@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
+  FlaskConical,
   Brain,
   CalendarClock,
   Database,
@@ -63,6 +64,8 @@ import {
   type TaskFormValues,
 } from "./task-form-model";
 
+import { DryRunDialog } from "./dry-run-dialog";
+
 const SECTIONS = [
   { id: "general", icon: Settings2 },
   { id: "source", icon: Database },
@@ -110,6 +113,7 @@ export function TaskEditor({ task }: { task?: Task }) {
   const navigate = useNavigate();
   const now = useNow();
   const editing = !!task;
+  const [dryRunOpen, setDryRunOpen] = useState(false);
   const connectors = useConnectors();
   const credentials = useCredentials();
   const settings = useQuery({ queryKey: qk.settings, queryFn: api.getSettings, staleTime: 60_000 });
@@ -313,6 +317,9 @@ export function TaskEditor({ task }: { task?: Task }) {
                 {t("tasks.actions.runNow")}
               </Button>
             ))}
+          {task && <Button type="button" variant="outline" onClick={() => setDryRunOpen(true)} disabled={task.running || formState.isDirty} title={formState.isDirty ? t("taskEditor.saveBeforeRun") : undefined}>
+            <FlaskConical /> {t("tasks.actions.dryRun")}
+          </Button>}
           <Button type="submit" disabled={saving || (editing && !formState.isDirty)}>
             {saving ? <Loader2 className="animate-spin" /> : <Save />}
             {editing ? t("common.saveChanges") : t("taskEditor.create")}
@@ -721,6 +728,7 @@ export function TaskEditor({ task }: { task?: Task }) {
           </div>
         </div>
       </div>
+      {task && dryRunOpen && <DryRunDialog task={task} onClose={() => setDryRunOpen(false)} />}
     </form>
   );
 }

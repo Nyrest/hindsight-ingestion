@@ -26,7 +26,7 @@ type credentialDTO struct {
 	Type           string            `json:"type"`
 	Config         map[string]any    `json:"config"`
 	CustomHeaders  map[string]string `json:"customHeaders"`
-	Status         string            `json:"status"`
+	Status         string            `json:"status" enum:"active,reauth_required,pending_oauth,error"`
 	StatusMessage  string            `json:"statusMessage"`
 	OAuthConnected bool              `json:"oauthConnected"`
 	OAuthExpiresAt *string           `json:"oauthExpiresAt"`
@@ -187,10 +187,10 @@ func (s *Server) testCredential(w http.ResponseWriter, r *http.Request) {
 		msg, err = validateCredential(ctx, cred)
 	}
 	if err != nil {
-		writeJSON(w, http.StatusOK, map[string]any{"ok": false, "message": err.Error()})
+		writeJSON(w, http.StatusOK, testDTO{false, err.Error()})
 		return
 	}
-	writeJSON(w, http.StatusOK, map[string]any{"ok": true, "message": msg})
+	writeJSON(w, http.StatusOK, testDTO{true, msg})
 }
 
 func validateCredential(ctx context.Context, cred connectors.Credential) (string, error) {
@@ -229,7 +229,7 @@ func (s *Server) oauthStart(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadRequest, "bad_request", err.Error())
 		return
 	}
-	writeJSON(w, http.StatusOK, map[string]string{"authUrl": u})
+	writeJSON(w, http.StatusOK, oauthStartDTO{u})
 }
 
 func (s *Server) oauthCallback(w http.ResponseWriter, r *http.Request) {
@@ -363,7 +363,7 @@ func (s *Server) credentialStrategies(w http.ResponseWriter, r *http.Request) {
 	if names == nil {
 		names = []string{}
 	}
-	writeJSON(w, http.StatusOK, map[string]any{"defaultStrategy": def, "strategies": names})
+	writeJSON(w, http.StatusOK, strategiesDTO{def, names})
 }
 
 func (s *Server) listConnectors(w http.ResponseWriter, r *http.Request) {
@@ -379,7 +379,7 @@ func (s *Server) listConnectors(w http.ResponseWriter, r *http.Request) {
 			sources[i].FilterFields = []connectors.FilterFieldSpec{}
 		}
 	}
-	writeJSON(w, http.StatusOK, map[string]any{"credentialTypes": types, "sources": sources})
+	writeJSON(w, http.StatusOK, connectorsDTO{types, sources})
 }
 
 func itoa(n int) string { b, _ := json.Marshal(n); return string(b) }

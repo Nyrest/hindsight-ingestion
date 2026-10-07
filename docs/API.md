@@ -1,8 +1,31 @@
 # REST API Contract
 
+The generated [OpenAPI contract](openapi.json) is derived from the backend's route
+registry and Go wire types. It is served at `GET /api/openapi.json` under the same
+authentication rules as the other API endpoints. The frontend generates its types
+from this file and calls the API through `openapi-fetch`.
+
+`POST /api/tasks/{id}/dry-run` tests a saved task with a full source inventory and
+reads changed content without destination writes or sync state changes. It returns
+`complete`, `error`, `discoveredCount`, `createdCount`, `updatedCount`, `deletedCount`,
+`unchangedCount`, `skippedCount`, `failedCount`, `items` and `truncated`. Each item has
+`sourceItemId`, `name`, `path`, `action` and `reason`. Actions are `create`, `update`,
+`delete`, `unchanged`, `skip`, `fail`. Counts cover the entire scan; `items` contains
+the first 100 items sorted by source ID. An incomplete inventory does not infer
+deletions of missing items. A source scan failure is returned in `error` with
+`complete=false`; credential/setup errors use the standard error envelope. A busy
+task returns `409`. The request shares the normal runner's concurrency limit and
+can be cancelled using the task cancel endpoint. OAuth refresh may update tokens.
+
+The `filesystem` source uses a credential `rootPath` (absolute server/container
+directory), and task config `{ "folder": ".", "recursive": true }`.
+New tasks default to hourly scheduling (`0 * * * *`) if cron is omitted.
+
 All endpoints live under `/api`, return JSON, and are protected by HTTP Basic Auth
 unless `DISABLE_AUTH=true` (except `GET /api/health`, which is always public and
-returns no sensitive data).
+returns no sensitive data, and the OAuth callback, protected by its state token).
+Basic Auth rejection returns a plain-text `401` response; application errors use
+the JSON envelope below.
 
 Errors use a uniform envelope with an appropriate HTTP status:
 

@@ -1,4 +1,5 @@
 import {
+  FlaskConical,
   History,
   ListChecks,
   Loader2,
@@ -49,6 +50,8 @@ import { useNow } from "@/lib/hooks";
 import type { Task } from "@/lib/types";
 import { ToneBadge } from "@/components/status-badge";
 
+import { DryRunDialog } from "@/features/tasks/dry-run-dialog";
+
 export default function TasksPage() {
   const { t } = useTranslation();
   const now = useNow();
@@ -60,6 +63,7 @@ export default function TasksPage() {
   const trigger = useTriggerTask();
   const cancel = useCancelTask();
   const del = useDeleteTask();
+  const [dryRunTask, setDryRunTask] = useState<Task | null>(null);
   const [toDelete, setToDelete] = useState<Task | null>(null);
   const [toReingest, setToReingest] = useState<Task | null>(null);
   const [pendingTrigger, setPendingTrigger] = useState<string | null>(null);
@@ -157,6 +161,9 @@ export default function TasksPage() {
           <DropdownMenuContent align="end" className="w-52">
             <DropdownMenuItem onSelect={() => fire(task, "run")} disabled={task.running}>
               <Play /> {t("tasks.actions.runNow")}
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => setDryRunTask(task)} disabled={task.running}>
+              <FlaskConical /> {t("tasks.actions.dryRun")}
             </DropdownMenuItem>
             <DropdownMenuItem onSelect={() => fire(task, "fullReconcile")} disabled={task.running}>
               <RefreshCcw /> {t("tasks.actions.fullReconcile")}
@@ -335,6 +342,7 @@ export default function TasksPage() {
         </>
       )}
 
+      {dryRunTask && <DryRunDialog task={dryRunTask} onClose={() => setDryRunTask(null)} />}
       <ConfirmDialog
         open={!!toDelete}
         onOpenChange={(o) => !o && setToDelete(null)}

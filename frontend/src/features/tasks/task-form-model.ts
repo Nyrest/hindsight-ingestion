@@ -76,7 +76,7 @@ export function emptyTaskForm(): TaskFormValues {
     metadataRows: [],
     filePolicyMode: "global",
     filePolicy: { ...DEFAULT_POLICY },
-    cronExpression: "0 */6 * * *",
+    cronExpression: "0 * * * *",
     cronTimezone: browserTimeZone(),
   };
 }
@@ -104,7 +104,7 @@ export function taskToForm(t: Task): TaskFormValues {
   };
 }
 
-export function formToInput(v: TaskFormValues, normalizedConfig: Record<string, unknown>): TaskInput {
+export function formToInput(v: TaskFormValues, normalizedConfig: Record<string, unknown>) {
   const customMetadata: Record<string, string> = {};
   for (const r of v.metadataRows) {
     const k = r.key.trim();
@@ -130,7 +130,7 @@ export function formToInput(v: TaskFormValues, normalizedConfig: Record<string, 
     filePolicy: v.filePolicy,
     cronExpression: v.cronExpression.trim(),
     cronTimezone: v.cronTimezone,
-  };
+  } satisfies TaskInput;
 }
 
 /** Maps a server validation `fields` key to a section id for scrolling. */

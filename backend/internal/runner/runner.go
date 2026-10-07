@@ -198,9 +198,46 @@ func (m *Manager) ActiveTasks() map[string]string {
 	defer m.mu.Unlock()
 	out := make(map[string]string, len(m.active))
 	for id, a := range m.active {
-		out[id] = a.runID
+		if a.runID != "" {
+			out[id] = a.runID
+		}
 	}
 	return out
+}
+
+// DryRun shares the task guard and concurrency limit with normal runs.
+func (m *Manager) DryRun(ctx context.Context, taskID string) (sync.DryRunResult, error) {
+	m.mu.Lock()
+	if m.base.Err() != nil {
+		m.mu.Unlock()
+		return sync.DryRunResult{}, ErrShutdown
+	}
+	if _, busy := m.active[taskID]; busy {
+		m.mu.Unlock()
+		return sync.DryRunResult{}, ErrAlreadyRunning
+	}
+	ctx, cancel := context.WithCancelCause(ctx)
+	stop := context.AfterFunc(m.base, func() { cancel(ErrShutdown) })
+	a := &active{cancel: cancel, done: make(chan struct{}), start: time.Now()}
+	m.active[taskID] = a
+	m.wg.Add(1)
+	m.mu.Unlock()
+	defer func() {
+		stop()
+		cancel(nil)
+		m.mu.Lock()
+		delete(m.active, taskID)
+		m.mu.Unlock()
+		close(a.done)
+		m.wg.Done()
+	}()
+	select {
+	case m.sem <- struct{}{}:
+		defer func() { <-m.sem }()
+	case <-ctx.Done():
+		return sync.DryRunResult{}, ctx.Err()
+	}
+	return m.engine.DryRun(ctx, taskID)
 }
 
 // Shutdown interrupts every active run and waits for them to record state.

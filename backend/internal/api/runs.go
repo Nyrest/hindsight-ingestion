@@ -14,7 +14,7 @@ type runDTO struct {
 	TaskID          string  `json:"taskId"`
 	TaskName        string  `json:"taskName"`
 	TriggerType     string  `json:"triggerType"`
-	Status          string  `json:"status"`
+	Status          string  `json:"status" enum:"pending,running,waiting_operations,succeeded,failed,interrupted,cancelled"`
 	SyncMode        string  `json:"syncMode"`
 	ScheduledFor    *string `json:"scheduledFor"`
 	StartedAt       *string `json:"startedAt"`
@@ -77,7 +77,7 @@ func (s *Server) queryRuns(w http.ResponseWriter, r *http.Request, taskID string
 	for i := range rows {
 		items = append(items, runView(&rows[i], names[rows[i].TaskID]))
 	}
-	writeJSON(w, http.StatusOK, map[string]any{"items": items, "total": total})
+	writeJSON(w, http.StatusOK, runPageDTO{items, total})
 }
 
 func (s *Server) taskRuns(w http.ResponseWriter, r *http.Request) {
@@ -90,7 +90,7 @@ type operationDTO struct {
 	ID                string `json:"id"`
 	RemoteOperationID string `json:"remoteOperationId"`
 	Type              string `json:"type"`
-	Status            string `json:"status"`
+	Status            string `json:"status" enum:"pending,running,waiting_operations,succeeded,failed,interrupted,cancelled"`
 	RetryCount        int    `json:"retryCount"`
 	CreatedAt         string `json:"createdAt"`
 	UpdatedAt         string `json:"updatedAt"`
@@ -113,15 +113,9 @@ func (s *Server) getRun(w http.ResponseWriter, r *http.Request) {
 			RetryCount: o.RetryCount, CreatedAt: timeStr(o.CreatedAt), UpdatedAt: timeStr(o.UpdatedAt),
 		})
 	}
-	logs := []map[string]any{}
+	logs := []logDTO{}
 	_ = json.Unmarshal([]byte(run.LogJSON), &logs)
-	writeJSON(w, http.StatusOK, struct {
-		runDTO
-		CursorBefore string           `json:"cursorBefore"`
-		CursorAfter  string           `json:"cursorAfter"`
-		Operations   []operationDTO   `json:"operations"`
-		Log          []map[string]any `json:"log"`
-	}{runView(&run, task.Name), run.CursorBefore, run.CursorAfter, opDTOs, logs})
+	writeJSON(w, http.StatusOK, runDetailDTO{runView(&run, task.Name), run.CursorBefore, run.CursorAfter, opDTOs, logs})
 }
 
 type settingsDTO struct {
@@ -176,11 +170,7 @@ func (s *Server) dashboard(w http.ResponseWriter, r *http.Request) {
 	s.DB.WithContext(ctx).Order("name").Find(&tasks)
 	names := map[string]string{}
 	enabled := 0
-	type nextRun struct {
-		TaskID    string `json:"taskId"`
-		TaskName  string `json:"taskName"`
-		NextRunAt string `json:"nextRunAt"`
-	}
+
 	var next []nextRun
 	for _, t := range tasks {
 		names[t.ID] = t.Name
@@ -205,13 +195,6 @@ func (s *Server) dashboard(w http.ResponseWriter, r *http.Request) {
 		next = []nextRun{}
 	}
 
-	type running struct {
-		TaskID    string  `json:"taskId"`
-		TaskName  string  `json:"taskName"`
-		RunID     string  `json:"runId"`
-		StartedAt *string `json:"startedAt"`
-		Status    string  `json:"status"`
-	}
 	runningList := []running{}
 	for taskID, runID := range s.Runs.ActiveTasks() {
 		var run models.TaskRun
@@ -230,12 +213,7 @@ func (s *Server) dashboard(w http.ResponseWriter, r *http.Request) {
 
 	var creds []models.Credential
 	s.DB.WithContext(ctx).Where("status IN ?", []string{models.CredentialReauthRequired, models.CredentialPendingOAuth, models.CredentialError}).Find(&creds)
-	type credRef struct {
-		ID     string `json:"id"`
-		Name   string `json:"name"`
-		Type   string `json:"type"`
-		Status string `json:"status"`
-	}
+
 	reauth := []credRef{}
 	for _, c := range creds {
 		reauth = append(reauth, credRef{c.ID, c.Name, c.Type, c.Status})
@@ -248,13 +226,5 @@ func (s *Server) dashboard(w http.ResponseWriter, r *http.Request) {
 	s.DB.WithContext(ctx).Model(&models.TaskRun{}).Where("started_at >= ? AND status IN ?", since,
 		[]string{models.RunFailed, models.RunInterrupted}).Count(&failed24)
 
-	writeJSON(w, http.StatusOK, map[string]any{
-		"totalTasks":        len(tasks),
-		"enabledTasks":      enabled,
-		"runningTasks":      runningList,
-		"recentFailures":    failureDTOs,
-		"reauthCredentials": reauth,
-		"nextRuns":          next,
-		"totals":            map[string]int64{"items": items, "runs24h": runs24, "failed24h": failed24},
-	})
+	writeJSON(w, http.StatusOK, dashboardDTO{len(tasks), enabled, runningList, failureDTOs, reauth, next, dashboardTotals{items, runs24, failed24}})
 }

@@ -64,7 +64,7 @@ type Option struct {
 type FieldSpec struct {
 	Key         string   `json:"key"`
 	Label       string   `json:"label"`
-	Type        string   `json:"type"`
+	Type        string   `json:"type" enum:"string,password,number,boolean,select,url,textarea"`
 	Required    bool     `json:"required"`
 	Secret      bool     `json:"secret"`
 	Placeholder string   `json:"placeholder,omitempty"`
@@ -102,8 +102,8 @@ const (
 type FilterFieldSpec struct {
 	Key       string   `json:"key"`
 	Label     string   `json:"label"`
-	Type      string   `json:"type"`
-	Operators []string `json:"operators"`
+	Type      string   `json:"type" enum:"string,boolean,number,datetime,enum"`
+	Operators []string `json:"operators" enum:"equals,notEquals,contains,in,notIn,greaterThan,lessThan"`
 	Options   []Option `json:"options,omitempty"`
 }
 
@@ -119,13 +119,13 @@ var (
 // FilterRule is one structured filter condition.
 type FilterRule struct {
 	Field    string `json:"field"`
-	Operator string `json:"operator"`
+	Operator string `json:"operator" enum:"equals,notEquals,contains,in,notIn,greaterThan,lessThan"`
 	Value    any    `json:"value"`
 }
 
 // Filter is a Task's source filter.
 type Filter struct {
-	Mode          string       `json:"mode"` // simple | advanced
+	Mode          string       `json:"mode" enum:"simple,advanced"` // simple | advanced
 	Rules         []FilterRule `json:"rules"`
 	AdvancedQuery string       `json:"advancedQuery"`
 }
@@ -369,7 +369,7 @@ func CredentialTypes() []CredentialType {
 }
 
 func order(t string) int {
-	for i, v := range []string{"notion", "siyuan", "s3", "webdav", "google_drive", "onedrive", "hindsight"} {
+	for i, v := range []string{"notion", "siyuan", "s3", "webdav", "google_drive", "onedrive", "filesystem", "hindsight"} {
 		if v == t {
 			return i
 		}

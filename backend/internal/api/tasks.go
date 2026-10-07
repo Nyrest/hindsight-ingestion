@@ -42,7 +42,7 @@ type taskDTO struct {
 	RetainStrategy          string                `json:"retainStrategy"`
 	CustomTags              []string              `json:"customTags"`
 	CustomMetadata          map[string]string     `json:"customMetadata"`
-	FilePolicyMode          string                `json:"filePolicyMode"`
+	FilePolicyMode          string                `json:"filePolicyMode" enum:"global,override"`
 	FilePolicy              connectors.FilePolicy `json:"filePolicy"`
 	CronExpression          string                `json:"cronExpression"`
 	CronTimezone            string                `json:"cronTimezone"`
@@ -139,7 +139,7 @@ type taskBody struct {
 	RetainStrategy          *string                `json:"retainStrategy"`
 	CustomTags              *[]string              `json:"customTags"`
 	CustomMetadata          *map[string]string     `json:"customMetadata"`
-	FilePolicyMode          *string                `json:"filePolicyMode"`
+	FilePolicyMode          *string                `json:"filePolicyMode" enum:"global,override"`
 	FilePolicy              *connectors.FilePolicy `json:"filePolicy"`
 	CronExpression          *string                `json:"cronExpression"`
 	CronTimezone            *string                `json:"cronTimezone"`
@@ -388,14 +388,22 @@ func (s *Server) createTask(w http.ResponseWriter, r *http.Request) {
 	if !decode(w, r, &b) {
 		return
 	}
-	t := models.Task{ID: uuid.NewString(), Enabled: true, ConfigRevision: 1, PolicyRevision: 1, CronTimezone: "UTC"}
+	t := models.Task{ID: uuid.NewString(), Enabled: true, ConfigRevision: 1, PolicyRevision: 1, CronExpression: "0 * * * *", CronTimezone: "UTC"}
 	if _, errs := s.applyTask(r.Context(), &t, b, true); len(errs) > 0 {
 		writeValidation(w, "Please fix the highlighted fields", errs)
 		return
 	}
+	enabled := t.Enabled
 	err := s.DB.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
 		if err := tx.Create(&t).Error; err != nil {
 			return err
+		}
+		// GORM substitutes the model's true default for a false zero value.
+		if !enabled {
+			t.Enabled = false
+			if err := tx.Model(&t).Update("enabled", false).Error; err != nil {
+				return err
+			}
 		}
 		return tx.Create(&models.TaskState{TaskID: t.ID}).Error
 	})
@@ -518,7 +526,7 @@ func (s *Server) runTask(mode string) http.HandlerFunc {
 			s.fail(w, err)
 			return
 		}
-		writeJSON(w, http.StatusAccepted, map[string]string{"runId": runID})
+		writeJSON(w, http.StatusAccepted, runTriggeredDTO{runID})
 	}
 }
 
@@ -527,25 +535,36 @@ func (s *Server) cancelTask(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusConflict, "conflict", "task is not running")
 		return
 	}
-	writeJSON(w, http.StatusAccepted, map[string]bool{"cancelled": true})
+	writeJSON(w, http.StatusAccepted, cancelDTO{true})
 }
 
 func (s *Server) validateCron(w http.ResponseWriter, r *http.Request) {
-	var b struct {
-		CronExpression string `json:"cronExpression"`
-		CronTimezone   string `json:"cronTimezone"`
-	}
+	var b cronBody
 	if !decode(w, r, &b) {
 		return
 	}
 	next, err := scheduler.ValidateCron(b.CronExpression, b.CronTimezone, 3)
 	if err != nil {
-		writeJSON(w, http.StatusOK, map[string]any{"valid": false, "error": err.Error(), "nextRuns": []string{}})
+		writeJSON(w, http.StatusOK, cronDTO{false, err.Error(), []string{}})
 		return
 	}
 	runs := make([]string, 0, len(next))
 	for _, t := range next {
 		runs = append(runs, t.Format(time.RFC3339))
 	}
-	writeJSON(w, http.StatusOK, map[string]any{"valid": true, "error": "", "nextRuns": runs})
+	writeJSON(w, http.StatusOK, cronDTO{true, "", runs})
+}
+
+func (s *Server) dryRunTask(w http.ResponseWriter, r *http.Request) {
+	preview, err := s.Runs.DryRun(r.Context(), r.PathValue("id"))
+	switch {
+	case errors.Is(err, runner.ErrAlreadyRunning):
+		writeError(w, http.StatusConflict, "conflict", err.Error())
+	case errors.Is(err, gorm.ErrRecordNotFound):
+		s.fail(w, err)
+	case err != nil:
+		writeError(w, http.StatusBadGateway, "upstream", err.Error())
+	default:
+		writeJSON(w, http.StatusOK, preview)
+	}
 }

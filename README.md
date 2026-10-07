@@ -1,6 +1,6 @@
 # Hindsight Ingestion
 
-Self-hosted service that incrementally synchronizes content from **Notion, SiYuan, S3 / S3-compatible storage, WebDAV, Google Drive, OneDrive and Hindsight** into [Hindsight](https://github.com/vectorize-io/hindsight) memory banks.
+Self-hosted service that incrementally synchronizes content from **Notion, SiYuan, S3 / S3-compatible storage, WebDAV, Google Drive, OneDrive, local files and Hindsight** into [Hindsight](https://github.com/vectorize-io/hindsight) memory banks.
 
 It is a long-running Go service with an embedded React admin UI, an in-process [gocron](https://github.com/go-co-op/gocron) scheduler and a relational database (SQLite, PostgreSQL or MySQL) as the synchronization ledger. It replaces the Cloudflare-based [notion-to-hindsight-sync](https://github.com/Nyrest/notion-to-hindsight-sync).
 
@@ -80,13 +80,41 @@ Access tokens are refreshed by one-time gocron jobs scheduled at `expiry − 15 
 | WebDAV | path | RFC 6578 `sync-collection` when available, else PROPFIND + ETag inventory | sync-token removals / scan generations | streamed file |
 | Google Drive | file ID | Changes API page token (baseline inventory, then changes since the start token) | `removed` / trashed / moved out of scope | streamed file; Docs → Markdown, Sheets → CSV, Slides → PDF |
 | OneDrive | drive ID + item ID | Graph `deltaLink` | `deleted` facet / moved out of scope | streamed file |
+| File System | path relative to credential root | full inventory; modification time + size revision | scan generations | streamed file |
 | Hindsight | source document ID | `updated_at` high-water mark + content hash | periodic full reconciliation | document original text |
 
 Files are classified by extension into **Plain Text, Documents, Images, Audios**; each task follows the global file-type policy or overrides it. File transfers are streamed (`io.Pipe` → multipart) and never buffered in memory.
 
+### Local files
+
+Create a **File System** credential with an absolute **Root directory** on the server.
+The task's **Folder** is relative to that root (`.` by default); sub-folders are
+included by default. The folder picker, filters and file policy work as with other
+file sources. Symlinks and special files are skipped. Failed inventories never
+trigger deletion of missing files.
+
+In Docker, mount the host directory read-only and use its container path in the
+credential. Add a volume alongside the existing `/data` volume, for example:
+
+```yaml
+volumes:
+  - hindsight-ingestion-data:/data
+  - /path/on/host:/sources/documents:ro
+```
+
+Set **Root directory** to `/sources/documents`. The container runs as UID 10001,
+which needs permission to read the mounted files and traverse their directories.
+
 ## How synchronization works
 
 - Each enabled task is a gocron cron job (5-field cron + timezone) in singleton mode. Manual **Run now** goes through the same per-task guard, so a task never runs concurrently with itself (scheduled overlaps are skipped; manual requests return `409`). A global semaphore enforces `MAX_CONCURRENT_TASKS`.
+- New tasks default to **Every hour** (`0 * * * *`). Existing schedules are preserved.
+- **Dry-run**, available in the task menu and editor after saving, performs a full
+  source inventory, applies filters and file policy, and verifies changed content
+  can be read. It previews create/update/delete/unchanged/skip/failure counts and
+  the first 100 items. It does not submit or delete Hindsight documents, create run
+  history, or change task state, ledger or cursors. OAuth tokens can still refresh
+  when needed. Destination ingestion is only exercised by a real run.
 - The database is the ledger: `TaskItem` rows record source revision, desired scope, destination presence and fingerprints. The **target fingerprint** covers the source revision plus retain strategy, tags, metadata and policy revision, so unchanged items are never re-uploaded, and policy changes re-retain everything in scope.
 - Destination document IDs are deterministic (`UUIDv5(task_id, source_item_id)`), so retries, renames, moves, restarts and duplicate executions are idempotent.
 - Run order: scan source → submit changes → wait for Hindsight async operations → reconcile deletions → **commit cursor**. If anything fails, the cursor is not advanced and the next run retries from the last committed state.
@@ -139,7 +167,19 @@ go test ./internal/database/
 SYNC_TEST_DB_TYPE=postgres SYNC_TEST_DB_DSN="..." go test ./internal/sync/
 ```
 
-API reference: [docs/API.md](docs/API.md).
+API reference: [docs/API.md](docs/API.md); machine-readable contract:
+[docs/openapi.json](docs/openapi.json), also served at `/api/openapi.json`.
+Routes and Go request/response structs generate the OpenAPI contract. The frontend
+uses generated types with `openapi-fetch` for checked paths, parameters and bodies.
+After changing API structs or routes, regenerate both artifacts:
+
+```bash
+cd backend && go generate ./internal/api
+cd ../frontend && bun run generate:api
+```
+
+Backend tests reject a stale OpenAPI file. Run `bun run generate:api` and check the
+generated diff when reviewing API changes.
 
 Before submitting a change, run `gofmt -l internal cmd`, `go build ./...`,
 `go vet ./...`, and `go test ./...` from `backend/`, and `bun run build` from

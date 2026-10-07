@@ -22,6 +22,7 @@ const TYPE_ICONS: Record<string, LucideIcon> = {
   google_drive: HardDrive,
   onedrive: Cloud,
   hindsight: Brain,
+  filesystem: HardDrive,
 };
 
 export function typeIcon(type: string | undefined | null): LucideIcon {
@@ -36,6 +37,7 @@ const FALLBACK_NAMES: Record<string, string> = {
   google_drive: "Google Drive",
   onedrive: "OneDrive",
   hindsight: "Hindsight",
+  filesystem: "File System",
 };
 
 export function useConnectors() {

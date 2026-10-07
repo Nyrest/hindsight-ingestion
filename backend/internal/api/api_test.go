@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"path/filepath"
 	"strings"
 	stdsync "sync"
@@ -27,6 +28,7 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/settings"
 	"github.com/Nyrest/hindsight-ingestion/internal/sync"
 
+	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/filesystem"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/googledrive"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/hindsightsrc"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/onedrive"
@@ -350,5 +352,53 @@ func TestOAuthCredentialApplicationSettings(t *testing.T) {
 				t.Fatalf("OAuth credential edit: status=%d config=%v", code, cred.Config)
 			}
 		})
+	}
+}
+
+func TestFilesystemDryRunAndHourlyDefault(t *testing.T) {
+	e := newEnv(t)
+	root := t.TempDir()
+	if err := os.WriteFile(filepath.Join(root, "hello.txt"), []byte("hello"), 0644); err != nil {
+		t.Fatal(err)
+	}
+	var source, dest map[string]any
+	if status := e.do("POST", "/api/credentials", map[string]any{"name": "Local", "type": "filesystem", "config": map[string]any{"rootPath": root}}, &source); status != 201 {
+		t.Fatalf("source: %d %+v", status, source)
+	}
+	if status := e.do("POST", "/api/credentials", map[string]any{"name": "Destination", "type": "hindsight", "config": map[string]any{"baseUrl": e.hsrv.URL}}, &dest); status != 201 {
+		t.Fatalf("destination: %d %+v", status, dest)
+	}
+	sourceID := source["id"].(string)
+	var test map[string]any
+	if status := e.do("POST", "/api/credentials/"+sourceID+"/test", nil, &test); status != 200 || test["ok"] != true {
+		t.Fatalf("credential test: %d %+v", status, test)
+	}
+	var task map[string]any
+	if status := e.do("POST", "/api/tasks", map[string]any{"name": "Local task", "enabled": false, "sourceType": "filesystem", "sourceCredentialId": sourceID, "sourceConfig": map[string]any{"folder": "."}, "destinationCredentialId": dest["id"], "destinationBankId": "dest"}, &task); status != 201 {
+		t.Fatalf("task: %d %+v", status, task)
+	}
+	if task["cronExpression"] != "0 * * * *" || task["enabled"] != false || task["nextRunAt"] != nil {
+		t.Fatalf("schedule: %+v", task)
+	}
+	id := task["id"].(string)
+	var result sync.DryRunResult
+	if status := e.do("POST", "/api/tasks/"+id+"/dry-run", nil, &result); status != 200 || !result.Complete || result.CreatedCount != 1 {
+		t.Fatalf("dry run: %d %+v", status, result)
+	}
+	var after map[string]any
+	e.do("GET", "/api/tasks/"+id, nil, &after)
+	if after["destinationLocked"] != false || after["lastRun"] != nil || after["itemCount"] != float64(0) || after["state"].(map[string]any)["hasCursor"] != false {
+		t.Fatalf("preview changed task: %+v", after)
+	}
+	if len(e.hs.docs) != 0 {
+		t.Fatal("dry-run wrote destination")
+	}
+	var spec map[string]any
+	if status := e.do("GET", "/api/openapi.json", nil, &spec); status != 200 || spec["openapi"] != "3.1.0" {
+		t.Fatalf("openapi: %d", status)
+	}
+	var missing map[string]any
+	if status := e.do("POST", "/api/tasks/missing/dry-run", nil, &missing); status != 404 {
+		t.Fatalf("missing task: %d %+v", status, missing)
 	}
 }

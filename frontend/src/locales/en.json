@@ -318,6 +318,7 @@
     "previewUnavailable": "Preview unavailable",
     "presets": {
       "every15m": "Every 15 min",
+      "everyHour": "Every hour",
       "every6h": "Every 6 hours",
       "daily3": "Daily 03:00",
       "weeklyMon8": "Mondays 08:00"
@@ -353,7 +354,8 @@
       "cancel": "Cancel run",
       "enable": "Enable",
       "disable": "Disable",
-      "viewRuns": "View runs"
+      "viewRuns": "View runs",
+      "dryRun": "Dry-run"
     },
     "empty": {
       "title": "No tasks yet",
@@ -570,5 +572,27 @@
     "title": "Page not found",
     "description": "The page you are looking for does not exist.",
     "home": "Go to dashboard"
+  },
+  "dryRun": {
+    "title": "Dry-run: {{name}}",
+    "description": "Test the saved task with a full source scan. No documents are sent or deleted, and sync progress and run history stay unchanged.",
+    "start": "Start dry-run",
+    "running": "Scanning…",
+    "complete_one": "Scanned {{count}} source item.",
+    "complete_other": "Scanned {{count}} source items.",
+    "incomplete_one": "Incomplete scan ({{count}} item). Missing items are not marked for deletion.",
+    "incomplete_other": "Incomplete scan ({{count}} items). Missing items are not marked for deletion.",
+    "truncated": "Showing the first 100 items. Counts include all items.",
+    "file": "Source item",
+    "action": "Action",
+    "reason": "Reason",
+    "actions": {
+      "create": "Create",
+      "update": "Update",
+      "delete": "Delete",
+      "unchanged": "Unchanged",
+      "skip": "Skip",
+      "fail": "Failed"
+    }
   }
 }

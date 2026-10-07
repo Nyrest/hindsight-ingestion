@@ -1,0 +1,2997 @@
+{
+  "components": {
+    "schemas": {
+      "Breadcrumb": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object"
+      },
+      "BrowseItem": {
+        "properties": {
+          "hasChildren": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "selectable": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "path",
+          "hasChildren",
+          "selectable"
+        ],
+        "type": "object"
+      },
+      "BrowseResult": {
+        "properties": {
+          "breadcrumbs": {
+            "items": {
+              "$ref": "#/components/schemas/Breadcrumb"
+            },
+            "type": "array"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/BrowseItem"
+            },
+            "type": "array"
+          },
+          "parentId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "items",
+          "parentId",
+          "breadcrumbs"
+        ],
+        "type": "object"
+      },
+      "Capabilities": {
+        "properties": {
+          "deletionMode": {
+            "type": "string"
+          },
+          "incrementalMode": {
+            "type": "string"
+          },
+          "supportsAdvancedFilter": {
+            "type": "boolean"
+          },
+          "supportsFiles": {
+            "type": "boolean"
+          },
+          "supportsOAuth": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "incrementalMode",
+          "deletionMode",
+          "supportsFiles",
+          "supportsOAuth",
+          "supportsAdvancedFilter"
+        ],
+        "type": "object"
+      },
+      "CredentialType": {
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "fields": {
+            "items": {
+              "$ref": "#/components/schemas/FieldSpec"
+            },
+            "type": "array"
+          },
+          "name": {
+            "type": "string"
+          },
+          "oauth": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "name",
+          "description",
+          "oauth",
+          "fields"
+        ],
+        "type": "object"
+      },
+      "DryRunItem": {
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "sourceItemId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "sourceItemId",
+          "name",
+          "path",
+          "action",
+          "reason"
+        ],
+        "type": "object"
+      },
+      "DryRunResult": {
+        "properties": {
+          "complete": {
+            "type": "boolean"
+          },
+          "createdCount": {
+            "type": "integer"
+          },
+          "deletedCount": {
+            "type": "integer"
+          },
+          "discoveredCount": {
+            "type": "integer"
+          },
+          "error": {
+            "type": "string"
+          },
+          "failedCount": {
+            "type": "integer"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DryRunItem"
+            },
+            "type": "array"
+          },
+          "skippedCount": {
+            "type": "integer"
+          },
+          "truncated": {
+            "type": "boolean"
+          },
+          "unchangedCount": {
+            "type": "integer"
+          },
+          "updatedCount": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "complete",
+          "error",
+          "discoveredCount",
+          "createdCount",
+          "updatedCount",
+          "deletedCount",
+          "unchangedCount",
+          "skippedCount",
+          "failedCount",
+          "items",
+          "truncated"
+        ],
+        "type": "object"
+      },
+      "FieldSpec": {
+        "properties": {
+          "browse": {
+            "type": "boolean"
+          },
+          "browseKind": {
+            "type": "string"
+          },
+          "default": {},
+          "help": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "options": {
+            "items": {
+              "$ref": "#/components/schemas/Option"
+            },
+            "type": "array"
+          },
+          "placeholder": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "secret": {
+            "type": "boolean"
+          },
+          "type": {
+            "enum": [
+              "string",
+              "password",
+              "number",
+              "boolean",
+              "select",
+              "url",
+              "textarea"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "type",
+          "required",
+          "secret"
+        ],
+        "type": "object"
+      },
+      "FilePolicy": {
+        "properties": {
+          "audios": {
+            "type": "boolean"
+          },
+          "documents": {
+            "type": "boolean"
+          },
+          "images": {
+            "type": "boolean"
+          },
+          "plainText": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "plainText",
+          "documents",
+          "images",
+          "audios"
+        ],
+        "type": "object"
+      },
+      "Filter": {
+        "properties": {
+          "advancedQuery": {
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "simple",
+              "advanced"
+            ],
+            "type": "string"
+          },
+          "rules": {
+            "items": {
+              "$ref": "#/components/schemas/FilterRule"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "mode",
+          "rules",
+          "advancedQuery"
+        ],
+        "type": "object"
+      },
+      "FilterFieldSpec": {
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "operators": {
+            "items": {
+              "enum": [
+                "equals",
+                "notEquals",
+                "contains",
+                "in",
+                "notIn",
+                "greaterThan",
+                "lessThan"
+              ],
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "options": {
+            "items": {
+              "$ref": "#/components/schemas/Option"
+            },
+            "type": "array"
+          },
+          "type": {
+            "enum": [
+              "string",
+              "boolean",
+              "number",
+              "datetime",
+              "enum"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "type",
+          "operators"
+        ],
+        "type": "object"
+      },
+      "FilterRule": {
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "operator": {
+            "enum": [
+              "equals",
+              "notEquals",
+              "contains",
+              "in",
+              "notIn",
+              "greaterThan",
+              "lessThan"
+            ],
+            "type": "string"
+          },
+          "value": {}
+        },
+        "required": [
+          "field",
+          "operator",
+          "value"
+        ],
+        "type": "object"
+      },
+      "Option": {
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value",
+          "label"
+        ],
+        "type": "object"
+      },
+      "SourceInfo": {
+        "properties": {
+          "browseKinds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "capabilities": {
+            "$ref": "#/components/schemas/Capabilities"
+          },
+          "credentialType": {
+            "type": "string"
+          },
+          "fields": {
+            "items": {
+              "$ref": "#/components/schemas/FieldSpec"
+            },
+            "type": "array"
+          },
+          "filterFields": {
+            "items": {
+              "$ref": "#/components/schemas/FilterFieldSpec"
+            },
+            "type": "array"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "name",
+          "credentialType",
+          "capabilities",
+          "browseKinds",
+          "fields",
+          "filterFields"
+        ],
+        "type": "object"
+      },
+      "apiError": {
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          },
+          "fields": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "error",
+          "code"
+        ],
+        "type": "object"
+      },
+      "cancelDTO": {
+        "properties": {
+          "cancelled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "cancelled"
+        ],
+        "type": "object"
+      },
+      "connectorsDTO": {
+        "properties": {
+          "credentialTypes": {
+            "items": {
+              "$ref": "#/components/schemas/CredentialType"
+            },
+            "type": "array"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/SourceInfo"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "credentialTypes",
+          "sources"
+        ],
+        "type": "object"
+      },
+      "credRef": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "reauth_required",
+              "pending_oauth",
+              "error"
+            ],
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "type",
+          "status"
+        ],
+        "type": "object"
+      },
+      "credentialDTO": {
+        "properties": {
+          "config": {
+            "additionalProperties": {},
+            "type": "object"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "customHeaders": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "oauthConnected": {
+            "type": "boolean"
+          },
+          "oauthExpiresAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "enum": [
+              "active",
+              "reauth_required",
+              "pending_oauth",
+              "error"
+            ],
+            "type": "string"
+          },
+          "statusMessage": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "usedByTasks": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "type",
+          "config",
+          "customHeaders",
+          "status",
+          "statusMessage",
+          "oauthConnected",
+          "oauthExpiresAt",
+          "usedByTasks",
+          "createdAt",
+          "updatedAt"
+        ],
+        "type": "object"
+      },
+      "cronDTO": {
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "nextRuns": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "valid": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "valid",
+          "error",
+          "nextRuns"
+        ],
+        "type": "object"
+      },
+      "dashboardDTO": {
+        "properties": {
+          "enabledTasks": {
+            "type": "integer"
+          },
+          "nextRuns": {
+            "items": {
+              "$ref": "#/components/schemas/nextRun"
+            },
+            "type": "array"
+          },
+          "reauthCredentials": {
+            "items": {
+              "$ref": "#/components/schemas/credRef"
+            },
+            "type": "array"
+          },
+          "recentFailures": {
+            "items": {
+              "$ref": "#/components/schemas/runDTO"
+            },
+            "type": "array"
+          },
+          "runningTasks": {
+            "items": {
+              "$ref": "#/components/schemas/running"
+            },
+            "type": "array"
+          },
+          "totalTasks": {
+            "type": "integer"
+          },
+          "totals": {
+            "$ref": "#/components/schemas/dashboardTotals"
+          }
+        },
+        "required": [
+          "totalTasks",
+          "enabledTasks",
+          "runningTasks",
+          "recentFailures",
+          "reauthCredentials",
+          "nextRuns",
+          "totals"
+        ],
+        "type": "object"
+      },
+      "dashboardTotals": {
+        "properties": {
+          "failed24h": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "integer"
+          },
+          "runs24h": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "runs24h",
+          "failed24h"
+        ],
+        "type": "object"
+      },
+      "healthDTO": {
+        "properties": {
+          "authEnabled": {
+            "type": "boolean"
+          },
+          "dbType": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "reauth_required",
+              "pending_oauth",
+              "error"
+            ],
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "version",
+          "authEnabled",
+          "dbType"
+        ],
+        "type": "object"
+      },
+      "logDTO": {
+        "properties": {
+          "level": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "time",
+          "level",
+          "message"
+        ],
+        "type": "object"
+      },
+      "nextRun": {
+        "properties": {
+          "nextRunAt": {
+            "type": "string"
+          },
+          "taskId": {
+            "type": "string"
+          },
+          "taskName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "taskId",
+          "taskName",
+          "nextRunAt"
+        ],
+        "type": "object"
+      },
+      "oauthStartDTO": {
+        "properties": {
+          "authUrl": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "authUrl"
+        ],
+        "type": "object"
+      },
+      "operationDTO": {
+        "properties": {
+          "createdAt": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "remoteOperationId": {
+            "type": "string"
+          },
+          "retryCount": {
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "running",
+              "waiting_operations",
+              "succeeded",
+              "failed",
+              "interrupted",
+              "cancelled"
+            ],
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "remoteOperationId",
+          "type",
+          "status",
+          "retryCount",
+          "createdAt",
+          "updatedAt"
+        ],
+        "type": "object"
+      },
+      "runDTO": {
+        "properties": {
+          "createdCount": {
+            "type": "integer"
+          },
+          "deletedCount": {
+            "type": "integer"
+          },
+          "discoveredCount": {
+            "type": "integer"
+          },
+          "errorMessage": {
+            "type": "string"
+          },
+          "failedCount": {
+            "type": "integer"
+          },
+          "finishedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "scheduledFor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "skippedCount": {
+            "type": "integer"
+          },
+          "startedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "running",
+              "waiting_operations",
+              "succeeded",
+              "failed",
+              "interrupted",
+              "cancelled"
+            ],
+            "type": "string"
+          },
+          "syncMode": {
+            "type": "string"
+          },
+          "taskId": {
+            "type": "string"
+          },
+          "taskName": {
+            "type": "string"
+          },
+          "triggerType": {
+            "type": "string"
+          },
+          "unchangedCount": {
+            "type": "integer"
+          },
+          "updatedCount": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "taskId",
+          "taskName",
+          "triggerType",
+          "status",
+          "syncMode",
+          "scheduledFor",
+          "startedAt",
+          "finishedAt",
+          "discoveredCount",
+          "createdCount",
+          "updatedCount",
+          "deletedCount",
+          "unchangedCount",
+          "skippedCount",
+          "failedCount",
+          "errorMessage"
+        ],
+        "type": "object"
+      },
+      "runDetailDTO": {
+        "properties": {
+          "createdCount": {
+            "type": "integer"
+          },
+          "cursorAfter": {
+            "type": "string"
+          },
+          "cursorBefore": {
+            "type": "string"
+          },
+          "deletedCount": {
+            "type": "integer"
+          },
+          "discoveredCount": {
+            "type": "integer"
+          },
+          "errorMessage": {
+            "type": "string"
+          },
+          "failedCount": {
+            "type": "integer"
+          },
+          "finishedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "log": {
+            "items": {
+              "$ref": "#/components/schemas/logDTO"
+            },
+            "type": "array"
+          },
+          "operations": {
+            "items": {
+              "$ref": "#/components/schemas/operationDTO"
+            },
+            "type": "array"
+          },
+          "scheduledFor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "skippedCount": {
+            "type": "integer"
+          },
+          "startedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "running",
+              "waiting_operations",
+              "succeeded",
+              "failed",
+              "interrupted",
+              "cancelled"
+            ],
+            "type": "string"
+          },
+          "syncMode": {
+            "type": "string"
+          },
+          "taskId": {
+            "type": "string"
+          },
+          "taskName": {
+            "type": "string"
+          },
+          "triggerType": {
+            "type": "string"
+          },
+          "unchangedCount": {
+            "type": "integer"
+          },
+          "updatedCount": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "taskId",
+          "taskName",
+          "triggerType",
+          "status",
+          "syncMode",
+          "scheduledFor",
+          "startedAt",
+          "finishedAt",
+          "discoveredCount",
+          "createdCount",
+          "updatedCount",
+          "deletedCount",
+          "unchangedCount",
+          "skippedCount",
+          "failedCount",
+          "errorMessage",
+          "cursorBefore",
+          "cursorAfter",
+          "operations",
+          "log"
+        ],
+        "type": "object"
+      },
+      "runPageDTO": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/runDTO"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "type": "object"
+      },
+      "runTriggeredDTO": {
+        "properties": {
+          "runId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "runId"
+        ],
+        "type": "object"
+      },
+      "running": {
+        "properties": {
+          "runId": {
+            "type": "string"
+          },
+          "startedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "running",
+              "waiting_operations",
+              "succeeded",
+              "failed",
+              "interrupted",
+              "cancelled"
+            ],
+            "type": "string"
+          },
+          "taskId": {
+            "type": "string"
+          },
+          "taskName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "taskId",
+          "taskName",
+          "runId",
+          "startedAt",
+          "status"
+        ],
+        "type": "object"
+      },
+      "settingsDTO": {
+        "properties": {
+          "filePolicy": {
+            "$ref": "#/components/schemas/FilePolicy"
+          },
+          "fullReconcileIntervalHours": {
+            "type": "integer"
+          },
+          "incrementalSyncEnabled": {
+            "type": "boolean"
+          },
+          "maxFileSizeMB": {
+            "type": "integer"
+          },
+          "oauthRedirectUri": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "incrementalSyncEnabled",
+          "fullReconcileIntervalHours",
+          "maxFileSizeMB",
+          "filePolicy",
+          "oauthRedirectUri"
+        ],
+        "type": "object"
+      },
+      "strategiesDTO": {
+        "properties": {
+          "defaultStrategy": {
+            "type": "string"
+          },
+          "strategies": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "defaultStrategy",
+          "strategies"
+        ],
+        "type": "object"
+      },
+      "taskDTO": {
+        "properties": {
+          "configRevision": {
+            "type": "integer"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "cronExpression": {
+            "type": "string"
+          },
+          "cronTimezone": {
+            "type": "string"
+          },
+          "customMetadata": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "customTags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "destinationBankId": {
+            "type": "string"
+          },
+          "destinationCredentialId": {
+            "type": "string"
+          },
+          "destinationLocked": {
+            "type": "boolean"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "filePolicy": {
+            "$ref": "#/components/schemas/FilePolicy"
+          },
+          "filePolicyMode": {
+            "enum": [
+              "global",
+              "override"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "itemCount": {
+            "type": "integer"
+          },
+          "lastRun": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/runDTO"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "nextRunAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "policyRevision": {
+            "type": "integer"
+          },
+          "reconcileRequired": {
+            "type": "boolean"
+          },
+          "retainStrategy": {
+            "type": "string"
+          },
+          "running": {
+            "type": "boolean"
+          },
+          "sourceConfig": {
+            "additionalProperties": {},
+            "type": "object"
+          },
+          "sourceCredentialId": {
+            "type": "string"
+          },
+          "sourceFilter": {
+            "$ref": "#/components/schemas/Filter"
+          },
+          "sourceType": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/taskStateDTO"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "enabled",
+          "sourceType",
+          "sourceCredentialId",
+          "sourceConfig",
+          "sourceFilter",
+          "destinationCredentialId",
+          "destinationBankId",
+          "retainStrategy",
+          "customTags",
+          "customMetadata",
+          "filePolicyMode",
+          "filePolicy",
+          "cronExpression",
+          "cronTimezone",
+          "configRevision",
+          "policyRevision",
+          "reconcileRequired",
+          "destinationLocked",
+          "running",
+          "nextRunAt",
+          "lastRun",
+          "itemCount",
+          "state",
+          "createdAt",
+          "updatedAt"
+        ],
+        "type": "object"
+      },
+      "taskStateDTO": {
+        "properties": {
+          "hasCursor": {
+            "type": "boolean"
+          },
+          "lastFullReconcileAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lastStartedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lastSuccessAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "lastStartedAt",
+          "lastSuccessAt",
+          "lastFullReconcileAt",
+          "hasCursor"
+        ],
+        "type": "object"
+      },
+      "testDTO": {
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ok",
+          "message"
+        ],
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "basicAuth": {
+        "scheme": "basic",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "title": "Hindsight Ingestion API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/connectors": {
+      "get": {
+        "operationId": "get_api_connectors",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/connectorsDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/credentials": {
+      "get": {
+        "operationId": "get_api_credentials",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/credentialDTO"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      },
+      "post": {
+        "operationId": "post_api_credentials",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "config": {
+                    "additionalProperties": {},
+                    "type": "object"
+                  },
+                  "customHeaders": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "type",
+                  "config"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/credentialDTO"
+                }
+              }
+            },
+            "description": "Created"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/credentials/{id}": {
+      "delete": {
+        "operationId": "delete_api_credentials_id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      },
+      "get": {
+        "operationId": "get_api_credentials_id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/credentialDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patch_api_credentials_id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "config": {
+                    "additionalProperties": {},
+                    "type": "object"
+                  },
+                  "customHeaders": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/credentialDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/credentials/{id}/browse": {
+      "post": {
+        "operationId": "post_api_credentials_id_browse",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "config": {
+                    "additionalProperties": {},
+                    "type": "object"
+                  },
+                  "kind": {
+                    "type": "string"
+                  },
+                  "parentId": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrowseResult"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/credentials/{id}/oauth/start": {
+      "post": {
+        "operationId": "post_api_credentials_id_oauth_start",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/oauthStartDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/credentials/{id}/refresh": {
+      "post": {
+        "operationId": "post_api_credentials_id_refresh",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/credentialDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/credentials/{id}/strategies": {
+      "get": {
+        "operationId": "get_api_credentials_id_strategies",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "bankId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/strategiesDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/credentials/{id}/test": {
+      "post": {
+        "operationId": "post_api_credentials_id_test",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/testDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/dashboard": {
+      "get": {
+        "operationId": "get_api_dashboard",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dashboardDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/health": {
+      "get": {
+        "operationId": "get_api_health",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/healthDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/oauth/callback": {
+      "get": {
+        "operationId": "get_api_oauth_callback",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "state",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "code",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "error",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Found"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/runs": {
+      "get": {
+        "operationId": "get_api_runs",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "taskId",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/runPageDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/runs/{id}": {
+      "get": {
+        "operationId": "get_api_runs_id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/runDetailDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/settings": {
+      "get": {
+        "operationId": "get_api_settings",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/settingsDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patch_api_settings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "filePolicy": {
+                    "$ref": "#/components/schemas/FilePolicy"
+                  },
+                  "fullReconcileIntervalHours": {
+                    "type": "integer"
+                  },
+                  "incrementalSyncEnabled": {
+                    "type": "boolean"
+                  },
+                  "maxFileSizeMB": {
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/settingsDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/tasks": {
+      "get": {
+        "operationId": "get_api_tasks",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/taskDTO"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      },
+      "post": {
+        "operationId": "post_api_tasks",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "cronExpression": {
+                    "type": "string"
+                  },
+                  "cronTimezone": {
+                    "type": "string"
+                  },
+                  "customMetadata": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "customTags": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "destinationBankId": {
+                    "type": "string"
+                  },
+                  "destinationCredentialId": {
+                    "type": "string"
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "filePolicy": {
+                    "$ref": "#/components/schemas/FilePolicy"
+                  },
+                  "filePolicyMode": {
+                    "enum": [
+                      "global",
+                      "override"
+                    ],
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "retainStrategy": {
+                    "type": "string"
+                  },
+                  "sourceConfig": {
+                    "additionalProperties": {},
+                    "type": "object"
+                  },
+                  "sourceCredentialId": {
+                    "type": "string"
+                  },
+                  "sourceFilter": {
+                    "$ref": "#/components/schemas/Filter"
+                  },
+                  "sourceType": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "sourceType",
+                  "sourceCredentialId",
+                  "destinationCredentialId",
+                  "destinationBankId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskDTO"
+                }
+              }
+            },
+            "description": "Created"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/tasks/validate-cron": {
+      "post": {
+        "operationId": "post_api_tasks_validate_cron",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "cronExpression": {
+                    "type": "string"
+                  },
+                  "cronTimezone": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "cronExpression",
+                  "cronTimezone"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cronDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/tasks/{id}": {
+      "delete": {
+        "operationId": "delete_api_tasks_id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      },
+      "get": {
+        "operationId": "get_api_tasks_id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patch_api_tasks_id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "cronExpression": {
+                    "type": "string"
+                  },
+                  "cronTimezone": {
+                    "type": "string"
+                  },
+                  "customMetadata": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "customTags": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "destinationBankId": {
+                    "type": "string"
+                  },
+                  "destinationCredentialId": {
+                    "type": "string"
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "filePolicy": {
+                    "$ref": "#/components/schemas/FilePolicy"
+                  },
+                  "filePolicyMode": {
+                    "enum": [
+                      "global",
+                      "override"
+                    ],
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "retainStrategy": {
+                    "type": "string"
+                  },
+                  "sourceConfig": {
+                    "additionalProperties": {},
+                    "type": "object"
+                  },
+                  "sourceCredentialId": {
+                    "type": "string"
+                  },
+                  "sourceFilter": {
+                    "$ref": "#/components/schemas/Filter"
+                  },
+                  "sourceType": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/taskDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/tasks/{id}/cancel": {
+      "post": {
+        "operationId": "post_api_tasks_id_cancel",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cancelDTO"
+                }
+              }
+            },
+            "description": "Accepted"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/tasks/{id}/dry-run": {
+      "post": {
+        "operationId": "post_api_tasks_id_dry_run",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DryRunResult"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/tasks/{id}/full-reconcile": {
+      "post": {
+        "operationId": "post_api_tasks_id_full_reconcile",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/runTriggeredDTO"
+                }
+              }
+            },
+            "description": "Accepted"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/tasks/{id}/full-reingest": {
+      "post": {
+        "operationId": "post_api_tasks_id_full_reingest",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/runTriggeredDTO"
+                }
+              }
+            },
+            "description": "Accepted"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/tasks/{id}/run": {
+      "post": {
+        "operationId": "post_api_tasks_id_run",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/runTriggeredDTO"
+                }
+              }
+            },
+            "description": "Accepted"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/tasks/{id}/runs": {
+      "get": {
+        "operationId": "get_api_tasks_id_runs",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "taskId",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/runPageDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "basicAuth": []
+    }
+  ]
+}

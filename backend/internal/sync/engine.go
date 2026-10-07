@@ -166,55 +166,16 @@ func (r *runner) execute(opts RunOptions) error {
 	if err := db.Where(models.TaskState{TaskID: r.task.ID}).FirstOrCreate(&r.state).Error; err != nil {
 		return fmt.Errorf("load task state: %w", err)
 	}
-	cfg, err := r.e.Settings.Get(r.ctx)
+	cfg, err := r.prepareSource()
 	if err != nil {
 		return err
 	}
-
-	src, ok := connectors.Source(r.task.SourceType)
-	if !ok {
-		return fmt.Errorf("unknown source type %q", r.task.SourceType)
-	}
-	r.src = src
-	if err := json.Unmarshal([]byte(orEmpty(r.task.SourceConfigJSON, "{}")), &r.srcCfg); err != nil {
-		return fmt.Errorf("invalid source config: %w", err)
-	}
-	_ = json.Unmarshal([]byte(orEmpty(r.task.SourceFilterJSON, "{}")), &r.filter)
-	r.policy = cfg.FilePolicy
-	if r.task.FilePolicyMode == models.FilePolicyOverride {
-		_ = json.Unmarshal([]byte(orEmpty(r.task.FilePolicyJSON, "{}")), &r.policy)
-	}
-	r.maxSz = int64(cfg.MaxFileSizeMB) << 20
-
-	srcCred, err := r.e.Creds.Load(r.ctx, r.task.SourceCredentialID)
-	if err != nil {
-		return fmt.Errorf("load source credential: %w", err)
-	}
-	if srcCred, err = r.e.OAuth.EnsureFresh(r.ctx, srcCred); err != nil {
-		return err
-	}
-	if srcCred.OAuth != nil {
-		srcCred.AccessToken = r.e.tokenSource(srcCred)
-	}
-	r.cred = srcCred
 	destCred, err := r.e.Creds.Load(r.ctx, r.task.DestinationCredentialID)
 	if err != nil {
 		return fmt.Errorf("load destination credential: %w", err)
 	}
 	if r.dest, err = r.e.NewDestination(destCred); err != nil {
 		return err
-	}
-
-	r.baseTags = []string{"source:" + r.task.SourceType, "ingestion_task:" + r.task.ID}
-	var custom []string
-	_ = json.Unmarshal([]byte(orEmpty(r.task.CustomTagsJSON, "[]")), &custom)
-	r.baseTags = append(r.baseTags, custom...)
-	r.customMD = map[string]string{}
-	_ = json.Unmarshal([]byte(orEmpty(r.task.CustomMetadataJSON, "{}")), &r.customMD)
-	for k := range r.customMD {
-		if strings.HasPrefix(k, ReservedMetadataPrefix) {
-			delete(r.customMD, k)
-		}
 	}
 
 	interval := time.Duration(cfg.FullReconcileIntervalHours) * time.Hour
@@ -270,7 +231,7 @@ func (r *runner) execute(opts RunOptions) error {
 	}
 
 	// 1. Scan source; changes are submitted as they are discovered.
-	res, err := src.Scan(r.ctx, connectors.ScanRequest{
+	res, err := r.src.Scan(r.ctx, connectors.ScanRequest{
 		Credential: r.cred,
 		Config:     r.srcCfg,
 		Filter:     r.filter,
@@ -1032,4 +993,52 @@ func sleepCtx(ctx context.Context, d time.Duration) error {
 	case <-t.C:
 		return nil
 	}
+}
+
+func (r *runner) prepareSource() (settings.Settings, error) {
+	cfg, err := r.e.Settings.Get(r.ctx)
+	if err != nil {
+		return cfg, err
+	}
+
+	src, ok := connectors.Source(r.task.SourceType)
+	if !ok {
+		return cfg, fmt.Errorf("unknown source type %q", r.task.SourceType)
+	}
+	r.src = src
+	if err := json.Unmarshal([]byte(orEmpty(r.task.SourceConfigJSON, "{}")), &r.srcCfg); err != nil {
+		return cfg, fmt.Errorf("invalid source config: %w", err)
+	}
+	_ = json.Unmarshal([]byte(orEmpty(r.task.SourceFilterJSON, "{}")), &r.filter)
+	r.policy = cfg.FilePolicy
+	if r.task.FilePolicyMode == models.FilePolicyOverride {
+		_ = json.Unmarshal([]byte(orEmpty(r.task.FilePolicyJSON, "{}")), &r.policy)
+	}
+	r.maxSz = int64(cfg.MaxFileSizeMB) << 20
+
+	srcCred, err := r.e.Creds.Load(r.ctx, r.task.SourceCredentialID)
+	if err != nil {
+		return cfg, fmt.Errorf("load source credential: %w", err)
+	}
+	if srcCred, err = r.e.OAuth.EnsureFresh(r.ctx, srcCred); err != nil {
+		return cfg, err
+	}
+	if srcCred.OAuth != nil {
+		srcCred.AccessToken = r.e.tokenSource(srcCred)
+	}
+	r.cred = srcCred
+
+	r.baseTags = []string{"source:" + r.task.SourceType, "ingestion_task:" + r.task.ID}
+	var custom []string
+	_ = json.Unmarshal([]byte(orEmpty(r.task.CustomTagsJSON, "[]")), &custom)
+	r.baseTags = append(r.baseTags, custom...)
+	r.customMD = map[string]string{}
+	_ = json.Unmarshal([]byte(orEmpty(r.task.CustomMetadataJSON, "{}")), &r.customMD)
+	for k := range r.customMD {
+		if strings.HasPrefix(k, ReservedMetadataPrefix) {
+			delete(r.customMD, k)
+		}
+	}
+
+	return cfg, nil
 }

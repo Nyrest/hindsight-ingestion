@@ -11,6 +11,7 @@ import { TimezoneCombobox } from "./timezone-combobox";
 
 const CRON_PRESETS = [
   { key: "every15m", expr: "*/15 * * * *" },
+  { key: "everyHour", expr: "0 * * * *" },
   { key: "every6h", expr: "0 */6 * * *" },
   { key: "daily3", expr: "0 3 * * *" },
   { key: "weeklyMon8", expr: "0 8 * * 1" },

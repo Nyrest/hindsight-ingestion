@@ -10,7 +10,8 @@ COPY frontend/ ./
 RUN mkdir -p ../backend/internal/web && bun run build
 
 # Stage 2: build the Go backend with the frontend embedded.
-FROM golang:1.26-bookworm AS backend
+FROM golang:1.26-alpine AS backend
+RUN apk add --no-cache gcc musl-dev
 WORKDIR /src/backend
 ARG GOPROXY=https://proxy.golang.org,direct
 ENV GOPROXY=${GOPROXY}
@@ -22,11 +23,10 @@ COPY --from=frontend /src/backend/internal/web/dist ./internal/web/dist
 RUN CGO_ENABLED=1 go build -trimpath -ldflags="-s -w" -o /out/hindsight-ingestion ./cmd/server
 
 # Stage 3: minimal runtime.
-FROM debian:bookworm-slim
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates tzdata wget \
-    && rm -rf /var/lib/apt/lists/* \
-    && useradd --system --uid 10001 --home-dir /data app \
+FROM alpine:3.23
+# BusyBox supplies wget for the health check.
+RUN apk add --no-cache ca-certificates tzdata \
+    && adduser -S -D -u 10001 -h /data app \
     && mkdir -p /data && chown app /data
 COPY --from=backend /out/hindsight-ingestion /usr/local/bin/hindsight-ingestion
 COPY LICENSE /usr/share/doc/hindsight-ingestion/LICENSE

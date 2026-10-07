@@ -34,38 +34,10 @@ type Server struct {
 
 // Routes registers all API routes on mux.
 func (s *Server) Routes(mux *http.ServeMux) {
-	mux.HandleFunc("GET /api/health", s.health)
-	mux.HandleFunc("GET /api/settings", s.getSettings)
-	mux.HandleFunc("PATCH /api/settings", s.patchSettings)
-	mux.HandleFunc("GET /api/connectors", s.listConnectors)
-	mux.HandleFunc("GET /api/dashboard", s.dashboard)
-
-	mux.HandleFunc("GET /api/credentials", s.listCredentials)
-	mux.HandleFunc("POST /api/credentials", s.createCredential)
-	mux.HandleFunc("GET /api/credentials/{id}", s.getCredential)
-	mux.HandleFunc("PATCH /api/credentials/{id}", s.patchCredential)
-	mux.HandleFunc("DELETE /api/credentials/{id}", s.deleteCredential)
-	mux.HandleFunc("POST /api/credentials/{id}/test", s.testCredential)
-	mux.HandleFunc("POST /api/credentials/{id}/oauth/start", s.oauthStart)
-	mux.HandleFunc("POST /api/credentials/{id}/refresh", s.refreshCredential)
-	mux.HandleFunc("POST /api/credentials/{id}/browse", s.browseCredential)
-	mux.HandleFunc("GET /api/credentials/{id}/strategies", s.credentialStrategies)
-	mux.HandleFunc("GET /api/oauth/callback", s.oauthCallback)
-
-	mux.HandleFunc("GET /api/tasks", s.listTasks)
-	mux.HandleFunc("POST /api/tasks", s.createTask)
-	mux.HandleFunc("POST /api/tasks/validate-cron", s.validateCron)
-	mux.HandleFunc("GET /api/tasks/{id}", s.getTask)
-	mux.HandleFunc("PATCH /api/tasks/{id}", s.patchTask)
-	mux.HandleFunc("DELETE /api/tasks/{id}", s.deleteTask)
-	mux.HandleFunc("POST /api/tasks/{id}/run", s.runTask(""))
-	mux.HandleFunc("POST /api/tasks/{id}/full-reconcile", s.runTask("full"))
-	mux.HandleFunc("POST /api/tasks/{id}/full-reingest", s.runTask("reingest"))
-	mux.HandleFunc("POST /api/tasks/{id}/cancel", s.cancelTask)
-	mux.HandleFunc("GET /api/tasks/{id}/runs", s.taskRuns)
-
-	mux.HandleFunc("GET /api/runs", s.listRuns)
-	mux.HandleFunc("GET /api/runs/{id}", s.getRun)
+	for _, route := range s.endpoints() {
+		mux.HandleFunc(route.method+" "+route.path, route.handler)
+	}
+	mux.HandleFunc("GET /api/openapi.json", s.openAPI)
 
 	mux.HandleFunc("/api/", func(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusNotFound, "not_found", "unknown API endpoint")
@@ -77,9 +49,7 @@ func (s *Server) health(w http.ResponseWriter, r *http.Request) {
 	if sqlDB, err := s.DB.DB(); err != nil || sqlDB.PingContext(r.Context()) != nil {
 		status = "degraded"
 	}
-	writeJSON(w, http.StatusOK, map[string]any{
-		"status": status, "version": httpx.Version, "authEnabled": !s.Cfg.AuthDisabled, "dbType": s.Cfg.DBType,
-	})
+	writeJSON(w, http.StatusOK, healthDTO{status, httpx.Version, !s.Cfg.AuthDisabled, s.Cfg.DBType})
 }
 
 type apiError struct {
