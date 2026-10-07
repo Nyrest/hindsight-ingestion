@@ -1,0 +1,34 @@
+# Default deployment: single container, SQLite on a named volume.
+#   cp .env.example .env   # then set BASIC_AUTH_PASSWORD and CREDENTIAL_ENCRYPTION_KEY
+#   docker compose up -d
+#
+# gocron is an in-process scheduler: run exactly one replica.
+services:
+  hindsight-ingestion:
+    build: .
+    image: hindsight-ingestion:latest
+    restart: unless-stopped
+    environment:
+      DB_TYPE: sqlite
+      DB_DSN: /data/hindsight-ingestion.db
+
+      BASIC_AUTH_USERNAME: ${BASIC_AUTH_USERNAME:-admin}
+      # Required unless DISABLE_AUTH=true (the app refuses to start otherwise).
+      BASIC_AUTH_PASSWORD: ${BASIC_AUTH_PASSWORD:-}
+      DISABLE_AUTH: ${DISABLE_AUTH:-false}
+
+      CREDENTIAL_ENCRYPTION_KEY: ${CREDENTIAL_ENCRYPTION_KEY:?set CREDENTIAL_ENCRYPTION_KEY in .env}
+
+      PUBLIC_URL: ${PUBLIC_URL:-http://localhost:8080}
+      MAX_CONCURRENT_TASKS: ${MAX_CONCURRENT_TASKS:-4}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    volumes:
+      - hindsight-ingestion-data:/data
+    ports:
+      - "8080:8080"
+    deploy:
+      replicas: 1
+    stop_grace_period: 40s
+
+volumes:
+  hindsight-ingestion-data:

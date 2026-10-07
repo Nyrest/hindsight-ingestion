@@ -1,0 +1,31 @@
+# Optional example: use an external PostgreSQL instead of SQLite.
+#   docker compose -f docker-compose.yml -f docker-compose.postgres.yml up -d
+#
+# The bundled "db" service is for convenience/testing only; point DB_DSN at
+# your own PostgreSQL server in production and remove the db service.
+services:
+  hindsight-ingestion:
+    environment:
+      DB_TYPE: postgres
+      DB_DSN: host=db user=hindsight password=${POSTGRES_PASSWORD:-hindsight} dbname=hindsight_ingestion port=5432 sslmode=disable
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: hindsight
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hindsight}
+      POSTGRES_DB: hindsight_ingestion
+    volumes:
+      - hindsight-ingestion-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hindsight -d hindsight_ingestion"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  hindsight-ingestion-postgres:

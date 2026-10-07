@@ -1,0 +1,15 @@
+.git
+.env
+.env.*
+!.env.example
+**/*.log
+**/node_modules
+frontend/dist
+backend/internal/web/dist
+**/*.db
+**/*.db-*
+.claude
+docs/internal
+**/*.exe
+backend/server
+backend/hindsight-ingestion

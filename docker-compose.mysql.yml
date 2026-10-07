@@ -1,0 +1,32 @@
+# Optional example: use an external MySQL instead of SQLite.
+#   docker compose -f docker-compose.yml -f docker-compose.mysql.yml up -d
+#
+# The bundled "db" service is for convenience/testing only; point DB_DSN at
+# your own MySQL server in production and remove the db service.
+services:
+  hindsight-ingestion:
+    environment:
+      DB_TYPE: mysql
+      DB_DSN: hindsight:${MYSQL_PASSWORD:-hindsight}@tcp(db:3306)/hindsight_ingestion?charset=utf8mb4&parseTime=True&loc=UTC
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_USER: hindsight
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-hindsight}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-hindsight-root}
+      MYSQL_DATABASE: hindsight_ingestion
+    volumes:
+      - hindsight-ingestion-mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uhindsight -p$$MYSQL_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+volumes:
+  hindsight-ingestion-mysql:

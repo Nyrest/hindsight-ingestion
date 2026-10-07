@@ -1,0 +1,574 @@
+{
+  "app": {
+    "name": "Hindsight Ingestion",
+    "tagline": "Sync sources into memory",
+    "version": "v{{version}}",
+    "authDisabled": "auth disabled"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "tasks": "Tasks",
+    "runs": "Runs",
+    "credentials": "Credentials",
+    "settings": "Settings",
+    "open": "Open navigation",
+    "title": "Navigation",
+    "description": "Main navigation"
+  },
+  "theme": {
+    "toggle": "Change theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "common": {
+    "actions": "Actions",
+    "backTo": "Back to {{page}}",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "copied": "Copied to clipboard",
+    "copy": "Copy",
+    "copyFailed": "Could not copy to clipboard",
+    "create": "Create",
+    "delete": "Delete",
+    "edit": "Edit",
+    "false": "False",
+    "true": "True",
+    "loadFailed": "Could not load data",
+    "loading": "Loading…",
+    "moreActions": "More actions",
+    "new": "New",
+    "next": "Next page",
+    "previous": "Previous page",
+    "none": "None",
+    "pageOf": "Page {{page}} of {{pages}}",
+    "refresh": "Refresh",
+    "retry": "Retry",
+    "save": "Save",
+    "saveChanges": "Save changes",
+    "select": "Select…",
+    "viewAll": "View all"
+  },
+  "validation": {
+    "required": "This field is required",
+    "number": "Must be a number",
+    "integer": "Must be a whole number",
+    "min1": "Must be at least 1",
+    "url": "Must be a valid URL",
+    "tooLong": "Too long"
+  },
+  "runStatus": {
+    "pending": "Pending",
+    "running": "Running",
+    "waiting_operations": "Waiting for operations",
+    "succeeded": "Succeeded",
+    "failed": "Failed",
+    "interrupted": "Interrupted",
+    "cancelled": "Cancelled"
+  },
+  "credentialStatus": {
+    "active": "Active",
+    "reauth_required": "Reconnect required",
+    "pending_oauth": "Awaiting OAuth",
+    "error": "Error"
+  },
+  "chips": {
+    "placeholder": "Type and press Enter",
+    "duplicate": "\"{{value}}\" is already added",
+    "remove": "Remove {{value}}",
+    "automatic": "Added automatically"
+  },
+  "kv": {
+    "key": "Key",
+    "value": "Value",
+    "add": "Add",
+    "remove": "Remove row"
+  },
+  "secret": {
+    "keepHint": "A value is stored. Leave the mask unchanged to keep it, or type a new value to replace it.",
+    "clear": "Clear stored value"
+  },
+  "headers": {
+    "title": "Custom headers",
+    "help": "Sent with every request to this provider. Connector authentication headers take precedence.",
+    "mode": "Editor mode",
+    "ui": "UI",
+    "json": "JSON",
+    "name": "Header name",
+    "value": "Value",
+    "valuePlaceholder": "Header value",
+    "add": "Add header",
+    "empty": "No custom headers",
+    "maskHint": "Stored values are shown as {{mask}}; keep the mask to leave a value unchanged.",
+    "errors": {
+      "duplicate": "Duplicate header name \"{{name}}\" (names are case-insensitive)",
+      "invalidJson": "Invalid JSON: {{detail}}",
+      "notObject": "JSON must be an object like {\"Header\": \"Value\"}",
+      "nonString": "Value of \"{{name}}\" must be a string",
+      "emptyName": "Header name cannot be empty"
+    }
+  },
+  "browse": {
+    "button": "Browse…",
+    "title": "Browse",
+    "titleFor": "Select {{label}}",
+    "description": "Navigate into folders and select an item.",
+    "breadcrumbs": "Location",
+    "root": "Root",
+    "empty": "Nothing here",
+    "hint": "Select an item, or open a folder with the arrow",
+    "open": "Open {{name}}",
+    "select": "Select",
+    "selected": "Selected",
+    "kinds": {
+      "folder": "Folder",
+      "file": "File",
+      "data_source": "Data source",
+      "notebook": "Notebook",
+      "bucket": "Bucket",
+      "bank": "Bank",
+      "drive": "Drive",
+      "site": "Site"
+    }
+  },
+  "capabilities": {
+    "incremental": {
+      "high_water_mark": "High-water mark",
+      "delta_token": "Delta token",
+      "sync_token": "Sync token",
+      "inventory": "Inventory diff"
+    },
+    "deletion": {
+      "full_reconcile": "Deletes via reconcile",
+      "scan_generation": "Deletes via scan",
+      "delta": "Deletes via delta"
+    },
+    "files": "Files",
+    "oauth": "OAuth",
+    "advancedFilter": "Advanced filter"
+  },
+  "credentials": {
+    "title": "Credentials",
+    "description": "Reusable connection details for sources and Hindsight destinations.",
+    "new": "New credential",
+    "createTitle": "New credential",
+    "createDescription": "Choose a provider and enter its connection details.",
+    "editTitle": "Edit credential",
+    "editDescription": "Secrets are never shown. Leave masked values unchanged to keep them.",
+    "createInline": "Create a new credential",
+    "namePlaceholder": "e.g. Work {{type}}",
+    "pick": "Select a credential",
+    "noneOfType": "No {{type}} credentials yet",
+    "notActiveWarning": "This credential is currently “{{status}}”. Runs may fail until it is fixed.",
+    "oauthHint": "After saving, use Connect to authorize access with the provider.",
+    "usedByCount_one": "{{count}} task",
+    "usedByCount_other": "{{count}} tasks",
+    "fields": {
+      "type": "Provider",
+      "name": "Name"
+    },
+    "columns": {
+      "name": "Name",
+      "type": "Type",
+      "status": "Status",
+      "usedBy": "Used by",
+      "oauth": "OAuth"
+    },
+    "actions": {
+      "test": "Test",
+      "connect": "Connect",
+      "reconnect": "Reconnect",
+      "refresh": "Refresh token"
+    },
+    "empty": {
+      "title": "No credentials yet",
+      "description": "Add a credential for a source (e.g. Notion) and one for your Hindsight instance to create a task."
+    },
+    "test": {
+      "ok": "{{name}}: connection OK",
+      "failed": "{{name}}: connection failed"
+    },
+    "oauth": {
+      "success": "OAuth connected successfully",
+      "error": "OAuth connection failed",
+      "startFailed": "Could not start OAuth",
+      "connected": "Connected",
+      "notConnected": "Not connected",
+      "expires": "Token expires {{when}}"
+    },
+    "toast": {
+      "created": "Credential created",
+      "updated": "Credential updated",
+      "deleted": "Credential deleted",
+      "deleteFailed": "Could not delete credential",
+      "inUse": "Credential is in use",
+      "refreshed": "Token refreshed",
+      "refreshFailed": "Token refresh failed"
+    },
+    "delete": {
+      "title": "Delete “{{name}}”?",
+      "description": "This permanently removes the credential and its stored secrets.",
+      "inUse_one": "This credential is used by {{count}} task. Remove or change that task first.",
+      "inUse_other": "This credential is used by {{count}} tasks. Remove or change those tasks first."
+    }
+  },
+  "filters": {
+    "add": "Add filter",
+    "remove": "Remove filter",
+    "where": "Where",
+    "and": "And",
+    "field": "Field",
+    "operator": "Operator",
+    "mode": "Filter mode",
+    "simple": "Simple",
+    "advanced": "Advanced",
+    "advancedQuery": "Query",
+    "advancedHint": "Raw provider query syntax.",
+    "driveHint": "Google Drive query syntax, e.g. mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'. Trashed files are always excluded.",
+    "noFields": "This source does not support filters.",
+    "selectValues": "Select values…",
+    "valuePlaceholder": "Value",
+    "valuesPlaceholder": "Type a value and press Enter",
+    "empty": {
+      "title": "No filters",
+      "description": "Everything in the source scope will be synced."
+    },
+    "operators": {
+      "equals": "equals",
+      "notEquals": "does not equal",
+      "contains": "contains",
+      "in": "is any of",
+      "notIn": "is none of",
+      "greaterThan": "greater than",
+      "lessThan": "less than"
+    },
+    "errors": {
+      "field": "Select a valid field",
+      "operator": "Operator not supported for this field",
+      "value": "Enter a value",
+      "valueList": "Add at least one value",
+      "number": "Must be a number"
+    }
+  },
+  "filePolicy": {
+    "plainText": "Plain text",
+    "documents": "Documents",
+    "images": "Images",
+    "audios": "Audio",
+    "globalPreview": "Current global policy (change it in Settings):",
+    "mode": {
+      "global": "Follow global",
+      "globalHelp": "Use the file types configured in Settings.",
+      "override": "Override",
+      "overrideHelp": "Choose file types for this task only."
+    }
+  },
+  "source": {
+    "type": "Source type",
+    "credential": "Source credential",
+    "pickTypeFirst": "Select a source type first.",
+    "pickCredentialFirst": "Select a credential first"
+  },
+  "destination": {
+    "credential": "Hindsight credential",
+    "bank": "Memory bank",
+    "bankPlaceholder": "bank-id",
+    "browseBanks": "Select a memory bank",
+    "pickCredentialFirst": "Select a Hindsight credential first",
+    "locked": "The destination is locked after the first successful run. To send data to a different credential or bank, clone this task (create a new one) instead.",
+    "lockNotice": "The destination becomes read-only after the first successful run."
+  },
+  "retain": {
+    "label": "Retain strategy",
+    "bankDefault": "Bank default",
+    "bankDefaultNamed": "Bank default ({{name}})",
+    "help": "How Hindsight processes retained content. Bank default uses the bank's configured strategy.",
+    "freeTextPlaceholder": "Leave empty for bank default",
+    "pickDestinationFirst": "Pick a destination credential and bank to load available strategies.",
+    "loadFailed": "Could not load strategies from Hindsight; enter a strategy name manually."
+  },
+  "tags": {
+    "custom": "Custom tags",
+    "help": "Dashed tags are added automatically to every document.",
+    "placeholder": "team:alpha",
+    "newTaskId": "<new>"
+  },
+  "metadata": {
+    "add": "Add field",
+    "empty": "No custom metadata",
+    "reservedHint": "Keys starting with _ingestion_ are reserved for system provenance fields.",
+    "errors": {
+      "emptyKey": "Key is required",
+      "reserved": "Keys starting with _ingestion_ are reserved",
+      "duplicate": "Duplicate key"
+    }
+  },
+  "schedule": {
+    "cron": "Cron expression",
+    "cronHelp": "Standard 5-field cron: minute hour day month weekday",
+    "timezone": "Timezone",
+    "selectTimezone": "Select timezone",
+    "searchTimezone": "Search timezones…",
+    "noTimezone": "No timezone found",
+    "suggested": "Suggested",
+    "allTimezones": "All timezones",
+    "nextRuns": "Next runs",
+    "enterCron": "Enter a cron expression to preview upcoming runs.",
+    "invalid": "Invalid schedule",
+    "previewUnavailable": "Preview unavailable",
+    "presets": {
+      "every15m": "Every 15 min",
+      "every6h": "Every 6 hours",
+      "daily3": "Daily 03:00",
+      "weeklyMon8": "Mondays 08:00"
+    }
+  },
+  "tasks": {
+    "title": "Tasks",
+    "description": "Each task syncs one source into one Hindsight memory bank on a schedule.",
+    "new": "New task",
+    "neverRun": "Never run",
+    "reconcileRequired": "Full reconcile pending",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items",
+    "columns": {
+      "enabled": "On",
+      "name": "Name",
+      "source": "Source",
+      "destination": "Destination",
+      "schedule": "Schedule",
+      "lastRun": "Last run",
+      "nextRun": "Next run",
+      "status": "Status"
+    },
+    "status": {
+      "idle": "Idle",
+      "disabled": "Disabled",
+      "reconcilePending": "Reconcile pending"
+    },
+    "actions": {
+      "runNow": "Run now",
+      "fullReconcile": "Full reconcile",
+      "fullReingest": "Full re-ingest",
+      "cancel": "Cancel run",
+      "enable": "Enable",
+      "disable": "Disable",
+      "viewRuns": "View runs"
+    },
+    "empty": {
+      "title": "No tasks yet",
+      "description": "Create a task to start syncing a source into Hindsight."
+    },
+    "trigger": {
+      "run": { "success": "Run started" },
+      "fullReconcile": { "success": "Full reconcile started" },
+      "fullReingest": { "success": "Full re-ingest started" },
+      "alreadyRunning": "Task is already running",
+      "failed": "Could not start run"
+    },
+    "cancel": {
+      "success": "Cancellation requested",
+      "notRunning": "Task is not running",
+      "failed": "Could not cancel run"
+    },
+    "toast": {
+      "enabled": "Task enabled",
+      "disabled": "Task disabled",
+      "updateFailed": "Could not update task",
+      "deleted": "Task deleted",
+      "deleteFailed": "Could not delete task",
+      "deleteRunning": "Task is running; cancel it before deleting"
+    },
+    "delete": {
+      "title": "Delete “{{name}}”?",
+      "description": "The task, its run history and its sync state will be removed. Documents already in Hindsight are not deleted."
+    },
+    "reingest": {
+      "title": "Re-ingest everything for “{{name}}”?",
+      "description": "Every matching item will be re-retained into Hindsight, even if unchanged. This may take a long time and consume Hindsight processing."
+    }
+  },
+  "taskEditor": {
+    "newTitle": "New task",
+    "create": "Create task",
+    "namePlaceholder": "e.g. Notion → Personal",
+    "enabledHelp": "Disabled tasks keep their sync state but are not scheduled.",
+    "notFound": "Task not found",
+    "nextRun": "Next run {{when}}",
+    "itemCount_one": "{{count}} item synced",
+    "itemCount_other": "{{count}} items synced",
+    "recentRuns": "Recent runs",
+    "saveBeforeRun": "Save your changes before running",
+    "saveError": "Could not save task",
+    "unsaved": "Unsaved changes",
+    "saved": "All changes saved",
+    "fields": {
+      "name": "Name",
+      "enabled": "Enabled"
+    },
+    "hints": {
+      "sourceReset": "Changing the source credential or root (bucket, folder, database, notebook…) resets the incremental cursor and triggers a full rebaseline.",
+      "sourceTypeLocked": "The source type cannot be changed after creation. Create a new task to use a different source.",
+      "filtersReconcile": "Changing filters marks the task for full reconciliation; items that no longer match are removed from Hindsight.",
+      "filesReconcile": "Changing file types triggers full reconciliation; excluded files are removed from Hindsight.",
+      "policyRevision": "Changing retain strategy, tags or metadata re-retains all matching items on the next run."
+    },
+    "sections": {
+      "general": { "title": "General", "description": "Name and activation." },
+      "source": { "title": "Source", "description": "Where content is read from." },
+      "filters": { "title": "Filters", "description": "Limit which items are synced." },
+      "destination": { "title": "Destination", "description": "The Hindsight memory bank that receives content." },
+      "retain": { "title": "Retain strategy", "description": "How Hindsight processes the content." },
+      "files": { "title": "File types", "description": "Which kinds of files are ingested." },
+      "tags": { "title": "Tags", "description": "Tags attached to every document." },
+      "metadata": { "title": "Metadata", "description": "Key/value metadata attached to every document." },
+      "schedule": { "title": "Schedule", "description": "When the task runs automatically." }
+    },
+    "toast": {
+      "created": "Task created",
+      "updated": "Task saved",
+      "saveFailed": "Could not save task",
+      "conflict": "Conflict"
+    }
+  },
+  "runs": {
+    "title": "Runs",
+    "description": "Execution history across all tasks.",
+    "notStarted": "Not started",
+    "total_one": "{{formatted}} run",
+    "total_other": "{{formatted}} runs",
+    "columns": {
+      "task": "Task",
+      "status": "Status",
+      "trigger": "Trigger",
+      "mode": "Mode",
+      "started": "Started",
+      "duration": "Duration",
+      "counters": "Counters"
+    },
+    "trigger": {
+      "scheduled": "Scheduled",
+      "manual": "Manual"
+    },
+    "mode": {
+      "incremental": "Incremental",
+      "full": "Full",
+      "reingest": "Re-ingest"
+    },
+    "counters": {
+      "discoveredCount": "Discovered",
+      "createdCount": "Created",
+      "updatedCount": "Updated",
+      "deletedCount": "Deleted",
+      "unchangedCount": "Unchanged",
+      "skippedCount": "Skipped",
+      "failedCount": "Failed"
+    },
+    "filters": {
+      "status": "Filter by status",
+      "task": "Filter by task",
+      "allStatuses": "All statuses",
+      "allTasks": "All tasks",
+      "clear": "Clear filters"
+    },
+    "empty": {
+      "title": "No runs yet",
+      "description": "Runs appear here once a task runs on schedule or manually.",
+      "filteredTitle": "No matching runs",
+      "filteredDescription": "Try a different status or task.",
+      "taskTitle": "No runs yet",
+      "taskDescription": "Use Run now to start the first sync."
+    }
+  },
+  "runDetail": {
+    "notFound": "Run not found",
+    "error": "Run error",
+    "scheduledFor": "Scheduled for",
+    "finished": "Finished",
+    "inProgress": "In progress",
+    "cursorBefore": "Cursor before",
+    "cursorAfter": "Cursor after",
+    "noCursor": "none",
+    "operations": "Hindsight operations",
+    "noOperations": "No asynchronous operations for this run.",
+    "log": "Log",
+    "noLog": "No log lines.",
+    "opColumns": {
+      "remoteId": "Remote ID",
+      "type": "Type",
+      "status": "Status",
+      "retries": "Retries",
+      "created": "Created",
+      "updated": "Updated"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "description": "Overview of sync activity.",
+    "stats": {
+      "enabledTasks": "Enabled tasks",
+      "ofTotal": "of {{total}} total",
+      "running": "Running",
+      "runs24h_one": "{{count}} run in 24h",
+      "runs24h_other": "{{count}} runs in 24h",
+      "items": "Items synced",
+      "itemsSub": "across all tasks",
+      "failures24h": "Failures (24h)",
+      "needsAttention": "Needs attention",
+      "allGood": "All good"
+    },
+    "getStarted": {
+      "title": "Set up your first sync",
+      "description": "Add credentials for a source and for Hindsight, then create a task.",
+      "credentials": "Add credentials"
+    },
+    "reauth": {
+      "title": "Credentials need reconnecting"
+    },
+    "running": {
+      "title": "Running now",
+      "empty": "Nothing is running"
+    },
+    "nextRuns": {
+      "title": "Next scheduled runs",
+      "empty": "No upcoming runs"
+    },
+    "failures": {
+      "title": "Recent failures",
+      "empty": "No recent failures"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Global synchronization behaviour.",
+    "units": { "hours": "hours" },
+    "sync": {
+      "title": "Synchronization",
+      "description": "Applies to all tasks.",
+      "incremental": "Incremental sync",
+      "incrementalHelp": "Use provider-native change tracking where available. When off, every run performs a full inventory (unchanged content is still not re-uploaded).",
+      "reconcileInterval": "Full reconcile interval",
+      "reconcileIntervalHelp": "A normal run becomes a full scan when the last full reconcile is older than this.",
+      "maxFileSize": "Max file size",
+      "maxFileSizeHelp": "Larger files are skipped."
+    },
+    "files": {
+      "title": "Global file types",
+      "description": "Default file types for tasks set to “Follow global”. Excluded files are removed during reconciliation."
+    },
+    "oauth": {
+      "title": "OAuth",
+      "description": "Register this redirect URI in your Google Cloud and Microsoft Entra (Azure) app configuration for Google Drive and OneDrive credentials.",
+      "redirectUri": "Redirect URI"
+    },
+    "toast": {
+      "saved": "Settings saved",
+      "failed": "Could not save settings"
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist.",
+    "home": "Go to dashboard"
+  }
+}
