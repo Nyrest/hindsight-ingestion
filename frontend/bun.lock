@@ -7,6 +7,7 @@
       "dependencies": {
         "@hookform/resolvers": "^5.9.1",
         "@tanstack/react-query": "^5.104.1",
+        "@thesvg/react": "^3.3.12",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "cmdk": "^1.1.1",
@@ -260,6 +261,8 @@
     "@tanstack/query-core": ["@tanstack/query-core@5.104.1", "", {}, "sha512-TiRghcrGkUTE+M4JBxvpPSpBhxvIzQairw+cksrHYGr+2uwC77yW1SY9nYxnYRYOppvucf8rEg6b5byoz4rTpw=="],
 
     "@tanstack/react-query": ["@tanstack/react-query@5.104.1", "", { "dependencies": { "@tanstack/query-core": "5.104.1" }, "peerDependencies": { "react": "^18 || ^19" } }, "sha512-Zz70EgjahNI7aCz8BZxM3vUGU44ycxEAzMuCUjLeA7SVhhOkg3ZgPjPJPvHjs6Rmky/dtmnu1WzjGHNHmhCoZQ=="],
+
+    "@thesvg/react": ["@thesvg/react@3.3.12", "", { "peerDependencies": { "react": ">=18" } }, "sha512-dUzTls10sk+dpBIQ5eoYXkb1lNKlOPf5Tp5CQpN1EC12DUFZSp+evDJX/TzTfcalJEfPNPBQQMGSJdpUK47Epw=="],
 
     "@types/node": ["@types/node@26.6.4", "", { "dependencies": { "undici-types": "~8.9.0" } }, "sha512-ldVPDCzj7fsaGZrLB0NuHuTvJcsNasysBAqMolr/cgxrLd1xbqxIr3XJiPnHHJUCxj5sNF1vnRj9aWnrVh5Jcg=="],
 
