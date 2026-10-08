@@ -39,6 +39,7 @@ import {
 import { CredentialSheet } from "@/features/credentials/credential-sheet";
 import { errorMessage, isApiError } from "@/lib/api";
 import { findCredentialType, typeName, useConnectors } from "@/lib/connectors";
+import { providerCopy } from "@/lib/provider-copy";
 import { formatDateTime, formatRelative } from "@/lib/format";
 import { useNow } from "@/lib/hooks";
 import type { Credential } from "@/lib/types";
@@ -261,7 +262,7 @@ export default function CredentialsPage() {
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="text-muted-foreground">{typeName(connectors.data, c.type)}</TableCell>
+                    <TableCell className="text-muted-foreground">{providerCopy(typeName(connectors.data, c.type), t)}</TableCell>
                     <TableCell>
                       <CredentialStatusBadge status={c.status} message={c.statusMessage} />
                     </TableCell>
@@ -284,7 +285,7 @@ export default function CredentialsPage() {
                   <TypeIcon type={c.type} boxed />
                   <div className="min-w-0 flex-1">
                     <div className="truncate font-medium">{c.name}</div>
-                    <div className="text-xs text-muted-foreground">{typeName(connectors.data, c.type)}</div>
+                    <div className="text-xs text-muted-foreground">{providerCopy(typeName(connectors.data, c.type), t)}</div>
                   </div>
                   <CredentialStatusBadge status={c.status} message={c.statusMessage} />
                 </div>

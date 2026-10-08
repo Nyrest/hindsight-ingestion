@@ -9,6 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { isoToLocalInput, localInputToIso } from "@/lib/format";
+import { providerCopy } from "@/lib/provider-copy";
 import type { FilterFieldSpec, FilterOperator, FilterRule, FilterValue } from "@/lib/types";
 
 export const isMultiOperator = (op: FilterOperator) => op === "in" || op === "notIn";
@@ -141,7 +142,7 @@ export function FilterBuilder({
                       <SelectContent>
                         {fields.map((f) => (
                           <SelectItem key={f.key} value={f.key}>
-                            {f.label}
+                            {providerCopy(f.label, t)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -214,7 +215,7 @@ function ValueControl({
     const options = spec?.options ?? [];
     if (multi) {
       const selected = Array.isArray(rule.value) ? rule.value.map(String) : [];
-      const labels = options.filter((o) => selected.includes(o.value)).map((o) => o.label);
+      const labels = options.filter((o) => selected.includes(o.value)).map((o) => providerCopy(o.label, t));
       return (
         <Popover>
           <PopoverTrigger asChild>
@@ -242,7 +243,7 @@ function ValueControl({
                         onChange(c ? [...selected, o.value] : selected.filter((v) => v !== o.value))
                       }
                     />
-                    {o.label}
+                    {providerCopy(o.label, t)}
                   </label>
                 );
               })}
@@ -259,7 +260,7 @@ function ValueControl({
         <SelectContent>
           {options.map((o) => (
             <SelectItem key={o.value} value={o.value}>
-              {o.label}
+              {providerCopy(o.label, t)}
             </SelectItem>
           ))}
         </SelectContent>

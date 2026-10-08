@@ -13,6 +13,12 @@
     "version": "v{{version}}",
     "authDisabled": "auth disabled"
   },
+  "language": {
+    "label": "Language"
+  },
+  "providerCopy": {
+    "fileSystem": "File System"
+  },
   "nav": {
     "dashboard": "Dashboard",
     "tasks": "Tasks",
@@ -33,7 +39,10 @@
     "actions": "Actions",
     "backTo": "Back to {{page}}",
     "cancel": "Cancel",
+    "close": "Close",
     "confirm": "Confirm",
+    "commandPaletteTitle": "Command palette",
+    "commandPaletteDescription": "Search for a command to run…",
     "copied": "Copied to clipboard",
     "copy": "Copy",
     "copyFailed": "Could not copy to clipboard",
@@ -123,6 +132,11 @@
     "description": "Navigate into folders and select an item.",
     "breadcrumbs": "Location",
     "root": "Root",
+    "memoryBanks": "Memory banks",
+    "drives": "Drives",
+    "buckets": "Buckets",
+    "dataSources": "Data sources",
+    "notebooks": "Notebooks",
     "empty": "Nothing here",
     "hint": "Select an item, or open a folder with the arrow",
     "open": "Open {{name}}",

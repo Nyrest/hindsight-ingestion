@@ -1,0 +1,728 @@
+{
+  "inlineMultimodal": {
+    "title": "內嵌多模態內容",
+    "description": "同步筆記中嵌入的媒體。目前支援 Notion 和 SiYuan 中的圖片。",
+    "enabled": "處理內嵌媒體",
+    "policyHelp": "只有同時啟用內嵌媒體和檔案類型策略中的「圖片」，才會同步圖片。",
+    "active": "將同步內嵌圖片。",
+    "inactive": "筆記將以純文字同步。如需包含圖片，請同時啟用內嵌媒體和「圖片」。"
+  },
+  "app": {
+    "name": "Hindsight Ingestion",
+    "tagline": "將資料來源同步至 Hindsight 記憶庫",
+    "version": "v{{version}}",
+    "authDisabled": "驗證功能已停用"
+  },
+  "language": {
+    "label": "語言"
+  },
+  "nav": {
+    "dashboard": "儀表板",
+    "tasks": "任務",
+    "runs": "執行記錄",
+    "credentials": "憑證",
+    "settings": "設定",
+    "open": "打開導航",
+    "title": "導航",
+    "description": "主導航"
+  },
+  "theme": {
+    "toggle": "更改主題",
+    "light": "淺色",
+    "dark": "深色",
+    "system": "系統"
+  },
+  "common": {
+    "actions": "操作",
+    "backTo": "返回{{page}}",
+    "cancel": "取消",
+    "close": "關閉",
+    "confirm": "確認",
+    "commandPaletteTitle": "命令面板",
+    "commandPaletteDescription": "搜尋要運行的命令...",
+    "copied": "已複製到剪貼簿",
+    "copy": "複製",
+    "copyFailed": "無法複製到剪貼簿",
+    "create": "建立",
+    "delete": "刪除",
+    "edit": "編輯",
+    "false": "否",
+    "true": "是",
+    "loadFailed": "無法載入數據",
+    "loading": "載入中…",
+    "moreActions": "更多操作",
+    "new": "新增",
+    "next": "下一頁",
+    "previous": "上一頁",
+    "none": "無",
+    "pageOf": "第 {{page}} 頁，共 {{pages}} 頁",
+    "refresh": "重新整理",
+    "retry": "重試",
+    "save": "儲存",
+    "saveChanges": "儲存變更",
+    "select": "選擇…",
+    "viewAll": "看全部"
+  },
+  "validation": {
+    "required": "該欄位為必填項",
+    "number": "必須是一個數字",
+    "integer": "必須是整數",
+    "min1": "必須至少為 1",
+    "url": "必須是有效的 URL",
+    "tooLong": "太長"
+  },
+  "runStatus": {
+    "pending": "待定",
+    "running": "執行中",
+    "waiting_operations": "等待操作",
+    "succeeded": "成功了",
+    "failed": "失敗",
+    "interrupted": "被打斷",
+    "cancelled": "取消"
+  },
+  "credentialStatus": {
+    "active": "活躍",
+    "reauth_required": "需要重新連接",
+    "pending_oauth": "等待OAuth",
+    "error": "錯誤"
+  },
+  "chips": {
+    "placeholder": "輸入並按 Enter 鍵",
+    "duplicate": "“{{value}}”已新增",
+    "remove": "刪除{{value}}",
+    "automatic": "自動添加"
+  },
+  "kv": {
+    "key": "鍵",
+    "value": "值",
+    "add": "添加",
+    "remove": "刪除行"
+  },
+  "secret": {
+    "keepHint": "儲存一個值。保持遮罩不變以保留它，或鍵入新值以取代它。",
+    "clear": "清除儲值"
+  },
+  "headers": {
+    "title": "自訂標頭",
+    "help": "隨每個請求一起發送給該提供者。連接器身份驗證標頭優先。",
+    "mode": "編輯器模式",
+    "ui": "使用者介面",
+    "json": "JSON",
+    "name": "標頭名稱",
+    "value": "價值",
+    "valuePlaceholder": "標頭值",
+    "add": "新增標題",
+    "empty": "沒有自訂標頭",
+    "maskHint": "儲存的值顯示為{{mask}}；保持遮罩以保持值不變。",
+    "errors": {
+      "duplicate": "重複的標頭名稱“{{name}}”（名稱不區分大小寫）",
+      "invalidJson": "無效的 JSON：{{detail}}",
+      "notObject": "JSON 必須是類似 {\"Header\": \"Value\"} 的對象",
+      "nonString": "“{{name}}”的值必須是字串",
+      "emptyName": "標頭名稱不能為空"
+    }
+  },
+  "browse": {
+    "button": "瀏覽…",
+    "title": "瀏覽",
+    "titleFor": "選擇{{label}}",
+    "description": "導航到資料夾並選擇一個項目。",
+    "breadcrumbs": "目前位置",
+    "root": "根目錄",
+    "empty": "這裡什麼都沒有",
+    "hint": "選擇一個項目，或使用箭頭開啟一個資料夾",
+    "open": "打開{{name}}",
+    "select": "選擇",
+    "selected": "已選擇",
+    "kinds": {
+      "folder": "資料夾",
+      "file": "檔案",
+      "data_source": "資料來源",
+      "notebook": "筆記本",
+      "bucket": "儲存貯體",
+      "bank": "記憶庫",
+      "drive": "雲端硬碟",
+      "site": "網站"
+    },
+    "memoryBanks": "記憶庫",
+    "drives": "雲端硬碟",
+    "buckets": "儲存貯體",
+    "dataSources": "資料來源",
+    "notebooks": "筆記本"
+  },
+  "capabilities": {
+    "incremental": {
+      "high_water_mark": "高水位線",
+      "delta_token": "增量權杖",
+      "sync_token": "同步令牌",
+      "inventory": "庫存差異"
+    },
+    "deletion": {
+      "full_reconcile": "完整核對時刪除",
+      "scan_generation": "透過掃描刪除",
+      "delta": "透過 delta 刪除"
+    },
+    "files": "文件",
+    "oauth": "OAuth",
+    "advancedFilter": "進階過濾器"
+  },
+  "credentials": {
+    "title": "憑證",
+    "description": "來源和 Hindsight 目標的可重複使用連接詳細資訊。",
+    "new": "新憑證",
+    "createTitle": "新憑證",
+    "createDescription": "選擇提供者並輸入其連接詳細資訊。",
+    "editTitle": "編輯憑證",
+    "editDescription": "秘密永遠不會被顯露出來。保持屏蔽值不變以保留它們。",
+    "createInline": "建立新憑證",
+    "namePlaceholder": "例如工作{{type}}",
+    "pick": "選擇一個憑證",
+    "noneOfType": "還沒有 {{type}} 憑證",
+    "notActiveWarning": "該憑證目前為“{{status}}”。在修復之前，運行可能會失敗。",
+    "oauthHint": "儲存後，點選「連線」並依照提示授權此服務存取。",
+    "usedByCount_one": "{{count}} 任務",
+    "usedByCount_other": "{{count}} 任務",
+    "fields": {
+      "type": "提供者",
+      "name": "名稱"
+    },
+    "columns": {
+      "name": "名稱",
+      "type": "類型",
+      "status": "狀態",
+      "usedBy": "使用者",
+      "oauth": "OAuth"
+    },
+    "actions": {
+      "test": "測試",
+      "connect": "連接",
+      "reconnect": "重新連接",
+      "refresh": "刷新令牌"
+    },
+    "empty": {
+      "title": "還沒有憑證",
+      "description": "新增來源憑證（例如 Notion）和 Hindsight 實例的憑證以建立任務。"
+    },
+    "test": {
+      "ok": "{{name}}：連線正常",
+      "failed": "{{name}}：連線失敗"
+    },
+    "oauth": {
+      "success": "OAuth 連線成功",
+      "error": "OAuth 連線失敗",
+      "startFailed": "無法啟動OAuth",
+      "connected": "已連接",
+      "notConnected": "未連接",
+      "expires": "令牌過期 {{when}}"
+    },
+    "toast": {
+      "created": "憑證已創建",
+      "updated": "憑證已更新",
+      "deleted": "憑證已刪除",
+      "deleteFailed": "無法刪除憑證",
+      "inUse": "憑證正在使用中",
+      "refreshed": "令牌已刷新",
+      "refreshFailed": "令牌刷新失敗"
+    },
+    "delete": {
+      "title": "刪除“{{name}}”？",
+      "description": "這將永久刪除憑證及其儲存的機密。",
+      "inUse_one": "此憑證由 {{count}} 任務使用。首先刪除或更改該任務。",
+      "inUse_other": "此憑證由 {{count}} 任務使用。首先刪除或變更這些任務。"
+    }
+  },
+  "filters": {
+    "add": "新增過濾器",
+    "remove": "移除過濾器",
+    "where": "哪裡",
+    "and": "並且",
+    "field": "領域",
+    "operator": "操作員",
+    "mode": "過濾模式",
+    "simple": "簡單",
+    "advanced": "進階",
+    "advancedQuery": "查詢",
+    "advancedHint": "原始提供者查詢語法。",
+    "driveHint": "Google Drive 查詢語法，例如 mimeType = 'application/pdf'，modifiedTime > '2024-01-01T00:00:00'。系統一律會排除垃圾桶中的檔案。",
+    "noFields": "此來源不支援過濾器。",
+    "selectValues": "選擇值...",
+    "valuePlaceholder": "價值",
+    "valuesPlaceholder": "輸入一個值並按 Enter 鍵",
+    "empty": {
+      "title": "無濾鏡",
+      "description": "來源範圍內的所有內容都會同步。"
+    },
+    "operators": {
+      "equals": "等於",
+      "notEquals": "不等於",
+      "contains": "包含",
+      "in": "是以下任一個",
+      "notIn": "不屬於",
+      "greaterThan": "大於",
+      "lessThan": "小於"
+    },
+    "errors": {
+      "field": "選擇有效字段",
+      "operator": "此欄位不支援運算符",
+      "value": "輸入一個值",
+      "valueList": "增加至少一個值",
+      "number": "必須是一個數字"
+    }
+  },
+  "filePolicy": {
+    "plainText": "純文字",
+    "documents": "文件",
+    "images": "圖片",
+    "audios": "音訊",
+    "globalPreview": "目前的全域政策（可在「設定」中更改）：",
+    "mode": {
+      "global": "沿用全域設定",
+      "globalHelp": "使用「設定」中配置的檔案類型。",
+      "override": "覆寫",
+      "overrideHelp": "僅選擇用於此任務的文件類型。"
+    }
+  },
+  "source": {
+    "type": "來源類型",
+    "credential": "來源憑證",
+    "pickTypeFirst": "首先選擇來源類型。",
+    "pickCredentialFirst": "首先選擇一個憑證"
+  },
+  "destination": {
+    "credential": "Hindsight 連線憑證",
+    "bank": "記憶庫",
+    "bankPlaceholder": "記憶庫 ID",
+    "browseBanks": "選擇記憶庫",
+    "pickCredentialFirst": "請先選擇 Hindsight 連線憑證。",
+    "locked": "首次成功執行後，目標記憶庫就會鎖定。若要改用其他連線憑證或記憶庫，請建立新任務。",
+    "lockNotice": "首次成功執行後，目標記憶庫將變為唯讀。"
+  },
+  "retain": {
+    "label": "內容處理策略",
+    "bankDefault": "使用記憶庫預設策略",
+    "bankDefaultNamed": "使用記憶庫預設策略（{{name}}）",
+    "help": "設定 Hindsight 如何處理寫入記憶庫的內容。選擇「使用記憶庫預設策略」即可沿用該記憶庫的設定。",
+    "freeTextPlaceholder": "留空以使用記憶庫預設策略",
+    "pickDestinationFirst": "請先選擇目標連線憑證和記憶庫，再載入可用策略。",
+    "loadFailed": "無法從 Hindsight 載入策略；手動輸入策略名稱。"
+  },
+  "tags": {
+    "custom": "自訂標籤",
+    "help": "攝取、來源和任務標籤會自動新增到每個文件中。",
+    "placeholder": "團隊：阿爾法",
+    "newTaskId": "<新>"
+  },
+  "metadata": {
+    "add": "新增字段",
+    "empty": "沒有自訂元數據",
+    "reservedHint": "以 _ingestion_ 開頭的鍵是為系統來源欄位保留的。",
+    "errors": {
+      "emptyKey": "需要鑰匙",
+      "reserved": "以 _ingestion_ 開頭的鍵被保留",
+      "duplicate": "重複金鑰"
+    }
+  },
+  "schedule": {
+    "cron": "Cron 表達式",
+    "cronHelp": "標準 5 欄位 cron：分鐘 小時 日 月 工作日",
+    "timezone": "時區",
+    "selectTimezone": "選擇時區",
+    "searchTimezone": "搜尋時區...",
+    "noTimezone": "未找到時區",
+    "suggested": "建議",
+    "allTimezones": "所有時區",
+    "nextRuns": "下次執行",
+    "enterCron": "輸入 cron 表達式以預覽即將進行的運行。",
+    "invalid": "時間表無效",
+    "previewUnavailable": "預覽不可用",
+    "presets": {
+      "every15m": "每15分鐘一班",
+      "everyHour": "每小時",
+      "every6h": "每 6 小時",
+      "daily3": "每日 03:00",
+      "weeklyMon8": "週一 08:00"
+    }
+  },
+  "tasks": {
+    "title": "任務",
+    "description": "每個任務都會依照排程，將一個來源同步至一個 Hindsight 記憶庫。",
+    "new": "新任務",
+    "neverRun": "從未執行",
+    "reconcileRequired": "需要進行全量同步",
+    "itemCount_one": "{{count}} 項目",
+    "itemCount_other": "{{count}} 項目",
+    "columns": {
+      "enabled": "開",
+      "name": "名稱",
+      "source": "來源",
+      "destination": "目的地",
+      "schedule": "時間表",
+      "lastRun": "最近一次執行",
+      "nextRun": "下次執行",
+      "status": "狀態"
+    },
+    "status": {
+      "idle": "空閒",
+      "disabled": "殘障人士",
+      "reconcilePending": "待全量同步"
+    },
+    "actions": {
+      "runNow": "立即執行",
+      "fullReconcile": "全量同步",
+      "fullReingest": "完全重新攝取",
+      "cancel": "取消運行",
+      "enable": "啟用",
+      "disable": "停用",
+      "viewRuns": "查看執行記錄",
+      "dryRun": "試執行"
+    },
+    "empty": {
+      "title": "還沒有任務",
+      "description": "建立一個任務以開始將來源同步到 Hindsight。"
+    },
+    "trigger": {
+      "run": {
+        "success": "運行開始"
+      },
+      "fullReconcile": {
+        "success": "已開始全量同步"
+      },
+      "fullReingest": {
+        "success": "完全重新攝取開始"
+      },
+      "alreadyRunning": "任務已經在運行",
+      "failed": "無法開始運行"
+    },
+    "cancel": {
+      "success": "已請求取消",
+      "notRunning": "任務未運行",
+      "failed": "無法取消運行"
+    },
+    "toast": {
+      "enabled": "任務已啟用",
+      "disabled": "任務已停用",
+      "updateFailed": "無法更新任務",
+      "deleted": "任務已刪除",
+      "deleteFailed": "無法刪除任務",
+      "deleteRunning": "任務正在運行；刪除前先取消"
+    },
+    "delete": {
+      "title": "刪除“{{name}}”？",
+      "description": "該任務、其運行歷史記錄及其同步狀態將會被刪除。已存在於 Hindsight 中的文件不會被刪除。"
+    },
+    "reingest": {
+      "title": "重新攝取「{{name}}」的所有內容？",
+      "description": "每個匹配項將重新保留到 Hindsight 中，即使未更改。這可能需要很長時間並消耗 Hindsight 處理。"
+    }
+  },
+  "taskEditor": {
+    "newTitle": "新任務",
+    "create": "創建任務",
+    "namePlaceholder": "例如Notion → 个人",
+    "enabledHelp": "禁用的任务会保留其同步状态，但不会被安排。",
+    "notFound": "未找到任務",
+    "nextRun": "下次執行時間：{{when}}",
+    "itemCount_one": "{{count}} 项目已同步",
+    "itemCount_other": "{{count}} 项目已同步",
+    "recentRuns": "最近執行記錄",
+    "saveBeforeRun": "運行前儲存更改",
+    "saveError": "無法保存任務",
+    "unsaved": "未儲存的更改",
+    "saved": "已儲存所有更改",
+    "fields": {
+      "name": "名稱",
+      "enabled": "啟用"
+    },
+    "hints": {
+      "sourceReset": "變更來源憑證或根目錄（儲存貯體、資料夾、資料庫、筆記本等）會重設增量游標，並觸發完整掃描以重新建立同步基準。",
+      "sourceTypeLocked": "创建后源类型无法更改。建立一個新任務以使用不同的來源。",
+      "filtersReconcile": "變更篩選條件後，任務會進行全量同步；全量同步時，不再符合條件的內容會從 Hindsight 中刪除。",
+      "filesReconcile": "變更檔案類型後，任務會進行全量同步；被排除的檔案會從 Hindsight 中刪除。",
+      "policyRevision": "更改保留策略、標籤或元資料會在下次執行時重新保留所有符合的項目。"
+    },
+    "sections": {
+      "general": {
+        "title": "一般",
+        "description": "名稱和激活。"
+      },
+      "source": {
+        "title": "來源",
+        "description": "從哪裡讀取內容。"
+      },
+      "filters": {
+        "title": "過濾器",
+        "description": "限制同步的項目。"
+      },
+      "destination": {
+        "title": "目的地",
+        "description": "接收同步內容的 Hindsight 記憶庫。"
+      },
+      "retain": {
+        "title": "保留策略",
+        "description": "Hindsight 如何处理内容。"
+      },
+      "files": {
+        "title": "文件類型",
+        "description": "摄取哪些类型的文件。"
+      },
+      "inline": {
+        "title": "內嵌多模態內容",
+        "description": "筆記中嵌入的媒體內容。"
+      },
+      "tags": {
+        "title": "標籤",
+        "description": "每个文档都附有标签。"
+      },
+      "metadata": {
+        "title": "元數據",
+        "description": "附加到每个文档的键/值元数据。"
+      },
+      "schedule": {
+        "title": "時間表",
+        "description": "当任务自动运行时。"
+      }
+    },
+    "toast": {
+      "created": "任務已創建",
+      "updated": "任務已儲存",
+      "saveFailed": "無法保存任務",
+      "conflict": "衝突"
+    }
+  },
+  "runs": {
+    "title": "執行記錄",
+    "description": "所有任務的執行歷史記錄。",
+    "notStarted": "未開始",
+    "total_one": "執行 {{formatted}} 次",
+    "total_other": "執行 {{formatted}} 次",
+    "columns": {
+      "task": "任務",
+      "status": "狀態",
+      "trigger": "觸發方式",
+      "mode": "執行模式",
+      "started": "開始時間",
+      "duration": "持續時間",
+      "counters": "統計"
+    },
+    "trigger": {
+      "scheduled": "排程",
+      "manual": "手動"
+    },
+    "mode": {
+      "incremental": "增量式",
+      "full": "全量",
+      "reingest": "全量重新寫入"
+    },
+    "counters": {
+      "discoveredCount": "已發現",
+      "createdCount": "已創建",
+      "updatedCount": "已更新",
+      "deletedCount": "已刪除",
+      "unchangedCount": "不變",
+      "skippedCount": "跳過",
+      "failedCount": "失敗"
+    },
+    "filters": {
+      "status": "按狀態過濾",
+      "task": "按任務過濾",
+      "allStatuses": "所有狀態",
+      "allTasks": "所有任務",
+      "clear": "清除過濾器"
+    },
+    "empty": {
+      "title": "尚無執行記錄",
+      "description": "任務依排程或手動執行後，記錄會顯示在這裡。",
+      "filteredTitle": "找不到符合條件的執行記錄",
+      "filteredDescription": "嘗試不同的狀態或任務。",
+      "taskTitle": "尚無執行記錄",
+      "taskDescription": "按一下「立即執行」開始首次同步。"
+    }
+  },
+  "runDetail": {
+    "notFound": "找不到這筆執行記錄",
+    "error": "執行錯誤",
+    "scheduledFor": "排定於",
+    "finished": "完成",
+    "inProgress": "進行中",
+    "cursorBefore": "執行前游標",
+    "cursorAfter": "執行後游標",
+    "noCursor": "無",
+    "operations": "Hindsight 操作",
+    "noOperations": "此運行沒有非同步操作。",
+    "log": "記錄",
+    "noLog": "沒有日誌行。",
+    "opColumns": {
+      "remoteId": "遠端ID",
+      "type": "類型",
+      "status": "狀態",
+      "retries": "重試",
+      "created": "已創建",
+      "updated": "已更新"
+    }
+  },
+  "dashboard": {
+    "title": "儀表板",
+    "description": "同步活動概述。",
+    "stats": {
+      "enabledTasks": "已啟用的任務",
+      "ofTotal": "{{total}} 總計",
+      "running": "執行中",
+      "runs24h_one": "過去 24 小時執行 {{count}} 次",
+      "runs24h_other": "過去 24 小時執行 {{count}} 次",
+      "items": "項目已同步",
+      "itemsSub": "跨所有任務",
+      "failures24h": "失敗（24小時）",
+      "needsAttention": "需要注意",
+      "allGood": "一切都好"
+    },
+    "getStarted": {
+      "title": "设置您的第一次同步",
+      "description": "新增來源和 Hindsight 的憑證，然後建立任務。",
+      "credentials": "新增憑證"
+    },
+    "reauth": {
+      "title": "憑證需要重新連接"
+    },
+    "running": {
+      "title": "正在執行",
+      "empty": "目前沒有任務正在執行"
+    },
+    "nextRuns": {
+      "title": "下次排程執行",
+      "empty": "目前沒有待執行的任務"
+    },
+    "failures": {
+      "title": "最近的失敗",
+      "empty": "最近沒有失敗"
+    }
+  },
+  "settings": {
+    "title": "設定",
+    "description": "全域同步行為。",
+    "units": {
+      "hours": "小時"
+    },
+    "sync": {
+      "title": "同步",
+      "description": "適用於所有任務。",
+      "incremental": "增量同步",
+      "incrementalHelp": "如果可用，請使用提供者本機變更追蹤。關閉時，每次運行都會執行完整的清單（未更改的內容仍然不會重新上傳）。",
+      "reconcileInterval": "全量同步間隔",
+      "reconcileIntervalHelp": "距上次全量同步超過此間隔後，一般執行會改為全量掃描。",
+      "maxFileSize": "最大檔案大小",
+      "maxFileSizeHelp": "較大的文件將被跳過。"
+    },
+    "files": {
+      "title": "全域文件類型",
+      "description": "任務的預設檔案類型設定為「遵循全域」。排除的文件將在協調期間刪除。"
+    },
+    "oauth": {
+      "title": "OAuth",
+      "description": "在 Google Cloud 和 Microsoft Entra (Azure) 應用程式設定中為 Google Drive 和 OneDrive 憑證註冊此重定向 URI。",
+      "redirectUri": "重定向URI"
+    },
+    "toast": {
+      "saved": "設定已儲存",
+      "failed": "無法儲存設定"
+    }
+  },
+  "notFound": {
+    "title": "找不到頁面",
+    "description": "您正在尋找的頁面不存在。",
+    "home": "轉到儀表板"
+  },
+  "dryRun": {
+    "title": "試執行：{{name}}",
+    "description": "使用完整來源掃描測試已儲存的任務。不會傳送或刪除任何文檔，同步進度和運行歷史記錄保持不變。",
+    "start": "開始試執行",
+    "running": "正在掃描…",
+    "complete_one": "已掃描 {{count}} 來源項目。",
+    "complete_other": "已掃描 {{count}} 來源項目。",
+    "incomplete_one": "掃描不完整（{{count}} 項）。遺失的項目不會被標記為刪除。",
+    "incomplete_other": "掃描不完整（{{count}} 項目）。遺失的項目不會被標記為刪除。",
+    "truncated": "顯示前 100 個項目，計數包含所有項目。",
+    "file": "來源項目",
+    "action": "行動",
+    "reason": "原因",
+    "actions": {
+      "create": "創建",
+      "update": "更新",
+      "delete": "刪除",
+      "unchanged": "不變",
+      "skip": "跳過",
+      "fail": "失敗"
+    }
+  },
+  "providerCopy": {
+    "integrationToken": "整合權杖",
+    "dataSource": "資料來源",
+    "pageTitle": "頁面標題",
+    "lastEdited": "最後編輯時間",
+    "created": "建立時間",
+    "oauthClientId": "OAuth 用戶端 ID",
+    "oauthClientSecret": "OAuth 用戶端密鑰",
+    "drive": "雲端硬碟",
+    "folder": "資料夾",
+    "includeSubfolders": "包含子資料夾",
+    "exportGoogleDocs": "匯出 Google 文件、試算表和簡報",
+    "fileName": "檔案名稱",
+    "path": "路徑",
+    "extension": "副檔名",
+    "mimeType": "MIME 類型",
+    "fileType": "檔案類型",
+    "sizeBytes": "大小（位元組）",
+    "modified": "修改時間",
+    "rootDirectory": "根目錄",
+    "rootFolder": "根資料夾",
+    "serverUrl": "伺服器 URL",
+    "username": "使用者名稱",
+    "passwordApp": "密碼 / 應用程式密碼",
+    "bearerToken": "Bearer 權杖",
+    "endpoint": "端點",
+    "region": "區域",
+    "accessKeyId": "存取金鑰 ID",
+    "secretAccessKey": "秘密存取金鑰",
+    "sessionToken": "工作階段權杖",
+    "pathStyle": "路徑式定址",
+    "baseUrl": "基礎 URL",
+    "instanceId": "執行個體 ID",
+    "apiToken": "API 權杖",
+    "notebook": "筆記本",
+    "pathPrefix": "路徑前綴",
+    "bucket": "儲存貯體",
+    "prefix": "前綴",
+    "applicationId": "應用程式（用戶端）ID",
+    "clientSecret": "用戶端密鑰",
+    "tenant": "租用戶",
+    "title": "標題",
+    "updated": "更新時間",
+    "tags": "標籤",
+    "notionDescription": "Notion 內部整合權杖，可讀取已分享的資料來源。",
+    "siYuanDescription": "SiYuan 核心 API 端點和權杖（設定 → 關於 → API 權杖）。",
+    "filesystemDescription": "應用程式可存取的本機檔案。",
+    "googleDriveDescription": "透過 OAuth 連結 Google 帳戶，以唯讀方式存取雲端硬碟。",
+    "oneDriveDescription": "透過 OAuth 連結 Microsoft 帳戶或 Microsoft 365，以存取 OneDrive 和 SharePoint。",
+    "s3Description": "Amazon S3 及相容服務，例如 MinIO、Cloudflare R2、Backblaze B2 和 Wasabi。",
+    "webdavDescription": "支援 Nextcloud、ownCloud、Synology、Apache mod_dav、rclone serve 等服務。",
+    "hindsightDescription": "接收同步內容的 Hindsight API 位址。",
+    "filesystemRootHelp": "應用程式伺服器上的絕對路徑。使用 Docker 時，請填入掛載至容器中的路徑。",
+    "filesystemFolderHelp": "相對於此憑證根目錄的路徑。輸入 . 代表根目錄。",
+    "notionDataSourceHelp": "Notion 資料來源 ID（不是資料庫 ID）。按一下「瀏覽」可選擇已分享給此整合的資料來源。",
+    "siYuanInstanceHelp": "此 SiYuan 執行個體的固定識別碼。留白時會使用基礎 URL。",
+    "s3EndpointHelp": "使用 AWS S3 時可留白。",
+    "s3PathStyleHelp": "大多數自架 S3 伺服器（例如 MinIO）都需要此設定。",
+    "s3PrefixHelp": "只包含此金鑰前綴下的物件。",
+    "webdavTokenHelp": "若伺服器要求權杖，請用此欄位取代使用者名稱和密碼。",
+    "webdavRootHelp": "相對於伺服器 URL 的路徑。",
+    "googleDriveHelp": "留白以使用「我的雲端硬碟」，也可以選擇共用雲端硬碟。",
+    "wholeDriveHelp": "留白以同步整個雲端硬碟。",
+    "googleExportHelp": "Google 文件匯出為 Markdown、試算表匯出為 CSV、簡報匯出為 PDF。",
+    "tenantHelp": "可填入 common、organizations、consumers 或租用戶 ID。",
+    "oneDriveHelp": "留白以使用個人 OneDrive。",
+    "siYuanPathHelp": "只包含可讀路徑以此為前綴的文件。",
+    "siYuanNotebookHelp": "留白以同步所有已開啟的筆記本。",
+    "hindsightApiKeyHelp": "會以 Bearer 權杖傳送。若執行個體不需要驗證，請留白。",
+    "syncCollectionHelp": "伺服器支援時使用 sync-collection（RFC 6578）。",
+    "fileSystem": "檔案系統"
+  }
+}

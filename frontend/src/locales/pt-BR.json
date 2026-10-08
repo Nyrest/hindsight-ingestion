@@ -1,0 +1,728 @@
+{
+  "inlineMultimodal": {
+    "title": "Conteúdo multimodal incorporado",
+    "description": "Inclui mídias incorporadas às notas. No momento, há suporte para imagens do Notion e do SiYuan.",
+    "enabled": "Processar mídia incorporada",
+    "policyHelp": "As imagens só serão incluídas quando a mídia incorporada e a opção “Imagens” na política de tipos de arquivo estiverem ativadas.",
+    "active": "As imagens incorporadas serão incluídas.",
+    "inactive": "As notas serão sincronizadas como texto. Para incluir imagens, ative a mídia incorporada e a opção “Imagens”."
+  },
+  "app": {
+    "name": "Hindsight Ingestion",
+    "tagline": "Sincronize suas fontes com os bancos de memória do Hindsight",
+    "version": "v{{version}}",
+    "authDisabled": "autenticação desativada"
+  },
+  "language": {
+    "label": "Idioma"
+  },
+  "nav": {
+    "dashboard": "Painel",
+    "tasks": "Tarefas",
+    "runs": "Execuções",
+    "credentials": "Credenciais",
+    "settings": "Configurações",
+    "open": "Abrir navegação",
+    "title": "Navegação",
+    "description": "Navegação principal"
+  },
+  "theme": {
+    "toggle": "Alterar tema",
+    "light": "Claro",
+    "dark": "Escuro",
+    "system": "Sistema"
+  },
+  "common": {
+    "actions": "Ações",
+    "backTo": "Voltar para {{page}}",
+    "cancel": "Cancelar",
+    "close": "Fechar",
+    "confirm": "Confirmar",
+    "commandPaletteTitle": "Paleta de comandos",
+    "commandPaletteDescription": "Procure um comando para executar…",
+    "copied": "Copiado para a área de transferência",
+    "copy": "Copiar",
+    "copyFailed": "Não foi possível copiar para a área de transferência",
+    "create": "Criar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "false": "Falso",
+    "true": "Verdadeiro",
+    "loadFailed": "Não foi possível carregar os dados",
+    "loading": "Carregando…",
+    "moreActions": "Mais ações",
+    "new": "Novo",
+    "next": "Próxima página",
+    "previous": "Página anterior",
+    "none": "Nenhum",
+    "pageOf": "Página {{page}} de {{pages}}",
+    "refresh": "Atualizar",
+    "retry": "Tentar novamente",
+    "save": "Salvar",
+    "saveChanges": "Salvar alterações",
+    "select": "Selecione…",
+    "viewAll": "Ver tudo"
+  },
+  "validation": {
+    "required": "Este campo é obrigatório",
+    "number": "Deve ser um número",
+    "integer": "Deve ser um número inteiro",
+    "min1": "Deve ser pelo menos 1",
+    "url": "Deve ser um URL válido",
+    "tooLong": "Muito longo"
+  },
+  "runStatus": {
+    "pending": "Pendente",
+    "running": "Em andamento",
+    "waiting_operations": "Aguardando operações",
+    "succeeded": "Sucesso",
+    "failed": "Falha",
+    "interrupted": "Interrompido",
+    "cancelled": "Cancelado"
+  },
+  "credentialStatus": {
+    "active": "Ativo",
+    "reauth_required": "É necessário reconectar",
+    "pending_oauth": "Aguardando OAuth",
+    "error": "Erro"
+  },
+  "chips": {
+    "placeholder": "Digite e pressione Enter",
+    "duplicate": "\"{{value}}\" já foi adicionado",
+    "remove": "Remover {{value}}",
+    "automatic": "Adicionado automaticamente"
+  },
+  "kv": {
+    "key": "Chave",
+    "value": "Valor",
+    "add": "Adicionar",
+    "remove": "Remover linha"
+  },
+  "secret": {
+    "keepHint": "Um valor é armazenado. Deixe a máscara inalterada para mantê-la ou digite um novo valor para substituí-la.",
+    "clear": "Limpar valor armazenado"
+  },
+  "headers": {
+    "title": "Cabeçalhos personalizados",
+    "help": "Enviado com todas as solicitações para este provedor. Os cabeçalhos de autenticação do conector têm precedência.",
+    "mode": "Modo editor",
+    "ui": "IU",
+    "json": "JSON",
+    "name": "Nome do cabeçalho",
+    "value": "Valor",
+    "valuePlaceholder": "Valor do cabeçalho",
+    "add": "Adicionar cabeçalho",
+    "empty": "Sem cabeçalhos personalizados",
+    "maskHint": "Os valores armazenados são mostrados como {{mask}}; mantenha a máscara para deixar um valor inalterado.",
+    "errors": {
+      "duplicate": "Nome de cabeçalho duplicado \"{{name}}\" (os nomes não diferenciam maiúsculas de minúsculas)",
+      "invalidJson": "JSON inválido: {{detail}}",
+      "notObject": "JSON deve ser um objeto como {\"Header\": \"Value\"}",
+      "nonString": "O valor de \"{{name}}\" deve ser uma string",
+      "emptyName": "O nome do cabeçalho não pode ficar vazio"
+    }
+  },
+  "browse": {
+    "button": "Navegar…",
+    "title": "Navegar",
+    "titleFor": "Selecione {{label}}",
+    "description": "Navegue pelas pastas e selecione um item.",
+    "breadcrumbs": "Localização",
+    "root": "Raiz",
+    "empty": "Nada aqui",
+    "hint": "Selecione um item ou abra uma pasta com a seta",
+    "open": "Abra {{name}}",
+    "select": "Selecione",
+    "selected": "Selecionado",
+    "kinds": {
+      "folder": "Pasta",
+      "file": "Arquivo",
+      "data_source": "Fonte de dados",
+      "notebook": "Caderno",
+      "bucket": "Bucket",
+      "bank": "Banco de memória",
+      "drive": "Unidade",
+      "site": "Local"
+    },
+    "memoryBanks": "Bancos de memória",
+    "drives": "Unidades",
+    "buckets": "Buckets do S3",
+    "dataSources": "Fontes de dados",
+    "notebooks": "Cadernos"
+  },
+  "capabilities": {
+    "incremental": {
+      "high_water_mark": "Marca d'água alta",
+      "delta_token": "Token delta",
+      "sync_token": "Token de sincronização",
+      "inventory": "Diferença de inventário"
+    },
+    "deletion": {
+      "full_reconcile": "Exclui durante a reconciliação completa",
+      "scan_generation": "Exclui via verificação",
+      "delta": "Exclui via delta"
+    },
+    "files": "Arquivos",
+    "oauth": "OAuth",
+    "advancedFilter": "Filtro avançado"
+  },
+  "credentials": {
+    "title": "Credenciais",
+    "description": "Detalhes de conexão reutilizáveis para origens e destinos Hindsight.",
+    "new": "Nova credencial",
+    "createTitle": "Nova credencial",
+    "createDescription": "Escolha um provedor e insira os detalhes de sua conexão.",
+    "editTitle": "Editar credencial",
+    "editDescription": "Segredos nunca são mostrados. Deixe os valores mascarados inalterados para mantê-los.",
+    "createInline": "Crie uma nova credencial",
+    "namePlaceholder": "por exemplo Trabalhar {{type}}",
+    "pick": "Selecione uma credencial",
+    "noneOfType": "Ainda não há credenciais {{type}}",
+    "notActiveWarning": "Esta credencial é atualmente “{{status}}”. As execuções podem falhar até que sejam corrigidas.",
+    "oauthHint": "Depois de salvar, clique em “Conectar” e siga as instruções para autorizar o acesso.",
+    "usedByCount_one": "Tarefa {{count}}",
+    "usedByCount_other": "Tarefas {{count}}",
+    "fields": {
+      "type": "Provedor",
+      "name": "Nome"
+    },
+    "columns": {
+      "name": "Nome",
+      "type": "Tipo",
+      "status": "Estado",
+      "usedBy": "Usado por",
+      "oauth": "OAuth"
+    },
+    "actions": {
+      "test": "Teste",
+      "connect": "Conectar",
+      "reconnect": "Reconectar",
+      "refresh": "Atualizar token"
+    },
+    "empty": {
+      "title": "Ainda não há credenciais",
+      "description": "Adicione uma credencial para uma origem (por exemplo, Notion) e uma para sua instância Hindsight para criar uma tarefa."
+    },
+    "test": {
+      "ok": "{{name}}: conexão OK",
+      "failed": "{{name}}: falha na conexão"
+    },
+    "oauth": {
+      "success": "OAuth conectado com sucesso",
+      "error": "Falha na conexão OAuth",
+      "startFailed": "Não foi possível iniciar OAuth",
+      "connected": "Conectado",
+      "notConnected": "Não conectado",
+      "expires": "O token expira {{when}}"
+    },
+    "toast": {
+      "created": "Credencial criada",
+      "updated": "Credencial atualizada",
+      "deleted": "Credencial excluída",
+      "deleteFailed": "Não foi possível excluir a credencial",
+      "inUse": "A credencial está em uso",
+      "refreshed": "Token atualizado",
+      "refreshFailed": "Falha na atualização do token"
+    },
+    "delete": {
+      "title": "Excluir “{{name}}”?",
+      "description": "Isso remove permanentemente a credencial e seus segredos armazenados.",
+      "inUse_one": "Esta credencial é usada pela tarefa {{count}}. Remova ou altere essa tarefa primeiro.",
+      "inUse_other": "Essa credencial é usada por tarefas {{count}}. Remova ou altere essas tarefas primeiro."
+    }
+  },
+  "filters": {
+    "add": "Adicionar filtro",
+    "remove": "Remover filtro",
+    "where": "Onde",
+    "and": "E",
+    "field": "Campo",
+    "operator": "Operador",
+    "mode": "Modo de filtro",
+    "simple": "Simples",
+    "advanced": "Avançado",
+    "advancedQuery": "Consulta",
+    "advancedHint": "Sintaxe de consulta bruta do provedor.",
+    "driveHint": "Sintaxe de consulta do Google Drive. Exemplo: mimeType = 'application/pdf' e modifiedTime > '2024-01-01T00:00:00'. Arquivos na lixeira são sempre excluídos.",
+    "noFields": "Esta fonte não suporta filtros.",
+    "selectValues": "Selecione valores…",
+    "valuePlaceholder": "Valor",
+    "valuesPlaceholder": "Digite um valor e pressione Enter",
+    "empty": {
+      "title": "Sem filtros",
+      "description": "Tudo no escopo de origem será sincronizado."
+    },
+    "operators": {
+      "equals": "é igual",
+      "notEquals": "não é igual",
+      "contains": "contém",
+      "in": "é qualquer um",
+      "notIn": "não é nenhum",
+      "greaterThan": "maior que",
+      "lessThan": "menos que"
+    },
+    "errors": {
+      "field": "Selecione um campo válido",
+      "operator": "Operador não suportado para este campo",
+      "value": "Insira um valor",
+      "valueList": "Adicione pelo menos um valor",
+      "number": "Deve ser um número"
+    }
+  },
+  "filePolicy": {
+    "plainText": "Texto simples",
+    "documents": "Documentos",
+    "images": "Imagens",
+    "audios": "Áudio",
+    "globalPreview": "Política global atual (altere-a em Configurações):",
+    "mode": {
+      "global": "Usar configuração global",
+      "globalHelp": "Use os tipos de arquivo definidos em Configurações.",
+      "override": "Substituir",
+      "overrideHelp": "Escolha tipos de arquivo somente para esta tarefa."
+    }
+  },
+  "source": {
+    "type": "Tipo de fonte",
+    "credential": "Credencial de origem",
+    "pickTypeFirst": "Selecione primeiro um tipo de fonte.",
+    "pickCredentialFirst": "Selecione primeiro uma credencial."
+  },
+  "destination": {
+    "credential": "Credencial Hindsight",
+    "bank": "Banco de memória",
+    "bankPlaceholder": "ID do banco",
+    "browseBanks": "Selecione um banco de memória",
+    "pickCredentialFirst": "Selecione primeiro as credenciais do Hindsight.",
+    "locked": "O destino fica bloqueado após a primeira execução bem-sucedida. Para usar outras credenciais ou outro banco de memória, crie uma nova tarefa.",
+    "lockNotice": "O destino torna-se somente leitura após a primeira execução bem-sucedida."
+  },
+  "retain": {
+    "label": "Estratégia de retenção",
+    "bankDefault": "Padrão do banco de memória",
+    "bankDefaultNamed": "Padrão do banco de memória ({{name}})",
+    "help": "Define como o Hindsight processa o conteúdo enviado ao banco de memória. A opção padrão usa a estratégia configurada nesse banco.",
+    "freeTextPlaceholder": "Deixe em branco para usar o padrão do banco de memória",
+    "pickDestinationFirst": "Selecione as credenciais de destino e um banco de memória para carregar as estratégias disponíveis.",
+    "loadFailed": "Não foi possível carregar estratégias de Hindsight; insira um nome de estratégia manualmente."
+  },
+  "tags": {
+    "custom": "Tags personalizadas",
+    "help": "As tags de ingestão, origem e tarefa são adicionadas automaticamente a cada documento.",
+    "placeholder": "equipe:alfa",
+    "newTaskId": "<novo>"
+  },
+  "metadata": {
+    "add": "Adicionar campo",
+    "empty": "Nenhum metadado personalizado",
+    "reservedHint": "As chaves que começam com _ingestion_ são reservadas para campos de origem do sistema.",
+    "errors": {
+      "emptyKey": "A chave é obrigatória",
+      "reserved": "Chaves que começam com _ingestion_ são reservadas",
+      "duplicate": "Chave duplicada"
+    }
+  },
+  "schedule": {
+    "cron": "Expressão Cron",
+    "cronHelp": "Cron padrão de 5 campos: minuto hora dia mês dia da semana",
+    "timezone": "Fuso horário",
+    "selectTimezone": "Selecione o fuso horário",
+    "searchTimezone": "Pesquisar fusos horários…",
+    "noTimezone": "Nenhum fuso horário encontrado",
+    "suggested": "Sugerido",
+    "allTimezones": "Todos os fusos horários",
+    "nextRuns": "Próximas execuções",
+    "enterCron": "Insira uma expressão cron para visualizar as próximas execuções.",
+    "invalid": "Agendamento inválido",
+    "previewUnavailable": "Visualização indisponível",
+    "presets": {
+      "every15m": "A cada 15 minutos",
+      "everyHour": "A cada hora",
+      "every6h": "A cada 6 horas",
+      "daily3": "Diariamente 03:00",
+      "weeklyMon8": "Segundas-feiras 08:00"
+    }
+  },
+  "tasks": {
+    "title": "Tarefas",
+    "description": "Cada tarefa sincroniza uma fonte com um banco de memória do Hindsight, de acordo com o agendamento configurado.",
+    "new": "Nova tarefa",
+    "neverRun": "Nunca executada",
+    "reconcileRequired": "Sincronização completa pendente",
+    "itemCount_one": "Item {{count}}",
+    "itemCount_other": "Itens {{count}}",
+    "columns": {
+      "enabled": "Ligado",
+      "name": "Nome",
+      "source": "Fonte",
+      "destination": "Destino",
+      "schedule": "Cronograma",
+      "lastRun": "Última execução",
+      "nextRun": "Próxima execução",
+      "status": "Estado"
+    },
+    "status": {
+      "idle": "Inativo",
+      "disabled": "Desativado",
+      "reconcilePending": "Sincronização completa pendente"
+    },
+    "actions": {
+      "runNow": "Executar agora",
+      "fullReconcile": "Sincronizar tudo",
+      "fullReingest": "Reingestão completa",
+      "cancel": "Cancelar execução",
+      "enable": "Habilitar",
+      "disable": "Desativar",
+      "viewRuns": "Ver execuções",
+      "dryRun": "Simulação"
+    },
+    "empty": {
+      "title": "Nenhuma tarefa ainda",
+      "description": "Crie uma tarefa para iniciar a sincronização de uma origem em Hindsight."
+    },
+    "trigger": {
+      "run": {
+        "success": "Execução iniciada"
+      },
+      "fullReconcile": {
+        "success": "Sincronização completa iniciada"
+      },
+      "fullReingest": {
+        "success": "Reingestão completa iniciada"
+      },
+      "alreadyRunning": "A tarefa já está em execução",
+      "failed": "Não foi possível iniciar a execução"
+    },
+    "cancel": {
+      "success": "Cancelamento solicitado",
+      "notRunning": "A tarefa não está em execução",
+      "failed": "Não foi possível cancelar a execução"
+    },
+    "toast": {
+      "enabled": "Tarefa ativada",
+      "disabled": "Tarefa desativada",
+      "updateFailed": "Não foi possível atualizar a tarefa",
+      "deleted": "Tarefa excluída",
+      "deleteFailed": "Não foi possível excluir a tarefa",
+      "deleteRunning": "A tarefa está em execução; cancele antes de excluir"
+    },
+    "delete": {
+      "title": "Excluir “{{name}}”?",
+      "description": "A tarefa, seu histórico de execução e seu estado de sincronização serão removidos. Os documentos que já estão em Hindsight não são excluídos."
+    },
+    "reingest": {
+      "title": "Reingerir tudo para “{{name}}”?",
+      "description": "Cada item correspondente será retido em Hindsight, mesmo que inalterado. Isso pode levar muito tempo e consumir o processamento Hindsight."
+    }
+  },
+  "taskEditor": {
+    "newTitle": "Nova tarefa",
+    "create": "Criar tarefa",
+    "namePlaceholder": "por exemplo Notion → Pessoal",
+    "enabledHelp": "As tarefas desativadas mantêm o estado de sincronização, mas não são agendadas.",
+    "notFound": "Tarefa não encontrada",
+    "nextRun": "Próxima execução: {{when}}",
+    "itemCount_one": "Item {{count}} sincronizado",
+    "itemCount_other": "Itens {{count}} sincronizados",
+    "recentRuns": "Execuções recentes",
+    "saveBeforeRun": "Salve suas alterações antes de executar",
+    "saveError": "Não foi possível salvar a tarefa",
+    "unsaved": "Alterações não salvas",
+    "saved": "Todas as alterações salvas",
+    "fields": {
+      "name": "Nome",
+      "enabled": "Habilitado"
+    },
+    "hints": {
+      "sourceReset": "Alterar as credenciais da origem ou a pasta raiz (bucket, pasta, banco de dados, caderno…) redefine o cursor incremental e inicia uma varredura completa para reconstruir a base da sincronização.",
+      "sourceTypeLocked": "O tipo de origem não pode ser alterado após a criação. Crie uma nova tarefa para usar uma fonte diferente.",
+      "filtersReconcile": "Ao alterar os filtros, a tarefa fica marcada para sincronização completa. Nela, os itens que não corresponderem mais serão removidos do Hindsight.",
+      "filesReconcile": "Ao alterar os tipos de arquivo, a tarefa faz uma sincronização completa. Os arquivos excluídos são removidos do Hindsight.",
+      "policyRevision": "Alterar a estratégia de retenção, tags ou metadados retém novamente todos os itens correspondentes na próxima execução."
+    },
+    "sections": {
+      "general": {
+        "title": "Geral",
+        "description": "Nome e ativação."
+      },
+      "source": {
+        "title": "Fonte",
+        "description": "De onde o conteúdo é lido."
+      },
+      "filters": {
+        "title": "Filtros",
+        "description": "Limite quais itens são sincronizados."
+      },
+      "destination": {
+        "title": "Destino",
+        "description": "Banco de memória do Hindsight que recebe o conteúdo."
+      },
+      "retain": {
+        "title": "Estratégia de retenção",
+        "description": "Como Hindsight processa o conteúdo."
+      },
+      "files": {
+        "title": "Tipos de arquivo",
+        "description": "Quais tipos de arquivos são ingeridos."
+      },
+      "inline": {
+        "title": "Conteúdo multimodal incorporado",
+        "description": "Mídia incorporada às notas."
+      },
+      "tags": {
+        "title": "Etiquetas",
+        "description": "Tags anexadas a cada documento."
+      },
+      "metadata": {
+        "title": "Metadados",
+        "description": "Metadados de chave/valor anexados a cada documento."
+      },
+      "schedule": {
+        "title": "Cronograma",
+        "description": "Quando a tarefa é executada automaticamente."
+      }
+    },
+    "toast": {
+      "created": "Tarefa criada",
+      "updated": "Tarefa salva",
+      "saveFailed": "Não foi possível salvar a tarefa",
+      "conflict": "Conflito"
+    }
+  },
+  "runs": {
+    "title": "Execuções",
+    "description": "Histórico de execução de todas as tarefas.",
+    "notStarted": "Não iniciado",
+    "total_one": "{{formatted}} execução",
+    "total_other": "{{formatted}} execuções",
+    "columns": {
+      "task": "Tarefa",
+      "status": "Estado",
+      "trigger": "Acionamento",
+      "mode": "Tipo de execução",
+      "started": "Início",
+      "duration": "Duração",
+      "counters": "Resultados"
+    },
+    "trigger": {
+      "scheduled": "Agendado",
+      "manual": "Manual"
+    },
+    "mode": {
+      "incremental": "Incremental",
+      "full": "Completa",
+      "reingest": "Reingerir tudo"
+    },
+    "counters": {
+      "discoveredCount": "Encontrados",
+      "createdCount": "Criado",
+      "updatedCount": "Atualizado",
+      "deletedCount": "Excluído",
+      "unchangedCount": "Inalterado",
+      "skippedCount": "Ignorado",
+      "failedCount": "Falha"
+    },
+    "filters": {
+      "status": "Filtrar por status",
+      "task": "Filtrar por tarefa",
+      "allStatuses": "Todos os status",
+      "allTasks": "Todas as tarefas",
+      "clear": "Limpar filtros"
+    },
+    "empty": {
+      "title": "Nenhuma execução ainda",
+      "description": "As execuções aparecem aqui quando uma tarefa é executada manualmente ou conforme o agendamento.",
+      "filteredTitle": "Nenhuma execução correspondente",
+      "filteredDescription": "Experimente um status ou tarefa diferente.",
+      "taskTitle": "Nenhuma execução ainda",
+      "taskDescription": "Selecione “Executar agora” para iniciar a primeira sincronização."
+    }
+  },
+  "runDetail": {
+    "notFound": "Execução não encontrada",
+    "error": "Erro na execução",
+    "scheduledFor": "Agendado para",
+    "finished": "Concluído",
+    "inProgress": "Em andamento",
+    "cursorBefore": "Cursor antes",
+    "cursorAfter": "Cursor depois",
+    "noCursor": "nenhum",
+    "operations": "Operações Hindsight",
+    "noOperations": "Nenhuma operação assíncrona para esta execução.",
+    "log": "Registro",
+    "noLog": "Sem linhas de registro.",
+    "opColumns": {
+      "remoteId": "ID remoto",
+      "type": "Tipo",
+      "status": "Estado",
+      "retries": "Novas tentativas",
+      "created": "Criado",
+      "updated": "Atualizado"
+    }
+  },
+  "dashboard": {
+    "title": "Painel",
+    "description": "Visão geral da atividade de sincronização.",
+    "stats": {
+      "enabledTasks": "Tarefas habilitadas",
+      "ofTotal": "do total de {{total}}",
+      "running": "Em andamento",
+      "runs24h_one": "{{count}} execução nas últimas 24 h",
+      "runs24h_other": "{{count}} execuções nas últimas 24 h",
+      "items": "Itens sincronizados",
+      "itemsSub": "em todas as tarefas",
+      "failures24h": "Falhas (24h)",
+      "needsAttention": "Precisa de atenção",
+      "allGood": "Tudo bem"
+    },
+    "getStarted": {
+      "title": "Configure sua primeira sincronização",
+      "description": "Adicione credenciais para uma origem e para Hindsight e crie uma tarefa.",
+      "credentials": "Adicionar credenciais"
+    },
+    "reauth": {
+      "title": "As credenciais precisam ser reconectadas"
+    },
+    "running": {
+      "title": "Em execução",
+      "empty": "Nenhuma tarefa está em execução"
+    },
+    "nextRuns": {
+      "title": "Próximas execuções agendadas",
+      "empty": "Não há execuções próximas"
+    },
+    "failures": {
+      "title": "Falhas recentes",
+      "empty": "Nenhuma falha recente"
+    }
+  },
+  "settings": {
+    "title": "Configurações",
+    "description": "Comportamento de sincronização global.",
+    "units": {
+      "hours": "horas"
+    },
+    "sync": {
+      "title": "Sincronização",
+      "description": "Aplica-se a todas as tarefas.",
+      "incremental": "Sincronização incremental",
+      "incrementalHelp": "Use o rastreamento de alterações nativo do provedor, quando disponível. Quando desativado, cada execução realiza um inventário completo (o conteúdo inalterado ainda não é reenviado).",
+      "reconcileInterval": "Intervalo da sincronização completa",
+      "reconcileIntervalHelp": "Se este intervalo tiver passado desde a última sincronização completa, a próxima execução fará uma varredura completa.",
+      "maxFileSize": "Tamanho máximo do arquivo",
+      "maxFileSizeHelp": "Arquivos maiores são ignorados."
+    },
+    "files": {
+      "title": "Tipos de arquivos globais",
+      "description": "Tipos de arquivo padrão para tarefas definidas como “Seguir global”. Os arquivos excluídos são removidos durante a reconciliação."
+    },
+    "oauth": {
+      "title": "OAuth",
+      "description": "Registre esse redirecionamento URI na configuração do aplicativo Google Cloud e Microsoft Entra (Azure) para credenciais Google Drive e OneDrive.",
+      "redirectUri": "Redirecionar URI"
+    },
+    "toast": {
+      "saved": "Configurações salvas",
+      "failed": "Não foi possível salvar as configurações"
+    }
+  },
+  "notFound": {
+    "title": "Página não encontrada",
+    "description": "A página que você procura não existe.",
+    "home": "Vá para o painel"
+  },
+  "dryRun": {
+    "title": "Simulação: {{name}}",
+    "description": "Teste a tarefa salva com uma varredura completa da origem. Nenhum documento será enviado ou excluído, e o progresso da sincronização e o histórico de execuções permanecerão inalterados.",
+    "start": "Iniciar simulação",
+    "running": "Verificando…",
+    "complete_one": "{{count}} item da origem verificado.",
+    "complete_other": "{{count}} itens da origem verificados.",
+    "incomplete_one": "Verificação incompleta ({{count}} item). Os itens ausentes não serão marcados para exclusão.",
+    "incomplete_other": "Verificação incompleta ({{count}} itens). Os itens ausentes não serão marcados para exclusão.",
+    "truncated": "Exibindo os 100 primeiros itens. A contagem considera todos os itens.",
+    "file": "Item da origem",
+    "action": "Ação",
+    "reason": "Razão",
+    "actions": {
+      "create": "Criar",
+      "update": "Atualizar",
+      "delete": "Excluir",
+      "unchanged": "Inalterado",
+      "skip": "Pular",
+      "fail": "Falha"
+    }
+  },
+  "providerCopy": {
+    "integrationToken": "Token de integração",
+    "dataSource": "Fonte de dados",
+    "pageTitle": "Título da página",
+    "lastEdited": "Última edição",
+    "created": "Criado em",
+    "oauthClientId": "ID do cliente OAuth",
+    "oauthClientSecret": "Segredo do cliente OAuth",
+    "drive": "Drive",
+    "folder": "Pasta",
+    "includeSubfolders": "Incluir subpastas",
+    "exportGoogleDocs": "Exportar Documentos, Planilhas e Apresentações Google",
+    "fileName": "Nome do arquivo",
+    "path": "Caminho",
+    "extension": "Extensão",
+    "mimeType": "Tipo MIME",
+    "fileType": "Tipo de arquivo",
+    "sizeBytes": "Tamanho (bytes)",
+    "modified": "Modificado em",
+    "rootDirectory": "Diretório raiz",
+    "rootFolder": "Pasta raiz",
+    "serverUrl": "URL do servidor",
+    "username": "Nome de usuário",
+    "passwordApp": "Senha / senha de aplicativo",
+    "bearerToken": "Token Bearer",
+    "endpoint": "Endpoint",
+    "region": "Região",
+    "accessKeyId": "ID da chave de acesso",
+    "secretAccessKey": "Chave de acesso secreta",
+    "sessionToken": "Token de sessão",
+    "pathStyle": "Endereçamento por caminho",
+    "baseUrl": "URL base",
+    "instanceId": "ID da instância",
+    "apiToken": "Token de API",
+    "notebook": "Caderno",
+    "pathPrefix": "Prefixo do caminho",
+    "bucket": "Bucket",
+    "prefix": "Prefixo",
+    "applicationId": "ID do aplicativo (cliente)",
+    "clientSecret": "Segredo do cliente",
+    "tenant": "Locatário",
+    "title": "Título",
+    "updated": "Atualizado em",
+    "tags": "Tags",
+    "notionDescription": "Token de integração interna do Notion com acesso de leitura às fontes de dados compartilhadas.",
+    "siYuanDescription": "Endpoint da API do kernel SiYuan e token (Configurações → Sobre → Token da API).",
+    "filesystemDescription": "Arquivos locais acessíveis ao aplicativo.",
+    "googleDriveDescription": "Conta Google via OAuth, com acesso somente para leitura ao Drive.",
+    "oneDriveDescription": "Conta Microsoft ou Microsoft 365 via OAuth, com acesso ao OneDrive e ao SharePoint.",
+    "s3Description": "Amazon S3 e serviços compatíveis, como MinIO, Cloudflare R2, Backblaze B2 e Wasabi.",
+    "webdavDescription": "Compatível com Nextcloud, ownCloud, Synology, Apache mod_dav, rclone serve e outros.",
+    "hindsightDescription": "Endereço da API Hindsight que receberá o conteúdo.",
+    "filesystemRootHelp": "Caminho absoluto no servidor do aplicativo. No Docker, use o caminho montado dentro do contêiner.",
+    "filesystemFolderHelp": "Caminho relativo à pasta raiz desta credencial. Use . para indicar a raiz.",
+    "notionDataSourceHelp": "ID da fonte de dados do Notion (não o ID do banco de dados). Use “Procurar” para escolher uma fonte compartilhada com esta integração.",
+    "siYuanInstanceHelp": "Identificador estável desta instância do SiYuan. Se ficar vazio, será usada a URL base.",
+    "s3EndpointHelp": "Deixe vazio para usar o AWS S3.",
+    "s3PathStyleHelp": "Necessário na maioria dos servidores S3 auto-hospedados, como o MinIO.",
+    "s3PrefixHelp": "Inclui somente objetos sob este prefixo de chave.",
+    "webdavTokenHelp": "Use no lugar do nome de usuário e da senha se o servidor exigir um token.",
+    "webdavRootHelp": "Caminho relativo à URL do servidor.",
+    "googleDriveHelp": "Deixe vazio para usar Meu Drive ou selecione um drive compartilhado.",
+    "wholeDriveHelp": "Deixe vazio para usar o drive inteiro.",
+    "googleExportHelp": "Documentos são exportados como Markdown, planilhas como CSV e apresentações como PDF.",
+    "tenantHelp": "Informe common, organizations, consumers ou um ID de locatário.",
+    "oneDriveHelp": "Deixe vazio para usar seu OneDrive pessoal.",
+    "siYuanPathHelp": "Inclui somente documentos cujo caminho legível começa com este prefixo.",
+    "siYuanNotebookHelp": "Deixe vazio para sincronizar todos os cadernos abertos.",
+    "hindsightApiKeyHelp": "É enviado como token Bearer. Deixe vazio se a instância não exigir autenticação.",
+    "syncCollectionHelp": "Usa sync-collection (RFC 6578) quando o servidor oferece suporte.",
+    "fileSystem": "Sistema de arquivos"
+  }
+}

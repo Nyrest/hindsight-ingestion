@@ -1,0 +1,728 @@
+{
+  "inlineMultimodal": {
+    "title": "インラインマルチモーダルコンテンツ",
+    "description": "ノート内に埋め込まれたメディアを取り込みます。現在は Notion と SiYuan の画像に対応しています。",
+    "enabled": "埋め込みメディアを処理する",
+    "policyHelp": "画像を取り込むには、埋め込みメディアとファイル種別ポリシーの「画像」の両方を有効にしてください。",
+    "active": "埋め込み画像を取り込みます。",
+    "inactive": "ノートはテキストとして同期されます。画像も取り込むには、埋め込みメディアと「画像」の両方を有効にしてください。"
+  },
+  "app": {
+    "name": "Hindsight Ingestion",
+    "tagline": "ソースを Hindsight のメモリバンクに同期",
+    "version": "v{{version}}",
+    "authDisabled": "認証が無効です"
+  },
+  "language": {
+    "label": "言語"
+  },
+  "nav": {
+    "dashboard": "ダッシュボード",
+    "tasks": "タスク",
+    "runs": "実行履歴",
+    "credentials": "資格情報",
+    "settings": "設定",
+    "open": "ナビゲーションを開く",
+    "title": "ナビゲーション",
+    "description": "メインナビゲーション"
+  },
+  "theme": {
+    "toggle": "テーマの変更",
+    "light": "ライト",
+    "dark": "ダーク",
+    "system": "システム"
+  },
+  "common": {
+    "actions": "アクション",
+    "backTo": "{{page}} に戻る",
+    "cancel": "キャンセル",
+    "close": "閉じる",
+    "confirm": "確認する",
+    "commandPaletteTitle": "コマンドパレット",
+    "commandPaletteDescription": "実行するコマンドを検索してください…",
+    "copied": "クリップボードにコピーされました",
+    "copy": "コピー",
+    "copyFailed": "クリップボードにコピーできませんでした",
+    "create": "作成",
+    "delete": "削除",
+    "edit": "編集",
+    "false": "いいえ",
+    "true": "はい",
+    "loadFailed": "データをロードできませんでした",
+    "loading": "読み込み中…",
+    "moreActions": "その他の操作",
+    "new": "新規作成",
+    "next": "次のページ",
+    "previous": "前のページへ",
+    "none": "なし",
+    "pageOf": "ページ {{page}} / {{pages}}",
+    "refresh": "リフレッシュ",
+    "retry": "再試行",
+    "save": "保存",
+    "saveChanges": "変更を保存する",
+    "select": "選択してください…",
+    "viewAll": "すべて見る"
+  },
+  "validation": {
+    "required": "このフィールドは必須です",
+    "number": "数字でなければなりません",
+    "integer": "整数でなければなりません",
+    "min1": "少なくとも 1 でなければなりません",
+    "url": "有効な URL である必要があります",
+    "tooLong": "長すぎます"
+  },
+  "runStatus": {
+    "pending": "保留中",
+    "running": "実行中",
+    "waiting_operations": "操作を待っています",
+    "succeeded": "成功しました",
+    "failed": "失敗しました",
+    "interrupted": "中断されました",
+    "cancelled": "キャンセルされました"
+  },
+  "credentialStatus": {
+    "active": "アクティブ",
+    "reauth_required": "再接続が必要です",
+    "pending_oauth": "OAuth を待っています",
+    "error": "エラー"
+  },
+  "chips": {
+    "placeholder": "と入力して Enter キーを押します",
+    "duplicate": "「{{value}}」はすでに追加されています",
+    "remove": "{{value}} を削除します",
+    "automatic": "自動的に追加される"
+  },
+  "kv": {
+    "key": "キー",
+    "value": "値",
+    "add": "追加",
+    "remove": "行を削除"
+  },
+  "secret": {
+    "keepHint": "値が格納されます。マスクを変更しないままにして保持するか、新しい値を入力して置き換えます。",
+    "clear": "保存された値をクリアする"
+  },
+  "headers": {
+    "title": "カスタムヘッダー",
+    "help": "このプロバイダーへのすべてのリクエストとともに送信されます。コネクタ認証ヘッダーが優先されます。",
+    "mode": "エディターモード",
+    "ui": "UI",
+    "json": "JSON",
+    "name": "ヘッダー名",
+    "value": "値",
+    "valuePlaceholder": "ヘッダー値",
+    "add": "ヘッダーの追加",
+    "empty": "カスタムヘッダーはありません",
+    "maskHint": "保存された値は {{mask}} として表示されます。値を変更しないままにするには、マスクを保持します。",
+    "errors": {
+      "duplicate": "ヘッダー名「{{name}}」が重複しています (名前は大文字と小文字が区別されません)",
+      "invalidJson": "無効な JSON: {{detail}}",
+      "notObject": "JSON は、{\"Header\": \"Value\"} のようなオブジェクトである必要があります。",
+      "nonString": "「{{name}}」の値は文字列である必要があります",
+      "emptyName": "ヘッダー名を空にすることはできません"
+    }
+  },
+  "browse": {
+    "button": "閲覧…",
+    "title": "閲覧する",
+    "titleFor": "{{label}}を選択します",
+    "description": "フォルダーに移動してアイテムを選択します。",
+    "breadcrumbs": "場所",
+    "root": "ルート",
+    "empty": "ここには何もありません",
+    "hint": "項目を選択するか、矢印でフォルダーを開きます",
+    "open": "{{name}}を開く",
+    "select": "選択",
+    "selected": "選択済み",
+    "kinds": {
+      "folder": "フォルダー",
+      "file": "ファイル",
+      "data_source": "データソース",
+      "notebook": "ノート",
+      "bucket": "バケット",
+      "bank": "メモリバンク",
+      "drive": "ドライブ",
+      "site": "サイト"
+    },
+    "memoryBanks": "メモリバンク",
+    "drives": "ドライブ",
+    "buckets": "バケット",
+    "dataSources": "データソース",
+    "notebooks": "ノートブック"
+  },
+  "capabilities": {
+    "incremental": {
+      "high_water_mark": "最高水準点",
+      "delta_token": "差分トークン",
+      "sync_token": "同期トークン",
+      "inventory": "在庫の差分"
+    },
+    "deletion": {
+      "full_reconcile": "全件照合時に削除",
+      "scan_generation": "スキャンによる削除",
+      "delta": "デルタ経由で削除"
+    },
+    "files": "ファイル",
+    "oauth": "OAuth",
+    "advancedFilter": "高度なフィルター"
+  },
+  "credentials": {
+    "title": "資格情報",
+    "description": "ソースと Hindsight 宛先の再利用可能な接続の詳細。",
+    "new": "新しい資格情報",
+    "createTitle": "新しい資格情報",
+    "createDescription": "プロバイダーを選択し、その接続の詳細を入力します。",
+    "editTitle": "資格情報の編集",
+    "editDescription": "秘密は決して明かされません。マスクされた値を維持するには、変更しないままにしておきます。",
+    "createInline": "新しい認証情報を作成する",
+    "namePlaceholder": "例:作品 {{type}}",
+    "pick": "資格情報を選択してください",
+    "noneOfType": "{{type}} 資格情報がまだありません",
+    "notActiveWarning": "この資格情報は現在「{{status}}」です。修正されるまで実行は失敗する可能性があります。",
+    "oauthHint": "保存後に「接続」をクリックし、画面の案内に沿ってアクセスを許可してください。",
+    "usedByCount_one": "{{count}} タスク",
+    "usedByCount_other": "{{count}} タスク",
+    "fields": {
+      "type": "プロバイダー",
+      "name": "名前"
+    },
+    "columns": {
+      "name": "名前",
+      "type": "種類",
+      "status": "ステータス",
+      "usedBy": "使用者",
+      "oauth": "OAuth"
+    },
+    "actions": {
+      "test": "テスト",
+      "connect": "接続する",
+      "reconnect": "再接続",
+      "refresh": "リフレッシュトークン"
+    },
+    "empty": {
+      "title": "まだ認証情報がありません",
+      "description": "ソース (例: Notion) の資格情報と Hindsight インスタンスの資格情報を追加して、タスクを作成します。"
+    },
+    "test": {
+      "ok": "{{name}}: 接続OK",
+      "failed": "{{name}}: 接続に失敗しました"
+    },
+    "oauth": {
+      "success": "OAuth が正常に接続されました",
+      "error": "OAuth 接続に失敗しました",
+      "startFailed": "OAuth を開始できませんでした",
+      "connected": "接続済み",
+      "notConnected": "接続されていません",
+      "expires": "トークンの有効期限が切れます {{when}}"
+    },
+    "toast": {
+      "created": "認証情報が作成されました",
+      "updated": "資格情報が更新されました",
+      "deleted": "資格情報が削除されました",
+      "deleteFailed": "認証情報を削除できませんでした",
+      "inUse": "資格情報は使用中です",
+      "refreshed": "トークンがリフレッシュされました",
+      "refreshFailed": "トークンの更新に失敗しました"
+    },
+    "delete": {
+      "title": "「{{name}}」を削除しますか？",
+      "description": "これにより、資格情報とその保存されたシークレットが完全に削除されます。",
+      "inUse_one": "この資格情報は、{{count}} タスクによって使用されます。まずそのタスクを削除または変更します。",
+      "inUse_other": "この資格情報は、{{count}} タスクによって使用されます。まずそれらのタスクを削除または変更します。"
+    }
+  },
+  "filters": {
+    "add": "フィルターを追加",
+    "remove": "フィルターを削除する",
+    "where": "どこで",
+    "and": "そして",
+    "field": "フィールド",
+    "operator": "オペレーター",
+    "mode": "フィルターモード",
+    "simple": "シンプル",
+    "advanced": "上級者向け",
+    "advancedQuery": "クエリ",
+    "advancedHint": "生のプロバイダー クエリ構文。",
+    "driveHint": "Google Drive の検索構文。例: mimeType = 'application/pdf'、modifiedTime > '2024-01-01T00:00:00'。ゴミ箱内のファイルは常に除外されます。",
+    "noFields": "このソースはフィルターをサポートしていません。",
+    "selectValues": "値を選択してください…",
+    "valuePlaceholder": "値",
+    "valuesPlaceholder": "値を入力して Enter キーを押します",
+    "empty": {
+      "title": "フィルターなし",
+      "description": "ソーススコープ内のすべてが同期されます。"
+    },
+    "operators": {
+      "equals": "等しい",
+      "notEquals": "等しくない",
+      "contains": "含まれています",
+      "in": "のいずれかです",
+      "notIn": "どれでもない",
+      "greaterThan": "より大きい",
+      "lessThan": "未満"
+    },
+    "errors": {
+      "field": "有効なフィールドを選択してください",
+      "operator": "このフィールドでは演算子がサポートされていません",
+      "value": "値を入力してください",
+      "valueList": "少なくとも 1 つの値を追加します",
+      "number": "数字でなければなりません"
+    }
+  },
+  "filePolicy": {
+    "plainText": "プレーンテキスト",
+    "documents": "書類",
+    "images": "画像",
+    "audios": "オーディオ",
+    "globalPreview": "現在の全体設定（「設定」で変更できます）：",
+    "mode": {
+      "global": "全体設定を使う",
+      "globalHelp": "「設定」で指定したファイル種別を使います。",
+      "override": "このタスクで上書き",
+      "overrideHelp": "このタスクのみのファイル タイプを選択してください。"
+    }
+  },
+  "source": {
+    "type": "ソースの種類",
+    "credential": "ソース資格情報",
+    "pickTypeFirst": "最初にソースの種類を選択します。",
+    "pickCredentialFirst": "最初に資格情報を選択してください"
+  },
+  "destination": {
+    "credential": "Hindsight 資格情報",
+    "bank": "メモリバンク",
+    "bankPlaceholder": "メモリバンク ID",
+    "browseBanks": "メモリバンクを選択",
+    "pickCredentialFirst": "先に Hindsight の資格情報を選択してください。",
+    "locked": "最初の実行が成功すると、宛先のメモリバンクは変更できなくなります。別の資格情報やメモリバンクを使うには、新しいタスクを作成してください。",
+    "lockNotice": "最初の実行が成功すると、宛先は読み取り専用になります。"
+  },
+  "retain": {
+    "label": "戦略を維持する",
+    "bankDefault": "メモリバンクの既定値",
+    "bankDefaultNamed": "メモリバンクの既定値（{{name}}）",
+    "help": "メモリバンクに送るコンテンツを Hindsight がどのように処理するかを設定します。既定値を選ぶと、メモリバンク側の設定が使われます。",
+    "freeTextPlaceholder": "メモリバンクの既定値を使う場合は空欄のままにします",
+    "pickDestinationFirst": "利用可能な戦略を読み込むには、先に送信先の資格情報とメモリバンクを選択してください。",
+    "loadFailed": "Hindsight から戦略を読み込めませんでした。戦略名を手動で入力してください。"
+  },
+  "tags": {
+    "custom": "カスタムタグ",
+    "help": "インジェスト、ソース、タスクのタグはすべてのドキュメントに自動的に追加されます。",
+    "placeholder": "チーム:アルファ",
+    "newTaskId": "<新規>"
+  },
+  "metadata": {
+    "add": "フィールドの追加",
+    "empty": "カスタムメタデータなし",
+    "reservedHint": "_ingestion_ で始まるキーは、システム来歴フィールド用に予約されています。",
+    "errors": {
+      "emptyKey": "キーが必要です",
+      "reserved": "_ingestion_ で始まるキーは予約されています",
+      "duplicate": "重複キー"
+    }
+  },
+  "schedule": {
+    "cron": "Cron 式",
+    "cronHelp": "標準の 5 フィールド cron: 分、時、日、月、平日",
+    "timezone": "タイムゾーン",
+    "selectTimezone": "タイムゾーンの選択",
+    "searchTimezone": "タイムゾーンを検索…",
+    "noTimezone": "タイムゾーンが見つかりません",
+    "suggested": "提案された",
+    "allTimezones": "すべてのタイムゾーン",
+    "nextRuns": "次回の実行",
+    "enterCron": "cron 式を入力して、今後の実行をプレビューします。",
+    "invalid": "無効なスケジュール",
+    "previewUnavailable": "プレビューは利用できません",
+    "presets": {
+      "every15m": "15分ごと",
+      "everyHour": "1時間ごと",
+      "every6h": "6時間ごと",
+      "daily3": "毎日03:00",
+      "weeklyMon8": "月曜日 08:00"
+    }
+  },
+  "tasks": {
+    "title": "タスク",
+    "description": "各タスクは、設定したスケジュールに従って 1 つのソースを Hindsight のメモリバンクに同期します。",
+    "new": "新しいタスク",
+    "neverRun": "未実行",
+    "reconcileRequired": "全件同期が必要です",
+    "itemCount_one": "{{count}} アイテム",
+    "itemCount_other": "{{count}} アイテム",
+    "columns": {
+      "enabled": "オン",
+      "name": "名前",
+      "source": "ソース",
+      "destination": "目的地",
+      "schedule": "スケジュール",
+      "lastRun": "前回の実行",
+      "nextRun": "次回の実行",
+      "status": "ステータス"
+    },
+    "status": {
+      "idle": "アイドル状態",
+      "disabled": "障害者",
+      "reconcilePending": "全件同期待ち"
+    },
+    "actions": {
+      "runNow": "今すぐ実行",
+      "fullReconcile": "全件同期",
+      "fullReingest": "完全な再取り込み",
+      "cancel": "実行をキャンセルする",
+      "enable": "有効にする",
+      "disable": "無効にする",
+      "viewRuns": "実行履歴を見る",
+      "dryRun": "シミュレーション"
+    },
+    "empty": {
+      "title": "まだタスクはありません",
+      "description": "Hindsight へのソースの同期を開始するタスクを作成します。"
+    },
+    "trigger": {
+      "run": {
+        "success": "実行が開始されました"
+      },
+      "fullReconcile": {
+        "success": "全件同期を開始しました"
+      },
+      "fullReingest": {
+        "success": "完全な再取り込みが開始されました"
+      },
+      "alreadyRunning": "タスクはすでに実行中です",
+      "failed": "実行を開始できませんでした"
+    },
+    "cancel": {
+      "success": "キャンセルが要求されました",
+      "notRunning": "タスクが実行されていません",
+      "failed": "実行をキャンセルできませんでした"
+    },
+    "toast": {
+      "enabled": "タスクが有効化されました",
+      "disabled": "タスクが無効化されました",
+      "updateFailed": "タスクを更新できませんでした",
+      "deleted": "タスクが削除されました",
+      "deleteFailed": "タスクを削除できませんでした",
+      "deleteRunning": "タスクは実行中です。削除する前にキャンセルしてください"
+    },
+    "delete": {
+      "title": "「{{name}}」を削除しますか？",
+      "description": "タスク、その実行履歴、およびその同期状態は削除されます。すでに Hindsight にあるドキュメントは削除されません。"
+    },
+    "reingest": {
+      "title": "「{{name}}」のすべてを再取り込みしますか?",
+      "description": "一致するすべての項目は、変更されていない場合でも Hindsight に再保持されます。これには時間がかかり、Hindsight 処理が消費される可能性があります。"
+    }
+  },
+  "taskEditor": {
+    "newTitle": "新しいタスク",
+    "create": "タスクの作成",
+    "namePlaceholder": "例: Notion → 個人用",
+    "enabledHelp": "無効化されたタスクは同期状態を維持しますが、スケジュールは設定されません。",
+    "notFound": "タスクが見つかりません",
+    "nextRun": "次回の実行：{{when}}",
+    "itemCount_one": "{{count}} アイテムが同期されました",
+    "itemCount_other": "{{count}} アイテムが同期されました",
+    "recentRuns": "最近の実行",
+    "saveBeforeRun": "実行する前に変更を保存します",
+    "saveError": "タスクを保存できませんでした",
+    "unsaved": "未保存の変更",
+    "saved": "すべての変更が保存されました",
+    "fields": {
+      "name": "名前",
+      "enabled": "有効"
+    },
+    "hints": {
+      "sourceReset": "ソースの認証情報またはルート（バケット、フォルダー、データベース、ノートブックなど）を変更すると、増分カーソルがリセットされ、全件スキャンを行って同期の基準を作り直します。",
+      "sourceTypeLocked": "ソースタイプは作成後に変更することはできません。別のソースを使用するには、新しいタスクを作成します。",
+      "filtersReconcile": "フィルターを変更すると、タスクは全件同期を行います。その際、条件に一致しなくなった項目は Hindsight から削除されます。",
+      "filesReconcile": "ファイル形式を変更すると、タスクは全件同期を行います。対象外になったファイルは Hindsight から削除されます。",
+      "policyRevision": "保持戦略、タグ、またはメタデータを変更すると、次回の実行時に一致するアイテムがすべて再保持されます。"
+    },
+    "sections": {
+      "general": {
+        "title": "一般",
+        "description": "タスク名と有効・無効を設定します。"
+      },
+      "source": {
+        "title": "ソース",
+        "description": "コンテンツの読み取り元。"
+      },
+      "filters": {
+        "title": "フィルター",
+        "description": "同期するアイテムを制限します。"
+      },
+      "destination": {
+        "title": "目的地",
+        "description": "コンテンツの送信先となる Hindsight のメモリバンク。"
+      },
+      "retain": {
+        "title": "戦略を維持する",
+        "description": "Hindsight がコンテンツを処理する方法。"
+      },
+      "files": {
+        "title": "ファイルの種類",
+        "description": "どの種類のファイルが取り込まれるか。"
+      },
+      "inline": {
+        "title": "インラインマルチモーダルコンテンツ",
+        "description": "ノート内に埋め込まれたメディア。"
+      },
+      "tags": {
+        "title": "タグ",
+        "description": "すべてのドキュメントに付けられるタグ。"
+      },
+      "metadata": {
+        "title": "メタデータ",
+        "description": "すべてのドキュメントに添付されるキー/値メタデータ。"
+      },
+      "schedule": {
+        "title": "スケジュール",
+        "description": "タスクを自動実行するタイミングを設定します。"
+      }
+    },
+    "toast": {
+      "created": "タスクが作成されました",
+      "updated": "タスクが保存されました",
+      "saveFailed": "タスクを保存できませんでした",
+      "conflict": "紛争"
+    }
+  },
+  "runs": {
+    "title": "実行履歴",
+    "description": "すべてのタスクの実行履歴です。",
+    "notStarted": "開始されていません",
+    "total_one": "{{formatted}} 回実行",
+    "total_other": "{{formatted}} 回実行",
+    "columns": {
+      "task": "タスク",
+      "status": "ステータス",
+      "trigger": "実行方法",
+      "mode": "実行モード",
+      "started": "開始時刻",
+      "duration": "期間",
+      "counters": "結果"
+    },
+    "trigger": {
+      "scheduled": "予定されている",
+      "manual": "手動"
+    },
+    "mode": {
+      "incremental": "インクリメンタル",
+      "full": "全件",
+      "reingest": "全件再取り込み"
+    },
+    "counters": {
+      "discoveredCount": "検出数",
+      "createdCount": "作成されました",
+      "updatedCount": "更新されました",
+      "deletedCount": "削除されました",
+      "unchangedCount": "変わらない",
+      "skippedCount": "スキップされました",
+      "failedCount": "失敗しました"
+    },
+    "filters": {
+      "status": "ステータスでフィルタリングする",
+      "task": "タスクごとにフィルタリングする",
+      "allStatuses": "すべてのステータス",
+      "allTasks": "すべてのタスク",
+      "clear": "フィルターをクリアする"
+    },
+    "empty": {
+      "title": "実行履歴はまだありません",
+      "description": "タスクがスケジュールまたは手動で実行されると、ここに履歴が表示されます。",
+      "filteredTitle": "条件に一致する実行履歴はありません",
+      "filteredDescription": "別のステータスまたはタスクを試してください。",
+      "taskTitle": "実行履歴はまだありません",
+      "taskDescription": "「今すぐ実行」を選んで、最初の同期を開始します。"
+    }
+  },
+  "runDetail": {
+    "notFound": "実行履歴が見つかりません",
+    "error": "実行エラー",
+    "scheduledFor": "実行予定",
+    "finished": "完了しました",
+    "inProgress": "進行中",
+    "cursorBefore": "実行前のカーソル",
+    "cursorAfter": "実行後のカーソル",
+    "noCursor": "なし",
+    "operations": "Hindsight の操作",
+    "noOperations": "この実行には非同期操作はありません。",
+    "log": "ログ",
+    "noLog": "ログ行はありません。",
+    "opColumns": {
+      "remoteId": "リモートID",
+      "type": "種類",
+      "status": "ステータス",
+      "retries": "再試行",
+      "created": "作成されました",
+      "updated": "更新されました"
+    }
+  },
+  "dashboard": {
+    "title": "ダッシュボード",
+    "description": "同期アクティビティの概要。",
+    "stats": {
+      "enabledTasks": "有効なタスク",
+      "ofTotal": "{{total}} 合計中",
+      "running": "実行中",
+      "runs24h_one": "過去 24 時間の実行 {{count}} 回",
+      "runs24h_other": "過去 24 時間の実行 {{count}} 回",
+      "items": "アイテムが同期されました",
+      "itemsSub": "すべてのタスクにわたって",
+      "failures24h": "障害 (24 時間)",
+      "needsAttention": "注意が必要です",
+      "allGood": "大丈夫です"
+    },
+    "getStarted": {
+      "title": "最初の同期をセットアップする",
+      "description": "ソースと Hindsight の資格情報を追加し、タスクを作成します。",
+      "credentials": "認証情報の追加"
+    },
+    "reauth": {
+      "title": "資格情報の再接続が必要です"
+    },
+    "running": {
+      "title": "実行中のタスク",
+      "empty": "現在実行中のタスクはありません"
+    },
+    "nextRuns": {
+      "title": "次回の予定",
+      "empty": "今後の実行予定はありません"
+    },
+    "failures": {
+      "title": "最近の失敗",
+      "empty": "最近失敗はありません"
+    }
+  },
+  "settings": {
+    "title": "設定",
+    "description": "グローバル同期動作。",
+    "units": {
+      "hours": "時間"
+    },
+    "sync": {
+      "title": "同期",
+      "description": "すべてのタスクに適用されます。",
+      "incremental": "増分同期",
+      "incrementalHelp": "可能な場合は、プロバイダーネイティブの変更追跡を使用します。オフの場合、実行のたびに完全なインベントリが実行されます (変更されていないコンテンツは再アップロードされません)。",
+      "reconcileInterval": "全件同期の間隔",
+      "reconcileIntervalHelp": "前回の全件同期からこの期間を過ぎると、通常の実行が全件スキャンに切り替わります。",
+      "maxFileSize": "最大ファイルサイズ",
+      "maxFileSizeHelp": "大きなファイルはスキップされます。"
+    },
+    "files": {
+      "title": "グローバルファイルタイプ",
+      "description": "タスクのデフォルトのファイルタイプは「グローバルに従う」に設定されています。除外されたファイルは調整中に削除されます。"
+    },
+    "oauth": {
+      "title": "OAuth",
+      "description": "このリダイレクト URI を、Google Drive および OneDrive 資格情報の Google Cloud および Microsoft Entra (Azure) アプリ構成に登録します。",
+      "redirectUri": "URIをリダイレクト"
+    },
+    "toast": {
+      "saved": "設定が保存されました",
+      "failed": "設定を保存できませんでした"
+    }
+  },
+  "notFound": {
+    "title": "ページが見つかりません",
+    "description": "お探しのページは存在しません。",
+    "home": "ダッシュボードに移動"
+  },
+  "dryRun": {
+    "title": "シミュレーション：{{name}}",
+    "description": "保存済みタスクでソース全体をスキャンして動作を確認します。ドキュメントの送信や削除は行わず、同期の進捗と実行履歴も変更しません。",
+    "start": "シミュレーションを開始",
+    "running": "スキャン中…",
+    "complete_one": "ソース項目を {{count}} 件スキャンしました。",
+    "complete_other": "ソース項目を {{count}} 件スキャンしました。",
+    "incomplete_one": "スキャン未完了（{{count}} 件）。未検出の項目は削除対象になりません。",
+    "incomplete_other": "スキャン未完了（{{count}} 件）。未検出の項目は削除対象になりません。",
+    "truncated": "先頭の100件を表示しています。集計にはすべての項目が含まれます。",
+    "file": "ソースアイテム",
+    "action": "アクション",
+    "reason": "理由",
+    "actions": {
+      "create": "作成",
+      "update": "アップデート",
+      "delete": "削除",
+      "unchanged": "変わらない",
+      "skip": "スキップ",
+      "fail": "失敗しました"
+    }
+  },
+  "providerCopy": {
+    "integrationToken": "インテグレーショントークン",
+    "dataSource": "データソース",
+    "pageTitle": "ページタイトル",
+    "lastEdited": "最終編集日時",
+    "created": "作成日時",
+    "oauthClientId": "OAuth クライアント ID",
+    "oauthClientSecret": "OAuth クライアントシークレット",
+    "drive": "ドライブ",
+    "folder": "フォルダー",
+    "includeSubfolders": "サブフォルダーを含める",
+    "exportGoogleDocs": "Google ドキュメント、スプレッドシート、スライドをエクスポート",
+    "fileName": "ファイル名",
+    "path": "パス",
+    "extension": "拡張子",
+    "mimeType": "MIME タイプ",
+    "fileType": "ファイル形式",
+    "sizeBytes": "サイズ（バイト）",
+    "modified": "更新日時",
+    "rootDirectory": "ルートディレクトリ",
+    "rootFolder": "ルートフォルダー",
+    "serverUrl": "サーバー URL",
+    "username": "ユーザー名",
+    "passwordApp": "パスワード / アプリパスワード",
+    "bearerToken": "Bearer トークン",
+    "endpoint": "エンドポイント",
+    "region": "リージョン",
+    "accessKeyId": "アクセスキー ID",
+    "secretAccessKey": "シークレットアクセスキー",
+    "sessionToken": "セッショントークン",
+    "pathStyle": "パス形式のアドレス指定",
+    "baseUrl": "ベース URL",
+    "instanceId": "インスタンス ID",
+    "apiToken": "API トークン",
+    "notebook": "ノートブック",
+    "pathPrefix": "パスのプレフィックス",
+    "bucket": "バケット",
+    "prefix": "プレフィックス",
+    "applicationId": "アプリケーション（クライアント）ID",
+    "clientSecret": "クライアントシークレット",
+    "tenant": "テナント",
+    "title": "タイトル",
+    "updated": "更新日時",
+    "tags": "タグ",
+    "notionDescription": "共有されたデータソースを読み取るための Notion 内部インテグレーショントークンです。",
+    "siYuanDescription": "SiYuan カーネルの API エンドポイントとトークンです（設定 → このアプリについて → API トークン）。",
+    "filesystemDescription": "アプリケーションからアクセスできるローカルファイルです。",
+    "googleDriveDescription": "OAuth で Google アカウントに接続し、Drive を読み取り専用で利用します。",
+    "oneDriveDescription": "OAuth で Microsoft アカウントまたは Microsoft 365 に接続し、OneDrive と SharePoint を利用します。",
+    "s3Description": "Amazon S3 と、MinIO、Cloudflare R2、Backblaze B2、Wasabi などの互換サービスです。",
+    "webdavDescription": "Nextcloud、ownCloud、Synology、Apache mod_dav、rclone serve などに対応します。",
+    "hindsightDescription": "同期データの送信先となる Hindsight API の URL です。",
+    "filesystemRootHelp": "アプリケーションサーバー上の絶対パスを入力してください。Docker の場合はコンテナー内のマウント先を指定します。",
+    "filesystemFolderHelp": "この資格情報のルートディレクトリからの相対パスです。ルートを指定する場合は . を入力します。",
+    "notionDataSourceHelp": "Notion のデータソース ID（データベース ID ではありません）。「参照」から、このインテグレーションに共有されたデータソースを選べます。",
+    "siYuanInstanceHelp": "この SiYuan インスタンスを識別する固定 ID です。空欄の場合はベース URL が使われます。",
+    "s3EndpointHelp": "AWS S3 を使う場合は空欄にします。",
+    "s3PathStyleHelp": "MinIO など、多くのセルフホスト型 S3 サーバーで必要です。",
+    "s3PrefixHelp": "このキーのプレフィックス配下にあるオブジェクトだけを対象にします。",
+    "webdavTokenHelp": "サーバーがトークン認証を要求する場合は、ユーザー名とパスワードの代わりに使用します。",
+    "webdavRootHelp": "サーバー URL からの相対パスです。",
+    "googleDriveHelp": "空欄の場合は「マイドライブ」を使います。共有ドライブも選択できます。",
+    "wholeDriveHelp": "空欄の場合はドライブ全体を対象にします。",
+    "googleExportHelp": "Google ドキュメントは Markdown、スプレッドシートは CSV、スライドは PDF に変換します。",
+    "tenantHelp": "common、organizations、consumers、またはテナント ID を指定します。",
+    "oneDriveHelp": "個人用 OneDrive を使う場合は空欄にします。",
+    "siYuanPathHelp": "人が読めるパスがこのプレフィックスで始まるドキュメントだけを対象にします。",
+    "siYuanNotebookHelp": "空欄の場合は、開いているすべてのノートブックを同期します。",
+    "hindsightApiKeyHelp": "Bearer トークンとして送信されます。インスタンスで認証を使わない場合は空欄にします。",
+    "syncCollectionHelp": "サーバーが対応している場合は sync-collection（RFC 6578）を使用します。",
+    "fileSystem": "ファイルシステム"
+  }
+}

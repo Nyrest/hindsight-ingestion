@@ -43,6 +43,15 @@ const KIND_ICONS: Record<string, LucideIcon> = {
   site: Globe,
 };
 
+const ROOT_BREADCRUMB_KEYS: Record<string, string> = {
+  Root: "browse.root",
+  Banks: "browse.memoryBanks",
+  Drives: "browse.drives",
+  Buckets: "browse.buckets",
+  "Data sources": "browse.dataSources",
+  Notebooks: "browse.notebooks",
+};
+
 export interface BrowseSelection {
   id: string;
   name: string;
@@ -129,7 +138,7 @@ export function BrowseDialog({
                       last ? "font-medium" : "text-muted-foreground hover:bg-accent hover:text-foreground",
                     )}
                   >
-                    {c.name || t("browse.root")}
+                    {i === 0 ? t(ROOT_BREADCRUMB_KEYS[c.name] ?? "browse.root") : c.name || t("browse.root")}
                   </button>
                 </span>
               );

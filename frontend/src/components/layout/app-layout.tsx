@@ -8,6 +8,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 import { api } from "@/lib/api";
 import { qk } from "@/lib/query";
 import { cn } from "@/lib/utils";
+import { LanguageSelector } from "./language-selector";
 import { ThemeToggle } from "./theme-toggle";
 
 const NAV = [
@@ -90,6 +91,7 @@ export function AppLayout() {
         <div className="flex-1 overflow-y-auto">
           <NavItems />
         </div>
+        <LanguageSelector className="px-2" />
         <Footer />
       </aside>
 
@@ -115,6 +117,7 @@ export function AppLayout() {
               <div className="flex-1">
                 <NavItems onNavigate={() => setMobileOpen(false)} />
               </div>
+              <LanguageSelector className="px-2" />
               <Footer />
             </div>
           </SheetContent>

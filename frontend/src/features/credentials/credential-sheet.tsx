@@ -33,6 +33,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { errorMessage, isApiError } from "@/lib/api";
 import { findCredentialType, useConnectors } from "@/lib/connectors";
+import { providerCopy } from "@/lib/provider-copy";
 import type { Credential } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useCreateCredential, useUpdateCredential } from "./api";
@@ -212,14 +213,14 @@ export function CredentialSheet({
                           <TypeIcon type={ct.type} boxed />
                           <span className="min-w-0">
                             <span className="flex items-center gap-1.5 text-sm font-medium">
-                              {ct.name}
+                              {providerCopy(ct.name, t)}
                               {ct.oauth && (
                                 <Badge variant="outline" className="h-4 px-1 text-[10px]">
                                   OAuth
                                 </Badge>
                               )}
                             </span>
-                            <span className="line-clamp-2 text-xs text-muted-foreground">{ct.description}</span>
+                            <span className="line-clamp-2 text-xs text-muted-foreground">{providerCopy(ct.description, t)}</span>
                           </span>
                         </button>
                       );
@@ -240,7 +241,7 @@ export function CredentialSheet({
               >
                 <Input
                   id="cred-name"
-                  placeholder={t("credentials.namePlaceholder", { type: typeSpec.name })}
+                  placeholder={t("credentials.namePlaceholder", { type: providerCopy(typeSpec.name, t) })}
                   aria-invalid={!!form.formState.errors.name}
                   {...form.register("name")}
                 />
