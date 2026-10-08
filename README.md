@@ -124,6 +124,12 @@ For these additional variables, edit the Compose service's `environment` section
 | `LISTEN_ADDR` | `:8080` | HTTP listen address. |
 | `NOTION_API_BASE` | `https://api.notion.com/v1` | Alternative Notion API URL for a proxy or local testing. |
 
+### Docker releases
+
+Publishing a GitHub Release builds `linux/amd64` and `linux/arm64` images at `ghcr.io/nyrest/hindsight-ingestion`.
+
+A release tagged `v1.2.3` publishes `v1.2.3`, `1.2.3`, `1.2`, `1` and `latest`. Pre-releases publish their version tags without updating `latest`; `0.x` releases omit the `0` tag.
+
 ## 🛠️ Development
 
 <details>

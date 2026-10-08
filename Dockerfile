@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Stage 1: build the React frontend with Bun.
-FROM oven/bun:1 AS frontend
+FROM --platform=$BUILDPLATFORM oven/bun:1 AS frontend
 WORKDIR /src/frontend
 COPY frontend/package.json frontend/bun.lock ./
 RUN bun install --frozen-lockfile
