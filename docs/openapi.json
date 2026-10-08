@@ -103,6 +103,36 @@
         ],
         "type": "object"
       },
+      "Config": {
+        "properties": {
+          "address": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "default",
+              "none",
+              "http",
+              "https",
+              "socks5"
+            ],
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "address",
+          "username",
+          "password"
+        ],
+        "type": "object"
+      },
       "CredentialType": {
         "properties": {
           "description": {
@@ -413,6 +443,34 @@
         ],
         "type": "object"
       },
+      "Scope": {
+        "properties": {
+          "rule": {
+            "enum": [
+              "combined",
+              "shared",
+              "per_tag",
+              "all_combinations",
+              "custom"
+            ],
+            "type": "string"
+          },
+          "scopes": {
+            "items": {
+              "items": {
+                "$ref": "#/components/schemas/TagRef"
+              },
+              "type": "array"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "rule",
+          "scopes"
+        ],
+        "type": "object"
+      },
       "SourceInfo": {
         "properties": {
           "browseKinds": {
@@ -454,6 +512,66 @@
           "browseKinds",
           "fields",
           "filterFields"
+        ],
+        "type": "object"
+      },
+      "Tag": {
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "tag": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tag",
+          "count"
+        ],
+        "type": "object"
+      },
+      "TagPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "offset": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "type": "object"
+      },
+      "TagRef": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "literal",
+              "dynamic"
+            ],
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "value"
         ],
         "type": "object"
       },
@@ -573,6 +691,16 @@
               }
             ]
           },
+          "proxy": {
+            "$ref": "#/components/schemas/Config"
+          },
+          "proxyMode": {
+            "enum": [
+              "global",
+              "override"
+            ],
+            "type": "string"
+          },
           "status": {
             "enum": [
               "active",
@@ -596,6 +724,8 @@
           }
         },
         "required": [
+          "proxyMode",
+          "proxy",
           "id",
           "name",
           "type",
@@ -608,6 +738,43 @@
           "usedByTasks",
           "createdAt",
           "updatedAt"
+        ],
+        "type": "object"
+      },
+      "credentialProxyBody": {
+        "properties": {
+          "address": {
+            "type": "string"
+          },
+          "password": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "enum": [
+              "default",
+              "none",
+              "http",
+              "https",
+              "socks5"
+            ],
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "address",
+          "username",
+          "password"
         ],
         "type": "object"
       },
@@ -696,6 +863,17 @@
           "items",
           "runs24h",
           "failed24h"
+        ],
+        "type": "object"
+      },
+      "deleteDocumentsDTO": {
+        "properties": {
+          "deletedCount": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "deletedCount"
         ],
         "type": "object"
       },
@@ -1144,9 +1322,17 @@
           },
           "oauthRedirectUri": {
             "type": "string"
+          },
+          "observationScope": {
+            "$ref": "#/components/schemas/Scope"
+          },
+          "proxy": {
+            "$ref": "#/components/schemas/Config"
           }
         },
         "required": [
+          "proxy",
+          "observationScope",
           "inlineMultimodalEnabled",
           "incrementalSyncEnabled",
           "fullReconcileIntervalHours",
@@ -1261,6 +1447,16 @@
               }
             ]
           },
+          "observationScope": {
+            "$ref": "#/components/schemas/Scope"
+          },
+          "observationScopeMode": {
+            "enum": [
+              "global",
+              "override"
+            ],
+            "type": "string"
+          },
           "policyRevision": {
             "type": "integer"
           },
@@ -1294,6 +1490,8 @@
           }
         },
         "required": [
+          "observationScopeMode",
+          "observationScope",
           "id",
           "name",
           "enabled",
@@ -1495,6 +1693,16 @@
                   "name": {
                     "type": "string"
                   },
+                  "proxy": {
+                    "$ref": "#/components/schemas/credentialProxyBody"
+                  },
+                  "proxyMode": {
+                    "enum": [
+                      "global",
+                      "override"
+                    ],
+                    "type": "string"
+                  },
                   "type": {
                     "type": "string"
                   }
@@ -1656,6 +1864,16 @@
                     "type": "object"
                   },
                   "name": {
+                    "type": "string"
+                  },
+                  "proxy": {
+                    "$ref": "#/components/schemas/credentialProxyBody"
+                  },
+                  "proxyMode": {
+                    "enum": [
+                      "global",
+                      "override"
+                    ],
                     "type": "string"
                   },
                   "type": {
@@ -1892,6 +2110,85 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/strategiesDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/credentials/{id}/tags": {
+      "get": {
+        "operationId": "get_api_credentials_id_tags",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "bankId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagPage"
                 }
               }
             },
@@ -2254,6 +2551,12 @@
                   },
                   "maxFileSizeMB": {
                     "type": "integer"
+                  },
+                  "observationScope": {
+                    "$ref": "#/components/schemas/Scope"
+                  },
+                  "proxy": {
+                    "$ref": "#/components/schemas/Config"
                   }
                 },
                 "type": "object"
@@ -2392,6 +2695,16 @@
                   "name": {
                     "type": "string"
                   },
+                  "observationScope": {
+                    "$ref": "#/components/schemas/Scope"
+                  },
+                  "observationScopeMode": {
+                    "enum": [
+                      "global",
+                      "override"
+                    ],
+                    "type": "string"
+                  },
                   "retainStrategy": {
                     "type": "string"
                   },
@@ -2525,6 +2838,14 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "deleteDocuments",
+            "required": false,
+            "schema": {
+              "type": "boolean"
             }
           }
         ],
@@ -2666,6 +2987,16 @@
                   "name": {
                     "type": "string"
                   },
+                  "observationScope": {
+                    "$ref": "#/components/schemas/Scope"
+                  },
+                  "observationScopeMode": {
+                    "enum": [
+                      "global",
+                      "override"
+                    ],
+                    "type": "string"
+                  },
                   "retainStrategy": {
                     "type": "string"
                   },
@@ -2746,6 +3077,53 @@
               }
             },
             "description": "Accepted"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/tasks/{id}/documents": {
+      "delete": {
+        "operationId": "delete_api_tasks_id_documents",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/deleteDocumentsDTO"
+                }
+              }
+            },
+            "description": "OK"
           },
           "401": {
             "content": {

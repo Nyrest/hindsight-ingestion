@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 	"gorm.io/gorm/clause"
 
+	"github.com/Nyrest/hindsight-ingestion/internal/crypto"
 	"github.com/Nyrest/hindsight-ingestion/internal/database"
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
 	"github.com/Nyrest/hindsight-ingestion/internal/settings"
@@ -26,6 +27,7 @@ func TestInlineSchemaUpgradeAndRestart(t *testing.T) {
 	}
 	for dialect, dsn := range cases {
 		t.Run(dialect, func(t *testing.T) {
+			cipher, _ := crypto.New(make([]byte, 32))
 			log := slog.New(slog.NewTextHandler(io.Discard, nil))
 			db, err := database.Open(dialect, dsn, log)
 			if err != nil {
@@ -67,7 +69,7 @@ func TestInlineSchemaUpgradeAndRestart(t *testing.T) {
 				if task.InlineMultimodalMode != "global" || task.InlineMultimodalEnabled || task.FilePolicyJSON != `{"images":true,"audios":true}` || row.NeedsImageRetry || row.SyncedFingerprint != "existing" || !row.DestinationPresent {
 					t.Fatalf("migration data: %+v %+v", task, row)
 				}
-				v, err := settings.NewStore(db).Get(t.Context())
+				v, err := settings.NewStore(db, cipher).Get(t.Context())
 				if err != nil || v.InlineMultimodalEnabled {
 					t.Fatalf("legacy global defaults: %+v %v", v, err)
 				}

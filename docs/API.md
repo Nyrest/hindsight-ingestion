@@ -62,6 +62,8 @@ clears it.
 
 ```json
 {
+  "proxy": { "type": "default", "address": "", "username": "", "password": "" },
+  "observationScope": { "rule": "combined", "scopes": [] },
   "incrementalSyncEnabled": true,
   "fullReconcileIntervalHours": 24,
   "maxFileSizeMB": 100,
@@ -69,6 +71,24 @@ clears it.
   "oauthRedirectUri": "http://localhost:8080/api/oauth/callback"   // read-only
 }
 ```
+
+### Proxy and observation scope configuration
+
+`proxy.type` accepts `default`, `none`, `http`, `https` or `socks5`. `default` uses the server process's `HTTP_PROXY`, `HTTPS_PROXY` and `NO_PROXY` environment variables (or their lowercase equivalents); `none` forces a direct connection. Manual proxies take a `host:port` address and optional `username`/`password`. Passwords are AES-GCM encrypted at rest and returned as `********`. Omit the password or send the mask to preserve it on update; send an empty string to clear it. Credentials add `proxyMode: "global" | "override"` and the same proxy object. Existing credentials inherit global settings.
+
+`observationScope.rule` accepts `combined`, `shared`, `per_tag`, `all_combinations` or `custom`. Tasks add `observationScopeMode: "global" | "override"` and the same scope object. Existing tasks inherit Combined. Custom scopes are nonempty groups of typed tag references:
+
+```json
+{
+  "rule": "custom",
+  "scopes": [
+    [{ "kind": "dynamic", "value": "task" }],
+    [{ "kind": "literal", "value": "ingestion" }, { "kind": "dynamic", "value": "source_group" }]
+  ]
+}
+```
+
+Dynamic values `task`, `source` and `source_group` resolve to the current task, connector and source group tags. A missing dynamic tag fails the item. Literal tags may be new and do not add tags to documents. Duplicate tags and groups are removed. `all_combinations` produces 2ⁿ − 1 scopes for n tags and can increase processing time and cost exponentially. Scopes apply to Notion and SiYuan text and inline content; file uploads keep Combined. Effective scope changes trigger a full scan and re-retain; upgrading with Combined preserves existing fingerprints.
 
 ## Connectors (schema for schema-driven forms)
 
@@ -162,9 +182,10 @@ Credential {
 ```
 
 - `GET /api/credentials` → `Credential[]`
-- `POST /api/credentials` body `{ name, type, config, customHeaders }` → `201 Credential`
+- `POST /api/credentials` body `{ name, type, config, customHeaders, proxyMode?, proxy? }` → `201 Credential`
 - `GET /api/credentials/:id` → `Credential`
-- `PATCH /api/credentials/:id` body partial `{ name?, config?, customHeaders? }` → `Credential`.
+- `GET /api/credentials/:id/tags?bankId=…&q=…&limit=100&offset=0` → `{ items: [{ tag, count }], total, limit, offset }`. Uses Hindsight bank tags for autocomplete; failed searches do not prevent literal input.
+- `PATCH /api/credentials/:id` body partial `{ name?, config?, customHeaders?, proxyMode?, proxy? }` → `Credential`.
   `customHeaders`, when present, replaces the whole set (masked values keep the old value for that header).
   Header names are rejected when duplicated case-insensitively.
 - `DELETE /api/credentials/:id` → `204` (`409` if used by a task)
@@ -211,6 +232,8 @@ Task {
   "retainStrategy": "",            // empty → bank default
   "customTags": ["team:alpha"],
   "customMetadata": { "project": "x" },   // keys starting with "_ingestion_" are rejected
+  "observationScopeMode": "global", // global | override
+  "observationScope": { "rule": "combined", "scopes": [] },
   "filePolicyMode": "global",      // global | override
   "filePolicy": { "plainText": true, "documents": true, "images": false, "audios": false },
   "cronExpression": "*/15 * * * *",
@@ -233,7 +256,8 @@ Task {
 - `POST /api/tasks` → `201 Task`
 - `GET /api/tasks/:id` → `Task`
 - `PATCH /api/tasks/:id` (partial; same fields) → `Task`. Changing destination after `destinationLocked` → `422`.
-- `DELETE /api/tasks/:id` → `204` (`409` while running)
+- `DELETE /api/tasks/:id?deleteDocuments=false` → `204`. By default removes only the local task and history. When `deleteDocuments=true`, completes document cleanup first and keeps the task on partial failure.
+- `DELETE /api/tasks/:id/documents` → `{ deletedCount }`. Pauses the task, removes its schedule and deletes remote documents and associated memories with the strict `ingestion_task:<id>` tag in the task's destination bank. Source content is unaffected. It collects all pages before deletion, treats 404 as already deleted and records each confirmed deletion in the ledger. Cleanup resets the cursor and requires a full scan for future re-import. Failure returns `502`, retains progress and leaves the task paused for retry. Runs, edits, deletion and other cleanup cannot overlap; unfinished remote retain operations return `409`. Untagged/unmatched documents are never included based on the local ledger.
 - `POST /api/tasks/:id/run` → `202 { "runId": "…" }`, `409` if already running
   Stale active run rows without a live execution are marked `interrupted` before starting a new run.
 - `POST /api/tasks/:id/full-reconcile` → same as run, forces a full inventory scan

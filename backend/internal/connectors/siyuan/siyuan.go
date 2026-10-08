@@ -69,7 +69,7 @@ type api struct {
 func newAPI(cred connectors.Credential) *api {
 	return &api{
 		base: strings.TrimRight(cred.String("baseUrl"), "/"),
-		http: httpx.New(cred.Headers, map[string]string{"Authorization": "Token " + cred.String("token")}),
+		http: httpx.New(cred.Headers, map[string]string{"Authorization": "Token " + cred.String("token")}, cred.Proxy),
 	}
 }
 
@@ -263,7 +263,7 @@ func fetchAsset(ctx context.Context, req connectors.ContentRequest, rawURL strin
 		return nil, fmt.Errorf("invalid SiYuan base URL")
 	}
 	if u.IsAbs() && (u.Scheme != base.Scheme || u.Host != base.Host) {
-		return connectors.FetchImage(ctx, rawURL, nil)
+		return connectors.FetchImageWithProxy(ctx, rawURL, nil, req.Credential.Proxy)
 	}
 	return fetchLocalAsset(ctx, req, u, base)
 }

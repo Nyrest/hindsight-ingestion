@@ -1,9 +1,11 @@
 package sync
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
+	"github.com/Nyrest/hindsight-ingestion/internal/observations"
 )
 
 func (r *runner) includesImages() bool {
@@ -20,5 +22,15 @@ func (r *runner) itemFingerprint(item connectors.SourceItem, tags []string, meta
 	if r.src.Info().Capabilities.SupportsInlineMultimodal {
 		revision += fmt.Sprintf("\x00inline-v1:%t:%t:%d", r.inlineEnabled, r.policy.Images, r.maxSz)
 	}
+	if scopes, err := r.resolvedObservationScope(item); err == nil && len(scopes) > 0 {
+		revision += "\x00observation-scopes:" + string(scopes)
+	}
 	return Fingerprint(revision, r.task.PolicyRevision, r.task.RetainStrategy, tags, metadata)
+}
+
+func (r *runner) resolvedObservationScope(item connectors.SourceItem) (json.RawMessage, error) {
+	if r.task.SourceType != "notion" && r.task.SourceType != "siyuan" {
+		return nil, nil
+	}
+	return r.observationScope.Resolve(observations.DocumentTags{TaskID: r.task.ID, SourceType: r.task.SourceType, SourceGroup: item.Tags})
 }

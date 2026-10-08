@@ -18,9 +18,12 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/hindsight"
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
 	"github.com/Nyrest/hindsight-ingestion/internal/oauth"
+	"github.com/Nyrest/hindsight-ingestion/internal/proxy"
 )
 
 type credentialDTO struct {
+	ProxyMode      string            `json:"proxyMode" enum:"global,override"`
+	Proxy          proxy.Config      `json:"proxy"`
 	ID             string            `json:"id"`
 	Name           string            `json:"name"`
 	Type           string            `json:"type"`
@@ -45,7 +48,7 @@ func (s *Server) credentialView(ctx context.Context, m *models.Credential) crede
 	s.DB.WithContext(ctx).Model(&models.Task{}).
 		Where("source_credential_id = ? OR destination_credential_id = ?", m.ID, m.ID).Count(&used)
 	return credentialDTO{
-		ID: m.ID, Name: m.Name, Type: m.Type, Config: view.Config, CustomHeaders: view.CustomHeaders,
+		ID: m.ID, Name: m.Name, Type: m.Type, ProxyMode: view.ProxyMode, Proxy: view.Proxy, Config: view.Config, CustomHeaders: view.CustomHeaders,
 		Status: status, StatusMessage: msg, OAuthConnected: view.OAuthConnect,
 		OAuthExpiresAt: timePtr(m.OAuthExpiresAt), UsedByTasks: used,
 		CreatedAt: timeStr(m.CreatedAt), UpdatedAt: timeStr(m.UpdatedAt),
@@ -65,15 +68,31 @@ func (s *Server) listCredentials(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, out)
 }
 
+type credentialProxyBody struct {
+	Type     string  `json:"type" enum:"default,none,http,https,socks5"`
+	Address  string  `json:"address"`
+	Username string  `json:"username"`
+	Password *string `json:"password"`
+}
+
 type credentialBody struct {
-	Name          *string            `json:"name"`
-	Type          string             `json:"type"`
-	Config        map[string]any     `json:"config"`
-	CustomHeaders *map[string]string `json:"customHeaders"`
+	ProxyMode     *string              `json:"proxyMode" enum:"global,override"`
+	Proxy         *credentialProxyBody `json:"proxy"`
+	Name          *string              `json:"name"`
+	Type          string               `json:"type"`
+	Config        map[string]any       `json:"config"`
+	CustomHeaders *map[string]string   `json:"customHeaders"`
 }
 
 func (b credentialBody) input() credentials.Input {
-	in := credentials.Input{Name: b.Name, Type: b.Type, Config: b.Config}
+	in := credentials.Input{ProxyMode: b.ProxyMode, Name: b.Name, Type: b.Type, Config: b.Config}
+	if b.Proxy != nil {
+		in.Proxy = &proxy.Config{Type: b.Proxy.Type, Address: b.Proxy.Address, Username: b.Proxy.Username}
+		in.ProxyPasswordOmitted = b.Proxy.Password == nil
+		if b.Proxy.Password != nil {
+			in.Proxy.Password = *b.Proxy.Password
+		}
+	}
 	if b.CustomHeaders != nil {
 		in.HeadersSet = true
 		in.CustomHeaders = *b.CustomHeaders

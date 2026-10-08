@@ -91,7 +91,7 @@ func newClient(cred connectors.Credential) (*minio.Client, error) {
 	if cred.Bool("pathStyle") {
 		lookup = minio.BucketLookupPath
 	}
-	transport := httpx.Shared.Clone()
+	transport := httpx.Transport(cred.Proxy)
 	return minio.New(host, &minio.Options{
 		Creds:        credentials.NewStaticV4(cred.String("accessKeyId"), cred.String("secretAccessKey"), cred.String("sessionToken")),
 		Secure:       secure,

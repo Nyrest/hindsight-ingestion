@@ -23,6 +23,7 @@ import { PageHeader } from "@/components/page-header";
 import { RunStatusBadge } from "@/components/status-badge";
 import { TypeIcon } from "@/components/type-icon";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Card } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -38,6 +39,7 @@ import { useCredentials } from "@/features/credentials/api";
 import {
   useCancelTask,
   useDeleteTask,
+  useDeleteDocuments,
   useTasks,
   useToggleTask,
   useTriggerTask,
@@ -63,6 +65,9 @@ export default function TasksPage() {
   const trigger = useTriggerTask();
   const cancel = useCancelTask();
   const del = useDeleteTask();
+  const clear = useDeleteDocuments();
+  const [toClear, setToClear] = useState<Task | null>(null);
+  const [deleteDocuments, setDeleteDocuments] = useState(false);
   const [dryRunTask, setDryRunTask] = useState<Task | null>(null);
   const [toDelete, setToDelete] = useState<Task | null>(null);
   const [toReingest, setToReingest] = useState<Task | null>(null);
@@ -88,12 +93,23 @@ export default function TasksPage() {
   async function onDelete() {
     if (!toDelete) return;
     try {
-      await del.mutateAsync(toDelete.id);
+      await del.mutateAsync({ id: toDelete.id, deleteDocuments });
       toast.success(t("tasks.toast.deleted"), { description: toDelete.name });
     } catch (e) {
       toast.error(isApiError(e) && e.status === 409 ? t("tasks.toast.deleteRunning") : t("tasks.toast.deleteFailed"), {
         description: errorMessage(e),
       });
+      throw e;
+    }
+  }
+
+  async function onClearDocuments() {
+    if (!toClear) return;
+    try {
+      const result = await clear.mutateAsync(toClear.id);
+      toast.success(t("tasks.clearDocuments.success", { count: result.deletedCount }));
+    } catch (e) {
+      toast.error(t("tasks.clearDocuments.failed"), { description: errorMessage(e) });
       throw e;
     }
   }
@@ -187,7 +203,10 @@ export default function TasksPage() {
               <History /> {t("tasks.actions.viewRuns")}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive" onSelect={() => setToDelete(task)}>
+            <DropdownMenuItem variant="destructive" disabled={task.running} onSelect={() => setToClear(task)}>
+              <Trash2 /> {t("tasks.actions.deleteDocuments")}
+            </DropdownMenuItem>
+            <DropdownMenuItem variant="destructive" disabled={task.running} onSelect={() => { setDeleteDocuments(false); setToDelete(task); }}>
               <Trash2 /> {t("common.delete")}
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -351,7 +370,19 @@ export default function TasksPage() {
         confirmLabel={t("common.delete")}
         destructive
         onConfirm={onDelete}
-      />
+      >
+        <div className="space-y-2">
+          <label className="flex items-center gap-2 text-sm">
+            <Checkbox checked={deleteDocuments} onCheckedChange={(v) => setDeleteDocuments(v === true)} disabled={del.isPending} />
+            {t("tasks.delete.alsoDeleteDocuments")}
+          </label>
+          {deleteDocuments && <p className="text-sm text-muted-foreground">{t("tasks.delete.documentsHelp")}</p>}
+        </div>
+      </ConfirmDialog>
+      <ConfirmDialog open={!!toClear} onOpenChange={(o) => !o && setToClear(null)}
+        title={t("tasks.clearDocuments.title", { name: toClear?.name ?? "" })}
+        description={t("tasks.clearDocuments.description")}
+        confirmLabel={t("tasks.actions.deleteDocuments")} destructive onConfirm={onClearDocuments} />
       <ConfirmDialog
         open={!!toReingest}
         onOpenChange={(o) => !o && setToReingest(null)}

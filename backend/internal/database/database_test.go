@@ -11,6 +11,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
+	"github.com/Nyrest/hindsight-ingestion/internal/crypto"
 	"github.com/Nyrest/hindsight-ingestion/internal/database"
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
 	"github.com/Nyrest/hindsight-ingestion/internal/settings"
@@ -103,7 +104,8 @@ func exercise(t *testing.T, db *gorm.DB) {
 	}
 
 	// Settings upsert (reserved word "key").
-	store := settings.NewStore(db)
+	cipher, _ := crypto.New(make([]byte, 32))
+	store := settings.NewStore(db, cipher)
 	v := settings.Defaults
 	v.MaxFileSizeMB = 7
 	if err := store.Put(t.Context(), v); err != nil {

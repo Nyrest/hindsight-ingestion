@@ -363,7 +363,8 @@
       "enable": "Enable",
       "disable": "Disable",
       "viewRuns": "View runs",
-      "dryRun": "Dry-run"
+      "dryRun": "Dry-run",
+      "deleteDocuments": "Delete documents"
     },
     "empty": {
       "title": "No tasks yet",
@@ -387,15 +388,23 @@
       "updateFailed": "Could not update task",
       "deleted": "Task deleted",
       "deleteFailed": "Could not delete task",
-      "deleteRunning": "Task is running; cancel it before deleting"
+      "deleteRunning": "Task is busy; try again after its current operation finishes"
     },
     "delete": {
       "title": "Delete “{{name}}”?",
-      "description": "The task, its run history and its sync state will be removed. Documents already in Hindsight are not deleted."
+      "description": "Delete this task and its run history. Source content will not be affected.",
+      "alsoDeleteDocuments": "Also delete documents in Hindsight",
+      "documentsHelp": "When selected, documents tagged for this task and their associated memories will also be deleted from Hindsight."
     },
     "reingest": {
       "title": "Re-ingest everything for “{{name}}”?",
       "description": "Every matching item will be re-retained into Hindsight, even if unchanged. This may take a long time and consume Hindsight processing."
+    },
+    "clearDocuments": {
+      "title": "Delete documents for “{{name}}”?",
+      "description": "Delete documents tagged for this task and their associated memories from Hindsight. The task will be paused. Source content will not be affected.",
+      "success": "Deleted {{count}} documents",
+      "failed": "Could not delete documents"
     }
   },
   "taskEditor": {
@@ -433,7 +442,11 @@
       "inline": { "title": "Inline multimodal content", "description": "Media embedded in notes." },
       "tags": { "title": "Tags", "description": "Tags attached to every document." },
       "metadata": { "title": "Metadata", "description": "Key/value metadata attached to every document." },
-      "schedule": { "title": "Schedule", "description": "When the task runs automatically." }
+      "schedule": { "title": "Schedule", "description": "When the task runs automatically." },
+      "observations": {
+        "title": "Observation scope",
+        "description": ""
+      }
     },
     "toast": {
       "created": "Task created",
@@ -603,5 +616,47 @@
       "skip": "Skip",
       "fail": "Failed"
     }
+  },
+  "proxy": {
+    "title": "Proxy",
+    "global": "Use global settings",
+    "types": {
+      "default": "Default",
+      "none": "No proxy",
+      "http": "HTTP",
+      "https": "HTTPS",
+      "socks5": "SOCKS5"
+    },
+    "defaultHelp": "Uses the server's proxy environment settings.",
+    "address": "Address",
+    "username": "Username (optional)",
+    "password": "Password (optional)",
+    "invalidAddress": "Enter a proxy address in host:port format with a port between 1 and 65535."
+  },
+  "observationScope": {
+    "title": "Observation scope",
+    "rule": "Rule",
+    "rules": {
+      "combined": "Combined",
+      "shared": "Shared",
+      "per_tag": "Per tag",
+      "all_combinations": "All combinations",
+      "custom": "Custom"
+    },
+    "dynamic": {
+      "task": "Current task",
+      "source": "Current source",
+      "source_group": "Current source group"
+    },
+    "group": "Scope {{number}}",
+    "removeGroup": "Remove scope {{number}}",
+    "addGroup": "Add scope",
+    "addTag": "Add tag",
+    "searchTags": "Search or enter a tag…",
+    "useTag": "Use “{{tag}}”",
+    "emptyGroup": "Add at least one tag to each scope.",
+    "exponentialWarning": "Scopes can grow exponentially: n tags produce 2ⁿ − 1 scopes per document, increasing processing time and cost.",
+    "fileLimitation": "Observation scopes apply to text and inline content. File uploads use Combined.",
+    "tagsUnavailable": "Could not load bank tags. You can still enter a tag."
   }
 }

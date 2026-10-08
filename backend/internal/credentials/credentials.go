@@ -16,6 +16,8 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 	"github.com/Nyrest/hindsight-ingestion/internal/crypto"
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
+	"github.com/Nyrest/hindsight-ingestion/internal/proxy"
+	"github.com/Nyrest/hindsight-ingestion/internal/settings"
 )
 
 // Mask is returned in place of stored secret values.
@@ -38,9 +40,10 @@ func invalid(field, msg string) error {
 
 // secretBlob is the encrypted payload of a credential.
 type secretBlob struct {
-	Secrets map[string]string      `json:"secrets,omitempty"`
-	Headers map[string]string      `json:"headers,omitempty"`
-	OAuth   *connectors.OAuthToken `json:"oauth,omitempty"`
+	ProxyPassword string                 `json:"proxyPassword,omitempty"`
+	Secrets       map[string]string      `json:"secrets,omitempty"`
+	Headers       map[string]string      `json:"headers,omitempty"`
+	OAuth         *connectors.OAuthToken `json:"oauth,omitempty"`
 }
 
 // Service stores and decrypts credentials.
@@ -70,7 +73,18 @@ func (s *Service) Load(ctx context.Context, id string) (connectors.Credential, e
 	if err != nil {
 		return connectors.Credential{}, err
 	}
-	return s.Decrypt(m)
+	cred, err := s.Decrypt(m)
+	if err != nil {
+		return cred, err
+	}
+	if cred.ProxyMode == "global" {
+		global, err := settings.NewStore(s.db, s.cipher).Get(ctx)
+		if err != nil {
+			return cred, err
+		}
+		cred.Proxy = global.Proxy
+	}
+	return cred, nil
 }
 
 // Decrypt converts a stored credential into its usable form.
@@ -81,10 +95,22 @@ func (s *Service) Decrypt(m *models.Credential) (connectors.Credential, error) {
 			return cred, fmt.Errorf("credential %s: invalid config: %w", m.ID, err)
 		}
 	}
+	cred.Proxy = proxy.Default
+	if m.ProxyJSON != "" {
+		if err := json.Unmarshal([]byte(m.ProxyJSON), &cred.Proxy); err != nil {
+			return cred, err
+		}
+	}
+	cred.Proxy = cred.Proxy.Normalize()
+	cred.ProxyMode = m.ProxyMode
+	if cred.ProxyMode == "" {
+		cred.ProxyMode = "global"
+	}
 	var blob secretBlob
 	if err := s.cipher.DecryptJSON(m.EncryptedSecret, &blob); err != nil {
 		return cred, fmt.Errorf("credential %s: %w", m.ID, err)
 	}
+	cred.Proxy.Password = blob.ProxyPassword
 	cred.Secrets = blob.Secrets
 	if cred.Secrets == nil {
 		cred.Secrets = map[string]string{}
@@ -96,15 +122,20 @@ func (s *Service) Decrypt(m *models.Credential) (connectors.Credential, error) {
 
 // Input is a create/update request. Nil fields are left unchanged on update.
 type Input struct {
-	Name          *string
-	Type          string
-	Config        map[string]any
-	CustomHeaders map[string]string
-	HeadersSet    bool
+	ProxyMode            *string
+	ProxyPasswordOmitted bool
+	Proxy                *proxy.Config
+	Name                 *string
+	Type                 string
+	Config               map[string]any
+	CustomHeaders        map[string]string
+	HeadersSet           bool
 }
 
 // View is the masked representation returned by the API.
 type View struct {
+	ProxyMode     string
+	Proxy         proxy.Config
 	Config        map[string]any
 	CustomHeaders map[string]string
 	OAuthConnect  bool
@@ -137,7 +168,7 @@ func (s *Service) MaskedView(m *models.Credential) (View, error) {
 	for _, n := range names {
 		headers[n] = Mask
 	}
-	return View{Config: cfg, CustomHeaders: headers, OAuthConnect: cred.OAuth != nil && cred.OAuth.RefreshToken != ""}, err
+	return View{ProxyMode: cred.ProxyMode, Proxy: cred.Proxy.Masked(), Config: cfg, CustomHeaders: headers, OAuthConnect: cred.OAuth != nil && cred.OAuth.RefreshToken != ""}, err
 }
 
 // Apply validates input and writes it into m (encrypting secrets). On create
@@ -178,7 +209,7 @@ func (s *Service) Apply(m *models.Credential, in Input, creating bool) error {
 		current = connectors.Credential{Config: map[string]any{}, Secrets: map[string]string{}}
 	}
 
-	blob := secretBlob{Secrets: current.Secrets, Headers: current.Headers, OAuth: current.OAuth}
+	blob := secretBlob{Secrets: current.Secrets, Headers: current.Headers, OAuth: current.OAuth, ProxyPassword: current.Proxy.Password}
 	if blob.Secrets == nil {
 		blob.Secrets = map[string]string{}
 	}
@@ -230,6 +261,32 @@ func (s *Service) Apply(m *models.Credential, in Input, creating bool) error {
 		m.HeaderNamesJSON = "[]"
 	}
 
+	if in.ProxyMode != nil {
+		m.ProxyMode = *in.ProxyMode
+	}
+	if m.ProxyMode == "" {
+		m.ProxyMode = "global"
+	}
+	if m.ProxyMode != "global" && m.ProxyMode != "override" {
+		return invalid("proxyMode", "Must be global or override")
+	}
+	pc := current.Proxy.Normalize()
+	if in.Proxy != nil {
+		pc = in.Proxy.Normalize()
+		if (in.ProxyPasswordOmitted || pc.Password == proxy.Mask) && pc.Type != "default" && pc.Type != "none" {
+			pc.Password = current.Proxy.Password
+		}
+	}
+	if err := pc.Validate(); err != nil {
+		return invalid("proxy", err.Error())
+	}
+	blob.ProxyPassword = pc.Password
+	pc.Password = ""
+	pb, err := json.Marshal(pc)
+	if err != nil {
+		return err
+	}
+	m.ProxyJSON = string(pb)
 	cb, err := json.Marshal(cfg)
 	if err != nil {
 		return err
@@ -254,7 +311,7 @@ func (s *Service) SaveOAuthToken(ctx context.Context, id string, tok *connectors
 		if err != nil {
 			cred = connectors.Credential{Secrets: map[string]string{}}
 		}
-		blob := secretBlob{Secrets: cred.Secrets, Headers: cred.Headers, OAuth: tok}
+		blob := secretBlob{Secrets: cred.Secrets, Headers: cred.Headers, OAuth: tok, ProxyPassword: cred.Proxy.Password}
 		enc, err := s.cipher.EncryptJSON(blob)
 		if err != nil {
 			return err

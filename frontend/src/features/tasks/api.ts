@@ -79,7 +79,12 @@ export function useToggleTask() {
 
 export function useDeleteTask() {
   const invalidate = useInvalidateTasks();
-  return useMutation({ mutationFn: (id: string) => api.deleteTask(id), onSuccess: invalidate });
+  return useMutation({ mutationFn: ({ id, deleteDocuments }: { id: string; deleteDocuments: boolean }) => api.deleteTask(id, deleteDocuments), onSettled: invalidate });
+}
+
+export function useDeleteDocuments() {
+  const invalidate = useInvalidateTasks();
+  return useMutation({ mutationFn: api.deleteTaskDocuments, onSettled: invalidate });
 }
 
 export type TriggerKind = "run" | "fullReconcile" | "fullReingest";

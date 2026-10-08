@@ -4,12 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"reflect"
 	"time"
 
 	"gorm.io/gorm"
 
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
+	"github.com/Nyrest/hindsight-ingestion/internal/proxy"
 	"github.com/Nyrest/hindsight-ingestion/internal/settings"
 )
 
@@ -133,7 +135,7 @@ func (s *Server) getSettings(w http.ResponseWriter, r *http.Request) {
 		s.fail(w, err)
 		return
 	}
-	writeJSON(w, http.StatusOK, settingsDTO{v, s.Cfg.OAuthRedirectURI()})
+	writeJSON(w, http.StatusOK, settingsDTO{v.Masked(), s.Cfg.OAuthRedirectURI()})
 }
 
 func (s *Server) patchSettings(w http.ResponseWriter, r *http.Request) {
@@ -143,8 +145,23 @@ func (s *Server) patchSettings(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	previous := v
+	// Decoding custom groups can reuse slice storage; keep the comparison snapshot independent.
+	previous.ObservationScope, err = v.ObservationScope.Normalize()
+	if err != nil {
+		s.fail(w, err)
+		return
+	}
 	// Decoding into the current value applies a partial update.
 	if !decode(w, r, &v) {
+		return
+	}
+	v.Proxy = v.Proxy.Normalize()
+	if v.Proxy.Password == proxy.Mask {
+		v.Proxy.Password = previous.Proxy.Password
+	}
+	v.ObservationScope, err = v.ObservationScope.Normalize()
+	if err != nil {
+		writeValidation(w, err.Error(), map[string]string{"observationScope": err.Error()})
 		return
 	}
 	if err := v.Validate(); err != nil {
@@ -155,16 +172,21 @@ func (s *Server) patchSettings(w http.ResponseWriter, r *http.Request) {
 		s.fail(w, err)
 		return
 	}
-	writeJSON(w, http.StatusOK, settingsDTO{v, s.Cfg.OAuthRedirectURI()})
+	writeJSON(w, http.StatusOK, settingsDTO{v.Masked(), s.Cfg.OAuthRedirectURI()})
 }
 
 func (s *Server) saveSettings(ctx context.Context, previous, current settings.Settings) error {
 	return s.DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		if err := settings.NewStore(tx).Put(ctx, current); err != nil {
+		if err := s.Settings.WithDB(tx).Put(ctx, current); err != nil {
 			return err
 		}
 		reconcile := func(query *gorm.DB) error {
 			return query.Updates(map[string]any{"reconcile_required": true, "config_revision": gorm.Expr("config_revision + 1")}).Error
+		}
+		if !reflect.DeepEqual(previous.ObservationScope, current.ObservationScope) {
+			if err := tx.Model(&models.Task{}).Where("observation_scope_mode = ? AND source_type IN ?", "global", []string{"notion", "siyuan"}).Updates(map[string]any{"reconcile_required": true, "policy_revision": gorm.Expr("policy_revision + 1"), "config_revision": gorm.Expr("config_revision + 1")}).Error; err != nil {
+				return err
+			}
 		}
 		if previous.FilePolicy != current.FilePolicy {
 			if err := reconcile(tx.Model(&models.Task{}).Where("file_policy_mode = ?", models.FilePolicyGlobal)); err != nil {

@@ -51,7 +51,7 @@ func NewClient(cred connectors.Credential) (*Client, error) {
 	if key := cred.String("apiKey"); key != "" {
 		auth["Authorization"] = "Bearer " + key
 	}
-	c := httpx.New(cred.Headers, auth)
+	c := httpx.New(cred.Headers, auth, cred.Proxy)
 	return &Client{baseURL: base, http: c}, nil
 }
 
@@ -121,15 +121,16 @@ func (c *Client) Strategies(ctx context.Context, bankID string) (def string, nam
 
 // MemoryItem is one retain item.
 type MemoryItem struct {
-	Blocks     []connectors.ContentBlock `json:"-"`
-	Content    string                    `json:"content"`
-	Timestamp  string                    `json:"timestamp,omitempty"`
-	Context    string                    `json:"context,omitempty"`
-	Metadata   map[string]string         `json:"metadata,omitempty"`
-	DocumentID string                    `json:"document_id"`
-	Tags       []string                  `json:"tags,omitempty"`
-	Strategy   string                    `json:"strategy,omitempty"`
-	UpdateMode string                    `json:"update_mode,omitempty"`
+	ObservationScopes json.RawMessage           `json:"observation_scopes,omitempty"`
+	Blocks            []connectors.ContentBlock `json:"-"`
+	Content           string                    `json:"content"`
+	Timestamp         string                    `json:"timestamp,omitempty"`
+	Context           string                    `json:"context,omitempty"`
+	Metadata          map[string]string         `json:"metadata,omitempty"`
+	DocumentID        string                    `json:"document_id"`
+	Tags              []string                  `json:"tags,omitempty"`
+	Strategy          string                    `json:"strategy,omitempty"`
+	UpdateMode        string                    `json:"update_mode,omitempty"`
 }
 
 func (item MemoryItem) MarshalJSON() ([]byte, error) {

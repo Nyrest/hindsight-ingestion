@@ -82,7 +82,7 @@ func client(cred connectors.Credential) *httpx.Client {
 	c := httpx.New(cred.Headers, map[string]string{
 		"Authorization":  "Bearer " + cred.String("token"),
 		"Notion-Version": apiVersion,
-	})
+	}, cred.Proxy)
 	c.Pace = httpx.Pacer(requestInterval)
 	return c
 }
@@ -306,7 +306,7 @@ func (c *Connector) OpenContent(ctx context.Context, req connectors.ContentReque
 		expired := false
 		if req.IncludesImages() {
 			content, err = connectors.InlineImages(ctx, markdown, req.MaxFileSize, func(ctx context.Context, rawURL string) (*http.Response, error) {
-				resp, err := connectors.FetchImage(ctx, rawURL, nil)
+				resp, err := connectors.FetchImageWithProxy(ctx, rawURL, nil, req.Credential.Proxy)
 				u, _ := url.Parse(rawURL)
 				if u != nil && u.Query().Get("X-Amz-Signature") != "" && (httpx.IsStatus(err, 401) || httpx.IsStatus(err, 403)) {
 					expired = true

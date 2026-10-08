@@ -112,6 +112,10 @@ func (r *runner) previewItem(item connectors.SourceItem) DryRunItem {
 	if !desired {
 		return scopePreview(preview, row, reason)
 	}
+	if _, err := r.resolvedObservationScope(item); err != nil {
+		preview.Action, preview.Reason = "fail", err.Error()
+		return preview
+	}
 	tags, md := r.documentTagsAndMetadata(item)
 	if row.DestinationPresent && row.PreviousDocumentID == "" &&
 		row.DestinationDocumentID == CanonicalIdentity(r.task.SourceType, r.cred, r.srcCfg, item) &&

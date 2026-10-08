@@ -69,7 +69,7 @@ func run() error {
 	}
 
 	creds := credentials.NewService(db, cipher)
-	store := settings.NewStore(db)
+	store := settings.NewStore(db, cipher)
 	oauthMgr := oauth.NewManager(cfg, db, creds, log)
 	engine := &sync.Engine{
 		DB: db, Creds: creds, Settings: store, OAuth: oauthMgr, Log: log,

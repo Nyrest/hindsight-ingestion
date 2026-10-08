@@ -15,6 +15,8 @@ import (
 	"testing"
 	"time"
 
+	"gorm.io/gorm"
+
 	"github.com/Nyrest/hindsight-ingestion/internal/api"
 	"github.com/Nyrest/hindsight-ingestion/internal/config"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
@@ -103,11 +105,13 @@ func (f *fakeHindsight) handler() http.Handler {
 }
 
 type env struct {
-	t    *testing.T
-	srv  *httptest.Server
-	hs   *fakeHindsight
-	hsrv *httptest.Server
-	runs *runner.Manager
+	db    *gorm.DB
+	creds *credentials.Service
+	t     *testing.T
+	srv   *httptest.Server
+	hs    *fakeHindsight
+	hsrv  *httptest.Server
+	runs  *runner.Manager
 }
 
 func newEnv(t *testing.T) *env {
@@ -120,7 +124,7 @@ func newEnv(t *testing.T) *env {
 	cipher, _ := crypto.New(bytes.Repeat([]byte{1}, 32))
 	cfg := &config.Config{ListenAddr: ":8080", DBType: "sqlite", BasicAuthUsername: "admin", BasicAuthPassword: "pw"}
 	creds := credentials.NewService(db, cipher)
-	store := settings.NewStore(db)
+	store := settings.NewStore(db, cipher)
 	om := oauth.NewManager(cfg, db, creds, log)
 	engine := &sync.Engine{DB: db, Creds: creds, Settings: store, OAuth: om, Log: log,
 		NewDestination: func(c connectors.Credential) (sync.Destination, error) { return hindsight.NewClient(c) }}
@@ -135,7 +139,7 @@ func newEnv(t *testing.T) *env {
 	mux := http.NewServeMux()
 	s.Routes(mux)
 	hs := &fakeHindsight{docs: map[string]map[string]any{}}
-	e := &env{t: t, srv: httptest.NewServer(mux), hs: hs, hsrv: httptest.NewServer(hs.handler()), runs: runs}
+	e := &env{db: db, creds: creds, t: t, srv: httptest.NewServer(mux), hs: hs, hsrv: httptest.NewServer(hs.handler()), runs: runs}
 	t.Cleanup(e.srv.Close)
 	t.Cleanup(e.hsrv.Close)
 	return e

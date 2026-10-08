@@ -29,6 +29,8 @@ type Credential struct {
 	EncryptedSecret string `gorm:"type:text"`
 	// HeaderNamesJSON lists custom header names in order (values are secret).
 	HeaderNamesJSON string `gorm:"type:text"`
+	ProxyMode       string `gorm:"size:16;not null;default:global"`
+	ProxyJSON       string `gorm:"type:text"`
 
 	Status         string `gorm:"size:32;not null;default:active"`
 	StatusMessage  string `gorm:"type:text"`
@@ -59,7 +61,9 @@ type Task struct {
 	DestinationCredentialID string `gorm:"size:36;index"`
 	DestinationBankID       string `gorm:"size:255"`
 
-	RetainStrategy string `gorm:"size:255"`
+	RetainStrategy       string `gorm:"size:255"`
+	ObservationScopeMode string `gorm:"size:16;not null;default:global"`
+	ObservationScopeJSON string `gorm:"type:text"`
 
 	CustomTagsJSON     string `gorm:"type:text"`
 	CustomMetadataJSON string `gorm:"type:text"`
@@ -187,8 +191,9 @@ type HindsightOperation struct {
 
 // Setting is a key/value global setting.
 type Setting struct {
-	Key   string `gorm:"primaryKey;size:128"`
-	Value string `gorm:"type:text"`
+	Key             string `gorm:"primaryKey;size:128"`
+	Value           string `gorm:"type:text"`
+	EncryptedSecret string `gorm:"type:text"`
 }
 
 // All returns every model for migration.

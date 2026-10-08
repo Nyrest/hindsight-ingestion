@@ -23,6 +23,8 @@ import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
+import { ObservationScopeEditor } from "@/components/observation-scope-editor";
+import { defaultObservationScope, sourceGroupTags } from "@/features/settings/config-model";
 import { ChipsInput } from "@/components/chips-input";
 import { EmptyState } from "@/components/empty-state";
 import { FieldRow } from "@/components/field-row";
@@ -72,6 +74,7 @@ const SECTIONS = [
   { id: "filters", icon: Filter },
   { id: "destination", icon: Brain },
   { id: "retain", icon: Sparkles },
+  { id: "observations", icon: Brain },
   { id: "files", icon: FileStack },
   { id: "inline", icon: Sparkles },
   { id: "tags", icon: Tags },
@@ -596,6 +599,31 @@ export function TaskEditor({ task }: { task?: Task }) {
                 )}
               />
             </FieldRow>
+          </EditorSection>
+
+          <EditorSection id="observations" icon={Brain} title={t("observationScope.title")}>
+            <Controller control={control} name="observationScope" render={({ field }) => (
+              <ObservationScopeEditor value={field.value} onChange={field.onChange}
+                mode={watch("observationScopeMode")}
+                onModeChange={(mode) => {
+                  setValue("observationScopeMode", mode, { shouldDirty: true });
+                  if (mode === "global") {
+                    setValue("observationScope", defaultObservationScope, { shouldDirty: true });
+                    form.clearErrors("observationScope");
+                  }
+                }}
+                globalValue={settings.data?.observationScope}
+                suggestions={[
+                  "ingestion",
+                  ...(sourceType ? [`source:${sourceType}`] : []),
+                  ...(task ? [`ingestion_task:${task.id}`] : []),
+                  ...watch("customTags"),
+                  ...sourceGroupTags(sourceType, watch("sourceConfig")),
+                ]}
+                credentialId={destinationCredentialId} bankId={destinationBankId}
+                showFileLimitation={!!sourceType && !["notion", "siyuan"].includes(sourceType)}
+                error={errText(errors.observationScope?.scopes?.message ?? errors.observationScope?.message)} />
+            )} />
           </EditorSection>
 
           {/* File types */}

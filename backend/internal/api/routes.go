@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
+	"github.com/Nyrest/hindsight-ingestion/internal/hindsight"
 	"github.com/Nyrest/hindsight-ingestion/internal/settings"
 	"github.com/Nyrest/hindsight-ingestion/internal/sync"
 )
@@ -34,6 +35,7 @@ func (s *Server) endpoints() []endpoint {
 		{"POST", "/api/credentials/{id}/oauth/start", s.oauthStart, nil, oauthStartDTO{}, 200},
 		{"POST", "/api/credentials/{id}/refresh", s.refreshCredential, nil, credentialDTO{}, 200},
 		{"POST", "/api/credentials/{id}/browse", s.browseCredential, connectors.BrowseRequest{}, connectors.BrowseResult{}, 200},
+		{"GET", "/api/credentials/{id}/tags", s.credentialTags, nil, hindsight.TagPage{}, 200},
 		{"GET", "/api/credentials/{id}/strategies", s.credentialStrategies, nil, strategiesDTO{}, 200},
 		{"GET", "/api/oauth/callback", s.oauthCallback, nil, nil, 302},
 		{"GET", "/api/tasks", s.listTasks, nil, []taskDTO{}, 200},
@@ -41,6 +43,7 @@ func (s *Server) endpoints() []endpoint {
 		{"POST", "/api/tasks/validate-cron", s.validateCron, cronBody{}, cronDTO{}, 200},
 		{"GET", "/api/tasks/{id}", s.getTask, nil, taskDTO{}, 200},
 		{"PATCH", "/api/tasks/{id}", s.patchTask, taskBody{}, taskDTO{}, 200},
+		{"DELETE", "/api/tasks/{id}/documents", s.deleteTaskDocuments, nil, deleteDocumentsDTO{}, 200},
 		{"DELETE", "/api/tasks/{id}", s.deleteTask, nil, nil, 204},
 		{"POST", "/api/tasks/{id}/run", s.runTask(""), nil, runTriggeredDTO{}, 202},
 		{"POST", "/api/tasks/{id}/dry-run", s.dryRunTask, nil, sync.DryRunResult{}, 200},

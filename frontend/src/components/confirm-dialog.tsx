@@ -17,6 +17,7 @@ export interface ConfirmDialogProps {
   onOpenChange: (open: boolean) => void;
   title: ReactNode;
   description?: ReactNode;
+  children?: ReactNode;
   confirmLabel?: ReactNode;
   destructive?: boolean;
   /** May return a promise; the dialog stays open with a spinner until it settles. */
@@ -28,6 +29,7 @@ export function ConfirmDialog({
   onOpenChange,
   title,
   description,
+  children,
   confirmLabel,
   destructive,
   onConfirm,
@@ -54,6 +56,7 @@ export function ConfirmDialog({
           <AlertDialogTitle>{title}</AlertDialogTitle>
           {description && <AlertDialogDescription>{description}</AlertDialogDescription>}
         </AlertDialogHeader>
+        {children}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={busy}>{t("common.cancel")}</AlertDialogCancel>
           <Button variant={destructive ? "destructive" : "default"} onClick={handleConfirm} disabled={busy}>

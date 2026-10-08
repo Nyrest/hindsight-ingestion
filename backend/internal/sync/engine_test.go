@@ -301,7 +301,7 @@ func newHarness(t *testing.T) *harness {
 
 	dest := newFakeDest()
 	engine := &sync.Engine{
-		DB: db, Creds: creds, Settings: settings.NewStore(db), OAuth: noOAuth{}, Log: log,
+		DB: db, Creds: creds, Settings: settings.NewStore(db, cipher), OAuth: noOAuth{}, Log: log,
 		NewDestination: func(connectors.Credential) (sync.Destination, error) { return dest, nil },
 	}
 	if err := engine.Settings.Put(t.Context(), settings.Defaults); err != nil {

@@ -39,6 +39,12 @@ func OpenAPIDocument() ([]byte, error) {
 		if strings.HasSuffix(route.path, "/strategies") {
 			params = append(params, parameter("bankId", "query", "string", true))
 		}
+		if route.path == "/api/tasks/{id}" && route.method == "DELETE" {
+			params = append(params, parameter("deleteDocuments", "query", "boolean", false))
+		}
+		if strings.HasSuffix(route.path, "/tags") {
+			params = append(params, parameter("bankId", "query", "string", true), parameter("q", "query", "string", false), parameter("limit", "query", "integer", false), parameter("offset", "query", "integer", false))
+		}
 		if route.path == "/api/oauth/callback" {
 			params = append(params, parameter("state", "query", "string", true), parameter("code", "query", "string", false), parameter("error", "query", "string", false))
 		}

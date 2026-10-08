@@ -122,7 +122,7 @@ func (m *Manager) Callback(ctx context.Context, state, code string) (string, err
 	if err := m.db.WithContext(ctx).First(&row, "o_auth_state = ?", state).Error; err != nil {
 		return "", errors.New("unknown or expired OAuth state")
 	}
-	cred, err := m.creds.Decrypt(&row)
+	cred, err := m.creds.Load(ctx, row.ID)
 	if err != nil {
 		return row.ID, err
 	}
@@ -130,9 +130,9 @@ func (m *Manager) Callback(ctx context.Context, state, code string) (string, err
 	if err != nil {
 		return row.ID, err
 	}
-	tok, err := oc.Exchange(oauthContext(ctx), code)
+	tok, err := oc.Exchange(oauthContext(ctx, cred.Proxy), code)
 	if err != nil {
-		return row.ID, fmt.Errorf("token exchange failed: %s", sanitize(err))
+		return row.ID, fmt.Errorf("token exchange failed: %s", cred.Proxy.Redact(sanitize(err)))
 	}
 	if tok.RefreshToken == "" && cred.OAuth != nil {
 		tok.RefreshToken = cred.OAuth.RefreshToken
@@ -173,7 +173,7 @@ func (m *Manager) refresh(ctx context.Context, credentialID string) (*connectors
 	if err != nil {
 		return nil, err
 	}
-	src := oc.TokenSource(oauthContext(ctx), &oauth2.Token{RefreshToken: cred.OAuth.RefreshToken, Expiry: time.Unix(1, 0)})
+	src := oc.TokenSource(oauthContext(ctx, cred.Proxy), &oauth2.Token{RefreshToken: cred.OAuth.RefreshToken, Expiry: time.Unix(1, 0)})
 	tok, err := src.Token()
 	if err != nil {
 		if isInvalidGrant(err) {
@@ -184,12 +184,12 @@ func (m *Manager) refresh(ctx context.Context, credentialID string) (*connectors
 			m.log.Warn("oauth refresh rejected; reauthorization required", "credential", credentialID)
 			return nil, ErrReauthRequired
 		}
-		m.log.Warn("oauth refresh failed", "credential", credentialID, "error", sanitize(err))
+		m.log.Warn("oauth refresh failed", "credential", credentialID, "error", cred.Proxy.Redact(sanitize(err)))
 		// Transient: retry in a few minutes.
 		if s := m.scheduler(); s != nil {
 			s.ScheduleRefresh(credentialID, time.Now().Add(5*time.Minute))
 		}
-		return nil, fmt.Errorf("token refresh failed: %s", sanitize(err))
+		return nil, fmt.Errorf("token refresh failed: %s", cred.Proxy.Redact(sanitize(err)))
 	}
 	if tok.RefreshToken == "" {
 		tok.RefreshToken = cred.OAuth.RefreshToken // provider did not rotate

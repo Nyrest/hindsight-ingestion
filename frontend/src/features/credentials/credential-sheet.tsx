@@ -5,6 +5,9 @@ import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { z } from "zod";
+import { ProxyEditor } from "@/components/proxy-editor";
+import { defaultProxy, proxySchema } from "@/features/settings/config-model";
+import type { ProxyConfig } from "@/lib/types";
 import { FieldRow } from "@/components/field-row";
 import {
   defaultConfig,
@@ -74,6 +77,9 @@ export function CredentialSheet({
   const type = form.watch("type");
   const typeSpec = findCredentialType(connectors.data, type);
 
+  const [proxyMode, setProxyMode] = useState<"global" | "override">("global");
+  const [proxy, setProxy] = useState<ProxyConfig>(defaultProxy);
+  const [proxyError, setProxyError] = useState<string>();
   const [config, setConfig] = useState<Record<string, unknown>>({});
   const [configErrors, setConfigErrors] = useState<Record<string, string>>({});
   const [headers, setHeaders] = useState<CustomHeadersState>({ headers: {}, error: null });
@@ -86,6 +92,9 @@ export function CredentialSheet({
     const initialType = credential?.type ?? defaultType ?? "";
     form.reset({ name: credential?.name ?? "", type: initialType });
     setConfigErrors({});
+    setProxyMode(credential?.proxyMode ?? "global");
+    setProxy(credential?.proxy ?? defaultProxy);
+    setProxyError(undefined);
     setFormError(null);
     setHeaders({ headers: credential?.customHeaders ?? {}, error: null });
     setHeadersKey((k) => k + 1);
@@ -108,7 +117,13 @@ export function CredentialSheet({
     const errs = validateConfig(typeSpec.fields, config, tr);
     setConfigErrors(errs);
     if (Object.keys(errs).length || headers.error) return;
+    if (proxyMode === "override") {
+      const validation = proxySchema.safeParse(proxy);
+      if (!validation.success) { setProxyError(t(validation.error.issues[0].message)); return; }
+    }
     const body = {
+      proxyMode,
+      proxy: proxyMode === "override" ? proxy : undefined,
       name: values.name.trim(),
       config: normalizeConfig(typeSpec.fields, config),
       customHeaders: headers.headers,
@@ -126,7 +141,8 @@ export function CredentialSheet({
       if (isApiError(e) && Object.keys(e.fields).length) {
         const cfgErrs: Record<string, string> = {};
         for (const [k, msg] of Object.entries(e.fields)) {
-          if (k === "name") form.setError("name", { message: msg });
+          if (k.startsWith("proxy")) setProxyError(msg);
+          else if (k === "name") form.setError("name", { message: msg });
           else if (k === "customHeaders" || k.startsWith("customHeaders.")) setFormError(msg);
           else cfgErrs[k.replace(/^config\./, "")] = msg;
         }
@@ -257,6 +273,8 @@ export function CredentialSheet({
 
               <Separator />
 
+              <ProxyEditor value={proxy} mode={proxyMode} onModeChange={(mode) => { setProxyMode(mode); setProxyError(undefined); }} onChange={(next) => { setProxy(next); setProxyError(undefined); }} error={proxyError} />
+              <Separator />
               <CustomHeadersEditor
                 key={headersKey}
                 initial={credential?.customHeaders ?? {}}

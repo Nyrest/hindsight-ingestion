@@ -90,6 +90,7 @@ Task actions are available from the **Tasks** menu:
 | **Full reconcile** | Scan the whole source to check for changes and deletions. Unchanged content is still skipped. |
 | **Full re-ingest** | Upload every matching item again, including unchanged content. |
 | **Cancel run** | Stop the current run. Changes already made in Hindsight are not rolled back. |
+| **Delete documents** | Pause the task and delete its tagged Hindsight documents and associated memories. Source content stays intact; retry if cleanup fails. |
 | **Disable** | Pause scheduled syncs while keeping the task's configuration and progress. |
 
 ### Sync behavior
@@ -100,6 +101,23 @@ Task actions are available from the **Tasks** menu:
 - **Destinations lock after the first successful run.** Create another task to change banks or Hindsight connections.
 - **Overlapping tasks share documents.** Tasks syncing the same source item into the same bank can overwrite or delete each other's documents.
 - **Each task runs once at a time.** Progress survives restarts and advances only after success; failed runs retry from the last committed progress.
+
+### Proxies and observation scopes
+
+In **Settings**, choose **Default** to follow the server's proxy environment, **No proxy** for a direct connection, or an **HTTP**, **HTTPS** or **SOCKS5** proxy with a `host:port` address and optional authentication. Credentials inherit this choice and can override it. Saved settings apply to newly created clients without a restart. Environment changes require restarting the service. Default follows [Go's proxy environment rules](https://pkg.go.dev/net/http#ProxyFromEnvironment); Docker must receive proxy variables inside the container, for example:
+
+```yaml
+services:
+  hindsight-ingestion:
+    environment:
+      HTTP_PROXY: ${HTTP_PROXY:-}
+      HTTPS_PROXY: ${HTTPS_PROXY:-}
+      NO_PROXY: ${NO_PROXY:-}
+```
+
+Choose an **Observation scope** globally or per task: **Combined**, **Shared**, **Per tag**, **All combinations**, or **Custom**. Custom groups support existing bank tags, new tags, and dynamic **Current task**, **Current source** and **Current source group** references. Each group becomes one scope; literal tags do not change document tags. All combinations can grow exponentially (2ⁿ − 1 scopes for n tags). Changing scopes re-retains text on the next full scan. Observation scopes apply to Notion and SiYuan text and inline content; file uploads use Combined, following the [Hindsight request model](https://github.com/vectorize-io/hindsight/blob/main/hindsight-api-slim/hindsight_api/api/http.py). See [retain documentation](https://hindsight.vectorize.io/developer/api/retain) for rule behavior.
+
+The task menu's **Delete documents** action pauses the task and removes only documents tagged `ingestion_task:<id>` and their associated memories from its destination bank. It follows [Hindsight's strict document filtering](https://hindsight.vectorize.io/developer/api/documents). **Delete** also offers an optional **Also delete documents in Hindsight** checkbox, unchecked by default. Sources are unaffected. Failed cleanup keeps progress and the paused task for retry; re-enable the task to import again after successful cleanup.
 
 ### Inline images in Notion and SiYuan
 

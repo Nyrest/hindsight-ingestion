@@ -22,6 +22,7 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/credentials"
 	"github.com/Nyrest/hindsight-ingestion/internal/hindsight"
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
+	"github.com/Nyrest/hindsight-ingestion/internal/observations"
 	"github.com/Nyrest/hindsight-ingestion/internal/settings"
 )
 
@@ -78,22 +79,23 @@ type pendingItem struct {
 
 // runner holds the state of one execution.
 type runner struct {
-	e             *Engine
-	ctx           context.Context
-	task          models.Task
-	state         models.TaskState
-	run           *models.TaskRun
-	gen           int64
-	full          bool
-	reing         bool
-	dest          Destination
-	src           connectors.SourceConnector
-	srcCfg        map[string]any
-	filter        connectors.Filter
-	policy        connectors.FilePolicy
-	cred          connectors.Credential
-	maxSz         int64
-	inlineEnabled bool
+	e                *Engine
+	ctx              context.Context
+	task             models.Task
+	state            models.TaskState
+	run              *models.TaskRun
+	gen              int64
+	full             bool
+	reing            bool
+	dest             Destination
+	src              connectors.SourceConnector
+	srcCfg           map[string]any
+	filter           connectors.Filter
+	policy           connectors.FilePolicy
+	cred             connectors.Credential
+	maxSz            int64
+	observationScope observations.Scope
+	inlineEnabled    bool
 
 	baseTags []string
 	customMD map[string]string
@@ -394,6 +396,9 @@ func (r *runner) observe(item connectors.SourceItem) error {
 	}
 
 	tags, md := r.documentTagsAndMetadata(item)
+	if _, err := r.resolvedObservationScope(item); err != nil {
+		return r.fail(row, item, err)
+	}
 	target := r.itemFingerprint(item, tags, md)
 	row.TargetFingerprint = target
 	row.SourceRevision = item.Revision
@@ -550,15 +555,20 @@ func (r *runner) flushText() error {
 	keys := make([]string, 0, len(batch))
 	for _, j := range batch {
 		tags, md := r.documentTagsAndMetadata(j.item)
+		scopes, err := r.resolvedObservationScope(j.item)
+		if err != nil {
+			return err
+		}
 		mi := hindsight.MemoryItem{
-			Blocks:     j.content.Blocks,
-			Content:    j.content.Text,
-			Context:    j.content.Context,
-			Metadata:   md,
-			DocumentID: j.row.DestinationDocumentID,
-			Tags:       tags,
-			Strategy:   r.task.RetainStrategy,
-			UpdateMode: "replace",
+			ObservationScopes: scopes,
+			Blocks:            j.content.Blocks,
+			Content:           j.content.Text,
+			Context:           j.content.Context,
+			Metadata:          md,
+			DocumentID:        j.row.DestinationDocumentID,
+			Tags:              tags,
+			Strategy:          r.task.RetainStrategy,
+			UpdateMode:        "replace",
 		}
 		if ts := pickTime(j.content.Timestamp, j.item.ModifiedAt); !ts.IsZero() {
 			mi.Timestamp = ts.UTC().Format(time.RFC3339Nano)
@@ -1080,6 +1090,12 @@ func (r *runner) prepareSource() (settings.Settings, error) {
 	r.policy = cfg.FilePolicy
 	if r.task.FilePolicyMode == models.FilePolicyOverride {
 		_ = json.Unmarshal([]byte(orEmpty(r.task.FilePolicyJSON, "{}")), &r.policy)
+	}
+	r.observationScope = cfg.ObservationScope
+	if r.task.ObservationScopeMode == "override" {
+		if err := json.Unmarshal([]byte(r.task.ObservationScopeJSON), &r.observationScope); err != nil {
+			return cfg, err
+		}
 	}
 	r.maxSz = int64(cfg.MaxFileSizeMB) << 20
 	r.inlineEnabled = cfg.InlineMultimodalEnabled

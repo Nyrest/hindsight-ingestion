@@ -93,7 +93,7 @@ func newClient(cred connectors.Credential) (*client, error) {
 		req.SetBasicAuth(user, cred.String("password"))
 		auth["Authorization"] = req.Header.Get("Authorization")
 	}
-	return &client{base: u, http: httpx.New(cred.Headers, auth)}, nil
+	return &client{base: u, http: httpx.New(cred.Headers, auth, cred.Proxy)}, nil
 }
 
 // resolve maps a root-relative path to an absolute URL.

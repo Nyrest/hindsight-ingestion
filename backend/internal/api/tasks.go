@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"reflect"
 	"slices"
+	"strconv"
 	"strings"
 	"time"
 
@@ -17,6 +18,7 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 	"github.com/Nyrest/hindsight-ingestion/internal/hindsight"
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
+	"github.com/Nyrest/hindsight-ingestion/internal/observations"
 	"github.com/Nyrest/hindsight-ingestion/internal/runner"
 	"github.com/Nyrest/hindsight-ingestion/internal/scheduler"
 	"github.com/Nyrest/hindsight-ingestion/internal/sync"
@@ -30,6 +32,8 @@ type taskStateDTO struct {
 }
 
 type taskDTO struct {
+	ObservationScopeMode    string                `json:"observationScopeMode" enum:"global,override"`
+	ObservationScope        observations.Scope    `json:"observationScope"`
 	ID                      string                `json:"id"`
 	Name                    string                `json:"name"`
 	Enabled                 bool                  `json:"enabled"`
@@ -74,6 +78,12 @@ func (s *Server) taskView(ctx context.Context, t *models.Task) taskDTO {
 		SourceConfig: map[string]any{}, CustomTags: []string{}, CustomMetadata: map[string]string{},
 		SourceFilter: connectors.Filter{Mode: "simple", Rules: []connectors.FilterRule{}},
 	}
+	d.ObservationScopeMode = t.ObservationScopeMode
+	if d.ObservationScopeMode == "" {
+		d.ObservationScopeMode = "global"
+	}
+	d.ObservationScope = observations.Default
+	_ = json.Unmarshal([]byte(t.ObservationScopeJSON), &d.ObservationScope)
 	_ = json.Unmarshal([]byte(t.SourceConfigJSON), &d.SourceConfig)
 	_ = json.Unmarshal([]byte(t.SourceFilterJSON), &d.SourceFilter)
 	if d.SourceFilter.Mode == "" {
@@ -131,6 +141,8 @@ func (s *Server) getTask(w http.ResponseWriter, r *http.Request) {
 
 // taskBody is a create/patch request. Pointer fields are optional on patch.
 type taskBody struct {
+	ObservationScopeMode    *string                `json:"observationScopeMode" enum:"global,override"`
+	ObservationScope        *observations.Scope    `json:"observationScope"`
 	Name                    *string                `json:"name"`
 	Enabled                 *bool                  `json:"enabled"`
 	SourceType              *string                `json:"sourceType"`
@@ -303,6 +315,25 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 		t.CustomMetadataJSON = "{}"
 	}
 
+	if b.ObservationScopeMode != nil {
+		t.ObservationScopeMode = *b.ObservationScopeMode
+	}
+	if t.ObservationScopeMode == "" {
+		t.ObservationScopeMode = "global"
+	}
+	if t.ObservationScopeMode != "global" && t.ObservationScopeMode != "override" {
+		errs.add("observationScopeMode", "Must be global or override")
+	}
+	if b.ObservationScope != nil {
+		scope, err := b.ObservationScope.Normalize()
+		if err != nil {
+			errs.add("observationScope", err.Error())
+		} else {
+			t.ObservationScopeJSON = mustJSON(scope)
+		}
+	} else if t.ObservationScopeJSON == "" {
+		t.ObservationScopeJSON = mustJSON(observations.Default)
+	}
 	if b.FilePolicyMode != nil {
 		t.FilePolicyMode = *b.FilePolicyMode
 	}
@@ -352,7 +383,8 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 	}
 	policyChanged := old.RetainStrategy != t.RetainStrategy || old.CustomTagsJSON != t.CustomTagsJSON ||
 		old.CustomMetadataJSON != t.CustomMetadataJSON || old.InlineMultimodalMode != t.InlineMultimodalMode ||
-		old.InlineMultimodalEnabled != t.InlineMultimodalEnabled
+		old.InlineMultimodalEnabled != t.InlineMultimodalEnabled ||
+		((t.SourceType == "notion" || t.SourceType == "siyuan") && (old.ObservationScopeMode != t.ObservationScopeMode || (t.ObservationScopeMode == "override" && old.ObservationScopeJSON != t.ObservationScopeJSON)))
 	if policyChanged {
 		t.PolicyRevision++
 		// Re-retain matching items: requires observing every item.
@@ -431,8 +463,14 @@ func (s *Server) createTask(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) patchTask(w http.ResponseWriter, r *http.Request) {
+	release, err := s.Runs.BeginEdit(r.PathValue("id"))
+	if err != nil {
+		writeError(w, http.StatusConflict, "conflict", "Task is busy; try again after the current operation finishes")
+		return
+	}
+	defer release()
 	var t models.Task
-	if err := s.DB.WithContext(r.Context()).First(&t, "id = ?", r.PathValue("id")).Error; err != nil {
+	if err = s.DB.WithContext(r.Context()).First(&t, "id = ?", r.PathValue("id")).Error; err != nil {
 		s.fail(w, err)
 		return
 	}
@@ -448,7 +486,7 @@ func (s *Server) patchTask(w http.ResponseWriter, r *http.Request) {
 	}
 	destChanged := t.DestinationCredentialID != origDestCred || t.DestinationBankID != origBank
 	errLocked := errors.New("destination locked")
-	err := s.DB.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
+	err = s.DB.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
 		// Re-read engine-owned fields under a row lock: a run may have
 		// locked the destination since the task was loaded.
 		var cur models.Task
@@ -488,19 +526,42 @@ func (s *Server) patchTask(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) deleteTask(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
-	if _, running := s.Runs.Active(id); running {
-		writeError(w, http.StatusConflict, "conflict", "task is running; cancel it first")
+	ctx, release, err := s.Runs.BeginMaintenance(r.Context(), id)
+	if err != nil {
+		writeError(w, http.StatusConflict, "conflict", "Task is busy; finish or cancel its current operation first")
 		return
 	}
+	defer release()
+	r = r.WithContext(ctx)
+	deleteDocuments := false
+	if raw := r.URL.Query().Get("deleteDocuments"); raw != "" {
+		deleteDocuments, err = strconv.ParseBool(raw)
+		if err != nil {
+			writeError(w, http.StatusBadRequest, "bad_request", "deleteDocuments must be a boolean")
+			return
+		}
+	}
 	var t models.Task
-	if err := s.DB.WithContext(r.Context()).First(&t, "id = ?", id).Error; err != nil {
+	if err = s.DB.WithContext(r.Context()).First(&t, "id = ?", id).Error; err != nil {
 		s.fail(w, err)
 		return
 	}
+	if deleteDocuments {
+		deleted, err := s.clearDocuments(ctx, &t)
+		if err != nil {
+			s.documentCleanupError(w, deleted, err)
+			return
+		}
+	} else if err := s.checkPendingRetains(ctx, &t); err != nil {
+		s.documentCleanupError(w, 0, err)
+		return
+	}
 	s.Sched.RemoveTask(id)
-	err := s.DB.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
+	err = s.DB.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
 		var runIDs []string
-		tx.Model(&models.TaskRun{}).Where("task_id = ?", id).Pluck("id", &runIDs)
+		if err := tx.Model(&models.TaskRun{}).Where("task_id = ?", id).Pluck("id", &runIDs).Error; err != nil {
+			return err
+		}
 		if len(runIDs) > 0 {
 			if err := tx.Where("run_id IN ?", runIDs).Delete(&models.HindsightOperation{}).Error; err != nil {
 				return err

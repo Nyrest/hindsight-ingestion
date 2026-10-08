@@ -15,6 +15,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/Nyrest/hindsight-ingestion/internal/proxy"
 )
 
 // Version is reported in the User-Agent header.
@@ -42,7 +44,8 @@ var Shared = &http.Transport{
 
 // Client wraps an http.Client with header injection and retries.
 type Client struct {
-	HTTP *http.Client
+	HTTP  *http.Client
+	proxy proxy.Config
 	// CustomHeaders are applied first; AuthHeaders override any conflicting
 	// custom header (connector-generated auth headers take precedence).
 	CustomHeaders map[string]string
@@ -69,9 +72,10 @@ func (c *Client) applyToken(ctx context.Context, req *http.Request) error {
 }
 
 // New returns a Client using the shared transport.
-func New(custom, auth map[string]string) *Client {
+func New(custom, auth map[string]string, config proxy.Config) *Client {
 	return &Client{
-		HTTP:          &http.Client{Transport: Shared},
+		proxy:         config.Normalize(),
+		HTTP:          &http.Client{Transport: Transport(config)},
 		CustomHeaders: custom,
 		AuthHeaders:   auth,
 		MaxRetries:    4,
@@ -155,7 +159,7 @@ func (c *Client) Do(ctx context.Context, r Request) (*http.Response, error) {
 			if ctx.Err() != nil {
 				return nil, ctx.Err()
 			}
-			lastErr = err
+			lastErr = &proxyError{err, c.proxy.Redact(err.Error())}
 			if attempt >= c.MaxRetries {
 				return nil, lastErr
 			}
@@ -169,7 +173,7 @@ func (c *Client) Do(ctx context.Context, r Request) (*http.Response, error) {
 		}
 		b, _ := io.ReadAll(io.LimitReader(resp.Body, 64<<10))
 		resp.Body.Close()
-		lastErr = &HTTPError{Method: r.Method, URL: r.URL, Status: resp.StatusCode, Body: string(b)}
+		lastErr = &HTTPError{Method: r.Method, URL: r.URL, Status: resp.StatusCode, Body: c.proxy.Redact(string(b))}
 		if !retryable(resp.StatusCode) || attempt >= c.MaxRetries {
 			return nil, lastErr
 		}
@@ -201,15 +205,23 @@ func (c *Client) DoStream(ctx context.Context, method, url string, header http.H
 	}
 	resp, err := c.HTTP.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, &proxyError{err, c.proxy.Redact(err.Error())}
 	}
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		b, _ := io.ReadAll(io.LimitReader(resp.Body, 64<<10))
 		resp.Body.Close()
-		return nil, &HTTPError{Method: method, URL: url, Status: resp.StatusCode, Body: string(b)}
+		return nil, &HTTPError{Method: method, URL: url, Status: resp.StatusCode, Body: c.proxy.Redact(string(b))}
 	}
 	return resp, nil
 }
+
+type proxyError struct {
+	cause   error
+	message string
+}
+
+func (e *proxyError) Error() string { return e.message }
+func (e *proxyError) Unwrap() error { return e.cause }
 
 // JSON performs a request with an optional JSON body and decodes a JSON
 // response into out (when non-nil).

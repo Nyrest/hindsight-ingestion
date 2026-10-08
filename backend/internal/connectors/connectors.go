@@ -9,6 +9,8 @@ import (
 	"io"
 	"sort"
 	"time"
+
+	"github.com/Nyrest/hindsight-ingestion/internal/proxy"
 )
 
 // Incremental modes.
@@ -162,13 +164,15 @@ type OAuthToken struct {
 // Credential is a decrypted credential handed to connectors. It must never be
 // logged.
 type Credential struct {
-	ID      string
-	Name    string
-	Type    string
-	Config  map[string]any    // non-sensitive values
-	Secrets map[string]string // decrypted secret values
-	Headers map[string]string // custom headers
-	OAuth   *OAuthToken
+	Proxy     proxy.Config
+	ProxyMode string
+	ID        string
+	Name      string
+	Type      string
+	Config    map[string]any    // non-sensitive values
+	Secrets   map[string]string // decrypted secret values
+	Headers   map[string]string // custom headers
+	OAuth     *OAuthToken
 	// AccessToken, when set, returns a currently valid OAuth access token
 	// (refreshing as needed). Connectors should prefer it over OAuth for
 	// requests made during long runs.

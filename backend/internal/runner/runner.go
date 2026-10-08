@@ -27,10 +27,11 @@ var ErrShutdown = errors.New("interrupted by application shutdown")
 var ActiveStatuses = []string{models.RunPending, models.RunRunning, models.RunWaitingOperations}
 
 type active struct {
-	runID  string
-	cancel context.CancelCauseFunc
-	done   chan struct{}
-	start  time.Time
+	maintenance bool
+	runID       string
+	cancel      context.CancelCauseFunc
+	done        chan struct{}
+	start       time.Time
 }
 
 // Manager coordinates run execution.
@@ -43,9 +44,10 @@ type Manager struct {
 	base       context.Context
 	cancelBase context.CancelCauseFunc
 
-	mu     stdsync.Mutex
-	active map[string]*active
-	wg     stdsync.WaitGroup
+	mu      stdsync.Mutex
+	active  map[string]*active
+	editing map[string]bool
+	wg      stdsync.WaitGroup
 }
 
 // NewManager creates a Manager allowing maxConcurrent simultaneous runs.
@@ -55,7 +57,8 @@ func NewManager(db *gorm.DB, engine *sync.Engine, maxConcurrent int, log *slog.L
 		db: db, engine: engine, log: log,
 		sem:  make(chan struct{}, maxConcurrent),
 		base: base, cancelBase: cancel,
-		active: map[string]*active{},
+		active:  map[string]*active{},
+		editing: map[string]bool{},
 	}
 }
 
@@ -87,7 +90,7 @@ func (m *Manager) Start(taskID, trigger, mode string, scheduledFor *time.Time, w
 		m.mu.Unlock()
 		return "", ErrShutdown
 	}
-	if _, busy := m.active[taskID]; busy {
+	if _, busy := m.active[taskID]; busy || m.editing[taskID] {
 		m.mu.Unlock()
 		return "", ErrAlreadyRunning
 	}
@@ -212,13 +215,13 @@ func (m *Manager) DryRun(ctx context.Context, taskID string) (sync.DryRunResult,
 		m.mu.Unlock()
 		return sync.DryRunResult{}, ErrShutdown
 	}
-	if _, busy := m.active[taskID]; busy {
+	if _, busy := m.active[taskID]; busy || m.editing[taskID] {
 		m.mu.Unlock()
 		return sync.DryRunResult{}, ErrAlreadyRunning
 	}
 	ctx, cancel := context.WithCancelCause(ctx)
 	stop := context.AfterFunc(m.base, func() { cancel(ErrShutdown) })
-	a := &active{cancel: cancel, done: make(chan struct{}), start: time.Now()}
+	a := &active{maintenance: true, cancel: cancel, done: make(chan struct{}), start: time.Now()}
 	m.active[taskID] = a
 	m.wg.Add(1)
 	m.mu.Unlock()
@@ -259,4 +262,40 @@ func orDefault(s, def string) string {
 		return def
 	}
 	return s
+}
+
+func (m *Manager) BeginEdit(taskID string) (func(), error) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	if m.editing[taskID] || (m.active[taskID] != nil && m.active[taskID].maintenance) {
+		return nil, ErrAlreadyRunning
+	}
+	m.editing[taskID] = true
+	return func() { m.mu.Lock(); delete(m.editing, taskID); m.mu.Unlock() }, nil
+}
+
+func (m *Manager) BeginMaintenance(ctx context.Context, taskID string) (context.Context, func(), error) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	if m.base.Err() != nil {
+		return ctx, nil, ErrShutdown
+	}
+	if m.active[taskID] != nil || m.editing[taskID] {
+		return ctx, nil, ErrAlreadyRunning
+	}
+	ctx, cancel := context.WithCancelCause(ctx)
+	stop := context.AfterFunc(m.base, func() { cancel(ErrShutdown) })
+	a := &active{maintenance: true, cancel: cancel, done: make(chan struct{}), start: time.Now()}
+	m.active[taskID] = a
+	m.wg.Add(1)
+	release := func() {
+		stop()
+		cancel(nil)
+		m.mu.Lock()
+		delete(m.active, taskID)
+		m.mu.Unlock()
+		close(a.done)
+		m.wg.Done()
+	}
+	return ctx, release, nil
 }

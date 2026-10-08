@@ -116,6 +116,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/credentials/{id}/tags": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_api_credentials_id_tags"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/credentials/{id}/test": {
         parameters: {
             query?: never;
@@ -292,6 +308,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/tasks/{id}/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["delete_api_tasks_id_documents"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/tasks/{id}/dry-run": {
         parameters: {
             query?: never;
@@ -401,6 +433,13 @@ export interface components {
             supportsInlineMultimodal: boolean;
             supportsOAuth: boolean;
         };
+        Config: {
+            address: string;
+            password: string;
+            /** @enum {string} */
+            type: "default" | "none" | "http" | "https" | "socks5";
+            username: string;
+        };
         CredentialType: {
             description: string;
             fields: components["schemas"]["FieldSpec"][];
@@ -473,6 +512,11 @@ export interface components {
             label: string;
             value: string;
         };
+        Scope: {
+            /** @enum {string} */
+            rule: "combined" | "shared" | "per_tag" | "all_combinations" | "custom";
+            scopes: components["schemas"]["TagRef"][][];
+        };
         SourceInfo: {
             browseKinds: string[];
             capabilities: components["schemas"]["Capabilities"];
@@ -481,6 +525,21 @@ export interface components {
             filterFields: components["schemas"]["FilterFieldSpec"][];
             name: string;
             type: string;
+        };
+        Tag: {
+            count: number;
+            tag: string;
+        };
+        TagPage: {
+            items: components["schemas"]["Tag"][];
+            limit: number;
+            offset: number;
+            total: number;
+        };
+        TagRef: {
+            /** @enum {string} */
+            kind: "literal" | "dynamic";
+            value: string;
         };
         apiError: {
             code: string;
@@ -515,12 +574,22 @@ export interface components {
             name: string;
             oauthConnected: boolean;
             oauthExpiresAt: string | null;
+            proxy: components["schemas"]["Config"];
+            /** @enum {string} */
+            proxyMode: "global" | "override";
             /** @enum {string} */
             status: "active" | "reauth_required" | "pending_oauth" | "error";
             statusMessage: string;
             type: string;
             updatedAt: string;
             usedByTasks: number;
+        };
+        credentialProxyBody: {
+            address: string;
+            password: string | null;
+            /** @enum {string} */
+            type: "default" | "none" | "http" | "https" | "socks5";
+            username: string;
         };
         cronDTO: {
             error: string;
@@ -540,6 +609,9 @@ export interface components {
             failed24h: number;
             items: number;
             runs24h: number;
+        };
+        deleteDocumentsDTO: {
+            deletedCount: number;
         };
         healthDTO: {
             authEnabled: boolean;
@@ -637,6 +709,8 @@ export interface components {
             inlineMultimodalEnabled: boolean;
             maxFileSizeMB: number;
             oauthRedirectUri: string;
+            observationScope: components["schemas"]["Scope"];
+            proxy: components["schemas"]["Config"];
         };
         strategiesDTO: {
             defaultStrategy: string;
@@ -666,6 +740,9 @@ export interface components {
             lastRun: components["schemas"]["runDTO"] | null;
             name: string;
             nextRunAt: string | null;
+            observationScope: components["schemas"]["Scope"];
+            /** @enum {string} */
+            observationScopeMode: "global" | "override";
             policyRevision: number;
             reconcileRequired: boolean;
             retainStrategy: string;
@@ -791,6 +868,9 @@ export interface operations {
                         [key: string]: string;
                     };
                     name: string;
+                    proxy?: components["schemas"]["credentialProxyBody"];
+                    /** @enum {string} */
+                    proxyMode?: "global" | "override";
                     type: string;
                 };
             };
@@ -922,6 +1002,9 @@ export interface operations {
                         [key: string]: string;
                     };
                     name?: string;
+                    proxy?: components["schemas"]["credentialProxyBody"];
+                    /** @enum {string} */
+                    proxyMode?: "global" | "override";
                     type?: string;
                 };
             };
@@ -1106,6 +1189,51 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["strategiesDTO"];
+                };
+            };
+            /** @description Basic Auth required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description API error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["apiError"];
+                };
+            };
+        };
+    };
+    get_api_credentials_id_tags: {
+        parameters: {
+            query: {
+                bankId: string;
+                q?: string;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TagPage"];
                 };
             };
             /** @description Basic Auth required */
@@ -1402,6 +1530,8 @@ export interface operations {
                     incrementalSyncEnabled?: boolean;
                     inlineMultimodalEnabled?: boolean;
                     maxFileSizeMB?: number;
+                    observationScope?: components["schemas"]["Scope"];
+                    proxy?: components["schemas"]["Config"];
                 };
             };
         };
@@ -1499,6 +1629,9 @@ export interface operations {
                     /** @enum {string} */
                     inlineMultimodalMode?: "global" | "override";
                     name: string;
+                    observationScope?: components["schemas"]["Scope"];
+                    /** @enum {string} */
+                    observationScopeMode?: "global" | "override";
                     retainStrategy?: string;
                     sourceConfig?: {
                         [key: string]: unknown;
@@ -1626,7 +1759,9 @@ export interface operations {
     };
     delete_api_tasks_id: {
         parameters: {
-            query?: never;
+            query?: {
+                deleteDocuments?: boolean;
+            };
             header?: never;
             path: {
                 id: string;
@@ -1690,6 +1825,9 @@ export interface operations {
                     /** @enum {string} */
                     inlineMultimodalMode?: "global" | "override";
                     name?: string;
+                    observationScope?: components["schemas"]["Scope"];
+                    /** @enum {string} */
+                    observationScopeMode?: "global" | "override";
                     retainStrategy?: string;
                     sourceConfig?: {
                         [key: string]: unknown;
@@ -1748,6 +1886,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["cancelDTO"];
+                };
+            };
+            /** @description Basic Auth required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description API error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["apiError"];
+                };
+            };
+        };
+    };
+    delete_api_tasks_id_documents: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["deleteDocumentsDTO"];
                 };
             };
             /** @description Basic Auth required */

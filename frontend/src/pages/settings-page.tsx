@@ -5,6 +5,10 @@ import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { z } from "zod";
+import { ProxyEditor } from "@/components/proxy-editor";
+import { ObservationScopeEditor } from "@/components/observation-scope-editor";
+import { useTasks } from "@/features/tasks/api";
+import { defaultProxy, defaultObservationScope, proxySchema, observationScopeSchema, taskTagSuggestions } from "@/features/settings/config-model";
 import { CopyButton } from "@/components/copy-button";
 import { EmptyState } from "@/components/empty-state";
 import { FieldRow } from "@/components/field-row";
@@ -19,6 +23,8 @@ import { useSettings, useUpdateSettings } from "@/features/settings/api";
 import { errorMessage, isApiError } from "@/lib/api";
 
 const schema = z.object({
+  proxy: proxySchema,
+  observationScope: observationScopeSchema,
   inlineMultimodalEnabled: z.boolean(),
   incrementalSyncEnabled: z.boolean(),
   fullReconcileIntervalHours: z.number({ error: "validation.number" }).int("validation.integer").min(1, "validation.min1"),
@@ -30,10 +36,13 @@ type Values = z.infer<typeof schema>;
 export default function SettingsPage() {
   const { t } = useTranslation();
   const settings = useSettings();
+  const tasks = useTasks();
   const update = useUpdateSettings();
   const form = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: {
+      proxy: defaultProxy,
+      observationScope: defaultObservationScope,
       inlineMultimodalEnabled: false,
       incrementalSyncEnabled: true,
       fullReconcileIntervalHours: 24,
@@ -105,6 +114,25 @@ export default function SettingsPage() {
         </div>
       ) : (
         <div className="space-y-6">
+          <Card>
+            <CardHeader><CardTitle>{t("proxy.title")}</CardTitle></CardHeader>
+            <CardContent>
+              <Controller control={form.control} name="proxy" render={({ field }) => (
+                <ProxyEditor value={field.value} onChange={field.onChange}
+                  error={errText(errors.proxy?.address?.message ?? errors.proxy?.message)} />
+              )} />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader><CardTitle>{t("observationScope.title")}</CardTitle></CardHeader>
+            <CardContent>
+              <Controller control={form.control} name="observationScope" render={({ field }) => (
+                <ObservationScopeEditor value={field.value} onChange={field.onChange} showFileLimitation
+                  suggestions={(tasks.data ?? []).flatMap(taskTagSuggestions)}
+                  error={errText(errors.observationScope?.scopes?.message ?? errors.observationScope?.message)} />
+              )} />
+            </CardContent>
+          </Card>
           <Card>
             <CardHeader>
               <CardTitle>{t("settings.sync.title")}</CardTitle>

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { defaultObservationScope, observationScopeSchema } from "@/features/settings/config-model";
 import type { KeyValueRow } from "@/components/key-value-editor";
 import { browserTimeZone } from "@/lib/format";
 import type { FilePolicy, FilterRule, SourceFilter, Task, TaskInput } from "@/lib/types";
@@ -26,6 +27,8 @@ export const taskFormSchema = z
     destinationCredentialId: z.string().min(1, "validation.required"),
     destinationBankId: z.string().trim().min(1, "validation.required"),
     retainStrategy: z.string(),
+    observationScopeMode: z.enum(["global", "override"]),
+    observationScope: observationScopeSchema,
     customTags: z.array(z.string()),
     metadataRows: z.array(z.object({ key: z.string(), value: z.string() })),
     filePolicyMode: z.enum(["global", "override"]),
@@ -74,6 +77,8 @@ export function emptyTaskForm(): TaskFormValues {
     destinationCredentialId: "",
     destinationBankId: "",
     retainStrategy: "",
+    observationScopeMode: "global",
+    observationScope: defaultObservationScope,
     customTags: [],
     metadataRows: [],
     filePolicyMode: "global",
@@ -99,6 +104,8 @@ export function taskToForm(t: Task): TaskFormValues {
     destinationCredentialId: t.destinationCredentialId,
     destinationBankId: t.destinationBankId,
     retainStrategy: t.retainStrategy ?? "",
+    observationScopeMode: t.observationScopeMode ?? "global",
+    observationScope: t.observationScope ?? defaultObservationScope,
     customTags: [...(t.customTags ?? [])],
     metadataRows: Object.entries(t.customMetadata ?? {}).map(([key, value]) => ({ key, value: String(value) })),
     filePolicyMode: t.filePolicyMode === "override" ? "override" : "global",
@@ -130,6 +137,8 @@ export function formToInput(v: TaskFormValues, normalizedConfig: Record<string, 
     destinationCredentialId: v.destinationCredentialId,
     destinationBankId: v.destinationBankId.trim(),
     retainStrategy: v.retainStrategy,
+    observationScopeMode: v.observationScopeMode,
+    observationScope: v.observationScope,
     customTags: v.customTags,
     customMetadata,
     filePolicyMode: v.filePolicyMode,
@@ -147,6 +156,7 @@ export function sectionForField(key: string): string {
   if (key.startsWith("sourceFilter")) return "filters";
   if (key.startsWith("source")) return "source";
   if (key.startsWith("destination")) return "destination";
+  if (key.startsWith("observationScope")) return "observations";
   if (key === "retainStrategy") return "retain";
   if (key.startsWith("filePolicy")) return "files";
   if (key.startsWith("inlineMultimodal")) return "inline";

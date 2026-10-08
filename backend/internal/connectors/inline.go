@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/Nyrest/hindsight-ingestion/internal/httpx"
+	"github.com/Nyrest/hindsight-ingestion/internal/proxy"
 )
 
 type AttachmentSource struct {
@@ -33,16 +34,24 @@ func (r ContentRequest) IncludesImages() bool {
 
 // FetchImage returns raw bytes; authentication is supplied only for source-owned assets.
 func FetchImage(ctx context.Context, rawURL string, credential *Credential) (*http.Response, error) {
+	config := proxy.Default
+	if credential != nil {
+		config = credential.Proxy
+	}
+	return FetchImageWithProxy(ctx, rawURL, credential, config)
+}
+
+func FetchImageWithProxy(ctx context.Context, rawURL string, credential *Credential, config proxy.Config) (*http.Response, error) {
 	u, err := url.Parse(rawURL)
 	if err != nil || (u.Scheme != "http" && u.Scheme != "https") || u.Host == "" || u.User != nil {
 		return nil, fmt.Errorf("image URL must be an http(s) URL without user information")
 	}
-	cl := httpx.New(nil, nil)
+	cl := httpx.New(nil, nil, config)
 	if credential != nil {
 		cl.CustomHeaders = credential.Headers
 		cl.AuthHeaders = map[string]string{"Authorization": "Token " + credential.String("token")}
 	}
-	cl.HTTP = &http.Client{Transport: httpx.Shared, CheckRedirect: func(req *http.Request, via []*http.Request) error {
+	cl.HTTP = &http.Client{Transport: httpx.Transport(config), CheckRedirect: func(req *http.Request, via []*http.Request) error {
 		if len(via) >= 10 {
 			return fmt.Errorf("too many image redirects")
 		}

@@ -79,7 +79,7 @@ func client(cred connectors.Credential) *httpx.Client {
 	if cred.OAuth != nil {
 		token = cred.OAuth.AccessToken
 	}
-	c := httpx.New(cred.Headers, map[string]string{"Authorization": "Bearer " + token})
+	c := httpx.New(cred.Headers, map[string]string{"Authorization": "Bearer " + token}, cred.Proxy)
 	c.Token = cred.AccessToken
 	return c
 }
