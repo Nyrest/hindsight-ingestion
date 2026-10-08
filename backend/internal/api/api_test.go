@@ -30,7 +30,6 @@ import (
 
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/filesystem"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/googledrive"
-	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/hindsightsrc"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/onedrive"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/s3"
 )
@@ -64,13 +63,37 @@ func (f *fakeHindsight) handler() http.Handler {
 		case strings.Contains(r.URL.Path, "/operations/"):
 			io.WriteString(w, `{"status":"completed"}`)
 		case strings.Contains(r.URL.Path, "/documents/") && r.Method == "DELETE":
-			id := r.URL.Path[strings.LastIndex(r.URL.Path, "/")+1:]
+			id := strings.SplitN(r.URL.Path, "/documents/", 2)[1]
 			delete(f.docs, id)
 			io.WriteString(w, `{"success":true}`)
-		case strings.HasPrefix(r.URL.Path, "/v1/default/banks/src/documents/"):
-			io.WriteString(w, `{"id":"doc1","original_text":"source text","updated_at":"2026-01-01T00:00:00Z"}`)
-		case r.URL.Path == "/v1/default/banks/src/documents":
-			io.WriteString(w, `{"items":[{"id":"doc1","content_hash":"h1","updated_at":"2026-01-01T00:00:00Z","tags":["x"]}],"total":1}`)
+		case strings.HasSuffix(r.URL.Path, "/files/retain") && r.Method == "POST":
+			if err := r.ParseMultipartForm(1 << 20); err != nil {
+				w.WriteHeader(400)
+				return
+			}
+			defer r.MultipartForm.RemoveAll()
+			var request struct {
+				Metadata []map[string]any `json:"files_metadata"`
+			}
+			if err := json.Unmarshal([]byte(r.FormValue("request")), &request); err != nil || len(request.Metadata) != 1 {
+				w.WriteHeader(400)
+				return
+			}
+			file, _, err := r.FormFile("files")
+			if err != nil {
+				w.WriteHeader(400)
+				return
+			}
+			defer file.Close()
+			content, err := io.ReadAll(file)
+			if err != nil {
+				w.WriteHeader(400)
+				return
+			}
+			metadata := request.Metadata[0]
+			metadata["content"] = string(content)
+			f.docs[metadata["document_id"].(string)] = metadata
+			io.WriteString(w, `{"operation_ids":["op"]}`)
 		default:
 			w.WriteHeader(404)
 		}
@@ -145,6 +168,11 @@ func TestEndToEnd(t *testing.T) {
 	if e.do("GET", "/api/connectors", nil, &conns) != 200 || len(conns.Sources) < 2 {
 		t.Fatalf("connectors: %+v", conns)
 	}
+	for _, source := range conns.Sources {
+		if source["type"] == "hindsight" {
+			t.Fatal("Hindsight is still advertised as a source")
+		}
+	}
 
 	// Credential with secret and custom headers.
 	var hcred map[string]any
@@ -182,27 +210,37 @@ func TestEndToEnd(t *testing.T) {
 		t.Fatalf("browse: %d %v", code, browse)
 	}
 
-	// Validation: no-op Hindsight → same bank.
+	// Hindsight remains a destination credential, but is no longer a source.
 	if code := e.do("POST", "/api/tasks", map[string]any{
-		"name": "noop", "sourceType": "hindsight", "sourceCredentialId": credID, "sourceConfig": map[string]any{"bankId": "dest"},
+		"name": "copy", "sourceType": "hindsight", "sourceCredentialId": credID, "sourceConfig": map[string]any{"bankId": "src"},
 		"destinationCredentialId": credID, "destinationBankId": "dest", "cronExpression": "0 3 * * *",
 	}, &errBody); code != 422 {
-		t.Fatalf("no-op task should be rejected: %d", code)
+		t.Fatalf("Hindsight source should be rejected: %d", code)
 	}
-	// Reserved metadata rejected.
+
+	root := t.TempDir()
+	if err := os.WriteFile(filepath.Join(root, "doc1.txt"), []byte("source text"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	var sourceCred map[string]any
+	if code := e.do("POST", "/api/credentials", map[string]any{
+		"name": "Files", "type": "filesystem", "config": map[string]any{"rootPath": root},
+	}, &sourceCred); code != 201 {
+		t.Fatalf("create source credential: %d %v", code, sourceCred)
+	}
+	sourceCredID := sourceCred["id"].(string)
 	if code := e.do("POST", "/api/tasks", map[string]any{
-		"name": "bad", "sourceType": "hindsight", "sourceCredentialId": credID, "sourceConfig": map[string]any{"bankId": "src"},
-		"destinationCredentialId": credID, "destinationBankId": "dest", "cronExpression": "0 3 * * *",
+		"name": "bad", "sourceType": "filesystem", "sourceCredentialId": sourceCredID,
+		"destinationCredentialId": credID, "destinationBankId": "dest",
 		"customMetadata": map[string]string{"_ingestion_x": "1"},
 	}, &errBody); code != 422 {
 		t.Fatalf("reserved metadata should be rejected: %d", code)
 	}
 
-	// Hindsight → Hindsight task.
 	var task map[string]any
 	code = e.do("POST", "/api/tasks", map[string]any{
-		"name": "copy", "sourceType": "hindsight", "sourceCredentialId": credID,
-		"sourceConfig": map[string]any{"bankId": "src"}, "destinationCredentialId": credID, "destinationBankId": "dest",
+		"name": "copy", "sourceType": "filesystem", "sourceCredentialId": sourceCredID,
+		"sourceConfig": map[string]any{"folder": "."}, "destinationCredentialId": credID, "destinationBankId": "dest",
 		"cronExpression": "*/15 * * * *", "cronTimezone": "Europe/Berlin", "customTags": []string{"copied"},
 	}, &task)
 	if code != 201 {
@@ -223,7 +261,7 @@ func TestEndToEnd(t *testing.T) {
 	if run["status"] != "succeeded" || run["createdCount"].(float64) != 1 {
 		t.Fatalf("run: %v", run)
 	}
-	docID := sync.DocumentID(taskID, "doc1")
+	docID := "filesystem:" + filepath.Join(root, "doc1.txt")
 	e.hs.mu.Lock()
 	doc := e.hs.docs[docID]
 	e.hs.mu.Unlock()

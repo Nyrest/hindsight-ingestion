@@ -1,5 +1,17 @@
 # Validation status
 
+## 2026-10-08 identity and source update
+
+- Full backend test suite on Windows with SQLite, including canonical identity
+  URL normalization, automatic legacy-ID reconciliation, failed replacement
+  retries and cleanup, duplicate deletions, and rejection of Hindsight sources.
+- Frontend TypeScript check passed. Connector API tests confirm Hindsight remains
+  a destination credential and is absent from the source list.
+- SQLite legacy schema upgrade was checked for idempotence, preservation of old
+  IDs, and storage of canonical IDs longer than 128 characters.
+- PostgreSQL/MySQL schema upgrades and real upstream synchronization were not
+  exercised for this update.
+
 ## Verified locally
 
 - Go formatting, build, vet, and the full backend test suite on Windows and in the
@@ -33,4 +45,4 @@
   browser redirects.
 
 Deployment supports one application instance. Advanced Google Drive queries require
-full inventory scans, and SiYuan/Hindsight deletions rely on periodic reconciliation.
+full inventory scans, and SiYuan deletions rely on periodic reconciliation.

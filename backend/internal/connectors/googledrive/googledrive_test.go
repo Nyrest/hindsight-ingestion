@@ -74,6 +74,9 @@ func TestScanBaselineThenChanges(t *testing.T) {
 	}
 	var doc connectors.SourceItem
 	for _, it := range items {
+		if it.Metadata["google_drive_id"] != "ROOTID" {
+			t.Errorf("My Drive identity = %q", it.Metadata["google_drive_id"])
+		}
 		if it.ID == "g1" {
 			doc = it
 		}

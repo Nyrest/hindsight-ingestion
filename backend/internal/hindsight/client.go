@@ -1,5 +1,4 @@
-// Package hindsight is the Hindsight API client used both as the sync
-// destination and as a source connector.
+// Package hindsight is the Hindsight API client used as the sync destination.
 package hindsight
 
 import (
@@ -12,7 +11,6 @@ import (
 	"net/textproto"
 	"net/url"
 	"strings"
-	"time"
 
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 	"github.com/Nyrest/hindsight-ingestion/internal/httpx"
@@ -25,11 +23,15 @@ const CredentialType = "hindsight"
 var CredentialSpec = connectors.CredentialType{
 	Type:        CredentialType,
 	Name:        "Hindsight",
-	Description: "Hindsight API endpoint (destination, or source for Hindsight → Hindsight)",
+	Description: "Hindsight API endpoint used as a destination",
 	Fields: []connectors.FieldSpec{
 		{Key: "baseUrl", Label: "Base URL", Type: connectors.FieldURL, Required: true, Placeholder: "https://hindsight.example.com"},
 		{Key: "apiKey", Label: "API key", Type: connectors.FieldPassword, Secret: true, Help: "Sent as a Bearer token. Leave empty if the instance has no authentication."},
 	},
+}
+
+func init() {
+	connectors.RegisterCredentialType(CredentialSpec)
 }
 
 // Client talks to one Hindsight instance.
@@ -237,65 +239,6 @@ func (c *Client) GetOperation(ctx context.Context, bankID, opID string) (Operati
 // RetryOperation retries a failed operation.
 func (c *Client) RetryOperation(ctx context.Context, bankID, opID string) error {
 	return c.http.JSON(ctx, http.MethodPost, c.bankURL(bankID, "operations", opID, "retry"), nil, nil)
-}
-
-// Document is a listed document.
-type Document struct {
-	ID           string         `json:"id"`
-	BankID       string         `json:"bank_id"`
-	ContentHash  string         `json:"content_hash"`
-	CreatedAt    string         `json:"created_at"`
-	UpdatedAt    string         `json:"updated_at"`
-	TextLength   int            `json:"text_length"`
-	Metadata     map[string]any `json:"document_metadata"`
-	Tags         []string       `json:"tags"`
-	OriginalText *string        `json:"original_text"`
-}
-
-// ListDocumentsOptions filters a document listing.
-type ListDocumentsOptions struct {
-	Tags      []string
-	TagsMatch string
-	StartDate *time.Time
-}
-
-// ListDocuments pages through all documents of a bank, calling fn per page.
-func (c *Client) ListDocuments(ctx context.Context, bankID string, opts ListDocumentsOptions, fn func([]Document) error) error {
-	const pageSize = 250
-	for offset := 0; ; {
-		q := url.Values{"limit": {fmt.Sprint(pageSize)}, "offset": {fmt.Sprint(offset)}}
-		for _, t := range opts.Tags {
-			q.Add("tags", t)
-		}
-		if opts.TagsMatch != "" {
-			q.Set("tags_match", opts.TagsMatch)
-		}
-		if opts.StartDate != nil {
-			q.Set("time_field", "updated_at")
-			q.Set("start_date", opts.StartDate.UTC().Format(time.RFC3339Nano))
-		}
-		var out struct {
-			Items []Document `json:"items"`
-			Total int        `json:"total"`
-		}
-		if err := c.http.JSON(ctx, http.MethodGet, c.bankURL(bankID, "documents")+"?"+q.Encode(), nil, &out); err != nil {
-			return err
-		}
-		if err := fn(out.Items); err != nil {
-			return err
-		}
-		offset += len(out.Items)
-		if len(out.Items) == 0 || offset >= out.Total {
-			return nil
-		}
-	}
-}
-
-// GetDocument returns a document including its original text.
-func (c *Client) GetDocument(ctx context.Context, bankID, documentID string) (Document, error) {
-	var out Document
-	err := c.http.JSON(ctx, http.MethodGet, c.bankURL(bankID, "documents", documentID), nil, &out)
-	return out, err
 }
 
 func uniq(in []string) []string {

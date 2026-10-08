@@ -289,7 +289,7 @@
   },
   "tags": {
     "custom": "Custom tags",
-    "help": "Dashed tags are added automatically to every document.",
+    "help": "The ingestion, source and task tags are added automatically to every document.",
     "placeholder": "team:alpha",
     "newTaskId": "<new>"
   },

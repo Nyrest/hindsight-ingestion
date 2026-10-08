@@ -1,6 +1,6 @@
 # Hindsight Ingestion
 
-Self-hosted service that incrementally synchronizes content from **Notion, SiYuan, S3 / S3-compatible storage, WebDAV, Google Drive, OneDrive, local files and Hindsight** into [Hindsight](https://github.com/vectorize-io/hindsight) memory banks.
+Self-hosted service that incrementally synchronizes content from **Notion, SiYuan, S3 / S3-compatible storage, WebDAV, Google Drive, OneDrive and local files** into [Hindsight](https://github.com/vectorize-io/hindsight) memory banks.
 
 It is a long-running Go service with an embedded React admin UI, an in-process [gocron](https://github.com/go-co-op/gocron) scheduler and a relational database (SQLite, PostgreSQL or MySQL) as the synchronization ledger. It replaces the Cloudflare-based [notion-to-hindsight-sync](https://github.com/Nyrest/notion-to-hindsight-sync).
 
@@ -74,14 +74,18 @@ Access tokens are refreshed by one-time gocron jobs scheduled at `expiry − 15 
 
 | Source | Item identity | Incremental | Deletions | Content |
 | --- | --- | --- | --- | --- |
-| Notion | page ID | `last_edited_time` high-water mark | periodic full reconciliation; trashed pages | Markdown + page properties |
-| SiYuan | document ID | SQL `updated` high-water mark | periodic full reconciliation | Markdown export |
-| S3 | bucket + key | full metadata LIST, download only changed (VersionId, or ETag + LastModified + Size) | scan generations | streamed file |
-| WebDAV | path | RFC 6578 `sync-collection` when available, else PROPFIND + ETag inventory | sync-token removals / scan generations | streamed file |
-| Google Drive | file ID | Changes API page token (baseline inventory, then changes since the start token) | `removed` / trashed / moved out of scope | streamed file; Docs → Markdown, Sheets → CSV, Slides → PDF |
-| OneDrive | drive ID + item ID | Graph `deltaLink` | `deleted` facet / moved out of scope | streamed file |
-| File System | path relative to credential root | full inventory; modification time + size revision | scan generations | streamed file |
-| Hindsight | source document ID | `updated_at` high-water mark + content hash | periodic full reconciliation | document original text |
+| Notion | `notion_page:<page-id>` | `last_edited_time` high-water mark | periodic full reconciliation; trashed pages | Markdown + page properties |
+| SiYuan | `siyuan:<instance-id>:<document-id>` | SQL `updated` high-water mark | periodic full reconciliation | Markdown export |
+| S3 | `s3:<endpoint>:<bucket>:<key>` | full metadata LIST, download only changed (VersionId, or ETag + LastModified + Size) | scan generations | streamed file |
+| WebDAV | `webdav:<server>:<path>` | RFC 6578 `sync-collection` when available, else PROPFIND + ETag inventory | sync-token removals / scan generations | streamed file |
+| Google Drive | `google_drive:<drive-id>:<file-id>` | Changes API page token (baseline inventory, then changes since the start token) | `removed` / trashed / moved out of scope | streamed file; Docs → Markdown, Sheets → CSV, Slides → PDF |
+| OneDrive | `onedrive:<drive-id>:<item-id>` | Graph `deltaLink` | `deleted` facet / moved out of scope | streamed file |
+| File System | `filesystem:<full-path>` | full inventory; modification time + size revision | scan generations | streamed file |
+
+SiYuan's instance ID can be configured on the credential and defaults to its base
+URL. URL components omit the leading `http://` or `https://` and trailing `/`.
+S3 without a custom endpoint uses `s3.amazonaws.com`; Google Drive's My Drive
+uses its stable root folder ID as the drive ID.
 
 Files are classified by extension into **Plain Text, Documents, Images, Audios**; each task follows the global file-type policy or overrides it. File transfers are streamed (`io.Pipe` → multipart) and never buffered in memory.
 
@@ -116,14 +120,14 @@ which needs permission to read the mounted files and traverse their directories.
   history, or change task state, ledger or cursors. OAuth tokens can still refresh
   when needed. Destination ingestion is only exercised by a real run.
 - The database is the ledger: `TaskItem` rows record source revision, desired scope, destination presence and fingerprints. The **target fingerprint** covers the source revision plus retain strategy, tags, metadata and policy revision, so unchanged items are never re-uploaded, and policy changes re-retain everything in scope.
-- Destination document IDs are deterministic (`UUIDv5(task_id, source_item_id)`), so retries, renames, moves, restarts and duplicate executions are idempotent.
+- Destination document IDs use each source's canonical identity directly, independent of task IDs. On the first successful sync after upgrading, existing task-scoped IDs are replaced and removed. Separate tasks that point at the same source object address the same Hindsight document.
 - Run order: scan source → submit changes → wait for Hindsight async operations → reconcile deletions → **commit cursor**. If anything fails, the cursor is not advanced and the next run retries from the last committed state.
 - Deletions of vanished items happen only after a **complete** inventory (scan generations); partial scans never delete. Items leaving the configured scope (filters, file policy, size limit) are removed from Hindsight.
 - A normal run performs a full reconciliation instead of a delta when the configured interval (default 24 h) has elapsed, after configuration changes, or when incremental sync is disabled globally.
 - On startup, runs left `running`/`waiting_operations` by a previous process are marked `interrupted`; their cursor was never committed.
 - If a completed execution left an active run row behind, the next run marks it `interrupted` and proceeds.
 
-Every Hindsight document gets tags `source:<type>`, `ingestion_task:<task_id>` (plus source-specific tags such as `s3_bucket:<bucket>` and custom task tags) and metadata `_ingestion_source_type`, `_ingestion_task_id`, `_ingestion_source_item_id`, `_ingestion_source_revision` (plus provider fields such as `notion_page_id`, `s3_key`, `google_file_id`, `onedrive_item_id`, `webdav_href`, and custom metadata). Keys starting with `_ingestion_` are reserved.
+Every Hindsight document gets the fixed `ingestion` tag, plus `source:<type>`, `ingestion_task:<task_id>`, source-specific tags such as `s3_bucket:<bucket>`, and custom task tags. Metadata includes `_ingestion_source_type`, `_ingestion_task_id`, `_ingestion_source_item_id`, `_ingestion_source_revision` and provider fields. Keys starting with `_ingestion_` are reserved.
 
 ### Task change rules
 

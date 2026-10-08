@@ -112,7 +112,9 @@ func (r *runner) previewItem(item connectors.SourceItem) DryRunItem {
 		return scopePreview(preview, row, reason)
 	}
 	tags, md := r.documentTagsAndMetadata(item)
-	if row.DestinationPresent && row.SyncedFingerprint == Fingerprint(item.Revision, r.task.PolicyRevision, r.task.RetainStrategy, tags, md) {
+	if row.DestinationPresent && row.PreviousDocumentID == "" &&
+		row.DestinationDocumentID == CanonicalIdentity(r.task.SourceType, r.cred, r.srcCfg, item) &&
+		row.SyncedFingerprint == Fingerprint(item.Revision, r.task.PolicyRevision, r.task.RetainStrategy, tags, md) {
 		preview.Action = "unchanged"
 		return preview
 	}

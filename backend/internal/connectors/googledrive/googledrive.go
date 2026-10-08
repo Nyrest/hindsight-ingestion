@@ -336,7 +336,7 @@ func (s *scanner) list(ctx context.Context, query string, fn func(file) error) e
 func (s *scanner) inventory(ctx context.Context, advanced string) error {
 	if advanced != "" {
 		return s.list(ctx, "("+advanced+") and trashed = false and mimeType != '"+folderMime+"'", func(f file) error {
-			return s.emitFile(f, "/"+f.Name)
+			return s.emitFile(ctx, f, "/"+f.Name)
 		})
 	}
 	root := s.root
@@ -360,7 +360,7 @@ func (s *scanner) inventory(ctx context.Context, advanced string) error {
 				}
 				return nil
 			}
-			return s.emitFile(f, p)
+			return s.emitFile(ctx, f, p)
 		})
 		if err != nil {
 			return fmt.Errorf("list folder: %w", err)
@@ -441,7 +441,7 @@ func (s *scanner) changes(ctx context.Context, token string) (string, error) {
 			}
 			continue
 		}
-		if err := s.emitFile(f, p); err != nil {
+		if err := s.emitFile(ctx, f, p); err != nil {
 			return "", err
 		}
 	}
@@ -515,7 +515,7 @@ func (s *scanner) isDriveRoot(ctx context.Context, id string) bool {
 	return id == s.rootID
 }
 
-func (s *scanner) emitFile(f file, p string) error {
+func (s *scanner) emitFile(ctx context.Context, f file, p string) error {
 	name, mime := f.Name, f.MimeType
 	if strings.HasPrefix(f.MimeType, "application/vnd.google-apps.") {
 		ext, exportMime, ok := exportFormat(f.MimeType)
@@ -535,11 +535,25 @@ func (s *scanner) emitFile(f file, p string) error {
 	rev += "|" + f.ModifiedTime.UTC().Format(time.RFC3339Nano)
 	op, _ := json.Marshal(opaque{MimeType: f.MimeType})
 	md := map[string]string{"google_file_id": f.ID, "file_name": name, "google_web_view_link": f.WebViewLink}
-	tags := []string{}
-	if f.DriveID != "" {
-		md["google_drive_id"] = f.DriveID
-		tags = append(tags, "google_drive_id:"+f.DriveID)
+	driveID := f.DriveID
+	if driveID == "" {
+		driveID = s.driveID
 	}
+	if driveID == "" {
+		if s.rootID == "" {
+			var root file
+			if err := s.cl.JSON(ctx, http.MethodGet, apiBase+"/files/root?fields=id", nil, &root); err != nil {
+				return fmt.Errorf("resolve My Drive identity: %w", err)
+			}
+			if root.ID == "" {
+				return fmt.Errorf("Google Drive returned no root ID")
+			}
+			s.rootID = root.ID
+		}
+		driveID = s.rootID
+	}
+	md["google_drive_id"] = driveID
+	tags := []string{"google_drive_id:" + driveID}
 	return s.emit(connectors.SourceItem{
 		ID: f.ID, Name: name, Path: p, Kind: connectors.KindFile, Revision: rev,
 		ModifiedAt: f.ModifiedTime, MIMEType: mime, Size: size, Metadata: md, Tags: tags, Opaque: op,

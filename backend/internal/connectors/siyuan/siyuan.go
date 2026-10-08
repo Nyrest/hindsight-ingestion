@@ -21,6 +21,8 @@ func init() {
 		Description: "SiYuan kernel API endpoint and token (Settings → About → API token)",
 		Fields: []connectors.FieldSpec{
 			{Key: "baseUrl", Label: "Base URL", Type: connectors.FieldURL, Required: true, Placeholder: "http://siyuan:6806"},
+			{Key: "instanceId", Label: "Instance ID", Type: connectors.FieldString,
+				Help: "Stable identifier for this SiYuan instance. Leave empty to use its base URL."},
 			{Key: "token", Label: "API token", Type: connectors.FieldPassword, Secret: true, Required: true},
 		},
 	})

@@ -262,11 +262,6 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 	if t.DestinationBankID == "" {
 		errs.add("destinationBankId", "Bank is required")
 	}
-	if t.SourceType == "hindsight" && t.SourceCredentialID == t.DestinationCredentialID &&
-		connectors.AsString(cfg["bankId"]) == t.DestinationBankID {
-		errs.add("destinationBankId", "Source and destination are the same bank (no-op)")
-	}
-
 	if b.RetainStrategy != nil {
 		t.RetainStrategy = strings.TrimSpace(*b.RetainStrategy)
 	}

@@ -177,6 +177,16 @@ func (r *runner) execute(opts RunOptions) error {
 	if r.dest, err = r.e.NewDestination(destCred); err != nil {
 		return err
 	}
+	if err := r.loadLedger(); err != nil {
+		return err
+	}
+	identityMigration := false
+	for _, row := range r.ledger {
+		if strings.HasPrefix(row.DestinationDocumentID, "hi_") || row.PreviousDocumentID != "" {
+			identityMigration = true
+			break
+		}
+	}
 
 	interval := time.Duration(cfg.FullReconcileIntervalHours) * time.Hour
 	hasCursor := r.state.CommittedCursorJSON != ""
@@ -190,6 +200,9 @@ func (r *runner) execute(opts RunOptions) error {
 	case r.task.ReconcileRequired:
 		r.full = true
 		r.logf("info", "Configuration changed; performing full reconciliation")
+	case identityMigration:
+		r.full = true
+		r.logf("info", "Document identity migration requires full reconciliation")
 	case !hasCursor:
 		r.full = true
 		r.logf("info", "No committed cursor; performing baseline full scan")
@@ -220,10 +233,6 @@ func (r *runner) execute(opts RunOptions) error {
 		return err
 	}
 	r.logf("info", "Starting %s sync (generation %d)", mode, r.gen)
-
-	if err := r.loadLedger(); err != nil {
-		return err
-	}
 
 	var cursor json.RawMessage
 	if !r.full && hasCursor {
@@ -315,10 +324,20 @@ func (r *runner) observe(item connectors.SourceItem) error {
 			if err := r.flushText(); err != nil {
 				return err
 			}
-			row := models.TaskItem{TaskID: r.task.ID, SourceItemID: item.ID, DestinationDocumentID: DocumentID(r.task.ID, item.ID),
-				DestinationPresent: true, LastSeenGeneration: r.gen}
+			row := r.ledger[item.ID]
+			pending := false
+			for _, p := range r.pending {
+				if p.row.SourceItemID == item.ID {
+					row = p.row
+					pending = true
+				}
+			}
+			if !pending && !row.DestinationPresent {
+				return nil
+			}
+			row.TaskID, row.SourceItemID = r.task.ID, item.ID
+			row.DestinationPresent, row.DesiredMatch, row.LastSeenGeneration = true, false, r.gen
 			r.deletes = append(r.deletes, row)
-			r.dropPending(item.ID)
 			return nil
 		}
 		r.logf("debug", "Ignoring duplicate emission of %s", displayName(item))
@@ -333,8 +352,12 @@ func (r *runner) observe(item connectors.SourceItem) error {
 	if !ok {
 		row = models.TaskItem{TaskID: r.task.ID, SourceItemID: item.ID}
 	}
-	if row.DestinationDocumentID == "" {
-		row.DestinationDocumentID = DocumentID(r.task.ID, item.ID)
+	previousDocumentID := row.DestinationDocumentID
+	canonicalDocumentID := CanonicalIdentity(r.task.SourceType, r.cred, r.srcCfg, item)
+	if !item.Deleted && (previousDocumentID != canonicalDocumentID || row.PreviousDocumentID != "") {
+		// A legacy task-scoped ID (or changed canonical identity) must be
+		// rewritten even when source content and policy are unchanged.
+		row.SyncedFingerprint = ""
 	}
 
 	if item.Deleted {
@@ -398,6 +421,10 @@ func (r *runner) observe(item connectors.SourceItem) error {
 	}
 
 	if content.Body != nil {
+		if err := r.prepareDocumentID(&row, canonicalDocumentID); err != nil {
+			_ = content.Body.Close()
+			return err
+		}
 		return r.retainFile(item, row, content, tags, md)
 	}
 	if strings.TrimSpace(content.Text) == "" {
@@ -410,11 +437,34 @@ func (r *runner) observe(item connectors.SourceItem) error {
 		}
 		return r.queueSeen(row)
 	}
+	if err := r.prepareDocumentID(&row, canonicalDocumentID); err != nil {
+		return err
+	}
 	r.textBuf = append(r.textBuf, textJob{item: item, row: row, content: content})
 	r.textSz += len(content.Text)
 	if len(r.textBuf) >= RetainBatchSize || r.textSz >= RetainBatchMaxBytes {
 		return r.flushText()
 	}
+	return nil
+}
+
+// Persist both identities before submitting a replacement so interruptions and
+// failed writes leave enough information to retry or delete both documents.
+func (r *runner) prepareDocumentID(row *models.TaskItem, documentID string) error {
+	if row.DestinationDocumentID == documentID {
+		return nil
+	}
+	if row.DestinationPresent && row.DestinationDocumentID != "" {
+		if row.PreviousDocumentID != "" && row.PreviousDocumentID != row.DestinationDocumentID {
+			if err := r.dest.DeleteDocument(r.ctx, r.task.DestinationBankID, row.PreviousDocumentID); err != nil {
+				return err
+			}
+		}
+		row.PreviousDocumentID = row.DestinationDocumentID
+		row.DestinationDocumentID = documentID
+		return r.saveRow(*row)
+	}
+	row.DestinationDocumentID = documentID
 	return nil
 }
 
@@ -666,6 +716,12 @@ func (r *runner) awaitPending() error {
 			row.DestinationPresent = true
 			r.logf("error", "Hindsight failed to ingest %s: %s", orEmpty(row.SourcePath, row.SourceName), failure)
 		} else {
+			if row.PreviousDocumentID != "" && row.PreviousDocumentID != row.DestinationDocumentID {
+				if err := r.dest.DeleteDocument(r.ctx, r.task.DestinationBankID, row.PreviousDocumentID); err != nil {
+					return fmt.Errorf("delete previous document %s from Hindsight: %w", row.PreviousDocumentID, err)
+				}
+			}
+			row.PreviousDocumentID = ""
 			if row.DestinationPresent {
 				r.run.UpdatedCount++
 			} else {
@@ -713,6 +769,12 @@ func (r *runner) reconcileDeletions(complete bool) error {
 			}
 			return fmt.Errorf("delete %s from Hindsight: %w", row.DestinationDocumentID, err)
 		}
+		if row.PreviousDocumentID != "" && row.PreviousDocumentID != row.DestinationDocumentID {
+			if err := r.dest.DeleteDocument(r.ctx, r.task.DestinationBankID, row.PreviousDocumentID); err != nil {
+				return fmt.Errorf("delete previous document %s from Hindsight: %w", row.PreviousDocumentID, err)
+			}
+		}
+		row.PreviousDocumentID = ""
 		r.run.DeletedCount++
 		r.logf("info", "Deleted %s from Hindsight", orEmpty(row.SourcePath, orEmpty(row.SourceName, row.SourceItemID)))
 		row.DestinationPresent = false
@@ -853,18 +915,6 @@ func (e *Engine) writeTerminal(runID string, updates map[string]any) {
 // normal finish path (load errors, panics, queue cancellation).
 func (e *Engine) MarkTerminal(runID, status, msg string) {
 	e.writeTerminal(runID, map[string]any{"status": status, "finished_at": time.Now().UTC(), "error_message": truncate(msg, 4000)})
-}
-
-// dropPending removes an item from the pending synced-state updates so a
-// subsequent deletion is not overwritten by them.
-func (r *runner) dropPending(id string) {
-	out := r.pending[:0]
-	for _, p := range r.pending {
-		if p.row.SourceItemID != id {
-			out = append(out, p)
-		}
-	}
-	r.pending = out
 }
 
 // loadLedger reads the task's ledger in pages to avoid per-item queries.
@@ -1032,7 +1082,7 @@ func (r *runner) prepareSource() (settings.Settings, error) {
 	}
 	r.cred = srcCred
 
-	r.baseTags = []string{"source:" + r.task.SourceType, "ingestion_task:" + r.task.ID}
+	r.baseTags = []string{"ingestion", "source:" + r.task.SourceType, "ingestion_task:" + r.task.ID}
 	var custom []string
 	_ = json.Unmarshal([]byte(orEmpty(r.task.CustomTagsJSON, "[]")), &custom)
 	r.baseTags = append(r.baseTags, custom...)

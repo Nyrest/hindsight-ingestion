@@ -181,6 +181,13 @@ func (d *fakeDest) RetainBatch(ctx context.Context, bank string, items []hindsig
 }
 
 func (d *fakeDest) RetainFile(ctx context.Context, bank string, meta hindsight.FileMeta, name, mime string, body io.Reader) ([]string, error) {
+	d.mu.Lock()
+	if d.failNext {
+		d.failNext = false
+		d.mu.Unlock()
+		return nil, errors.New("hindsight down")
+	}
+	d.mu.Unlock()
 	b, err := io.ReadAll(body)
 	if err != nil {
 		return nil, err
@@ -350,13 +357,13 @@ func TestIncrementalLifecycle(t *testing.T) {
 	if r.SyncMode != models.SyncFull || r.CreatedCount != 2 {
 		t.Fatalf("baseline: mode=%s created=%d", r.SyncMode, r.CreatedCount)
 	}
-	docA := sync.DocumentID(h.task.ID, "a")
+	docA := "a"
 	got := h.dest.docs[docA]
 	if got.Content != "alpha" {
 		t.Fatalf("doc a = %+v", got)
 	}
 	// Tags and metadata.
-	for _, tag := range []string{"source:fake", "ingestion_task:" + h.task.ID, "team:a"} {
+	for _, tag := range []string{"ingestion", "source:fake", "ingestion_task:" + h.task.ID, "team:a"} {
 		if !contains(got.Tags, tag) {
 			t.Errorf("missing tag %s in %v", tag, got.Tags)
 		}
@@ -460,7 +467,7 @@ func TestCursorNotCommittedOnFailure(t *testing.T) {
 	h.dest.failOps = false
 	r := h.run("")
 	expectStatus(t, r, models.RunSucceeded)
-	if h.dest.docs[sync.DocumentID(h.task.ID, "a")].Content != "a2" {
+	if h.dest.docs["a"].Content != "a2" {
 		t.Fatal("retry did not ingest the change")
 	}
 }
@@ -478,7 +485,7 @@ func TestPolicyChangeReRetains(t *testing.T) {
 	if r.UpdatedCount != 2 {
 		t.Fatalf("policy change updated %d, want 2", r.UpdatedCount)
 	}
-	if !contains(h.dest.docs[sync.DocumentID(h.task.ID, "a")].Tags, "team:b") {
+	if !contains(h.dest.docs["a"].Tags, "team:b") {
 		t.Fatal("new tag not applied")
 	}
 	var task models.Task
@@ -499,7 +506,7 @@ func TestFilterExitDeletes(t *testing.T) {
 	})
 	r := h.run("")
 	expectStatus(t, r, models.RunSucceeded)
-	if r.DeletedCount != 1 || !contains(h.dest.deleted, sync.DocumentID(h.task.ID, "drop-1")) {
+	if r.DeletedCount != 1 || !contains(h.dest.deleted, "drop-1") {
 		t.Fatalf("filter exit: deleted=%d %v", r.DeletedCount, h.dest.deleted)
 	}
 }
@@ -516,7 +523,7 @@ func TestFilePolicyAndStreaming(t *testing.T) {
 	if r.CreatedCount != 1 || r.SkippedCount != 2 {
 		t.Fatalf("created=%d skipped=%d", r.CreatedCount, r.SkippedCount)
 	}
-	if h.dest.files[sync.DocumentID(h.task.ID, "f1")] != "hello pdf" {
+	if h.dest.files["f1"] != "hello pdf" {
 		t.Fatal("file content not streamed")
 	}
 
@@ -621,7 +628,7 @@ func TestDuplicateDeletionAfterUpsert(t *testing.T) {
 			h.src.deleteAfterScan = "doc-00"
 			r := h.run("")
 			expectStatus(t, r, models.RunSucceeded)
-			id := sync.DocumentID(h.task.ID, "doc-00")
+			id := "doc-00"
 			if _, present := h.dest.docs[id]; present || r.DeletedCount != 1 {
 				t.Fatalf("duplicate deletion left document present=%v, deleted=%d", present, r.DeletedCount)
 			}
@@ -658,13 +665,6 @@ func TestShutdownInterruptsRun(t *testing.T) {
 	}
 	if h.state().CommittedCursorJSON != "" {
 		t.Fatal("cursor committed by interrupted run")
-	}
-}
-
-func TestDeterministicIDs(t *testing.T) {
-	a := sync.DocumentID("task", "item")
-	if a != sync.DocumentID("task", "item") || a == sync.DocumentID("task", "item2") || a == sync.DocumentID("task2", "item") {
-		t.Fatal("document IDs not deterministic/unique")
 	}
 }
 

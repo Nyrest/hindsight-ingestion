@@ -265,7 +265,7 @@ export function TaskEditor({ task }: { task?: Task }) {
     if (m) metaRowErrors[i] = t(m);
   });
 
-  const autoTags = [`source:${sourceType || "<type>"}`, `ingestion_task:${task?.id ?? t("tags.newTaskId")}`];
+  const autoTags = ["ingestion", `source:${sourceType || "<type>"}`, `ingestion_task:${task?.id ?? t("tags.newTaskId")}`];
   const lastRun = runs.data?.items[0] ?? task?.lastRun ?? null;
 
   return (

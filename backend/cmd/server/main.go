@@ -31,7 +31,6 @@ import (
 	// Source connectors register themselves.
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/filesystem"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/googledrive"
-	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/hindsightsrc"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/notion"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/onedrive"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/s3"

@@ -104,8 +104,10 @@ type TaskItem struct {
 	// (filters + file policy) at its last observation.
 	DesiredMatch bool `gorm:"not null;default:false"`
 
-	DestinationDocumentID string `gorm:"size:128"`
-	DestinationPresent    bool   `gorm:"not null;default:false"`
+	DestinationDocumentID string `gorm:"type:text"`
+	// PreviousDocumentID remains tracked until an identity replacement succeeds.
+	PreviousDocumentID string `gorm:"type:text"`
+	DestinationPresent bool   `gorm:"not null;default:false"`
 
 	// TargetFingerprint is what the destination should reflect; SyncedFingerprint
 	// is what it reflects after the last confirmed write.
