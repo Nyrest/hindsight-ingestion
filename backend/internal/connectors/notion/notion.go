@@ -311,7 +311,7 @@ func (c *Connector) OpenContent(ctx context.Context, req connectors.ContentReque
 	if md.Truncated || len(md.UnknownBlockID) > 0 {
 		return connectors.SourceContent{}, fmt.Errorf("notion page %s returned truncated markdown", req.Item.ID)
 	}
-	text := strings.TrimSpace(md.Markdown + "\n\nNotion page properties:\n" + PropertiesText(op.Properties))
+	text := strings.TrimSpace(md.Markdown + "\n\n---\n\nNotion page properties:\n" + PropertiesText(op.Properties))
 	return connectors.SourceContent{
 		Text:      text,
 		Context:   fmt.Sprintf("Notion Page %q in Data Source %q", op.Title, op.Source),
