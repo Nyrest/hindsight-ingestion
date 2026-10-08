@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { providerCopy } from "@/lib/provider-copy";
 import { MASK, type FieldSpec } from "@/lib/types";
 
 export function isSecretField(f: FieldSpec): boolean {
@@ -115,6 +116,8 @@ export function SchemaField({
 }: SchemaFieldProps) {
   const { t } = useTranslation();
   const id = `${idPrefix}-${f.key}`;
+  const label = providerCopy(f.label, t);
+  const help = providerCopy(f.help, t);
   const secret = isSecretField(f);
   const str = value === undefined || value === null ? "" : String(value);
   const masked = secret && str === MASK;
@@ -126,9 +129,9 @@ export function SchemaField({
         <div className="flex items-start justify-between gap-4 rounded-md border px-3 py-2.5">
           <div className="space-y-0.5">
             <label htmlFor={id} className="text-sm font-medium">
-              {f.label}
+              {label}
             </label>
-            {f.help && <p className="text-xs text-muted-foreground">{f.help}</p>}
+            {help && <p className="text-xs text-muted-foreground">{help}</p>}
             {error && <p className="text-xs font-medium text-destructive">{error}</p>}
           </div>
           <Switch id={id} checked={!!value} onCheckedChange={(c) => onChange(c)} />
@@ -148,7 +151,7 @@ export function SchemaField({
             {!f.required && <SelectItem value={NONE}>{t("common.none")}</SelectItem>}
             {options.map((o) => (
               <SelectItem key={o.value} value={o.value}>
-                {o.label}
+                {providerCopy(o.label, t)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -217,11 +220,11 @@ export function SchemaField({
   }
 
   const helpParts: React.ReactNode[] = [];
-  if (f.help) helpParts.push(f.help);
+  if (help) helpParts.push(help);
   if (secret && editing && masked) helpParts.push(t("secret.keepHint"));
   return (
     <FieldRow
-      label={f.label}
+      label={label}
       htmlFor={id}
       required={f.required}
       error={error}

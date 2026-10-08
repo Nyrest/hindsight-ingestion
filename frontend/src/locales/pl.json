@@ -1,0 +1,744 @@
+{
+  "inlineMultimodal": {
+    "title": "Osadzone treści multimodalne",
+    "description": "Uwzględnia multimedia osadzone w notatkach. Obecnie obsługiwane są obrazy z Notion i SiYuan.",
+    "enabled": "Przetwarzaj osadzone multimedia",
+    "policyHelp": "Obrazy są uwzględniane tylko wtedy, gdy włączone są zarówno osadzone multimedia, jak i opcja „Obrazy” w zasadach typów plików.",
+    "active": "Osadzone obrazy będą uwzględniane.",
+    "inactive": "Notatki będą synchronizowane jako tekst. Aby uwzględniać obrazy, włącz osadzone multimedia i opcję „Obrazy”."
+  },
+  "app": {
+    "name": "Hindsight Ingestion",
+    "tagline": "Synchronizuj źródła z bankami pamięci Hindsight",
+    "version": "v{{version}}",
+    "authDisabled": "autoryzacja wyłączona"
+  },
+  "language": {
+    "label": "Język"
+  },
+  "nav": {
+    "dashboard": "Pulpit nawigacyjny",
+    "tasks": "Zadania",
+    "runs": "Uruchomienia",
+    "credentials": "Poświadczenia",
+    "settings": "Ustawienia",
+    "open": "Otwórz nawigację",
+    "title": "Nawigacja",
+    "description": "Główna nawigacja"
+  },
+  "theme": {
+    "toggle": "Zmień motyw",
+    "light": "Jasny",
+    "dark": "Ciemny",
+    "system": "Systemu"
+  },
+  "common": {
+    "actions": "Działania",
+    "backTo": "Powrót do {{page}}",
+    "cancel": "Anuluj",
+    "close": "Zamknij",
+    "confirm": "Potwierdź",
+    "commandPaletteTitle": "Paleta poleceń",
+    "commandPaletteDescription": "Wyszukaj polecenie do uruchomienia…",
+    "copied": "Skopiowano do schowka",
+    "copy": "Kopiuj",
+    "copyFailed": "Nie można skopiować do schowka",
+    "create": "Utwórz",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "false": "Nie",
+    "true": "Tak",
+    "loadFailed": "Nie udało się wczytać danych",
+    "loading": "Ładowanie…",
+    "moreActions": "Więcej działań",
+    "new": "Nowe",
+    "next": "Następna strona",
+    "previous": "Poprzednia strona",
+    "none": "Żadne",
+    "pageOf": "Strona {{page}} z {{pages}}",
+    "refresh": "Odśwież",
+    "retry": "Spróbuj ponownie",
+    "save": "Zapisz",
+    "saveChanges": "Zapisz zmiany",
+    "select": "Wybierz…",
+    "viewAll": "Zobacz wszystkie"
+  },
+  "validation": {
+    "required": "To pole jest wymagane",
+    "number": "Musi być liczbą",
+    "integer": "Musi to być liczba całkowita",
+    "min1": "Musi być co najmniej 1",
+    "url": "Musi to być prawidłowy URL",
+    "tooLong": "Za długo"
+  },
+  "runStatus": {
+    "pending": "Oczekujące",
+    "running": "W trakcie",
+    "waiting_operations": "Oczekiwanie na operacje",
+    "succeeded": "Udało się",
+    "failed": "Nie udało się",
+    "interrupted": "Przerwano",
+    "cancelled": "Anulowano"
+  },
+  "credentialStatus": {
+    "active": "Aktywny",
+    "reauth_required": "Wymagane ponowne połączenie",
+    "pending_oauth": "Oczekiwanie na OAuth",
+    "error": "Błąd"
+  },
+  "chips": {
+    "placeholder": "Wpisz i naciśnij Enter",
+    "duplicate": "„{{value}}” został już dodany",
+    "remove": "Usuń {{value}}",
+    "automatic": "Dodano automatycznie"
+  },
+  "kv": {
+    "key": "Klucz",
+    "value": "Wartość",
+    "add": "Dodaj",
+    "remove": "Usuń wiersz"
+  },
+  "secret": {
+    "keepHint": "Wartość jest przechowywana. Pozostaw maskę niezmienioną, aby ją zachować, lub wpisz nową wartość, aby ją zastąpić.",
+    "clear": "Wyczyść zapisaną wartość"
+  },
+  "headers": {
+    "title": "Niestandardowe nagłówki",
+    "help": "Wysyłane przy każdym żądaniu do tego dostawcy. Nagłówki uwierzytelniania łącznika mają pierwszeństwo.",
+    "mode": "Tryb edytora",
+    "ui": "Interfejs użytkownika",
+    "json": "JSON",
+    "name": "Nazwa nagłówka",
+    "value": "Wartość",
+    "valuePlaceholder": "Wartość nagłówka",
+    "add": "Dodaj nagłówek",
+    "empty": "Brak niestandardowych nagłówków",
+    "maskHint": "Przechowywane wartości są wyświetlane jako {{mask}}; zachowaj maskę, aby pozostawić wartość bez zmian.",
+    "errors": {
+      "duplicate": "Zduplikowana nazwa nagłówka „{{name}}” (w nazwach nie ma znaczenia wielkość liter)",
+      "invalidJson": "Nieprawidłowy JSON: {{detail}}",
+      "notObject": "JSON musi być obiektem typu {\"Header\": \"Value\"}",
+      "nonString": "Wartość „{{name}}” musi być ciągiem znaków",
+      "emptyName": "Nazwa nagłówka nie może być pusta"
+    }
+  },
+  "browse": {
+    "button": "Przeglądaj…",
+    "title": "Przeglądaj",
+    "titleFor": "Wybierz {{label}}",
+    "description": "Przejdź do folderów i wybierz element.",
+    "breadcrumbs": "Lokalizacja",
+    "root": "Korzeń",
+    "empty": "Nic tutaj",
+    "hint": "Wybierz element lub otwórz folder za pomocą strzałki",
+    "open": "Otwórz {{name}}",
+    "select": "Wybierz",
+    "selected": "Wybrane",
+    "kinds": {
+      "folder": "Folder",
+      "file": "Plik",
+      "data_source": "Źródło danych",
+      "notebook": "Notatnik",
+      "bucket": "Bucket",
+      "bank": "Bank pamięci",
+      "drive": "Dysk",
+      "site": "Witryna"
+    },
+    "memoryBanks": "Banki pamięci",
+    "drives": "Dyski",
+    "buckets": "Zasobniki",
+    "dataSources": "Źródła danych",
+    "notebooks": "Notatniki"
+  },
+  "capabilities": {
+    "incremental": {
+      "high_water_mark": "Znak wysokiego poziomu wody",
+      "delta_token": "Token delta",
+      "sync_token": "Token synchronizacji",
+      "inventory": "Różnica w ekwipunku"
+    },
+    "deletion": {
+      "full_reconcile": "Usuwa podczas pełnego uzgadniania",
+      "scan_generation": "Usuwa poprzez skanowanie",
+      "delta": "Usuwa poprzez deltę"
+    },
+    "files": "Pliki",
+    "oauth": "OAuth",
+    "advancedFilter": "Zaawansowany filtr"
+  },
+  "credentials": {
+    "title": "Poświadczenia",
+    "description": "Szczegóły połączeń wielokrotnego użytku dla źródeł i miejsc docelowych Hindsight.",
+    "new": "Nowe poświadczenie",
+    "createTitle": "Nowe poświadczenie",
+    "createDescription": "Wybierz dostawcę i wprowadź szczegóły jego połączenia.",
+    "editTitle": "Edytuj dane uwierzytelniające",
+    "editDescription": "Sekrety nigdy nie są ujawniane. Pozostaw zamaskowane wartości bez zmian, aby je zachować.",
+    "createInline": "Utwórz nowe poświadczenie",
+    "namePlaceholder": "np. Pracuj {{type}}",
+    "pick": "Wybierz dane uwierzytelniające",
+    "noneOfType": "Brak jeszcze poświadczeń {{type}}",
+    "notActiveWarning": "To poświadczenie to obecnie „{{status}}”. Uruchamianie może zakończyć się niepowodzeniem, dopóki nie zostanie naprawione.",
+    "oauthHint": "Po zapisaniu kliknij „Połącz” i postępuj zgodnie z instrukcjami, aby przyznać dostęp.",
+    "usedByCount_one": "Zadanie {{count}}",
+    "usedByCount_other": "Zadania {{count}}",
+    "fields": {
+      "type": "Dostawca",
+      "name": "Imię"
+    },
+    "columns": {
+      "name": "Imię",
+      "type": "Wpisz",
+      "status": "Stan",
+      "usedBy": "Używany przez",
+      "oauth": "OAuth"
+    },
+    "actions": {
+      "test": "Testuj",
+      "connect": "Połącz",
+      "reconnect": "Połącz ponownie",
+      "refresh": "Odśwież token"
+    },
+    "empty": {
+      "title": "Nie ma jeszcze żadnych poświadczeń",
+      "description": "Dodaj poświadczenia dla źródła (np. Notion) i poświadczenia dla instancji Hindsight, aby utworzyć zadanie."
+    },
+    "test": {
+      "ok": "{{name}}: połączenie OK",
+      "failed": "{{name}}: połączenie nie powiodło się"
+    },
+    "oauth": {
+      "success": "Pomyślnie podłączono OAuth",
+      "error": "Połączenie OAuth nie powiodło się",
+      "startFailed": "Nie można uruchomić OAuth",
+      "connected": "Połączono",
+      "notConnected": "Nie podłączony",
+      "expires": "Token wygasa {{when}}"
+    },
+    "toast": {
+      "created": "Utworzono dane uwierzytelniające",
+      "updated": "Dane uwierzytelniające zaktualizowane",
+      "deleted": "Dane uwierzytelniające usunięte",
+      "deleteFailed": "Nie można usunąć danych logowania",
+      "inUse": "Poświadczenie jest w użyciu",
+      "refreshed": "Token odświeżony",
+      "refreshFailed": "Odświeżenie tokena nie powiodło się"
+    },
+    "delete": {
+      "title": "Usunąć „{{name}}”?",
+      "description": "Spowoduje to trwałe usunięcie danych uwierzytelniających i przechowywanych w nich sekretów.",
+      "inUse_one": "To poświadczenie jest używane przez zadanie {{count}}. Najpierw usuń lub zmień to zadanie.",
+      "inUse_other": "To poświadczenie jest używane przez zadania {{count}}. Najpierw usuń lub zmień te zadania.",
+      "inUse_few": "Z tego poświadczenia korzystają {{count}} zadania. Najpierw usuń te zadania lub zmień używane w nich poświadczenie.",
+      "inUse_many": "Z tego poświadczenia korzysta {{count}} zadań. Najpierw usuń te zadania lub zmień używane w nich poświadczenie."
+    },
+    "usedByCount_few": "{{count}} zadania",
+    "usedByCount_many": "{{count}} zadań"
+  },
+  "filters": {
+    "add": "Dodaj filtr",
+    "remove": "Usuń filtr",
+    "where": "Gdzie",
+    "and": "I",
+    "field": "Pole",
+    "operator": "Operatora",
+    "mode": "Tryb filtra",
+    "simple": "Proste",
+    "advanced": "Zaawansowane",
+    "advancedQuery": "Zapytanie",
+    "advancedHint": "Składnia zapytania dostawcy surowego.",
+    "driveHint": "Składnia zapytań Google Drive, np. mimeType = 'application/pdf' i modifiedTime > '2024-01-01T00:00:00'. Pliki z kosza są zawsze pomijane.",
+    "noFields": "To źródło nie obsługuje filtrów.",
+    "selectValues": "Wybierz wartości…",
+    "valuePlaceholder": "Wartość",
+    "valuesPlaceholder": "Wpisz wartość i naciśnij klawisz Enter",
+    "empty": {
+      "title": "Żadnych filtrów",
+      "description": "Wszystko w zakresie źródłowym zostanie zsynchronizowane."
+    },
+    "operators": {
+      "equals": "równa się",
+      "notEquals": "nie równa się",
+      "contains": "zawiera",
+      "in": "jest którykolwiek z",
+      "notIn": "nie jest żadnym",
+      "greaterThan": "większy niż",
+      "lessThan": "mniej niż"
+    },
+    "errors": {
+      "field": "Wybierz prawidłowe pole",
+      "operator": "Operator nie jest obsługiwany dla tego pola",
+      "value": "Wprowadź wartość",
+      "valueList": "Dodaj co najmniej jedną wartość",
+      "number": "Musi być liczbą"
+    }
+  },
+  "filePolicy": {
+    "plainText": "Zwykły tekst",
+    "documents": "Dokumenty",
+    "images": "Obrazy",
+    "audios": "Dźwięk",
+    "globalPreview": "Aktualna polityka globalna (zmień ją w Ustawieniach):",
+    "mode": {
+      "global": "Użyj ustawień globalnych",
+      "globalHelp": "Użyj typów plików ustawionych w Ustawieniach.",
+      "override": "Zastąp",
+      "overrideHelp": "Wybierz typy plików tylko dla tego zadania."
+    }
+  },
+  "source": {
+    "type": "Typ źródła",
+    "credential": "Poświadczenie źródła",
+    "pickTypeFirst": "Najpierw wybierz typ źródła.",
+    "pickCredentialFirst": "Najpierw wybierz dane uwierzytelniające"
+  },
+  "destination": {
+    "credential": "Poświadczenie Hindsight",
+    "bank": "Bank pamięci",
+    "bankPlaceholder": "ID banku",
+    "browseBanks": "Wybierz bank pamięci",
+    "pickCredentialFirst": "Najpierw wybierz dane dostępowe Hindsight.",
+    "locked": "Po pierwszym udanym uruchomieniu miejsce docelowe zostaje zablokowane. Aby użyć innych danych dostępowych lub innego banku pamięci, utwórz nowe zadanie.",
+    "lockNotice": "Miejsce docelowe staje się tylko do odczytu po pierwszym pomyślnym uruchomieniu."
+  },
+  "retain": {
+    "label": "Zachowaj strategię",
+    "bankDefault": "Domyślna strategia banku pamięci",
+    "bankDefaultNamed": "Domyślna strategia banku pamięci ({{name}})",
+    "help": "Określa, jak Hindsight przetwarza treści wysyłane do banku pamięci. Opcja domyślna korzysta ze strategii ustawionej dla tego banku.",
+    "freeTextPlaceholder": "Pozostaw puste, aby użyć ustawień domyślnych banku pamięci",
+    "pickDestinationFirst": "Wybierz dane dostępowe miejsca docelowego i bank pamięci, aby wczytać dostępne strategie.",
+    "loadFailed": "Nie można załadować strategii z Hindsight; wprowadź ręcznie nazwę strategii."
+  },
+  "tags": {
+    "custom": "Niestandardowe tagi",
+    "help": "Tagi pozyskiwania, źródła i zadania są dodawane automatycznie do każdego dokumentu.",
+    "placeholder": "zespół: alfa",
+    "newTaskId": "<nowy>"
+  },
+  "metadata": {
+    "add": "Dodaj pole",
+    "empty": "Brak niestandardowych metadanych",
+    "reservedHint": "Klucze zaczynające się od _inggestion_ są zarezerwowane dla pól pochodzenia systemowego.",
+    "errors": {
+      "emptyKey": "Klucz jest wymagany",
+      "reserved": "Klucze zaczynające się od _inggestion_ są zarezerwowane",
+      "duplicate": "Zduplikowany klucz"
+    }
+  },
+  "schedule": {
+    "cron": "Wyrażenie Cron",
+    "cronHelp": "Standardowy cron z 5 polami: minuta, godzina, dzień, miesiąc, dzień powszedni",
+    "timezone": "Strefa czasowa",
+    "selectTimezone": "Wybierz strefę czasową",
+    "searchTimezone": "Wyszukaj strefy czasowe…",
+    "noTimezone": "Nie znaleziono strefy czasowej",
+    "suggested": "Sugerowane",
+    "allTimezones": "Wszystkie strefy czasowe",
+    "nextRuns": "Następne uruchomienia",
+    "enterCron": "Wprowadź wyrażenie cron, aby wyświetlić podgląd nadchodzących uruchomień.",
+    "invalid": "Nieprawidłowy harmonogram",
+    "previewUnavailable": "Podgląd niedostępny",
+    "presets": {
+      "every15m": "Co 15 minut",
+      "everyHour": "Co godzinę",
+      "every6h": "Co 6 godzin",
+      "daily3": "Codziennie 03:00",
+      "weeklyMon8": "Poniedziałki 08:00"
+    }
+  },
+  "tasks": {
+    "title": "Zadania",
+    "description": "Każde zadanie synchronizuje jedno źródło z bankiem pamięci Hindsight zgodnie z ustawionym harmonogramem.",
+    "new": "Nowe zadanie",
+    "neverRun": "Jeszcze nie uruchomiono",
+    "reconcileRequired": "Wymagana pełna synchronizacja",
+    "itemCount_one": "Element {{count}}",
+    "itemCount_other": "Elementy {{count}}",
+    "columns": {
+      "enabled": "Włączone",
+      "name": "Imię",
+      "source": "Źródło",
+      "destination": "Miejsce docelowe",
+      "schedule": "Harmonogram",
+      "lastRun": "Ostatnie uruchomienie",
+      "nextRun": "Następne uruchomienie",
+      "status": "Stan"
+    },
+    "status": {
+      "idle": "Bezczynny",
+      "disabled": "Niepełnosprawny",
+      "reconcilePending": "Oczekuje na pełną synchronizację"
+    },
+    "actions": {
+      "runNow": "Uruchom teraz",
+      "fullReconcile": "Pełna synchronizacja",
+      "fullReingest": "Pełne ponowne spożycie",
+      "cancel": "Anuluj uruchomienie",
+      "enable": "Włącz",
+      "disable": "Wyłącz",
+      "viewRuns": "Zobacz historię uruchomień",
+      "dryRun": "Symulacja"
+    },
+    "empty": {
+      "title": "Nie ma jeszcze żadnych zadań",
+      "description": "Utwórz zadanie, aby rozpocząć synchronizację źródła z Hindsight."
+    },
+    "trigger": {
+      "run": {
+        "success": "Uruchomiono bieg"
+      },
+      "fullReconcile": {
+        "success": "Rozpoczęto pełną synchronizację"
+      },
+      "fullReingest": {
+        "success": "Rozpoczęło się pełne ponowne spożycie"
+      },
+      "alreadyRunning": "Zadanie już działa",
+      "failed": "Nie udało się uruchomić zadania"
+    },
+    "cancel": {
+      "success": "Zażądano anulowania",
+      "notRunning": "Zadanie nie jest uruchomione",
+      "failed": "Nie udało się anulować uruchomienia"
+    },
+    "toast": {
+      "enabled": "Zadanie włączone",
+      "disabled": "Zadanie wyłączone",
+      "updateFailed": "Nie udało się zaktualizować zadania",
+      "deleted": "Zadanie usunięte",
+      "deleteFailed": "Nie można usunąć zadania",
+      "deleteRunning": "Zadanie jest uruchomione; anuluj je przed usunięciem"
+    },
+    "delete": {
+      "title": "Usunąć „{{name}}”?",
+      "description": "Zadanie, jego historia uruchamiania i stan synchronizacji zostaną usunięte. Dokumenty znajdujące się już w Hindsight nie są usuwane."
+    },
+    "reingest": {
+      "title": "Ponownie przełknąć wszystko dla „{{name}}”?",
+      "description": "Każdy pasujący element zostanie ponownie zapisany w Hindsight, nawet jeśli się nie zmienił. Może to zająć dużo czasu i obciążyć przetwarzanie Hindsight."
+    },
+    "itemCount_few": "{{count}} elementy",
+    "itemCount_many": "{{count}} elementów"
+  },
+  "taskEditor": {
+    "newTitle": "Nowe zadanie",
+    "create": "Utwórz zadanie",
+    "namePlaceholder": "np. Notion → Osobiste",
+    "enabledHelp": "Wyłączone zadania zachowują stan synchronizacji, ale nie są zaplanowane.",
+    "notFound": "Nie znaleziono zadania",
+    "nextRun": "Następne uruchomienie: {{when}}",
+    "itemCount_one": "Zsynchronizowano element {{count}}",
+    "itemCount_other": "Zsynchronizowano elementy {{count}}",
+    "recentRuns": "Ostatnie uruchomienia",
+    "saveBeforeRun": "Zapisz zmiany przed uruchomieniem",
+    "saveError": "Nie udało się zapisać zadania",
+    "unsaved": "Niezapisane zmiany",
+    "saved": "Wszystkie zmiany zostały zapisane",
+    "fields": {
+      "name": "Imię",
+      "enabled": "Włączone"
+    },
+    "hints": {
+      "sourceReset": "Zmiana danych dostępowych źródła lub katalogu głównego (zasobnika, folderu, bazy danych, notatnika itd.) resetuje kursor przyrostowy i uruchamia pełne skanowanie, aby ponownie utworzyć punkt odniesienia synchronizacji.",
+      "sourceTypeLocked": "Po utworzeniu nie można zmienić typu źródła. Utwórz nowe zadanie, aby użyć innego źródła.",
+      "filtersReconcile": "Zmiana filtrów oznacza, że zadanie wymaga pełnej synchronizacji. Elementy, które przestaną pasować do filtrów, zostaną usunięte z Hindsight.",
+      "filesReconcile": "Zmiana typów plików uruchamia pełną synchronizację. Wykluczone pliki zostaną usunięte z Hindsight.",
+      "policyRevision": "Zmiana strategii zachowywania, tagów lub metadanych powoduje ponowne zachowanie wszystkich pasujących elementów przy następnym uruchomieniu."
+    },
+    "sections": {
+      "general": {
+        "title": "Generał",
+        "description": "Nazwa i aktywacja."
+      },
+      "source": {
+        "title": "Źródło",
+        "description": "Skąd odczytywana jest treść."
+      },
+      "filters": {
+        "title": "Filtry",
+        "description": "Ogranicz synchronizację elementów."
+      },
+      "destination": {
+        "title": "Miejsce docelowe",
+        "description": "Bank pamięci Hindsight, do którego trafiają treści."
+      },
+      "retain": {
+        "title": "Zachowaj strategię",
+        "description": "Jak Hindsight przetwarza zawartość."
+      },
+      "files": {
+        "title": "Typy plików",
+        "description": "Jakie rodzaje plików są pozyskiwane."
+      },
+      "inline": {
+        "title": "Osadzone treści multimodalne",
+        "description": "Multimedia osadzone w notatkach."
+      },
+      "tags": {
+        "title": "Tagi",
+        "description": "Tagi dołączone do każdego dokumentu."
+      },
+      "metadata": {
+        "title": "Metadane",
+        "description": "Metadane klucza/wartości dołączone do każdego dokumentu."
+      },
+      "schedule": {
+        "title": "Harmonogram",
+        "description": "Gdy zadanie zostanie uruchomione automatycznie."
+      }
+    },
+    "toast": {
+      "created": "Zadanie utworzone",
+      "updated": "Zadanie zapisane",
+      "saveFailed": "Nie udało się zapisać zadania",
+      "conflict": "Konflikt"
+    },
+    "itemCount_few": "Zsynchronizowano {{count}} elementy",
+    "itemCount_many": "Zsynchronizowano {{count}} elementów"
+  },
+  "runs": {
+    "title": "Historia uruchomień",
+    "description": "Historia wykonań wszystkich zadań.",
+    "notStarted": "Nie rozpoczęte",
+    "total_one": "{{formatted}} uruchomienie",
+    "total_other": "{{formatted}} uruchomień",
+    "columns": {
+      "task": "Zadanie",
+      "status": "Stan",
+      "trigger": "Sposób uruchomienia",
+      "mode": "Tryb uruchomienia",
+      "started": "Czas rozpoczęcia",
+      "duration": "Czas trwania",
+      "counters": "Wyniki"
+    },
+    "trigger": {
+      "scheduled": "Zaplanowane",
+      "manual": "Ręcznie"
+    },
+    "mode": {
+      "incremental": "Przyrostowe",
+      "full": "Pełny",
+      "reingest": "Ponownie zaimportuj wszystko"
+    },
+    "counters": {
+      "discoveredCount": "Wykryto",
+      "createdCount": "Utworzono",
+      "updatedCount": "Zaktualizowano",
+      "deletedCount": "Usunięto",
+      "unchangedCount": "Niezmienione",
+      "skippedCount": "Pominięte",
+      "failedCount": "Nie udało się"
+    },
+    "filters": {
+      "status": "Filtruj według stanu",
+      "task": "Filtruj według zadania",
+      "allStatuses": "Wszystkie statusy",
+      "allTasks": "Wszystkie zadania",
+      "clear": "Wyczyść filtry"
+    },
+    "empty": {
+      "title": "Brak uruchomień",
+      "description": "Uruchomienia zadań zgodne z harmonogramem i ręczne będą widoczne tutaj.",
+      "filteredTitle": "Brak pasujących uruchomień",
+      "filteredDescription": "Wypróbuj inny status lub zadanie.",
+      "taskTitle": "Brak uruchomień",
+      "taskDescription": "Wybierz „Uruchom teraz”, aby rozpocząć pierwszą synchronizację."
+    },
+    "total_few": "{{formatted}} uruchomienia",
+    "total_many": "{{formatted}} uruchomień"
+  },
+  "runDetail": {
+    "notFound": "Nie znaleziono uruchomienia",
+    "error": "Błąd uruchomienia",
+    "scheduledFor": "Zaplanowane na",
+    "finished": "Skończone",
+    "inProgress": "W toku",
+    "cursorBefore": "Kursor wcześniej",
+    "cursorAfter": "Kursor po",
+    "noCursor": "żaden",
+    "operations": "Operacje Hindsight",
+    "noOperations": "Brak operacji asynchronicznych dla tego uruchomienia.",
+    "log": "Dziennik",
+    "noLog": "Brak linii dziennika.",
+    "opColumns": {
+      "remoteId": "Zdalny identyfikator",
+      "type": "Wpisz",
+      "status": "Stan",
+      "retries": "Ponowne próby",
+      "created": "Utworzono",
+      "updated": "Zaktualizowano"
+    }
+  },
+  "dashboard": {
+    "title": "Pulpit nawigacyjny",
+    "description": "Przegląd aktywności synchronizacji.",
+    "stats": {
+      "enabledTasks": "Włączone zadania",
+      "ofTotal": "łącznie {{total}}",
+      "running": "W trakcie",
+      "runs24h_one": "{{count}} uruchomienie w ciągu ostatnich 24 godzin",
+      "runs24h_other": "{{count}} uruchomień w ciągu ostatnich 24 godzin",
+      "items": "Elementy zsynchronizowane",
+      "itemsSub": "we wszystkich zadaniach",
+      "failures24h": "Awarie (24h)",
+      "needsAttention": "Potrzebuje uwagi",
+      "allGood": "Wszystko dobrze",
+      "runs24h_few": "{{count}} uruchomienia w ciągu ostatnich 24 godzin",
+      "runs24h_many": "{{count}} uruchomień w ciągu ostatnich 24 godzin"
+    },
+    "getStarted": {
+      "title": "Skonfiguruj pierwszą synchronizację",
+      "description": "Dodaj poświadczenia dla źródła i dla Hindsight, a następnie utwórz zadanie.",
+      "credentials": "Dodaj dane uwierzytelniające"
+    },
+    "reauth": {
+      "title": "Poświadczenia wymagają ponownego połączenia"
+    },
+    "running": {
+      "title": "Trwa wykonywanie",
+      "empty": "Żadne zadanie nie jest obecnie uruchomione"
+    },
+    "nextRuns": {
+      "title": "Następne zaplanowane uruchomienia",
+      "empty": "Brak nadchodzących uruchomień"
+    },
+    "failures": {
+      "title": "Ostatnie awarie",
+      "empty": "Żadnych ostatnich awarii"
+    }
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "description": "Globalne zachowanie synchronizacji.",
+    "units": {
+      "hours": "godziny"
+    },
+    "sync": {
+      "title": "Synchronizacja",
+      "description": "Dotyczy wszystkich zadań.",
+      "incremental": "Synchronizacja przyrostowa",
+      "incrementalHelp": "Jeśli to możliwe, użyj natywnego śledzenia zmian dostawcy. Gdy opcja jest wyłączona, przy każdym uruchomieniu wykonywana jest pełna inwentaryzacja (niezmieniona zawartość nadal nie jest ponownie przesyłana).",
+      "reconcileInterval": "Odstęp między pełnymi synchronizacjami",
+      "reconcileIntervalHelp": "Jeśli od ostatniej pełnej synchronizacji minęło więcej czasu niż ten odstęp, następne uruchomienie wykona pełne skanowanie.",
+      "maxFileSize": "Maksymalny rozmiar pliku",
+      "maxFileSizeHelp": "Większe pliki są pomijane."
+    },
+    "files": {
+      "title": "Globalne typy plików",
+      "description": "Domyślne typy plików dla zadań ustawione na „Śledź globalnie”. Wykluczone pliki są usuwane podczas uzgadniania."
+    },
+    "oauth": {
+      "title": "OAuth",
+      "description": "Zarejestruj to przekierowanie URI w konfiguracji aplikacji Google Cloud i Microsoft Entra (Azure) dla poświadczeń Google Drive i OneDrive.",
+      "redirectUri": "Przekieruj URI"
+    },
+    "toast": {
+      "saved": "Ustawienia zostały zapisane",
+      "failed": "Nie udało się zapisać ustawień"
+    }
+  },
+  "notFound": {
+    "title": "Nie znaleziono strony",
+    "description": "Strona, której szukasz nie istnieje.",
+    "home": "Przejdź do pulpitu nawigacyjnego"
+  },
+  "dryRun": {
+    "title": "Symulacja: {{name}}",
+    "description": "Sprawdź zapisane zadanie, skanując całe źródło. Dokumenty nie zostaną wysłane ani usunięte, a postęp synchronizacji i historia uruchomień pozostaną bez zmian.",
+    "start": "Uruchom symulację",
+    "running": "Skanowanie…",
+    "complete_one": "Zeskanowano {{count}} element źródłowy.",
+    "complete_other": "Zeskanowano {{count}} elementy źródłowe.",
+    "incomplete_one": "Niepełne skanowanie ({{count}} element). Brakujące elementy nie zostaną oznaczone do usunięcia.",
+    "incomplete_other": "Niepełne skanowanie ({{count}} elementy). Brakujące elementy nie zostaną oznaczone do usunięcia.",
+    "truncated": "Wyświetlono pierwsze 100 elementów. Liczba obejmuje wszystkie elementy.",
+    "file": "Element źródłowy",
+    "action": "Akcja",
+    "reason": "Powód",
+    "actions": {
+      "create": "Utwórz",
+      "update": "Aktualizacja",
+      "delete": "Usuń",
+      "unchanged": "Niezmienione",
+      "skip": "Pomiń",
+      "fail": "Nie udało się"
+    },
+    "complete_few": "Zeskanowano {{count}} elementy.",
+    "complete_many": "Zeskanowano {{count}} elementów.",
+    "incomplete_few": "Niepełne skanowanie ({{count}} elementy). Brakujące elementy nie zostaną oznaczone do usunięcia.",
+    "incomplete_many": "Niepełne skanowanie ({{count}} elementów). Brakujące elementy nie zostaną oznaczone do usunięcia."
+  },
+  "providerCopy": {
+    "integrationToken": "Token integracji",
+    "dataSource": "Źródło danych",
+    "pageTitle": "Tytuł strony",
+    "lastEdited": "Ostatnia edycja",
+    "created": "Utworzono",
+    "oauthClientId": "Identyfikator klienta OAuth",
+    "oauthClientSecret": "Klucz tajny klienta OAuth",
+    "drive": "Dysk",
+    "folder": "Folder",
+    "includeSubfolders": "Uwzględnij podfoldery",
+    "exportGoogleDocs": "Eksportuj Dokumenty, Arkusze i Prezentacje Google",
+    "fileName": "Nazwa pliku",
+    "path": "Ścieżka",
+    "extension": "Rozszerzenie",
+    "mimeType": "Typ MIME",
+    "fileType": "Typ pliku",
+    "sizeBytes": "Rozmiar (bajty)",
+    "modified": "Zmodyfikowano",
+    "rootDirectory": "Katalog główny",
+    "rootFolder": "Folder główny",
+    "serverUrl": "Adres URL serwera",
+    "username": "Nazwa użytkownika",
+    "passwordApp": "Hasło / hasło aplikacji",
+    "bearerToken": "Token Bearer",
+    "endpoint": "Punkt końcowy",
+    "region": "Region",
+    "accessKeyId": "Identyfikator klucza dostępu",
+    "secretAccessKey": "Tajny klucz dostępu",
+    "sessionToken": "Token sesji",
+    "pathStyle": "Adresowanie ścieżkowe",
+    "baseUrl": "Podstawowy adres URL",
+    "instanceId": "Identyfikator instancji",
+    "apiToken": "Token API",
+    "notebook": "Notatnik",
+    "pathPrefix": "Prefiks ścieżki",
+    "bucket": "Bucket",
+    "prefix": "Prefiks",
+    "applicationId": "Identyfikator aplikacji (klienta)",
+    "clientSecret": "Klucz tajny klienta",
+    "tenant": "Dzierżawca",
+    "title": "Tytuł",
+    "updated": "Zaktualizowano",
+    "tags": "Tagi",
+    "notionDescription": "Wewnętrzny token integracji Notion z dostępem do odczytu udostępnionych źródeł danych.",
+    "siYuanDescription": "Adres API jądra SiYuan i token (Ustawienia → Informacje → Token API).",
+    "filesystemDescription": "Pliki lokalne dostępne dla aplikacji.",
+    "googleDriveDescription": "Konto Google przez OAuth z dostępem do Dysku tylko do odczytu.",
+    "oneDriveDescription": "Konto Microsoft lub Microsoft 365 przez OAuth z dostępem do OneDrive i SharePoint.",
+    "s3Description": "Amazon S3 i zgodne usługi, takie jak MinIO, Cloudflare R2, Backblaze B2 i Wasabi.",
+    "webdavDescription": "Obsługuje m.in. Nextcloud, ownCloud, Synology, Apache mod_dav i rclone serve.",
+    "hindsightDescription": "Adres API Hindsight, do którego trafiają treści.",
+    "filesystemRootHelp": "Bezwzględna ścieżka na serwerze aplikacji. W Dockerze użyj ścieżki zamontowanej w kontenerze.",
+    "filesystemFolderHelp": "Ścieżka względem katalogu głównego tych danych dostępowych. Wpisz . , aby wskazać katalog główny.",
+    "notionDataSourceHelp": "Identyfikator źródła danych Notion (nie identyfikator bazy danych). Użyj opcji „Przeglądaj”, aby wybrać źródło udostępnione tej integracji.",
+    "siYuanInstanceHelp": "Stały identyfikator tej instancji SiYuan. Jeśli pozostawisz pole puste, zostanie użyty podstawowy adres URL.",
+    "s3EndpointHelp": "Pozostaw puste dla AWS S3.",
+    "s3PathStyleHelp": "Wymagane przez większość samodzielnie hostowanych serwerów S3, np. MinIO.",
+    "s3PrefixHelp": "Uwzględnia tylko obiekty z tym prefiksem klucza.",
+    "webdavTokenHelp": "Użyj zamiast nazwy użytkownika i hasła, jeśli serwer wymaga tokena.",
+    "webdavRootHelp": "Ścieżka względem adresu URL serwera.",
+    "googleDriveHelp": "Pozostaw puste, aby użyć Mojego dysku, lub wybierz dysk udostępniony.",
+    "wholeDriveHelp": "Pozostaw puste, aby użyć całego dysku.",
+    "googleExportHelp": "Dokumenty są eksportowane do Markdown, arkusze do CSV, a prezentacje do PDF.",
+    "tenantHelp": "Wpisz common, organizations, consumers lub identyfikator dzierżawcy.",
+    "oneDriveHelp": "Pozostaw puste, aby użyć osobistego OneDrive.",
+    "siYuanPathHelp": "Uwzględnia tylko dokumenty, których czytelna ścieżka zaczyna się od tego prefiksu.",
+    "siYuanNotebookHelp": "Pozostaw puste, aby synchronizować wszystkie otwarte notatniki.",
+    "hindsightApiKeyHelp": "Wysyłany jako token Bearer. Pozostaw puste, jeśli instancja nie wymaga uwierzytelniania.",
+    "syncCollectionHelp": "Jeśli serwer to obsługuje, używa sync-collection (RFC 6578).",
+    "fileSystem": "System plików"
+  }
+}

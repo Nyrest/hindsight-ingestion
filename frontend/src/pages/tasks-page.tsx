@@ -45,6 +45,7 @@ import {
 } from "@/features/tasks/api";
 import { errorMessage, isApiError } from "@/lib/api";
 import { typeName, useConnectors } from "@/lib/connectors";
+import { providerCopy } from "@/lib/provider-copy";
 import { describeCron, formatDateTime, formatRelative } from "@/lib/format";
 import { useNow } from "@/lib/hooks";
 import type { Task } from "@/lib/types";
@@ -279,7 +280,7 @@ export default function TasksPage() {
                       <div className="flex items-center gap-2">
                         <TypeIcon type={task.sourceType} className="text-muted-foreground" />
                         <div className="min-w-0">
-                          <div className="truncate text-sm">{typeName(connectors.data, task.sourceType)}</div>
+                          <div className="truncate text-sm">{providerCopy(typeName(connectors.data, task.sourceType), t)}</div>
                           <div className="truncate text-xs text-muted-foreground">{credName(task.sourceCredentialId)}</div>
                         </div>
                       </div>

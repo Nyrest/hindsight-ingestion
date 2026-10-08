@@ -1,0 +1,728 @@
+{
+  "inlineMultimodal": {
+    "title": "内嵌多模态内容",
+    "description": "同步笔记中嵌入的媒体。目前支持 Notion 和 SiYuan 中的图片。",
+    "enabled": "处理内嵌媒体",
+    "policyHelp": "只有同时启用内嵌媒体和文件类型策略中的“图片”，才会同步图片。",
+    "active": "将同步内嵌图片。",
+    "inactive": "笔记将按纯文本同步。如需包含图片，请同时启用内嵌媒体和“图片”。"
+  },
+  "app": {
+    "name": "Hindsight Ingestion",
+    "tagline": "将数据源同步到 Hindsight 记忆库",
+    "version": "v{{version}}",
+    "authDisabled": "身份验证已禁用"
+  },
+  "nav": {
+    "dashboard": "仪表板",
+    "tasks": "任务",
+    "runs": "运行",
+    "credentials": "凭证",
+    "settings": "设置",
+    "open": "打开导航",
+    "title": "导航",
+    "description": "主导航"
+  },
+  "theme": {
+    "toggle": "更改主题",
+    "light": "浅色",
+    "dark": "深色",
+    "system": "系统"
+  },
+  "common": {
+    "actions": "操作",
+    "backTo": "返回 {{page}}",
+    "cancel": "取消",
+    "confirm": "确认",
+    "copied": "已复制到剪贴板",
+    "copy": "复制",
+    "copyFailed": "无法复制到剪贴板",
+    "create": "创建",
+    "delete": "删除",
+    "edit": "编辑",
+    "false": "否",
+    "true": "是",
+    "loadFailed": "无法加载数据",
+    "loading": "正在加载...",
+    "moreActions": "更多操作",
+    "new": "新建",
+    "next": "下一页",
+    "previous": "上一页",
+    "none": "无",
+    "pageOf": "第 {{page}} 页，共 {{pages}} 页",
+    "refresh": "刷新",
+    "retry": "重试",
+    "save": "保存",
+    "saveChanges": "保存更改",
+    "select": "选择...",
+    "viewAll": "查看全部",
+    "close": "关闭",
+    "commandPaletteTitle": "命令面板",
+    "commandPaletteDescription": "搜索要执行的命令…"
+  },
+  "validation": {
+    "required": "此字段为必填项",
+    "number": "必须是数字",
+    "integer": "必须是整数",
+    "min1": "必须至少为 1",
+    "url": "必须是有效的 URL",
+    "tooLong": "太长"
+  },
+  "runStatus": {
+    "pending": "等待中",
+    "running": "运行中",
+    "waiting_operations": "等待异步操作完成",
+    "succeeded": "成功",
+    "failed": "失败",
+    "interrupted": "已中断",
+    "cancelled": "已取消"
+  },
+  "credentialStatus": {
+    "active": "可用",
+    "reauth_required": "需要重新连接",
+    "pending_oauth": "等待 OAuth",
+    "error": "错误"
+  },
+  "chips": {
+    "placeholder": "键入并按 Enter",
+    "duplicate": "“{{value}}”已添加",
+    "remove": "删除 {{value}}",
+    "automatic": "自动添加"
+  },
+  "kv": {
+    "key": "键",
+    "value": "值",
+    "add": "添加",
+    "remove": "删除行"
+  },
+  "secret": {
+    "keepHint": "已保存一个值。保留掩码即可继续使用当前值；输入新值可将其替换。",
+    "clear": "清除已保存的值"
+  },
+  "headers": {
+    "title": "自定义请求头",
+    "help": "每次向该服务发送请求时都会附带这些请求头。连接器自身的认证请求头优先。",
+    "mode": "编辑方式",
+    "ui": "UI",
+    "json": "JSON",
+    "name": "请求头名称",
+    "value": "值",
+    "valuePlaceholder": "请求头的值",
+    "add": "添加请求头",
+    "empty": "尚未添加自定义请求头",
+    "maskHint": "存储的值显示为 {{mask}}；保持掩码以保持值不变。",
+    "errors": {
+      "duplicate": "重复的标头名称“{{name}}”（名称不区分大小写）",
+      "invalidJson": "无效 JSON：{{detail}}",
+      "notObject": "JSON 必须是类似 {\"Header\": \"Value\"} 的对象",
+      "nonString": "“{{name}}”的值必须是字符串",
+      "emptyName": "标头名称不能是空"
+    }
+  },
+  "browse": {
+    "button": "浏览...",
+    "title": "浏览",
+    "titleFor": "选择 {{label}}",
+    "description": "导航到文件夹并选择一个项目。",
+    "breadcrumbs": "当前位置",
+    "root": "根目录",
+    "empty": "此处无内容",
+    "hint": "选择一项，或点击箭头进入文件夹",
+    "open": "打开 {{name}}",
+    "select": "选择",
+    "selected": "已选择",
+    "kinds": {
+      "folder": "文件夹",
+      "file": "文件",
+      "data_source": "数据源",
+      "notebook": "笔记本",
+      "bucket": "存储桶",
+      "bank": "记忆库",
+      "drive": "云端硬盘",
+      "site": "站点"
+    },
+    "memoryBanks": "记忆库",
+    "drives": "云端硬盘",
+    "buckets": "存储桶",
+    "dataSources": "数据源",
+    "notebooks": "笔记本"
+  },
+  "capabilities": {
+    "incremental": {
+      "high_water_mark": "高水位线",
+      "delta_token": "增量令牌",
+      "sync_token": "同步令牌",
+      "inventory": "清单差异"
+    },
+    "deletion": {
+      "full_reconcile": "全量校准时删除",
+      "scan_generation": "扫描时删除",
+      "delta": "增量同步时删除"
+    },
+    "files": "文件",
+    "oauth": "OAuth",
+    "advancedFilter": "高级过滤器"
+  },
+  "credentials": {
+    "title": "凭据",
+    "description": "用于连接数据源和 Hindsight 目标记忆库的凭据。",
+    "new": "新凭证",
+    "createTitle": "新凭证",
+    "createDescription": "选择提供商并输入其连接详细信息。",
+    "editTitle": "编辑凭证",
+    "editDescription": "密钥不会再次显示。保留掩码不变即可继续使用已保存的密钥。",
+    "createInline": "新建凭据",
+    "namePlaceholder": "例如工作 {{type}}",
+    "pick": "选择凭证",
+    "noneOfType": "尚无 {{type}} 凭证",
+    "notActiveWarning": "此凭证当前为“{{status}}”。在修复之前，运行可能会失败。",
+    "oauthHint": "保存后，点击“连接”并按提示授权访问。",
+    "usedByCount_one": "{{count}} 任务",
+    "usedByCount_other": "{{count}} 任务",
+    "fields": {
+      "type": "服务类型",
+      "name": "名称"
+    },
+    "columns": {
+      "name": "名称",
+      "type": "类型",
+      "status": "状态",
+      "usedBy": "关联任务",
+      "oauth": "OAuth"
+    },
+    "actions": {
+      "test": "测试",
+      "connect": "连接",
+      "reconnect": "重新连接",
+      "refresh": "刷新令牌"
+    },
+    "empty": {
+      "title": "尚无凭证",
+      "description": "请添加一个数据源凭据（例如 Notion），再添加 Hindsight 凭据，然后创建任务。"
+    },
+    "test": {
+      "ok": "{{name}}：连接正常",
+      "failed": "{{name}}：连接失败"
+    },
+    "oauth": {
+      "success": "OAuth 连接成功",
+      "error": "OAuth 连接失败",
+      "startFailed": "无法启动 OAuth",
+      "connected": "已连接",
+      "notConnected": "未连接",
+      "expires": "令牌将于 {{when}} 过期"
+    },
+    "toast": {
+      "created": "凭证已创建",
+      "updated": "凭证已更新",
+      "deleted": "凭证已删除",
+      "deleteFailed": "无法删除凭证",
+      "inUse": "凭证正在使用",
+      "refreshed": "令牌已刷新",
+      "refreshFailed": "令牌刷新失败"
+    },
+    "delete": {
+      "title": "删除“{{name}}”？",
+      "description": "这将永久删除凭证及其存储的机密。",
+      "inUse_one": "该凭证由 {{count}} 任务使用。首先删除或更改该任务。",
+      "inUse_other": "此凭证由 {{count}} 任务使用。首先删除或更改这些任务。"
+    }
+  },
+  "filters": {
+    "add": "添加过滤器",
+    "remove": "删除过滤器",
+    "where": "条件",
+    "and": "并且",
+    "field": "字段",
+    "operator": "运算符",
+    "mode": "过滤器模式",
+    "simple": "简单",
+    "advanced": "高级",
+    "advancedQuery": "查询",
+    "advancedHint": "原始提供者查询语法。",
+    "driveHint": "Google Drive 查询语法示例：mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'。回收站中的文件始终会被排除。",
+    "noFields": "该源不支持过滤器。",
+    "selectValues": "选择值...",
+    "valuePlaceholder": "值",
+    "valuesPlaceholder": "键入一个值并按 Enter 键",
+    "empty": {
+      "title": "无过滤器",
+      "description": "源范围中的所有内容都将同步。"
+    },
+    "operators": {
+      "equals": "等于",
+      "notEquals": "不等于",
+      "contains": "包含",
+      "in": "属于以下任一值",
+      "notIn": "不属于以下任何值",
+      "greaterThan": "大于",
+      "lessThan": "小于"
+    },
+    "errors": {
+      "field": "选择有效字段",
+      "operator": "该字段不支持运算符",
+      "value": "输入一个值",
+      "valueList": "添加至少一个值",
+      "number": "必须是数字"
+    }
+  },
+  "filePolicy": {
+    "plainText": "纯文本",
+    "documents": "文档",
+    "images": "图像",
+    "audios": "音频",
+    "globalPreview": "当前全局策略（可在“设置”中修改）：",
+    "mode": {
+      "global": "跟随全局设置",
+      "globalHelp": "使用“设置”中配置的文件类型。",
+      "override": "覆盖",
+      "overrideHelp": "仅为此任务选择文件类型。"
+    }
+  },
+  "source": {
+    "type": "源类型",
+    "credential": "源凭证",
+    "pickTypeFirst": "请先选择数据源类型。",
+    "pickCredentialFirst": "请先选择一个凭据。"
+  },
+  "destination": {
+    "credential": "Hindsight 连接凭据",
+    "bank": "记忆库",
+    "bankPlaceholder": "记忆库 ID",
+    "browseBanks": "选择记忆库",
+    "pickCredentialFirst": "请先选择 Hindsight 连接凭据。",
+    "locked": "首次运行成功后，目标记忆库就会锁定。若要改用其他连接凭据或记忆库，请新建任务。",
+    "lockNotice": "首次运行成功后，目标记忆库将变为只读。"
+  },
+  "retain": {
+    "label": "内容处理策略",
+    "bankDefault": "使用记忆库默认策略",
+    "bankDefaultNamed": "使用记忆库默认策略（{{name}}）",
+    "help": "设置 Hindsight 如何处理写入记忆库的内容。选择“使用记忆库默认策略”可沿用该记忆库中的配置。",
+    "freeTextPlaceholder": "留空以使用记忆库默认策略",
+    "pickDestinationFirst": "请先选择目标连接凭据和记忆库，再加载可用策略。",
+    "loadFailed": "无法从 Hindsight 加载策略，请手动输入策略名称。"
+  },
+  "tags": {
+    "custom": "自定义标签",
+    "help": "每篇文档都会自动附加导入来源、数据源和任务标签。",
+    "placeholder": "team:alpha",
+    "newTaskId": "<new>"
+  },
+  "metadata": {
+    "add": "添加字段",
+    "empty": "无自定义元数据",
+    "reservedHint": "以 _ingestion_ 开头的密钥保留用于系统来源字段。",
+    "errors": {
+      "emptyKey": "请输入键名",
+      "reserved": "以 _ingestion_ 开头的键名为系统保留项",
+      "duplicate": "重复密钥"
+    }
+  },
+  "schedule": {
+    "cron": "Cron 表达式",
+    "cronHelp": "标准 5 字段 cron：分钟 小时 日 月 工作日",
+    "timezone": "时区",
+    "selectTimezone": "选择时区",
+    "searchTimezone": "搜索时区...",
+    "noTimezone": "未找到时区",
+    "suggested": "建议",
+    "allTimezones": "所有时区",
+    "nextRuns": "后续运行时间",
+    "enterCron": "输入 cron 表达式以预览后续运行时间。",
+    "invalid": "无效时间表",
+    "previewUnavailable": "无法预览",
+    "presets": {
+      "every15m": "每 15 分钟",
+      "everyHour": "每小时",
+      "every6h": "每 6 小时",
+      "daily3": "每日 03:00",
+      "weeklyMon8": "周一 08:00"
+    }
+  },
+  "tasks": {
+    "title": "任务",
+    "description": "每个任务都会按计划将一个数据源同步到 Hindsight 记忆库。",
+    "new": "新任务",
+    "neverRun": "尚未运行",
+    "reconcileRequired": "等待全量校准",
+    "itemCount_one": "{{count}} 项目",
+    "itemCount_other": "{{count}} 项目",
+    "columns": {
+      "enabled": "启用",
+      "name": "上 名称",
+      "source": "源",
+      "destination": "目标",
+      "schedule": "计划",
+      "lastRun": "上次运行",
+      "nextRun": "下次运行",
+      "status": "状态"
+    },
+    "status": {
+      "idle": "空闲",
+      "disabled": "已禁用",
+      "reconcilePending": "等待全量校准"
+    },
+    "actions": {
+      "runNow": "立即运行",
+      "fullReconcile": "全量校准",
+      "fullReingest": "全部重新写入",
+      "cancel": "取消运行",
+      "enable": "启用",
+      "disable": "禁用",
+      "viewRuns": "查看运行",
+      "dryRun": "试运行"
+    },
+    "empty": {
+      "title": "尚无任务",
+      "description": "创建一个任务以开始将源同步到 Hindsight。"
+    },
+    "trigger": {
+      "run": {
+        "success": "运行开始"
+      },
+      "fullReconcile": {
+        "success": "完全协调开始"
+      },
+      "fullReingest": {
+        "success": "完全重新摄取已开始"
+      },
+      "alreadyRunning": "任务已在运行",
+      "failed": "无法开始运行"
+    },
+    "cancel": {
+      "success": "已请求取消",
+      "notRunning": "任务未运行",
+      "failed": "无法取消运行"
+    },
+    "toast": {
+      "enabled": "任务已启用",
+      "disabled": "任务已禁用",
+      "updateFailed": "无法更新任务",
+      "deleted": "任务已删除",
+      "deleteFailed": "无法删除任务",
+      "deleteRunning": "任务正在运行，请先取消运行再删除。"
+    },
+    "delete": {
+      "title": "删除任务“{{name}}”？",
+      "description": "任务、运行记录和同步状态都会被删除。已写入 Hindsight 的文档不会删除。"
+    },
+    "reingest": {
+      "title": "要重新写入“{{name}}”的所有内容吗？",
+      "description": "所有符合条件的内容都会重新写入 Hindsight，即使内容没有变化。这可能需要较长时间，也会消耗 Hindsight 的处理资源。"
+    }
+  },
+  "taskEditor": {
+    "newTitle": "新任务",
+    "create": "创建任务",
+    "namePlaceholder": "例如：Notion → 个人笔记",
+    "enabledHelp": "停用任务后，同步状态会保留，但任务不会按计划运行。",
+    "notFound": "未找到任务",
+    "nextRun": "下次运行：{{when}}",
+    "itemCount_one": "{{count}} 项目已同步",
+    "itemCount_other": "{{count}} 项目已同步",
+    "recentRuns": "最近运行",
+    "saveBeforeRun": "运行前请先保存更改。",
+    "saveError": "无法保存任务",
+    "unsaved": "未保存的更改",
+    "saved": "更改已全部保存",
+    "fields": {
+      "name": "名称",
+      "enabled": "已启用"
+    },
+    "hints": {
+      "sourceReset": "更改数据源凭据或根目录（存储桶、文件夹、数据库、笔记本等）会重置增量游标，并触发完整扫描以重新建立同步基线。",
+      "sourceTypeLocked": "创建后无法更改数据源类型。要使用其他数据源，请新建任务。",
+      "filtersReconcile": "更改筛选条件后，下次运行会执行全量校准，并从 Hindsight 删除不再符合条件的文档。",
+      "filesReconcile": "更改文件类型后，下次运行会执行全量校准，并从 Hindsight 删除不再包含的文件。",
+      "policyRevision": "更改处理策略、标签或元数据后，下次运行会重新处理所有符合条件的内容。"
+    },
+    "sections": {
+      "general": {
+        "title": "常规",
+        "description": "设置任务名称和启用状态。"
+      },
+      "source": {
+        "title": "源",
+        "description": "从中读取内容的位置。"
+      },
+      "filters": {
+        "title": "过滤器",
+        "description": "限制同步的项目。"
+      },
+      "destination": {
+        "title": "目标",
+        "description": "接收同步内容的 Hindsight 记忆库。"
+      },
+      "retain": {
+        "title": "保留策略",
+        "description": "设置 Hindsight 如何处理写入记忆库的内容。"
+      },
+      "files": {
+        "title": "文件类型",
+        "description": "选择要导入的文件类型。"
+      },
+      "inline": {
+        "title": "内嵌多模态内容",
+        "description": "笔记中嵌入的媒体内容。"
+      },
+      "tags": {
+        "title": "标签",
+        "description": "附加到每个文档的标签。"
+      },
+      "metadata": {
+        "title": "元数据",
+        "description": "附加到每个文档的键/值元数据。"
+      },
+      "schedule": {
+        "title": "计划",
+        "description": "设置任务的自动运行时间。"
+      }
+    },
+    "toast": {
+      "created": "已创建任务",
+      "updated": "已保存任务",
+      "saveFailed": "无法保存任务",
+      "conflict": "冲突"
+    }
+  },
+  "runs": {
+    "title": "运行",
+    "description": "所有任务的执行历史记录。",
+    "notStarted": "尚未开始",
+    "total_one": "{{formatted}} 运行",
+    "total_other": "{{formatted}} 运行",
+    "columns": {
+      "task": "任务",
+      "status": "状态",
+      "trigger": "触发方式",
+      "mode": "同步模式",
+      "started": "已启动",
+      "duration": "持续时间",
+      "counters": "计数器"
+    },
+    "trigger": {
+      "scheduled": "已计划",
+      "manual": "手动"
+    },
+    "mode": {
+      "incremental": "增量",
+      "full": "完整",
+      "reingest": "重新摄取"
+    },
+    "counters": {
+      "discoveredCount": "已发现",
+      "createdCount": "已创建",
+      "updatedCount": "已更新",
+      "deletedCount": "已删除",
+      "unchangedCount": "未更改",
+      "skippedCount": "已跳过",
+      "failedCount": "失败"
+    },
+    "filters": {
+      "status": "按状态过滤",
+      "task": "按任务过滤",
+      "allStatuses": "所有状态",
+      "allTasks": "所有任务",
+      "clear": "清除过滤器"
+    },
+    "empty": {
+      "title": "尚未运行",
+      "description": "一旦任务按计划或手动运行，运行就会显示在此处。",
+      "filteredTitle": "没有匹配的运行",
+      "filteredDescription": "尝试不同的状态或任务。",
+      "taskTitle": "尚未运行",
+      "taskDescription": "点击“立即运行”开始首次同步。"
+    }
+  },
+  "runDetail": {
+    "notFound": "未找到运行",
+    "error": "运行错误",
+    "scheduledFor": "计划运行时间",
+    "finished": "已完成",
+    "inProgress": "进行中",
+    "cursorBefore": "运行前的游标",
+    "cursorAfter": "运行后的游标",
+    "noCursor": "无",
+    "operations": "Hindsight 操作",
+    "noOperations": "本次运行没有异步操作。",
+    "log": "日志",
+    "noLog": "无日志行。",
+    "opColumns": {
+      "remoteId": "远程 ID",
+      "type": "类型",
+      "status": "状态",
+      "retries": "重试",
+      "created": "已创建",
+      "updated": "更新了"
+    }
+  },
+  "dashboard": {
+    "title": "仪表板",
+    "description": "查看同步任务和运行情况。",
+    "stats": {
+      "enabledTasks": "已启用的任务",
+      "ofTotal": "共 {{total}} 个任务",
+      "running": "正在运行",
+      "runs24h_one": "过去 24 小时运行 {{count}} 次",
+      "runs24h_other": "过去 24 小时运行 {{count}} 次",
+      "items": "已同步内容",
+      "itemsSub": "所有任务合计",
+      "failures24h": "失败 (24 小时)",
+      "needsAttention": "需要注意",
+      "allGood": "一切顺利"
+    },
+    "getStarted": {
+      "title": "开始首次同步",
+      "description": "分别添加数据源和 Hindsight 的连接凭据，然后创建任务。",
+      "credentials": "添加凭证"
+    },
+    "reauth": {
+      "title": "凭证需要重新连接"
+    },
+    "running": {
+      "title": "正在运行",
+      "empty": "当前没有任务在运行"
+    },
+    "nextRuns": {
+      "title": "即将运行的任务",
+      "empty": "没有待运行的任务"
+    },
+    "failures": {
+      "title": "最近失败",
+      "empty": "最近没有失败"
+    }
+  },
+  "settings": {
+    "title": "设置",
+    "description": "配置适用于所有任务的同步行为。",
+    "units": {
+      "hours": "小时"
+    },
+    "sync": {
+      "title": "同步",
+      "description": "适用于所有任务。",
+      "incremental": "增量同步",
+      "incrementalHelp": "如果数据源支持原生变更跟踪，系统会优先使用。关闭后，每次运行都会扫描全部内容；未变更的内容仍不会重复上传。",
+      "reconcileInterval": "全量校准间隔",
+      "reconcileIntervalHelp": "距离上次全量校准超过此间隔后，普通运行会改为全量扫描。",
+      "maxFileSize": "最大文件大小",
+      "maxFileSizeHelp": "跳过较大的文件。"
+    },
+    "files": {
+      "title": "全局文件类型",
+      "description": "“跟随全局”任务使用的默认文件类型。全量校准时会从 Hindsight 删除被排除的文件。"
+    },
+    "oauth": {
+      "title": "OAuth",
+      "description": "为 Google Drive 和 OneDrive 凭据配置 OAuth 时，请将此重定向 URI 添加到 Google Cloud 或 Microsoft Entra（Azure）的应用设置中。",
+      "redirectUri": "重定向 URI"
+    },
+    "toast": {
+      "saved": "已保存设置",
+      "failed": "无法保存设置"
+    }
+  },
+  "notFound": {
+    "title": "未找到页面",
+    "description": "您正在查找的页面不存在。",
+    "home": "返回仪表板"
+  },
+  "dryRun": {
+    "title": "试运行：{{name}}",
+    "description": "对已保存的任务执行完整数据源扫描。不会发送或删除文档，也不会改变同步进度或运行记录。",
+    "start": "开始试运行",
+    "running": "扫描…",
+    "complete_one": "已扫描 {{count}} 个数据源项目。",
+    "complete_other": "已扫描 {{count}} 个数据源项目。",
+    "incomplete_one": "扫描未完成（{{count}} 个项目）。缺失项目不会被标记为删除。",
+    "incomplete_other": "扫描未完成（{{count}} 个项目）。缺失项目不会被标记为删除。",
+    "truncated": "显示前 100 项。计数包括所有项目。",
+    "file": "源项目",
+    "action": "操作",
+    "reason": "原因",
+    "actions": {
+      "create": "创建",
+      "update": "更新",
+      "delete": "删除",
+      "unchanged": "未更改",
+      "skip": "跳过",
+      "fail": "失败"
+    }
+  },
+  "language": {
+    "label": "语言"
+  },
+  "providerCopy": {
+    "integrationToken": "集成令牌",
+    "dataSource": "数据源",
+    "pageTitle": "页面标题",
+    "lastEdited": "最后编辑时间",
+    "created": "创建时间",
+    "oauthClientId": "OAuth 客户端 ID",
+    "oauthClientSecret": "OAuth 客户端密钥",
+    "drive": "云端硬盘",
+    "folder": "文件夹",
+    "includeSubfolders": "包含子文件夹",
+    "exportGoogleDocs": "导出 Google 文档、表格和演示文稿",
+    "fileName": "文件名",
+    "path": "路径",
+    "extension": "扩展名",
+    "mimeType": "MIME 类型",
+    "fileType": "文件类型",
+    "sizeBytes": "大小（字节）",
+    "modified": "修改时间",
+    "rootDirectory": "根目录",
+    "rootFolder": "根文件夹",
+    "serverUrl": "服务器 URL",
+    "username": "用户名",
+    "passwordApp": "密码 / 应用专用密码",
+    "bearerToken": "Bearer 令牌",
+    "endpoint": "终端节点",
+    "region": "区域",
+    "accessKeyId": "访问密钥 ID",
+    "secretAccessKey": "访问密钥",
+    "sessionToken": "会话令牌",
+    "pathStyle": "路径式寻址",
+    "baseUrl": "基础 URL",
+    "instanceId": "实例 ID",
+    "apiToken": "API 令牌",
+    "notebook": "笔记本",
+    "pathPrefix": "路径前缀",
+    "bucket": "存储桶",
+    "prefix": "前缀",
+    "applicationId": "应用程序（客户端）ID",
+    "clientSecret": "客户端密钥",
+    "tenant": "租户",
+    "title": "标题",
+    "updated": "更新时间",
+    "tags": "标签",
+    "notionDescription": "Notion 内部集成令牌，可读取已共享的数据源。",
+    "siYuanDescription": "SiYuan 内核 API 地址和令牌（位于“设置 → 关于 → API 令牌”）。",
+    "filesystemDescription": "应用可以访问的本地文件。",
+    "googleDriveDescription": "通过 OAuth 连接 Google 账号，以只读方式访问云端硬盘。",
+    "oneDriveDescription": "通过 OAuth 连接 Microsoft 账号或 Microsoft 365，访问 OneDrive 和 SharePoint。",
+    "s3Description": "兼容 Amazon S3 的存储服务，例如 MinIO、Cloudflare R2、Backblaze B2 和 Wasabi。",
+    "webdavDescription": "支持 Nextcloud、ownCloud、Synology、Apache mod_dav 和 rclone serve 等服务。",
+    "hindsightDescription": "用作数据接收目标的 Hindsight API 地址。",
+    "filesystemRootHelp": "填写应用服务器上的绝对路径。使用 Docker 时，请填写挂载到容器中的路径。",
+    "filesystemFolderHelp": "相对于此凭据的根目录。填写 . 表示根目录。",
+    "notionDataSourceHelp": "填写 Notion 数据源 ID（不是数据库 ID）。点击“浏览”可选择已共享给此集成的数据源。",
+    "siYuanInstanceHelp": "用于识别此 SiYuan 实例的固定标识。留空时使用基础 URL。",
+    "s3EndpointHelp": "使用 AWS S3 时可留空。",
+    "s3PathStyleHelp": "大多数自托管 S3 服务（例如 MinIO）都需要启用此选项。",
+    "s3PrefixHelp": "仅同步此键名前缀下的对象。",
+    "webdavTokenHelp": "如果服务器要求使用令牌，请用它代替用户名和密码。",
+    "webdavRootHelp": "相对于服务器 URL 的路径。",
+    "googleDriveHelp": "留空以使用“我的云端硬盘”，也可以选择共享云端硬盘。",
+    "wholeDriveHelp": "留空以同步整个云端硬盘。",
+    "googleExportHelp": "Google 文档导出为 Markdown，表格导出为 CSV，演示文稿导出为 PDF。",
+    "tenantHelp": "可填写 common、organizations、consumers 或租户 ID。",
+    "oneDriveHelp": "留空以使用个人 OneDrive。",
+    "siYuanPathHelp": "仅同步可读路径以此为前缀的文档。",
+    "siYuanNotebookHelp": "留空以同步所有已打开的笔记本。",
+    "hindsightApiKeyHelp": "此密钥会作为 Bearer 令牌发送。如果实例未启用身份验证，请留空。",
+    "syncCollectionHelp": "服务器支持时使用 sync-collection（RFC 6578）。",
+    "fileSystem": "文件系统"
+  }
+}

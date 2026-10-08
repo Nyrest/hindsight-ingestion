@@ -6,6 +6,7 @@ import { TypeIcon } from "@/components/type-icon";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BrowseDialog } from "@/features/credentials/browse-dialog";
 import type { Credential, FieldSpec, SourceSpec } from "@/lib/types";
+import { providerCopy } from "@/lib/provider-copy";
 import { cn } from "@/lib/utils";
 import { CredentialPicker } from "./credential-picker";
 
@@ -68,7 +69,7 @@ export function SourceTypePicker({
           >
             <span className="flex items-center gap-2.5">
               <TypeIcon type={s.type} boxed />
-              <span className="text-sm font-medium">{s.name}</span>
+              <span className="text-sm font-medium">{providerCopy(s.name, t)}</span>
             </span>
             <CapabilityBadges source={s} />
           </button>

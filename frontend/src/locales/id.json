@@ -1,0 +1,728 @@
+{
+  "inlineMultimodal": {
+    "title": "Konten multimodal tertanam",
+    "description": "Sertakan media yang disematkan dalam catatan. Saat ini, gambar dari Notion dan SiYuan didukung.",
+    "enabled": "Proses media tertanam",
+    "policyHelp": "Gambar hanya disertakan jika media tertanam dan opsi Gambar pada kebijakan jenis file sama-sama diaktifkan.",
+    "active": "Gambar tertanam akan disertakan.",
+    "inactive": "Catatan akan disinkronkan sebagai teks. Untuk menyertakan gambar, aktifkan media tertanam dan opsi Gambar."
+  },
+  "app": {
+    "name": "Hindsight Ingestion",
+    "tagline": "Sinkronkan sumber ke bank memori Hindsight",
+    "version": "v{{version}}",
+    "authDisabled": "autentikasi dinonaktifkan"
+  },
+  "language": {
+    "label": "Bahasa"
+  },
+  "nav": {
+    "dashboard": "Dasbor",
+    "tasks": "Tugas",
+    "runs": "Eksekusi",
+    "credentials": "Kredensial",
+    "settings": "Pengaturan",
+    "open": "Buka navigasi",
+    "title": "Navigasi",
+    "description": "Navigasi utama"
+  },
+  "theme": {
+    "toggle": "Ubah tema",
+    "light": "Terang",
+    "dark": "Gelap",
+    "system": "Sistem"
+  },
+  "common": {
+    "actions": "Tindakan",
+    "backTo": "Kembali ke {{page}}",
+    "cancel": "Batalkan",
+    "close": "Tutup",
+    "confirm": "Konfirmasikan",
+    "commandPaletteTitle": "Palet perintah",
+    "commandPaletteDescription": "Cari perintah untuk dijalankan…",
+    "copied": "Disalin ke papan klip",
+    "copy": "Salin",
+    "copyFailed": "Tidak dapat menyalin ke papan klip",
+    "create": "Buat",
+    "delete": "Hapus",
+    "edit": "Sunting",
+    "false": "Salah",
+    "true": "Benar",
+    "loadFailed": "Tidak dapat memuat data",
+    "loading": "Memuat…",
+    "moreActions": "Tindakan lainnya",
+    "new": "Baru",
+    "next": "Halaman berikutnya",
+    "previous": "Halaman sebelumnya",
+    "none": "Tidak ada",
+    "pageOf": "Halaman {{page}} dari {{pages}}",
+    "refresh": "Segarkan",
+    "retry": "Coba lagi",
+    "save": "Simpan",
+    "saveChanges": "Simpan perubahan",
+    "select": "Pilih…",
+    "viewAll": "Lihat semua"
+  },
+  "validation": {
+    "required": "Bidang ini wajib diisi",
+    "number": "Harus berupa angka",
+    "integer": "Harus bilangan bulat",
+    "min1": "Minimal harus 1",
+    "url": "Harus berupa URL yang valid",
+    "tooLong": "Terlalu lama"
+  },
+  "runStatus": {
+    "pending": "Tertunda",
+    "running": "Sedang berlangsung",
+    "waiting_operations": "Menunggu operasi",
+    "succeeded": "Berhasil",
+    "failed": "Gagal",
+    "interrupted": "Terganggu",
+    "cancelled": "Dibatalkan"
+  },
+  "credentialStatus": {
+    "active": "Aktif",
+    "reauth_required": "Diperlukan sambungan ulang",
+    "pending_oauth": "Menunggu OAuth",
+    "error": "Kesalahan"
+  },
+  "chips": {
+    "placeholder": "Ketik dan tekan Enter",
+    "duplicate": "\"{{value}}\" sudah ditambahkan",
+    "remove": "Hapus {{value}}",
+    "automatic": "Ditambahkan secara otomatis"
+  },
+  "kv": {
+    "key": "Kunci",
+    "value": "Nilai",
+    "add": "Tambahkan",
+    "remove": "Hapus baris"
+  },
+  "secret": {
+    "keepHint": "Sebuah nilai disimpan. Biarkan masker tidak berubah untuk mempertahankannya, atau ketikkan nilai baru untuk menggantikannya.",
+    "clear": "Hapus nilai yang disimpan"
+  },
+  "headers": {
+    "title": "Header khusus",
+    "help": "Dikirim dengan setiap permintaan ke penyedia ini. Header autentikasi konektor diutamakan.",
+    "mode": "Modus penyunting",
+    "ui": "UI",
+    "json": "JSON",
+    "name": "Nama tajuk",
+    "value": "Nilai",
+    "valuePlaceholder": "Nilai tajuk",
+    "add": "Tambahkan tajuk",
+    "empty": "Tidak ada tajuk khusus",
+    "maskHint": "Nilai yang disimpan ditampilkan sebagai {{mask}}; pertahankan topeng agar nilai tidak berubah.",
+    "errors": {
+      "duplicate": "Nama header duplikat \"{{name}}\" (nama tidak peka huruf besar-kecil)",
+      "invalidJson": "JSON tidak valid: {{detail}}",
+      "notObject": "JSON harus berupa objek seperti {\"Header\": \"Value\"}",
+      "nonString": "Nilai \"{{name}}\" harus berupa string",
+      "emptyName": "Nama header tidak boleh kosong"
+    }
+  },
+  "browse": {
+    "button": "Jelajahi…",
+    "title": "Jelajahi",
+    "titleFor": "Pilih {{label}}",
+    "description": "Navigasikan ke dalam folder dan pilih item.",
+    "breadcrumbs": "Lokasi",
+    "root": "Akar",
+    "empty": "Tidak ada apa pun di sini",
+    "hint": "Pilih item, atau buka folder dengan panah",
+    "open": "Buka {{name}}",
+    "select": "Pilih",
+    "selected": "Dipilih",
+    "kinds": {
+      "folder": "Map",
+      "file": "Berkas",
+      "data_source": "Sumber data",
+      "notebook": "Buku catatan",
+      "bucket": "Bucket",
+      "bank": "Bank memori",
+      "drive": "Drive",
+      "site": "Situs"
+    },
+    "memoryBanks": "Bank memori",
+    "drives": "Drive",
+    "buckets": "Bucket",
+    "dataSources": "Sumber data",
+    "notebooks": "Buku catatan"
+  },
+  "capabilities": {
+    "incremental": {
+      "high_water_mark": "Tanda air tinggi",
+      "delta_token": "Token delta",
+      "sync_token": "Token sinkronisasi",
+      "inventory": "Perbedaan inventaris"
+    },
+    "deletion": {
+      "full_reconcile": "Menghapus saat rekonsiliasi penuh",
+      "scan_generation": "Menghapus melalui pemindaian",
+      "delta": "Menghapus melalui delta"
+    },
+    "files": "File",
+    "oauth": "OAuth",
+    "advancedFilter": "Penyaring lanjutan"
+  },
+  "credentials": {
+    "title": "Kredensial",
+    "description": "Detail koneksi yang dapat digunakan kembali untuk sumber dan tujuan Hindsight.",
+    "new": "Kredensial baru",
+    "createTitle": "Kredensial baru",
+    "createDescription": "Pilih penyedia dan masukkan detail koneksinya.",
+    "editTitle": "Edit kredensial",
+    "editDescription": "Rahasia tidak pernah diperlihatkan. Biarkan nilai yang disamarkan tidak berubah untuk mempertahankannya.",
+    "createInline": "Buat kredensial baru",
+    "namePlaceholder": "misalnya Bekerja {{type}}",
+    "pick": "Pilih kredensial",
+    "noneOfType": "Belum ada kredensial {{type}}",
+    "notActiveWarning": "Kredensial ini saat ini adalah “{{status}}”. Proses mungkin gagal sampai diperbaiki.",
+    "oauthHint": "Setelah menyimpan, klik “Hubungkan” dan ikuti petunjuk untuk memberikan izin akses.",
+    "usedByCount_one": "tugas {{count}}",
+    "usedByCount_other": "tugas {{count}}",
+    "fields": {
+      "type": "Penyedia",
+      "name": "Nama"
+    },
+    "columns": {
+      "name": "Nama",
+      "type": "Ketik",
+      "status": "Status",
+      "usedBy": "Digunakan oleh",
+      "oauth": "OAuth"
+    },
+    "actions": {
+      "test": "Tes",
+      "connect": "Hubungkan",
+      "reconnect": "Hubungkan kembali",
+      "refresh": "Segarkan token"
+    },
+    "empty": {
+      "title": "Belum ada kredensial",
+      "description": "Tambahkan kredensial untuk sumber (misalnya Notion) dan satu untuk instans Hindsight Anda untuk membuat tugas."
+    },
+    "test": {
+      "ok": "{{name}}: koneksi oke",
+      "failed": "{{name}}: koneksi gagal"
+    },
+    "oauth": {
+      "success": "OAuth berhasil terhubung",
+      "error": "Koneksi OAuth gagal",
+      "startFailed": "Tidak dapat memulai OAuth",
+      "connected": "Terhubung",
+      "notConnected": "Tidak terhubung",
+      "expires": "Token kedaluwarsa {{when}}"
+    },
+    "toast": {
+      "created": "Kredensial dibuat",
+      "updated": "Kredensial diperbarui",
+      "deleted": "Kredensial dihapus",
+      "deleteFailed": "Tidak dapat menghapus kredensial",
+      "inUse": "Kredensial sedang digunakan",
+      "refreshed": "Token disegarkan",
+      "refreshFailed": "Penyegaran token gagal"
+    },
+    "delete": {
+      "title": "Hapus “{{name}}”?",
+      "description": "Tindakan ini secara permanen menghapus kredensial dan rahasia yang tersimpan.",
+      "inUse_one": "Kredensial ini digunakan oleh tugas {{count}}. Hapus atau ubah tugas itu terlebih dahulu.",
+      "inUse_other": "Kredensial ini digunakan oleh tugas {{count}}. Hapus atau ubah tugas tersebut terlebih dahulu."
+    }
+  },
+  "filters": {
+    "add": "Tambahkan penyaring",
+    "remove": "Hapus penyaring",
+    "where": "Dimana",
+    "and": "Dan",
+    "field": "Bidang",
+    "operator": "Operator",
+    "mode": "Modus penyaring",
+    "simple": "Sederhana",
+    "advanced": "Lanjutan",
+    "advancedQuery": "Pertanyaan",
+    "advancedHint": "Sintaks kueri penyedia mentah.",
+    "driveHint": "Sintaks kueri Google Drive, misalnya mimeType = 'application/pdf' dan modifiedTime > '2024-01-01T00:00:00'. File di sampah selalu dikecualikan.",
+    "noFields": "Sumber ini tidak mendukung filter.",
+    "selectValues": "Pilih nilai…",
+    "valuePlaceholder": "Nilai",
+    "valuesPlaceholder": "Ketikkan nilai dan tekan Enter",
+    "empty": {
+      "title": "Tidak ada filter",
+      "description": "Segala sesuatu dalam lingkup sumber akan disinkronkan."
+    },
+    "operators": {
+      "equals": "sama",
+      "notEquals": "tidak sama",
+      "contains": "berisi",
+      "in": "adalah salah satu dari",
+      "notIn": "tidak ada satupun",
+      "greaterThan": "lebih besar dari",
+      "lessThan": "kurang dari"
+    },
+    "errors": {
+      "field": "Pilih bidang yang valid",
+      "operator": "Operator tidak didukung untuk bidang ini",
+      "value": "Masukkan nilai",
+      "valueList": "Tambahkan setidaknya satu nilai",
+      "number": "Harus berupa angka"
+    }
+  },
+  "filePolicy": {
+    "plainText": "Teks biasa",
+    "documents": "Dokumen",
+    "images": "Gambar",
+    "audios": "Audio",
+    "globalPreview": "Kebijakan global saat ini (ubah di Pengaturan):",
+    "mode": {
+      "global": "Gunakan pengaturan global",
+      "globalHelp": "Gunakan jenis file yang ditetapkan di Pengaturan.",
+      "override": "Atur khusus untuk tugas ini",
+      "overrideHelp": "Pilih jenis file untuk tugas ini saja."
+    }
+  },
+  "source": {
+    "type": "Jenis sumber",
+    "credential": "Kredensial sumber",
+    "pickTypeFirst": "Pilih jenis sumber terlebih dahulu.",
+    "pickCredentialFirst": "Pilih kredensial terlebih dahulu"
+  },
+  "destination": {
+    "credential": "Kredensial Hindsight",
+    "bank": "Bank memori",
+    "bankPlaceholder": "ID bank",
+    "browseBanks": "Pilih bank memori",
+    "pickCredentialFirst": "Pilih kredensial Hindsight terlebih dahulu.",
+    "locked": "Tujuan dikunci setelah proses pertama berhasil. Untuk memakai kredensial atau bank memori lain, buat tugas baru.",
+    "lockNotice": "Tujuannya menjadi hanya-baca setelah proses pertama berhasil."
+  },
+  "retain": {
+    "label": "Pertahankan strategi",
+    "bankDefault": "Strategi bawaan bank memori",
+    "bankDefaultNamed": "Strategi bawaan bank memori ({{name}})",
+    "help": "Menentukan cara Hindsight memproses konten yang dikirim ke bank memori. Setelan bawaan menggunakan strategi yang dikonfigurasi pada bank tersebut.",
+    "freeTextPlaceholder": "Biarkan kosong untuk menggunakan setelan bawaan bank memori",
+    "pickDestinationFirst": "Pilih kredensial tujuan dan bank memori untuk memuat strategi yang tersedia.",
+    "loadFailed": "Tidak dapat memuat strategi dari Hindsight; masukkan nama strategi secara manual."
+  },
+  "tags": {
+    "custom": "Tag khusus",
+    "help": "Tag penyerapan, sumber, dan tugas ditambahkan secara otomatis ke setiap dokumen.",
+    "placeholder": "tim:alfa",
+    "newTaskId": "<baru>"
+  },
+  "metadata": {
+    "add": "Tambahkan bidang",
+    "empty": "Tidak ada metadata khusus",
+    "reservedHint": "Kunci yang dimulai dengan _ingestion_ dicadangkan untuk bidang asal sistem.",
+    "errors": {
+      "emptyKey": "Kunci diperlukan",
+      "reserved": "Kunci yang dimulai dengan _ingestion_ sudah dipesan",
+      "duplicate": "Kunci duplikat"
+    }
+  },
+  "schedule": {
+    "cron": "ekspresi Cron",
+    "cronHelp": "Cron 5 bidang standar: menit jam hari bulan hari kerja",
+    "timezone": "Zona waktu",
+    "selectTimezone": "Pilih zona waktu",
+    "searchTimezone": "Cari zona waktu…",
+    "noTimezone": "Tidak ada zona waktu yang ditemukan",
+    "suggested": "Disarankan",
+    "allTimezones": "Semua zona waktu",
+    "nextRuns": "Eksekusi berikutnya",
+    "enterCron": "Masukkan ekspresi cron untuk melihat pratinjau proses yang akan datang.",
+    "invalid": "Jadwal tidak valid",
+    "previewUnavailable": "Pratinjau tidak tersedia",
+    "presets": {
+      "every15m": "Setiap 15 menit",
+      "everyHour": "Setiap jam",
+      "every6h": "Setiap 6 jam",
+      "daily3": "Setiap hari 03:00",
+      "weeklyMon8": "Senin 08:00"
+    }
+  },
+  "tasks": {
+    "title": "Tugas",
+    "description": "Setiap tugas menyinkronkan satu sumber ke bank memori Hindsight sesuai jadwal.",
+    "new": "Tugas baru",
+    "neverRun": "Belum pernah dijalankan",
+    "reconcileRequired": "Sinkronisasi penuh diperlukan",
+    "itemCount_one": "Barang {{count}}",
+    "itemCount_other": "item {{count}}",
+    "columns": {
+      "enabled": "Aktif",
+      "name": "Nama",
+      "source": "Sumber",
+      "destination": "Tujuan",
+      "schedule": "Jadwal",
+      "lastRun": "Eksekusi terakhir",
+      "nextRun": "Eksekusi berikutnya",
+      "status": "Status"
+    },
+    "status": {
+      "idle": "Menganggur",
+      "disabled": "Dengan disabilitas",
+      "reconcilePending": "Menunggu sinkronisasi penuh"
+    },
+    "actions": {
+      "runNow": "Jalankan sekarang",
+      "fullReconcile": "Sinkronkan semua",
+      "fullReingest": "Penyerapan ulang secara penuh",
+      "cancel": "Batalkan eksekusi",
+      "enable": "Aktifkan",
+      "disable": "Nonaktifkan",
+      "viewRuns": "Lihat riwayat eksekusi",
+      "dryRun": "Simulasi"
+    },
+    "empty": {
+      "title": "Belum ada tugas",
+      "description": "Buat tugas untuk mulai menyinkronkan sumber ke Hindsight."
+    },
+    "trigger": {
+      "run": {
+        "success": "Jalankan dimulai"
+      },
+      "fullReconcile": {
+        "success": "Sinkronisasi penuh dimulai"
+      },
+      "fullReingest": {
+        "success": "Penyerapan ulang penuh dimulai"
+      },
+      "alreadyRunning": "Tugas sudah berjalan",
+      "failed": "Tidak dapat mulai dijalankan"
+    },
+    "cancel": {
+      "success": "Pembatalan diminta",
+      "notRunning": "Tugas tidak berjalan",
+      "failed": "Tidak dapat membatalkan eksekusi"
+    },
+    "toast": {
+      "enabled": "Tugas diaktifkan",
+      "disabled": "Tugas dinonaktifkan",
+      "updateFailed": "Tidak dapat memperbarui tugas",
+      "deleted": "Tugas dihapus",
+      "deleteFailed": "Tidak dapat menghapus tugas",
+      "deleteRunning": "Tugas sedang berjalan; batalkan sebelum menghapus"
+    },
+    "delete": {
+      "title": "Hapus “{{name}}”?",
+      "description": "Tugas, riwayat pengoperasiannya, dan status sinkronisasinya akan dihapus. Dokumen yang sudah ada di Hindsight tidak dihapus."
+    },
+    "reingest": {
+      "title": "Serap ulang semuanya untuk “{{name}}”?",
+      "description": "Setiap item yang cocok akan disimpan kembali ke Hindsight, meskipun tidak diubah. Ini mungkin memerlukan waktu lama dan menghabiskan pemrosesan Hindsight."
+    }
+  },
+  "taskEditor": {
+    "newTitle": "Tugas baru",
+    "create": "Buat tugas",
+    "namePlaceholder": "misalnya Notion → Pribadi",
+    "enabledHelp": "Tugas yang dinonaktifkan tetap mempertahankan status sinkronisasinya tetapi tidak dijadwalkan.",
+    "notFound": "Tugas tidak ditemukan",
+    "nextRun": "Jadwal berikutnya: {{when}}",
+    "itemCount_one": "Item {{count}} disinkronkan",
+    "itemCount_other": "Item {{count}} disinkronkan",
+    "recentRuns": "Eksekusi terbaru",
+    "saveBeforeRun": "Simpan perubahan Anda sebelum dijalankan",
+    "saveError": "Tidak dapat menyimpan tugas",
+    "unsaved": "Perubahan yang belum disimpan",
+    "saved": "Semua perubahan disimpan",
+    "fields": {
+      "name": "Nama",
+      "enabled": "Diaktifkan"
+    },
+    "hints": {
+      "sourceReset": "Mengubah kredensial sumber atau direktori akar (bucket, folder, database, buku catatan, dan sebagainya) akan mereset kursor inkremental dan memicu pemindaian penuh untuk membangun ulang data dasar sinkronisasi.",
+      "sourceTypeLocked": "Jenis sumber tidak dapat diubah setelah pembuatan. Buat tugas baru untuk menggunakan sumber yang berbeda.",
+      "filtersReconcile": "Perubahan filter akan menandai tugas untuk sinkronisasi penuh. Item yang tidak lagi sesuai dengan filter akan dihapus dari Hindsight.",
+      "filesReconcile": "Perubahan jenis file akan memicu sinkronisasi penuh. File yang dikecualikan akan dihapus dari Hindsight.",
+      "policyRevision": "Mengubah strategi penyimpanan, tag, atau metadata akan mempertahankan kembali semua item yang cocok pada proses berikutnya."
+    },
+    "sections": {
+      "general": {
+        "title": "Umum",
+        "description": "Nama dan aktivasi."
+      },
+      "source": {
+        "title": "Sumber",
+        "description": "Dari mana konten dibaca."
+      },
+      "filters": {
+        "title": "Filter",
+        "description": "Batasi item mana yang disinkronkan."
+      },
+      "destination": {
+        "title": "Tujuan",
+        "description": "Bank memori Hindsight yang menerima konten."
+      },
+      "retain": {
+        "title": "Pertahankan strategi",
+        "description": "Bagaimana Hindsight memproses konten."
+      },
+      "files": {
+        "title": "Jenis berkas",
+        "description": "Jenis file apa yang diserap."
+      },
+      "inline": {
+        "title": "Konten multimodal tertanam",
+        "description": "Media yang disematkan dalam catatan."
+      },
+      "tags": {
+        "title": "Tag",
+        "description": "Tag yang dilampirkan pada setiap dokumen."
+      },
+      "metadata": {
+        "title": "Metadata",
+        "description": "Metadata kunci/nilai yang dilampirkan pada setiap dokumen."
+      },
+      "schedule": {
+        "title": "Jadwal",
+        "description": "Saat tugas berjalan secara otomatis."
+      }
+    },
+    "toast": {
+      "created": "Tugas dibuat",
+      "updated": "Tugas disimpan",
+      "saveFailed": "Tidak dapat menyimpan tugas",
+      "conflict": "Konflik"
+    }
+  },
+  "runs": {
+    "title": "Riwayat eksekusi",
+    "description": "Riwayat eksekusi semua tugas.",
+    "notStarted": "Belum dimulai",
+    "total_one": "{{formatted}} eksekusi",
+    "total_other": "{{formatted}} eksekusi",
+    "columns": {
+      "task": "Tugas",
+      "status": "Status",
+      "trigger": "Pemicu",
+      "mode": "Mode eksekusi",
+      "started": "Waktu mulai",
+      "duration": "Durasi",
+      "counters": "Hasil"
+    },
+    "trigger": {
+      "scheduled": "Dijadwalkan",
+      "manual": "Manual"
+    },
+    "mode": {
+      "incremental": "tambahan",
+      "full": "Penuh",
+      "reingest": "Muat ulang semua"
+    },
+    "counters": {
+      "discoveredCount": "Ditemukan",
+      "createdCount": "Dibuat",
+      "updatedCount": "Diperbarui",
+      "deletedCount": "Dihapus",
+      "unchangedCount": "Tidak berubah",
+      "skippedCount": "Dilewati",
+      "failedCount": "Gagal"
+    },
+    "filters": {
+      "status": "Saring berdasarkan status",
+      "task": "Filter berdasarkan tugas",
+      "allStatuses": "Semua status",
+      "allTasks": "Semua tugas",
+      "clear": "Hapus filter"
+    },
+    "empty": {
+      "title": "Belum ada eksekusi",
+      "description": "Riwayat akan muncul di sini setelah tugas dijalankan sesuai jadwal atau secara manual.",
+      "filteredTitle": "Tidak ada eksekusi yang cocok",
+      "filteredDescription": "Coba status atau tugas lain.",
+      "taskTitle": "Belum ada eksekusi",
+      "taskDescription": "Pilih “Jalankan sekarang” untuk memulai sinkronisasi pertama."
+    }
+  },
+  "runDetail": {
+    "notFound": "Eksekusi tidak ditemukan",
+    "error": "Kesalahan eksekusi",
+    "scheduledFor": "Dijadwalkan untuk",
+    "finished": "Selesai",
+    "inProgress": "Sedang berlangsung",
+    "cursorBefore": "Kursor sebelumnya",
+    "cursorAfter": "Kursor setelahnya",
+    "noCursor": "tidak ada",
+    "operations": "Operasi Hindsight",
+    "noOperations": "Tidak ada operasi asinkron dalam eksekusi ini.",
+    "log": "Log",
+    "noLog": "Tidak ada garis log.",
+    "opColumns": {
+      "remoteId": "ID jarak jauh",
+      "type": "Ketik",
+      "status": "Status",
+      "retries": "Percobaan ulang",
+      "created": "Dibuat",
+      "updated": "Diperbarui"
+    }
+  },
+  "dashboard": {
+    "title": "Dasbor",
+    "description": "Ikhtisar aktivitas sinkronisasi.",
+    "stats": {
+      "enabledTasks": "Tugas yang diaktifkan",
+      "ofTotal": "dari total {{total}}",
+      "running": "Sedang berlangsung",
+      "runs24h_one": "{{count}} eksekusi dalam 24 jam terakhir",
+      "runs24h_other": "{{count}} eksekusi dalam 24 jam terakhir",
+      "items": "Item disinkronkan",
+      "itemsSub": "di semua tugas",
+      "failures24h": "Kegagalan (24 jam)",
+      "needsAttention": "Perlu perhatian",
+      "allGood": "Semuanya baik-baik saja"
+    },
+    "getStarted": {
+      "title": "Siapkan sinkronisasi pertama Anda",
+      "description": "Tambahkan kredensial untuk sumber dan Hindsight, lalu buat tugas.",
+      "credentials": "Tambahkan kredensial"
+    },
+    "reauth": {
+      "title": "Kredensial perlu dihubungkan kembali"
+    },
+    "running": {
+      "title": "Sedang berjalan",
+      "empty": "Tidak ada tugas yang sedang berjalan"
+    },
+    "nextRuns": {
+      "title": "Jadwal eksekusi berikutnya",
+      "empty": "Tidak ada eksekusi mendatang"
+    },
+    "failures": {
+      "title": "Kegagalan baru-baru ini",
+      "empty": "Tidak ada kegagalan baru-baru ini"
+    }
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "description": "Perilaku sinkronisasi global.",
+    "units": {
+      "hours": "jam"
+    },
+    "sync": {
+      "title": "Sinkronisasi",
+      "description": "Berlaku untuk semua tugas.",
+      "incremental": "Sinkronisasi tambahan",
+      "incrementalHelp": "Gunakan pelacakan perubahan asli penyedia jika tersedia. Jika nonaktif, setiap proses akan melakukan inventarisasi penuh (konten yang tidak diubah tetap tidak diupload ulang).",
+      "reconcileInterval": "Interval sinkronisasi penuh",
+      "reconcileIntervalHelp": "Jika waktu sejak sinkronisasi penuh terakhir melebihi interval ini, pemindaian penuh akan dilakukan pada eksekusi berikutnya.",
+      "maxFileSize": "Ukuran file maksimal",
+      "maxFileSizeHelp": "File yang lebih besar dilewati."
+    },
+    "files": {
+      "title": "Jenis file global",
+      "description": "Jenis file default untuk tugas diatur ke “Ikuti global”. File yang dikecualikan akan dihapus selama rekonsiliasi."
+    },
+    "oauth": {
+      "title": "OAuth",
+      "description": "Daftarkan pengalihan ini URI di konfigurasi aplikasi Google Cloud dan Microsoft Entra (Azure) Anda untuk kredensial Google Drive dan OneDrive.",
+      "redirectUri": "Alihkan URI"
+    },
+    "toast": {
+      "saved": "Pengaturan disimpan",
+      "failed": "Tidak dapat menyimpan setelan"
+    }
+  },
+  "notFound": {
+    "title": "Halaman tidak ditemukan",
+    "description": "Halaman yang Anda cari tidak ada.",
+    "home": "Buka dasbor"
+  },
+  "dryRun": {
+    "title": "Simulasi: {{name}}",
+    "description": "Uji tugas tersimpan dengan memindai seluruh sumber. Tidak ada dokumen yang dikirim atau dihapus, dan progres sinkronisasi serta riwayat eksekusi tetap sama.",
+    "start": "Mulai simulasi",
+    "running": "Memindai…",
+    "complete_one": "{{count}} item sumber dipindai.",
+    "complete_other": "{{count}} item sumber dipindai.",
+    "incomplete_one": "Pemindaian belum selesai ({{count}} item). Item yang tidak ditemukan tidak akan ditandai untuk dihapus.",
+    "incomplete_other": "Pemindaian belum selesai ({{count}} item). Item yang tidak ditemukan tidak akan ditandai untuk dihapus.",
+    "truncated": "Menampilkan 100 item pertama. Jumlah total mencakup semua item.",
+    "file": "Item sumber",
+    "action": "Tindakan",
+    "reason": "Alasan",
+    "actions": {
+      "create": "Buat",
+      "update": "Pembaruan",
+      "delete": "Hapus",
+      "unchanged": "Tidak berubah",
+      "skip": "Lewati",
+      "fail": "Gagal"
+    }
+  },
+  "providerCopy": {
+    "integrationToken": "Token integrasi",
+    "dataSource": "Sumber data",
+    "pageTitle": "Judul halaman",
+    "lastEdited": "Terakhir diedit",
+    "created": "Dibuat",
+    "oauthClientId": "ID klien OAuth",
+    "oauthClientSecret": "Rahasia klien OAuth",
+    "drive": "Drive",
+    "folder": "Folder",
+    "includeSubfolders": "Sertakan subfolder",
+    "exportGoogleDocs": "Ekspor Dokumen, Spreadsheet, dan Presentasi Google",
+    "fileName": "Nama file",
+    "path": "Lokasi",
+    "extension": "Ekstensi",
+    "mimeType": "Jenis MIME",
+    "fileType": "Jenis file",
+    "sizeBytes": "Ukuran (byte)",
+    "modified": "Diubah",
+    "rootDirectory": "Direktori root",
+    "rootFolder": "Folder root",
+    "serverUrl": "URL server",
+    "username": "Nama pengguna",
+    "passwordApp": "Kata sandi / kata sandi aplikasi",
+    "bearerToken": "Token Bearer",
+    "endpoint": "Endpoint",
+    "region": "Wilayah",
+    "accessKeyId": "ID kunci akses",
+    "secretAccessKey": "Kunci akses rahasia",
+    "sessionToken": "Token sesi",
+    "pathStyle": "Pengalamatan gaya jalur",
+    "baseUrl": "URL dasar",
+    "instanceId": "ID instans",
+    "apiToken": "Token API",
+    "notebook": "Notebook",
+    "pathPrefix": "Awalan jalur",
+    "bucket": "Bucket",
+    "prefix": "Awalan",
+    "applicationId": "ID aplikasi (klien)",
+    "clientSecret": "Rahasia klien",
+    "tenant": "Tenant",
+    "title": "Judul",
+    "updated": "Diubah",
+    "tags": "Tag",
+    "notionDescription": "Token integrasi internal Notion dengan akses baca ke sumber data yang dibagikan.",
+    "siYuanDescription": "Endpoint API kernel SiYuan dan token (Pengaturan → Tentang → Token API).",
+    "filesystemDescription": "Berkas lokal yang dapat diakses aplikasi.",
+    "googleDriveDescription": "Akun Google melalui OAuth dengan akses Drive hanya-baca.",
+    "oneDriveDescription": "Akun Microsoft atau Microsoft 365 melalui OAuth untuk mengakses OneDrive dan SharePoint.",
+    "s3Description": "Amazon S3 dan layanan yang kompatibel, seperti MinIO, Cloudflare R2, Backblaze B2, dan Wasabi.",
+    "webdavDescription": "Mendukung Nextcloud, ownCloud, Synology, Apache mod_dav, rclone serve, dan lainnya.",
+    "hindsightDescription": "Alamat API Hindsight yang menerima konten.",
+    "filesystemRootHelp": "Jalur absolut pada server aplikasi. Jika memakai Docker, gunakan jalur yang dipasang ke dalam kontainer.",
+    "filesystemFolderHelp": "Jalur relatif terhadap direktori root kredensial ini. Gunakan . untuk memilih root.",
+    "notionDataSourceHelp": "ID sumber data Notion (bukan ID basis data). Gunakan “Jelajahi” untuk memilih sumber data yang dibagikan ke integrasi ini.",
+    "siYuanInstanceHelp": "ID tetap untuk mengenali instans SiYuan ini. Jika dikosongkan, URL dasar akan digunakan.",
+    "s3EndpointHelp": "Kosongkan jika menggunakan AWS S3.",
+    "s3PathStyleHelp": "Diperlukan oleh sebagian besar server S3 yang dihosting sendiri, seperti MinIO.",
+    "s3PrefixHelp": "Hanya sertakan objek di bawah awalan kunci ini.",
+    "webdavTokenHelp": "Gunakan sebagai pengganti nama pengguna dan kata sandi jika server meminta token.",
+    "webdavRootHelp": "Jalur relatif terhadap URL server.",
+    "googleDriveHelp": "Kosongkan untuk menggunakan Drive Saya, atau pilih drive bersama.",
+    "wholeDriveHelp": "Kosongkan untuk menggunakan seluruh drive.",
+    "googleExportHelp": "Dokumen diekspor sebagai Markdown, spreadsheet sebagai CSV, dan presentasi sebagai PDF.",
+    "tenantHelp": "Masukkan common, organizations, consumers, atau ID tenant.",
+    "oneDriveHelp": "Kosongkan untuk menggunakan OneDrive pribadi Anda.",
+    "siYuanPathHelp": "Hanya sertakan dokumen dengan jalur yang dapat dibaca dan diawali awalan ini.",
+    "siYuanNotebookHelp": "Kosongkan untuk menyinkronkan semua notebook yang terbuka.",
+    "hindsightApiKeyHelp": "Dikirim sebagai token Bearer. Kosongkan jika instans tidak memerlukan autentikasi.",
+    "syncCollectionHelp": "Gunakan sync-collection (RFC 6578) jika didukung server.",
+    "fileSystem": "Sistem berkas"
+  }
+}

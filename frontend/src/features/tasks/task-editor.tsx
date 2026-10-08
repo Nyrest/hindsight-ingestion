@@ -42,6 +42,7 @@ import { useCredentials } from "@/features/credentials/api";
 import { RunsTable } from "@/features/runs/runs-table";
 import { api, errorMessage, isApiError } from "@/lib/api";
 import { findSource, typeName, useConnectors } from "@/lib/connectors";
+import { providerCopy } from "@/lib/provider-copy";
 import { formatRelative } from "@/lib/format";
 import { useNow } from "@/lib/hooks";
 import { qk } from "@/lib/query";
@@ -422,7 +423,7 @@ export function TaskEditor({ task }: { task?: Task }) {
                 <div className="flex items-center gap-3 rounded-md border px-3 py-2.5">
                   <TypeIcon type={sourceType} boxed />
                   <div className="min-w-0 flex-1 space-y-1">
-                    <div className="text-sm font-medium">{typeName(connectors.data, sourceType)}</div>
+                    <div className="text-sm font-medium">{providerCopy(typeName(connectors.data, sourceType), t)}</div>
                     {source && <SourceCapabilityLine sourceType={sourceType} />}
                   </div>
                 </div>
@@ -550,7 +551,7 @@ export function TaskEditor({ task }: { task?: Task }) {
                         id="task-dest-cred"
                         credentials={credList}
                         type="hindsight"
-                        typeLabel={typeName(connectors.data, "hindsight")}
+                        typeLabel={providerCopy(typeName(connectors.data, "hindsight"), t)}
                         value={field.value}
                         onChange={field.onChange}
                         invalid={!!errors.destinationCredentialId}
