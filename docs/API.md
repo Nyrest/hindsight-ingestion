@@ -27,13 +27,19 @@ returns no sensitive data, and the OAuth callback, protected by its state token)
 Basic Auth rejection returns a plain-text `401` response; application errors use
 the JSON envelope below.
 
+Requests other than `GET`, `HEAD` and `OPTIONS` require `X-CSRF-Protection: 1`,
+including when authentication is disabled. Cross-origin browser write requests
+are rejected using Fetch Metadata or Origin checks. Rejection returns JSON with
+HTTP `403` and code `csrf`. The WebUI sends the required header automatically;
+direct API clients must include it as well.
+
 Errors use a uniform envelope with an appropriate HTTP status:
 
 ```json
 { "error": "human readable message", "code": "conflict", "fields": { "name": "is required" } }
 ```
 
-`code` is one of `bad_request`, `validation`, `not_found`, `conflict`, `internal`, `upstream`.
+`code` is one of `bad_request`, `validation`, `not_found`, `conflict`, `internal`, `upstream`, `csrf`.
 `fields` is optional (validation errors).
 
 Timestamps are RFC 3339 strings (UTC) or `null`. IDs are strings (UUID v4).

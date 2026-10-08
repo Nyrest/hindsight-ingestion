@@ -109,7 +109,7 @@ func run() error {
 	srv.Routes(mux)
 	mux.Handle("/", web.Handler())
 
-	var handler http.Handler = mux
+	var handler http.Handler = auth.CSRFProtection(mux)
 	if !cfg.AuthDisabled {
 		public := func(r *http.Request) bool {
 			// Health is unauthenticated for container health checks; the

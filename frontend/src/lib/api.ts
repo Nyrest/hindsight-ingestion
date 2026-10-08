@@ -29,6 +29,9 @@ const client = createClient<paths>({
   baseUrl: window.location.origin,
   credentials: "same-origin",
   fetch: async (request) => {
+    if (!["GET", "HEAD", "OPTIONS"].includes(request.method)) {
+      request.headers.set("X-CSRF-Protection", "1");
+    }
     try { return await fetch(request); }
     catch (error) { throw new ApiError(0, "network", errorMessage(error)); }
   },

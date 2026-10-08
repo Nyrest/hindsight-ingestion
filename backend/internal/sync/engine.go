@@ -917,9 +917,13 @@ type limitedReader struct {
 }
 
 func (l *limitedReader) Read(p []byte) (int, error) {
-	if l.n <= 0 {
+	if len(p) == 0 {
+		return 0, nil
+	}
+	if l.n < 0 {
 		return 0, errors.New("file exceeds the configured maximum size")
 	}
+	// Probe one byte beyond the limit to distinguish EOF from oversized content.
 	if int64(len(p)) > l.n {
 		p = p[:l.n+1]
 	}
