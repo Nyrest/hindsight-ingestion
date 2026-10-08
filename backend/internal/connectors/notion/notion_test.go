@@ -1,6 +1,7 @@
 package notion
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"io"
@@ -11,6 +12,65 @@ import (
 
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 )
+
+func TestInlineImagesRefreshAndPolicy(t *testing.T) {
+	for _, tc := range []struct {
+		name            string
+		enabled, images bool
+	}{
+		{"off", false, true}, {"excluded", true, false}, {"on", true, true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			reads, downloads := 0, 0
+			var srv *httptest.Server
+			srv = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if r.URL.Path == "/pages/p1/markdown" {
+					if r.Header.Get("Authorization") != "Bearer secret" {
+						t.Error("missing source auth")
+					}
+					reads++
+					image := "/expired?X-Amz-Signature=secret"
+					if reads > 1 {
+						image = "/fresh"
+					}
+					json.NewEncoder(w).Encode(map[string]any{"markdown": "before ![caption](" + srv.URL + image + ") after"})
+					return
+				}
+				downloads++
+				if r.Header.Get("Authorization") != "" {
+					t.Error("source auth leaked to image")
+				}
+				if r.URL.Path == "/expired" {
+					w.WriteHeader(403)
+					return
+				}
+				w.Write(append([]byte{137, 80, 78, 71, 13, 10, 26, 10}, bytes.Repeat([]byte{0}, 24)...))
+			}))
+			defer srv.Close()
+			old := apiBase
+			apiBase = srv.URL
+			defer func() { apiBase = old }()
+			op, _ := json.Marshal(opaque{Title: "Title", Source: "Wiki", Properties: json.RawMessage(`{"Name":{"type":"title","title":[{"plain_text":"Title"}]}}`)})
+			content, err := (&Connector{}).OpenContent(t.Context(), connectors.ContentRequest{
+				Credential: connectors.Credential{Secrets: map[string]string{"token": "secret"}}, Item: connectors.SourceItem{ID: "p1", Opaque: op},
+				InlineMultimodalEnabled: tc.enabled, FilePolicy: connectors.FilePolicy{Images: tc.images}, MaxFileSize: 1000,
+			})
+			if err != nil || len(content.Warnings) > 0 {
+				t.Fatalf("content: %+v %v", content, err)
+			}
+			if tc.enabled && tc.images {
+				if reads != 2 || downloads != 2 {
+					t.Fatalf("refresh reads=%d downloads=%d", reads, downloads)
+				}
+				if len(content.Blocks) != 5 || content.Blocks[2].Type != "image" || !strings.Contains(content.Blocks[4].Text, "- Name: Title") {
+					t.Fatalf("order/properties: %+v", content.Blocks)
+				}
+			} else if reads != 1 || downloads != 0 || len(content.Blocks) != 0 {
+				t.Fatal("policy did not gate downloads")
+			}
+		})
+	}
+}
 
 func TestPropertiesText(t *testing.T) {
 	raw := json.RawMessage(`{

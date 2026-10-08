@@ -28,11 +28,12 @@ const (
 
 // Capabilities describe what a source connector supports.
 type Capabilities struct {
-	IncrementalMode        string `json:"incrementalMode"`
-	DeletionMode           string `json:"deletionMode"`
-	SupportsFiles          bool   `json:"supportsFiles"`
-	SupportsOAuth          bool   `json:"supportsOAuth"`
-	SupportsAdvancedFilter bool   `json:"supportsAdvancedFilter"`
+	SupportsInlineMultimodal bool   `json:"supportsInlineMultimodal"`
+	IncrementalMode          string `json:"incrementalMode"`
+	DeletionMode             string `json:"deletionMode"`
+	SupportsFiles            bool   `json:"supportsFiles"`
+	SupportsOAuth            bool   `json:"supportsOAuth"`
+	SupportsAdvancedFilter   bool   `json:"supportsAdvancedFilter"`
 }
 
 // Field types for schema-driven forms.
@@ -251,13 +252,18 @@ type ScanResult struct {
 
 // ContentRequest asks for an item's content.
 type ContentRequest struct {
-	Credential Credential
-	Config     map[string]any
-	Item       SourceItem
+	InlineMultimodalEnabled bool
+	FilePolicy              FilePolicy
+	MaxFileSize             int64
+	Credential              Credential
+	Config                  map[string]any
+	Item                    SourceItem
 }
 
 // SourceContent is either text (Markdown) or a streamed file.
 type SourceContent struct {
+	Blocks   []ContentBlock
+	Warnings []string
 	// Text content, used when Body is nil.
 	Text string
 	// Body streams file content; the engine closes it.

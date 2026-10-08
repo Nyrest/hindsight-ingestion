@@ -86,11 +86,15 @@
           "supportsFiles": {
             "type": "boolean"
           },
+          "supportsInlineMultimodal": {
+            "type": "boolean"
+          },
           "supportsOAuth": {
             "type": "boolean"
           }
         },
         "required": [
+          "supportsInlineMultimodal",
           "incrementalMode",
           "deletionMode",
           "supportsFiles",
@@ -145,6 +149,12 @@
           },
           "sourceItemId": {
             "type": "string"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
           }
         },
         "required": [
@@ -1126,6 +1136,9 @@
           "incrementalSyncEnabled": {
             "type": "boolean"
           },
+          "inlineMultimodalEnabled": {
+            "type": "boolean"
+          },
           "maxFileSizeMB": {
             "type": "integer"
           },
@@ -1134,6 +1147,7 @@
           }
         },
         "required": [
+          "inlineMultimodalEnabled",
           "incrementalSyncEnabled",
           "fullReconcileIntervalHours",
           "maxFileSizeMB",
@@ -1211,6 +1225,16 @@
           "id": {
             "type": "string"
           },
+          "inlineMultimodalEnabled": {
+            "type": "boolean"
+          },
+          "inlineMultimodalMode": {
+            "enum": [
+              "global",
+              "override"
+            ],
+            "type": "string"
+          },
           "itemCount": {
             "type": "integer"
           },
@@ -1284,6 +1308,8 @@
           "customMetadata",
           "filePolicyMode",
           "filePolicy",
+          "inlineMultimodalMode",
+          "inlineMultimodalEnabled",
           "cronExpression",
           "cronTimezone",
           "configRevision",
@@ -2223,6 +2249,9 @@
                   "incrementalSyncEnabled": {
                     "type": "boolean"
                   },
+                  "inlineMultimodalEnabled": {
+                    "type": "boolean"
+                  },
                   "maxFileSizeMB": {
                     "type": "integer"
                   }
@@ -2344,6 +2373,16 @@
                     "$ref": "#/components/schemas/FilePolicy"
                   },
                   "filePolicyMode": {
+                    "enum": [
+                      "global",
+                      "override"
+                    ],
+                    "type": "string"
+                  },
+                  "inlineMultimodalEnabled": {
+                    "type": "boolean"
+                  },
+                  "inlineMultimodalMode": {
                     "enum": [
                       "global",
                       "override"
@@ -2608,6 +2647,16 @@
                     "$ref": "#/components/schemas/FilePolicy"
                   },
                   "filePolicyMode": {
+                    "enum": [
+                      "global",
+                      "override"
+                    ],
+                    "type": "string"
+                  },
+                  "inlineMultimodalEnabled": {
+                    "type": "boolean"
+                  },
+                  "inlineMultimodalMode": {
                     "enum": [
                       "global",
                       "override"

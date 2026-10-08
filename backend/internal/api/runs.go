@@ -1,10 +1,14 @@
 package api
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"time"
 
+	"gorm.io/gorm"
+
+	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
 	"github.com/Nyrest/hindsight-ingestion/internal/settings"
 )
@@ -138,8 +142,7 @@ func (s *Server) patchSettings(w http.ResponseWriter, r *http.Request) {
 		s.fail(w, err)
 		return
 	}
-	oldPolicy := v.FilePolicy
-	oldMaxSize := v.MaxFileSizeMB
+	previous := v
 	// Decoding into the current value applies a partial update.
 	if !decode(w, r, &v) {
 		return
@@ -148,20 +151,44 @@ func (s *Server) patchSettings(w http.ResponseWriter, r *http.Request) {
 		writeValidation(w, err.Error(), nil)
 		return
 	}
-	if err := s.Settings.Put(r.Context(), v); err != nil {
+	if err := s.saveSettings(r.Context(), previous, v); err != nil {
 		s.fail(w, err)
 		return
 	}
-	if oldPolicy != v.FilePolicy {
-		// Tasks following the global policy must reconcile their scope.
-		s.DB.WithContext(r.Context()).Model(&models.Task{}).Where("file_policy_mode = ?", models.FilePolicyGlobal).
-			Update("reconcile_required", true)
-	}
-	if oldMaxSize != v.MaxFileSizeMB {
-		// The size limit is part of every task's scope.
-		s.DB.WithContext(r.Context()).Model(&models.Task{}).Where("1 = 1").Update("reconcile_required", true)
-	}
 	writeJSON(w, http.StatusOK, settingsDTO{v, s.Cfg.OAuthRedirectURI()})
+}
+
+func (s *Server) saveSettings(ctx context.Context, previous, current settings.Settings) error {
+	return s.DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		if err := settings.NewStore(tx).Put(ctx, current); err != nil {
+			return err
+		}
+		reconcile := func(query *gorm.DB) error {
+			return query.Updates(map[string]any{"reconcile_required": true, "config_revision": gorm.Expr("config_revision + 1")}).Error
+		}
+		if previous.FilePolicy != current.FilePolicy {
+			if err := reconcile(tx.Model(&models.Task{}).Where("file_policy_mode = ?", models.FilePolicyGlobal)); err != nil {
+				return err
+			}
+		}
+		if previous.InlineMultimodalEnabled != current.InlineMultimodalEnabled {
+			var sourceTypes []string
+			for _, source := range connectors.Sources() {
+				if source.Capabilities.SupportsInlineMultimodal {
+					sourceTypes = append(sourceTypes, source.Type)
+				}
+			}
+			if len(sourceTypes) > 0 {
+				if err := reconcile(tx.Model(&models.Task{}).Where("inline_multimodal_mode = ? AND source_type IN ?", models.FilePolicyGlobal, sourceTypes)); err != nil {
+					return err
+				}
+			}
+		}
+		if previous.MaxFileSizeMB != current.MaxFileSizeMB {
+			return reconcile(tx.Model(&models.Task{}).Where("1 = 1"))
+		}
+		return nil
+	})
 }
 
 func (s *Server) dashboard(w http.ResponseWriter, r *http.Request) {

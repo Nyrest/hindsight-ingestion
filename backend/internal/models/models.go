@@ -64,8 +64,10 @@ type Task struct {
 	CustomTagsJSON     string `gorm:"type:text"`
 	CustomMetadataJSON string `gorm:"type:text"`
 
-	FilePolicyMode string `gorm:"size:16;not null;default:global"`
-	FilePolicyJSON string `gorm:"type:text"`
+	FilePolicyMode          string `gorm:"size:16;not null;default:global"`
+	FilePolicyJSON          string `gorm:"type:text"`
+	InlineMultimodalMode    string `gorm:"size:16;not null;default:global"`
+	InlineMultimodalEnabled bool   `gorm:"not null;default:false"`
 
 	CronExpression string `gorm:"size:128;not null"`
 	CronTimezone   string `gorm:"size:64;not null;default:UTC"`
@@ -113,6 +115,7 @@ type TaskItem struct {
 	// is what it reflects after the last confirmed write.
 	TargetFingerprint string `gorm:"size:128"`
 	SyncedFingerprint string `gorm:"size:128"`
+	NeedsImageRetry   bool   `gorm:"not null;default:false"`
 
 	LastSeenGeneration int64 `gorm:"not null;default:0;index"`
 	LastSyncedAt       *time.Time

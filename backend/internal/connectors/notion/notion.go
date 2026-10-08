@@ -60,8 +60,9 @@ func (c *Connector) Info() connectors.SourceInfo {
 		Name:           "Notion",
 		CredentialType: "notion",
 		Capabilities: connectors.Capabilities{
-			IncrementalMode: connectors.IncrementalHighWater,
-			DeletionMode:    connectors.DeletionFullReconcile,
+			SupportsInlineMultimodal: true,
+			IncrementalMode:          connectors.IncrementalHighWater,
+			DeletionMode:             connectors.DeletionFullReconcile,
 		},
 		BrowseKinds: []string{connectors.KindDataSource},
 		Fields: []connectors.FieldSpec{
@@ -296,6 +297,41 @@ func toItem(p page, dsID, dsName string) connectors.SourceItem {
 func (c *Connector) OpenContent(ctx context.Context, req connectors.ContentRequest) (connectors.SourceContent, error) {
 	var op opaque
 	_ = json.Unmarshal(req.Item.Opaque, &op)
+	for attempt := 0; ; attempt++ {
+		markdown, err := readMarkdown(ctx, req)
+		if err != nil {
+			return connectors.SourceContent{}, err
+		}
+		content := connectors.SourceContent{Text: markdown}
+		expired := false
+		if req.IncludesImages() {
+			content, err = connectors.InlineImages(ctx, markdown, req.MaxFileSize, func(ctx context.Context, rawURL string) (*http.Response, error) {
+				resp, err := connectors.FetchImage(ctx, rawURL, nil)
+				u, _ := url.Parse(rawURL)
+				if u != nil && u.Query().Get("X-Amz-Signature") != "" && (httpx.IsStatus(err, 401) || httpx.IsStatus(err, 403)) {
+					expired = true
+				}
+				return resp, err
+			})
+			if err != nil {
+				return connectors.SourceContent{}, err
+			}
+		}
+		if expired && attempt == 0 {
+			continue
+		}
+		properties := "\n\n---\n\nNotion page properties:\n" + PropertiesText(op.Properties)
+		content.Text = strings.TrimSpace(markdown + properties)
+		if len(content.Blocks) > 0 {
+			content.Blocks = append(content.Blocks, connectors.TextBlock(properties))
+		}
+		content.Context = fmt.Sprintf("Notion Page %q in Data Source %q", op.Title, op.Source)
+		content.Timestamp = req.Item.ModifiedAt
+		return content, nil
+	}
+}
+
+func readMarkdown(ctx context.Context, req connectors.ContentRequest) (string, error) {
 	var md struct {
 		Markdown       string   `json:"markdown"`
 		Truncated      bool     `json:"truncated"`
@@ -304,19 +340,14 @@ func (c *Connector) OpenContent(ctx context.Context, req connectors.ContentReque
 	u := apiBase + "/pages/" + url.PathEscape(req.Item.ID) + "/markdown?include_transcript=true"
 	if err := client(req.Credential).JSON(ctx, http.MethodGet, u, nil, &md); err != nil {
 		if httpx.IsStatus(err, http.StatusNotFound) {
-			return connectors.SourceContent{}, connectors.Skip("page no longer accessible")
+			return "", connectors.Skip("page no longer accessible")
 		}
-		return connectors.SourceContent{}, err
+		return "", err
 	}
 	if md.Truncated || len(md.UnknownBlockID) > 0 {
-		return connectors.SourceContent{}, fmt.Errorf("notion page %s returned truncated markdown", req.Item.ID)
+		return "", fmt.Errorf("notion page %s returned truncated markdown", req.Item.ID)
 	}
-	text := strings.TrimSpace(md.Markdown + "\n\n---\n\nNotion page properties:\n" + PropertiesText(op.Properties))
-	return connectors.SourceContent{
-		Text:      text,
-		Context:   fmt.Sprintf("Notion Page %q in Data Source %q", op.Title, op.Source),
-		Timestamp: req.Item.ModifiedAt,
-	}, nil
+	return md.Markdown, nil
 }
 
 func pageTitle(p page) string {

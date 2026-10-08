@@ -19,6 +19,7 @@ import { useSettings, useUpdateSettings } from "@/features/settings/api";
 import { errorMessage, isApiError } from "@/lib/api";
 
 const schema = z.object({
+  inlineMultimodalEnabled: z.boolean(),
   incrementalSyncEnabled: z.boolean(),
   fullReconcileIntervalHours: z.number({ error: "validation.number" }).int("validation.integer").min(1, "validation.min1"),
   maxFileSizeMB: z.number({ error: "validation.number" }).int("validation.integer").min(1, "validation.min1"),
@@ -33,6 +34,7 @@ export default function SettingsPage() {
   const form = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: {
+      inlineMultimodalEnabled: false,
       incrementalSyncEnabled: true,
       fullReconcileIntervalHours: 24,
       maxFileSizeMB: 100,
@@ -164,6 +166,20 @@ export default function SettingsPage() {
                   </div>
                 </FieldRow>
               </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>{t("inlineMultimodal.title")}</CardTitle>
+              <CardDescription>{t("inlineMultimodal.description")}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <FieldRow label={t("inlineMultimodal.enabled")} htmlFor="s-inline" help={t("inlineMultimodal.policyHelp")}>
+                <Controller control={form.control} name="inlineMultimodalEnabled" render={({ field }) => (
+                  <Switch id="s-inline" checked={field.value} onCheckedChange={field.onChange} />
+                )} />
+              </FieldRow>
             </CardContent>
           </Card>
 

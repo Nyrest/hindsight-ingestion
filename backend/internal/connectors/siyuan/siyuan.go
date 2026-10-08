@@ -6,6 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
+	"path"
 	"regexp"
 	"strings"
 	"time"
@@ -39,8 +41,9 @@ func (c *Connector) Info() connectors.SourceInfo {
 		Name:           "SiYuan",
 		CredentialType: "siyuan",
 		Capabilities: connectors.Capabilities{
-			IncrementalMode: connectors.IncrementalHighWater,
-			DeletionMode:    connectors.DeletionFullReconcile,
+			SupportsInlineMultimodal: true,
+			IncrementalMode:          connectors.IncrementalHighWater,
+			DeletionMode:             connectors.DeletionFullReconcile,
 		},
 		BrowseKinds: []string{connectors.KindNotebook},
 		Fields: []connectors.FieldSpec{
@@ -235,11 +238,69 @@ func (c *Connector) OpenContent(ctx context.Context, req connectors.ContentReque
 	if err := newAPI(req.Credential).call(ctx, "/api/export/exportMdContent", map[string]any{"id": req.Item.ID}, &out); err != nil {
 		return connectors.SourceContent{}, err
 	}
-	return connectors.SourceContent{
-		Text:      out.Content,
-		Context:   fmt.Sprintf("SiYuan document %q", req.Item.Path),
-		Timestamp: req.Item.ModifiedAt,
-	}, nil
+	content := connectors.SourceContent{Text: out.Content}
+	if req.IncludesImages() {
+		var err error
+		content, err = connectors.InlineImages(ctx, out.Content, req.MaxFileSize, func(ctx context.Context, rawURL string) (*http.Response, error) {
+			return fetchAsset(ctx, req, rawURL)
+		})
+		if err != nil {
+			return connectors.SourceContent{}, err
+		}
+	}
+	content.Context = fmt.Sprintf("SiYuan document %q", req.Item.Path)
+	content.Timestamp = req.Item.ModifiedAt
+	return content, nil
+}
+
+func fetchAsset(ctx context.Context, req connectors.ContentRequest, rawURL string) (*http.Response, error) {
+	u, err := url.Parse(rawURL)
+	if err != nil {
+		return nil, fmt.Errorf("invalid image URL")
+	}
+	base, err := url.Parse(strings.TrimRight(req.Credential.String("baseUrl"), "/") + "/")
+	if err != nil {
+		return nil, fmt.Errorf("invalid SiYuan base URL")
+	}
+	if u.IsAbs() && (u.Scheme != base.Scheme || u.Host != base.Host) {
+		return connectors.FetchImage(ctx, rawURL, nil)
+	}
+	return fetchLocalAsset(ctx, req, u, base)
+}
+
+func localAssetPath(u, base *url.URL) (string, error) {
+	assetPath := strings.TrimPrefix(strings.TrimPrefix(u.Path, "/"), "./")
+	if u.IsAbs() {
+		assetPath = strings.TrimPrefix(u.Path, base.Path)
+	}
+	if !strings.HasPrefix(assetPath, "assets/") || path.Clean(assetPath) != assetPath || strings.Contains(assetPath, "\\") || u.Host != "" && !u.IsAbs() {
+		return "", fmt.Errorf("image is not a valid SiYuan asset path")
+	}
+	return assetPath, nil
+}
+
+func fetchLocalAsset(ctx context.Context, req connectors.ContentRequest, u, base *url.URL) (*http.Response, error) {
+	assetPath, err := localAssetPath(u, base)
+	if err != nil {
+		return nil, err
+	}
+	u.Scheme, u.Host, u.Path = base.Scheme, base.Host, base.Path+assetPath
+	u.RawPath = ""
+	query := u.Query()
+	inferredBox := query.Get("box") == "" && query.Get("dataPath") == "" && req.Item.Metadata["siyuan_notebook_id"] != ""
+	if inferredBox {
+		query.Set("box", req.Item.Metadata["siyuan_notebook_id"])
+	}
+	u.RawQuery = query.Encode()
+	resp, err := connectors.FetchImage(ctx, u.String(), &req.Credential)
+	if inferredBox && (httpx.IsStatus(err, http.StatusNotFound) || httpx.IsStatus(err, http.StatusForbidden)) {
+		// Older notes can reference global data/assets; a box-scoped route cannot serve those.
+		query.Del("box")
+		query.Set("dataPath", assetPath)
+		u.RawQuery = query.Encode()
+		return connectors.FetchImage(ctx, u.String(), &req.Credential)
+	}
+	return resp, err
 }
 
 func sqlEscape(s string) string {

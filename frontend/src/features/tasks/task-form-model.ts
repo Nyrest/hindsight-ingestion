@@ -29,6 +29,8 @@ export const taskFormSchema = z
     customTags: z.array(z.string()),
     metadataRows: z.array(z.object({ key: z.string(), value: z.string() })),
     filePolicyMode: z.enum(["global", "override"]),
+    inlineMultimodalMode: z.enum(["global", "override"]),
+    inlineMultimodalEnabled: z.boolean(),
     filePolicy: filePolicySchema,
     cronExpression: z.string().trim().min(1, "validation.required"),
     cronTimezone: z.string().min(1, "validation.required"),
@@ -75,6 +77,8 @@ export function emptyTaskForm(): TaskFormValues {
     customTags: [],
     metadataRows: [],
     filePolicyMode: "global",
+    inlineMultimodalMode: "global",
+    inlineMultimodalEnabled: false,
     filePolicy: { ...DEFAULT_POLICY },
     cronExpression: "0 * * * *",
     cronTimezone: browserTimeZone(),
@@ -98,6 +102,8 @@ export function taskToForm(t: Task): TaskFormValues {
     customTags: [...(t.customTags ?? [])],
     metadataRows: Object.entries(t.customMetadata ?? {}).map(([key, value]) => ({ key, value: String(value) })),
     filePolicyMode: t.filePolicyMode === "override" ? "override" : "global",
+    inlineMultimodalMode: t.inlineMultimodalMode === "override" ? "override" : "global",
+    inlineMultimodalEnabled: t.inlineMultimodalEnabled ?? false,
     filePolicy: { ...DEFAULT_POLICY, ...(t.filePolicy ?? {}) },
     cronExpression: t.cronExpression,
     cronTimezone: t.cronTimezone || "UTC",
@@ -127,6 +133,8 @@ export function formToInput(v: TaskFormValues, normalizedConfig: Record<string, 
     customTags: v.customTags,
     customMetadata,
     filePolicyMode: v.filePolicyMode,
+    inlineMultimodalMode: v.inlineMultimodalMode,
+    inlineMultimodalEnabled: v.inlineMultimodalEnabled,
     filePolicy: v.filePolicy,
     cronExpression: v.cronExpression.trim(),
     cronTimezone: v.cronTimezone,
@@ -141,6 +149,7 @@ export function sectionForField(key: string): string {
   if (key.startsWith("destination")) return "destination";
   if (key === "retainStrategy") return "retain";
   if (key.startsWith("filePolicy")) return "files";
+  if (key.startsWith("inlineMultimodal")) return "inline";
   if (key.startsWith("customTags")) return "tags";
   if (key.startsWith("customMetadata")) return "metadata";
   if (key.startsWith("cron")) return "schedule";

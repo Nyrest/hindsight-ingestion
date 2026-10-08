@@ -1,4 +1,12 @@
 {
+  "inlineMultimodal": {
+    "title": "Inline multimodal content",
+    "description": "Include media embedded in notes. Currently supports images in Notion and SiYuan.",
+    "enabled": "Process inline media",
+    "policyHelp": "Images are included only when both inline media and Images in the file type policy are enabled.",
+    "active": "Inline images will be included.",
+    "inactive": "Notes will sync as text. Enable both inline media and Images to include pictures."
+  },
   "app": {
     "name": "Hindsight Ingestion",
     "tagline": "Sync sources into memory",
@@ -422,6 +430,7 @@
       "destination": { "title": "Destination", "description": "The Hindsight memory bank that receives content." },
       "retain": { "title": "Retain strategy", "description": "How Hindsight processes the content." },
       "files": { "title": "File types", "description": "Which kinds of files are ingested." },
+      "inline": { "title": "Inline multimodal content", "description": "Media embedded in notes." },
       "tags": { "title": "Tags", "description": "Tags attached to every document." },
       "metadata": { "title": "Metadata", "description": "Key/value metadata attached to every document." },
       "schedule": { "title": "Schedule", "description": "When the task runs automatically." }

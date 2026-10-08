@@ -121,14 +121,27 @@ func (c *Client) Strategies(ctx context.Context, bankID string) (def string, nam
 
 // MemoryItem is one retain item.
 type MemoryItem struct {
-	Content    string            `json:"content"`
-	Timestamp  string            `json:"timestamp,omitempty"`
-	Context    string            `json:"context,omitempty"`
-	Metadata   map[string]string `json:"metadata,omitempty"`
-	DocumentID string            `json:"document_id"`
-	Tags       []string          `json:"tags,omitempty"`
-	Strategy   string            `json:"strategy,omitempty"`
-	UpdateMode string            `json:"update_mode,omitempty"`
+	Blocks     []connectors.ContentBlock `json:"-"`
+	Content    string                    `json:"content"`
+	Timestamp  string                    `json:"timestamp,omitempty"`
+	Context    string                    `json:"context,omitempty"`
+	Metadata   map[string]string         `json:"metadata,omitempty"`
+	DocumentID string                    `json:"document_id"`
+	Tags       []string                  `json:"tags,omitempty"`
+	Strategy   string                    `json:"strategy,omitempty"`
+	UpdateMode string                    `json:"update_mode,omitempty"`
+}
+
+func (item MemoryItem) MarshalJSON() ([]byte, error) {
+	type plain MemoryItem
+	var content any = item.Content
+	if len(item.Blocks) > 0 {
+		content = item.Blocks
+	}
+	return json.Marshal(struct {
+		plain
+		Content any `json:"content"`
+	}{plain(item), content})
 }
 
 // RetainBatch submits items asynchronously and returns operation IDs.

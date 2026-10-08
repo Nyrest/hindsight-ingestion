@@ -18,16 +18,18 @@ export function FilePolicySwitches({
   onChange,
   disabled,
   idPrefix = "fp",
+  groups,
 }: {
   value: FilePolicy;
   onChange: (value: FilePolicy) => void;
   disabled?: boolean;
   idPrefix?: string;
+  groups?: Array<keyof FilePolicy>;
 }) {
   const { t } = useTranslation();
   return (
     <div className={cn("grid gap-2 sm:grid-cols-2", disabled && "opacity-60")}>
-      {GROUPS.map(({ key, icon: Icon, examples }) => (
+      {GROUPS.filter((group) => !groups || groups.includes(group.key)).map(({ key, icon: Icon, examples }) => (
         <label
           key={key}
           htmlFor={`${idPrefix}-${key}`}
@@ -38,7 +40,7 @@ export function FilePolicySwitches({
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-sm font-medium">{t(`filePolicy.${key}`)}</span>
-            <span className="block truncate font-mono text-[11px] text-muted-foreground">{examples}</span>
+            <span className="block truncate font-mono text-[11px] text-muted-foreground">{groups && key === "images" ? ".png .jpg .webp .gif" : examples}</span>
           </span>
           <Switch
             id={`${idPrefix}-${key}`}

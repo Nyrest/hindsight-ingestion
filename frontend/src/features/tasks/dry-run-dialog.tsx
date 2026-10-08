@@ -42,7 +42,10 @@ export function DryRunDialog({ task, onClose }: { task: Task; onClose: () => voi
             <TableBody>{result.items.map((item) => <TableRow key={item.sourceItemId}>
               <TableCell className="max-w-64 break-all whitespace-normal">{item.path || item.name || item.sourceItemId}</TableCell>
               <TableCell>{t(`dryRun.actions.${item.action}`)}</TableCell>
-              <TableCell className="max-w-64 break-words whitespace-normal text-muted-foreground">{item.reason}</TableCell>
+              <TableCell className="max-w-64 break-words whitespace-normal text-muted-foreground">
+                {item.reason}
+                {item.warnings?.map((warning, index) => <p key={index} className="text-amber-700 dark:text-amber-400">{warning}</p>)}
+              </TableCell>
             </TableRow>)}</TableBody>
           </Table>
           {result.truncated && <p className="text-xs text-muted-foreground">{t("dryRun.truncated")}</p>}

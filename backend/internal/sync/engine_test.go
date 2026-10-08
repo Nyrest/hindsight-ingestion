@@ -33,10 +33,12 @@ import (
 // --- fake source ----------------------------------------------------------
 
 type fakeDoc struct {
-	rev     string
-	content string
-	file    bool
-	name    string
+	rev      string
+	content  string
+	file     bool
+	name     string
+	image    bool
+	warnings []string
 }
 
 type fakeSource struct {
@@ -54,7 +56,7 @@ type fakeSource struct {
 func (f *fakeSource) Info() connectors.SourceInfo {
 	return connectors.SourceInfo{
 		Type: "fake", Name: "Fake", CredentialType: "fakecred",
-		Capabilities: connectors.Capabilities{IncrementalMode: connectors.IncrementalHighWater, SupportsFiles: true},
+		Capabilities: connectors.Capabilities{IncrementalMode: connectors.IncrementalHighWater, SupportsFiles: true, SupportsInlineMultimodal: true},
 		FilterFields: []connectors.FilterFieldSpec{{Key: "name", Type: connectors.FilterString, Operators: connectors.StringOps}},
 	}
 }
@@ -137,22 +139,30 @@ func (f *fakeSource) OpenContent(ctx context.Context, req connectors.ContentRequ
 	if d.file {
 		return connectors.SourceContent{Body: io.NopCloser(strings.NewReader(d.content)), FileName: req.Item.Name}, nil
 	}
-	return connectors.SourceContent{Text: d.content}, nil
+	content := connectors.SourceContent{Text: d.content}
+	if req.IncludesImages() && d.image {
+		content.Warnings = d.warnings
+		if len(d.warnings) == 0 {
+			content.Blocks = []connectors.ContentBlock{connectors.TextBlock("before"), {Type: "image", Source: &connectors.AttachmentSource{Type: "base64", MediaType: "image/png", Data: "aW1hZ2U="}}, connectors.TextBlock("after")}
+		}
+	}
+	return content, nil
 }
 
 // --- fake hindsight -------------------------------------------------------
 
 type fakeDest struct {
-	mu        stdsync.Mutex
-	docs      map[string]hindsight.MemoryItem
-	files     map[string]string
-	deleted   []string
-	opStatus  map[string]string
-	opSeq     int
-	retains   int
-	failNext  bool
-	failOps   bool
-	opIDsSeen map[string]bool
+	mu         stdsync.Mutex
+	docs       map[string]hindsight.MemoryItem
+	files      map[string]string
+	deleted    []string
+	opStatus   map[string]string
+	opSeq      int
+	retains    int
+	batchSizes []int
+	failNext   bool
+	failOps    bool
+	opIDsSeen  map[string]bool
 }
 
 func newFakeDest() *fakeDest {
@@ -167,6 +177,7 @@ func (d *fakeDest) RetainBatch(ctx context.Context, bank string, items []hindsig
 		return nil, errors.New("hindsight down")
 	}
 	d.retains++
+	d.batchSizes = append(d.batchSizes, len(items))
 	d.opIDsSeen[opID] = true
 	for _, it := range items {
 		d.docs[it.DocumentID] = it
@@ -292,6 +303,9 @@ func newHarness(t *testing.T) *harness {
 	engine := &sync.Engine{
 		DB: db, Creds: creds, Settings: settings.NewStore(db), OAuth: noOAuth{}, Log: log,
 		NewDestination: func(connectors.Credential) (sync.Destination, error) { return dest, nil },
+	}
+	if err := engine.Settings.Put(t.Context(), settings.Defaults); err != nil {
+		t.Fatal(err)
 	}
 	sync.OperationPollInitial = time.Millisecond
 	task := models.Task{

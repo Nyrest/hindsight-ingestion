@@ -398,6 +398,7 @@ export interface components {
             incrementalMode: string;
             supportsAdvancedFilter: boolean;
             supportsFiles: boolean;
+            supportsInlineMultimodal: boolean;
             supportsOAuth: boolean;
         };
         CredentialType: {
@@ -413,6 +414,7 @@ export interface components {
             path: string;
             reason: string;
             sourceItemId: string;
+            warnings?: string[];
         };
         DryRunResult: {
             complete: boolean;
@@ -632,6 +634,7 @@ export interface components {
             filePolicy: components["schemas"]["FilePolicy"];
             fullReconcileIntervalHours: number;
             incrementalSyncEnabled: boolean;
+            inlineMultimodalEnabled: boolean;
             maxFileSizeMB: number;
             oauthRedirectUri: string;
         };
@@ -656,6 +659,9 @@ export interface components {
             /** @enum {string} */
             filePolicyMode: "global" | "override";
             id: string;
+            inlineMultimodalEnabled: boolean;
+            /** @enum {string} */
+            inlineMultimodalMode: "global" | "override";
             itemCount: number;
             lastRun: components["schemas"]["runDTO"] | null;
             name: string;
@@ -1394,6 +1400,7 @@ export interface operations {
                     filePolicy?: components["schemas"]["FilePolicy"];
                     fullReconcileIntervalHours?: number;
                     incrementalSyncEnabled?: boolean;
+                    inlineMultimodalEnabled?: boolean;
                     maxFileSizeMB?: number;
                 };
             };
@@ -1488,6 +1495,9 @@ export interface operations {
                     filePolicy?: components["schemas"]["FilePolicy"];
                     /** @enum {string} */
                     filePolicyMode?: "global" | "override";
+                    inlineMultimodalEnabled?: boolean;
+                    /** @enum {string} */
+                    inlineMultimodalMode?: "global" | "override";
                     name: string;
                     retainStrategy?: string;
                     sourceConfig?: {
@@ -1676,6 +1686,9 @@ export interface operations {
                     filePolicy?: components["schemas"]["FilePolicy"];
                     /** @enum {string} */
                     filePolicyMode?: "global" | "override";
+                    inlineMultimodalEnabled?: boolean;
+                    /** @enum {string} */
+                    inlineMultimodalMode?: "global" | "override";
                     name?: string;
                     retainStrategy?: string;
                     sourceConfig?: {

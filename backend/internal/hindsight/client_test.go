@@ -13,6 +13,39 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 )
 
+func TestMemoryItemContentJSON(t *testing.T) {
+	blocks := []connectors.ContentBlock{connectors.TextBlock("before"), {Type: "image", Source: &connectors.AttachmentSource{Type: "base64", MediaType: "image/png", Data: "aW1hZ2U="}}, connectors.TextBlock("after")}
+	for _, multimodal := range []bool{false, true} {
+		item := MemoryItem{Content: "markdown", DocumentID: "doc", Tags: []string{"tag"}, Metadata: map[string]string{"key": "value"}, Strategy: "strategy"}
+		if multimodal {
+			item.Blocks = blocks
+		}
+		b, err := json.Marshal(item)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var body map[string]any
+		json.Unmarshal(b, &body)
+		if body["document_id"] != "doc" || body["strategy"] != "strategy" {
+			t.Fatalf("metadata lost: %s", b)
+		}
+		if !multimodal {
+			if body["content"] != "markdown" {
+				t.Fatal("plain content changed")
+			}
+			continue
+		}
+		content, ok := body["content"].([]any)
+		if !ok || len(content) != 3 || content[0].(map[string]any)["text"] != "before" || content[2].(map[string]any)["text"] != "after" {
+			t.Fatalf("order: %s", b)
+		}
+		source := content[1].(map[string]any)["source"].(map[string]any)
+		if source["type"] != "base64" || source["media_type"] != "image/png" || source["data"] != "aW1hZ2U=" {
+			t.Fatalf("image shape: %s", b)
+		}
+	}
+}
+
 func TestClient(t *testing.T) {
 	var gotFile, gotMeta, gotAuth, gotCustom string
 	var retainBody map[string]any

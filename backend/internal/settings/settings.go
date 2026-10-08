@@ -15,6 +15,7 @@ import (
 
 // Settings are the global, UI-editable settings.
 type Settings struct {
+	InlineMultimodalEnabled    bool                  `json:"inlineMultimodalEnabled"`
 	IncrementalSyncEnabled     bool                  `json:"incrementalSyncEnabled"`
 	FullReconcileIntervalHours int                   `json:"fullReconcileIntervalHours"`
 	MaxFileSizeMB              int                   `json:"maxFileSizeMB"`

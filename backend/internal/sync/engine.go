@@ -78,21 +78,22 @@ type pendingItem struct {
 
 // runner holds the state of one execution.
 type runner struct {
-	e      *Engine
-	ctx    context.Context
-	task   models.Task
-	state  models.TaskState
-	run    *models.TaskRun
-	gen    int64
-	full   bool
-	reing  bool
-	dest   Destination
-	src    connectors.SourceConnector
-	srcCfg map[string]any
-	filter connectors.Filter
-	policy connectors.FilePolicy
-	cred   connectors.Credential
-	maxSz  int64
+	e             *Engine
+	ctx           context.Context
+	task          models.Task
+	state         models.TaskState
+	run           *models.TaskRun
+	gen           int64
+	full          bool
+	reing         bool
+	dest          Destination
+	src           connectors.SourceConnector
+	srcCfg        map[string]any
+	filter        connectors.Filter
+	policy        connectors.FilePolicy
+	cred          connectors.Credential
+	maxSz         int64
+	inlineEnabled bool
 
 	baseTags []string
 	customMD map[string]string
@@ -393,16 +394,16 @@ func (r *runner) observe(item connectors.SourceItem) error {
 	}
 
 	tags, md := r.documentTagsAndMetadata(item)
-	target := Fingerprint(item.Revision, r.task.PolicyRevision, r.task.RetainStrategy, tags, md)
+	target := r.itemFingerprint(item, tags, md)
 	row.TargetFingerprint = target
 	row.SourceRevision = item.Revision
 
-	if !r.reing && row.DestinationPresent && row.SyncedFingerprint == target {
+	if !r.reing && row.DestinationPresent && row.SyncedFingerprint == target && !(r.full && r.includesImages() && row.NeedsImageRetry) {
 		r.run.UnchangedCount++
 		return r.queueSeen(row)
 	}
 
-	content, err := r.src.OpenContent(r.ctx, connectors.ContentRequest{Credential: r.cred, Config: r.srcCfg, Item: item})
+	content, err := r.src.OpenContent(r.ctx, r.contentRequest(item))
 	if err != nil {
 		if errors.Is(err, connectors.ErrSkip) {
 			r.logf("info", "Skipped %s: %v", displayName(item), err)
@@ -420,6 +421,10 @@ func (r *runner) observe(item connectors.SourceItem) error {
 		return r.fail(row, item, err)
 	}
 
+	for _, warning := range content.Warnings {
+		r.logf("warn", "%s: %s", displayName(item), warning)
+	}
+	row.NeedsImageRetry = r.includesImages() && len(content.Warnings) > 0
 	if content.Body != nil {
 		if err := r.prepareDocumentID(&row, canonicalDocumentID); err != nil {
 			_ = content.Body.Close()
@@ -427,7 +432,7 @@ func (r *runner) observe(item connectors.SourceItem) error {
 		}
 		return r.retainFile(item, row, content, tags, md)
 	}
-	if strings.TrimSpace(content.Text) == "" {
+	if strings.TrimSpace(content.Text) == "" && len(content.Blocks) == 0 {
 		r.logf("info", "Skipped %s: empty content", displayName(item))
 		r.run.SkippedCount++
 		row.DesiredMatch = false
@@ -439,6 +444,13 @@ func (r *runner) observe(item connectors.SourceItem) error {
 	}
 	if err := r.prepareDocumentID(&row, canonicalDocumentID); err != nil {
 		return err
+	}
+	if len(content.Blocks) > 0 {
+		if err := r.flushText(); err != nil {
+			return err
+		}
+		r.textBuf = append(r.textBuf, textJob{item: item, row: row, content: content})
+		return r.flushText()
 	}
 	r.textBuf = append(r.textBuf, textJob{item: item, row: row, content: content})
 	r.textSz += len(content.Text)
@@ -539,6 +551,7 @@ func (r *runner) flushText() error {
 	for _, j := range batch {
 		tags, md := r.documentTagsAndMetadata(j.item)
 		mi := hindsight.MemoryItem{
+			Blocks:     j.content.Blocks,
 			Content:    j.content.Text,
 			Context:    j.content.Context,
 			Metadata:   md,
@@ -1069,6 +1082,10 @@ func (r *runner) prepareSource() (settings.Settings, error) {
 		_ = json.Unmarshal([]byte(orEmpty(r.task.FilePolicyJSON, "{}")), &r.policy)
 	}
 	r.maxSz = int64(cfg.MaxFileSizeMB) << 20
+	r.inlineEnabled = cfg.InlineMultimodalEnabled
+	if r.task.InlineMultimodalMode == models.FilePolicyOverride {
+		r.inlineEnabled = r.task.InlineMultimodalEnabled
+	}
 
 	srcCred, err := r.e.Creds.Load(r.ctx, r.task.SourceCredentialID)
 	if err != nil {

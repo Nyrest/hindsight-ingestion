@@ -30,8 +30,10 @@ import (
 
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/filesystem"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/googledrive"
+	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/notion"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/onedrive"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/s3"
+	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/siyuan"
 )
 
 // fakeHindsight is an in-memory Hindsight server.
@@ -296,8 +298,9 @@ func TestEndToEnd(t *testing.T) {
 		t.Fatalf("policy change: %v", task)
 	}
 	// Name change → no sync effect.
+	revisionBeforeRename := task["configRevision"]
 	e.do("PATCH", "/api/tasks/"+taskID, map[string]any{"name": "renamed"}, &task)
-	if task["configRevision"].(float64) != 2 {
+	if task["configRevision"] != revisionBeforeRename {
 		t.Fatalf("rename bumped config revision: %v", task["configRevision"])
 	}
 	// Disable removes job; re-enable restores it.

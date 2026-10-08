@@ -73,6 +73,7 @@ const SECTIONS = [
   { id: "destination", icon: Brain },
   { id: "retain", icon: Sparkles },
   { id: "files", icon: FileStack },
+  { id: "inline", icon: Sparkles },
   { id: "tags", icon: Tags },
   { id: "metadata", icon: Braces },
   { id: "schedule", icon: CalendarClock },
@@ -142,10 +143,16 @@ export function TaskEditor({ task }: { task?: Task }) {
   const destinationCredentialId = watch("destinationCredentialId");
   const destinationBankId = watch("destinationBankId");
   const filePolicyMode = watch("filePolicyMode");
+  const inlineMode = watch("inlineMultimodalMode");
+  const inlineOverride = watch("inlineMultimodalEnabled");
+  const filePolicy = watch("filePolicy");
   const metadataRows = watch("metadataRows");
 
   const source = findSource(connectors.data, sourceType);
   const supportsFiles = !!source?.capabilities.supportsFiles;
+  const supportsInline = !!source?.capabilities.supportsInlineMultimodal;
+  const effectiveInline = inlineMode === "override" ? inlineOverride : !!settings.data?.inlineMultimodalEnabled;
+  const effectiveImages = filePolicyMode === "override" ? filePolicy.images : !!settings.data?.filePolicy.images;
   const locked = !!task?.destinationLocked;
   const credList = credentials.data ?? [];
 
@@ -159,8 +166,8 @@ export function TaskEditor({ task }: { task?: Task }) {
   }, [source, setValue, form, editing]);
 
   const sectionIds = useMemo(
-    () => SECTIONS.filter((s) => s.id !== "files" || supportsFiles).map((s) => s.id),
-    [supportsFiles],
+    () => SECTIONS.filter((s) => (s.id !== "files" || supportsFiles || supportsInline) && (s.id !== "inline" || supportsInline)).map((s) => s.id),
+    [supportsFiles, supportsInline],
   );
   const activeSection = useActiveSection(sectionIds);
 
@@ -592,7 +599,7 @@ export function TaskEditor({ task }: { task?: Task }) {
           </EditorSection>
 
           {/* File types */}
-          {supportsFiles && (
+          {(supportsFiles || supportsInline) && (
             <EditorSection id="files" icon={FileStack} title={t("taskEditor.sections.files.title")} description={t("taskEditor.sections.files.description")}>
               {editing && <Hint tone="warning">{t("taskEditor.hints.filesReconcile")}</Hint>}
               <Controller
@@ -624,11 +631,12 @@ export function TaskEditor({ task }: { task?: Task }) {
                 name="filePolicy"
                 render={({ field }) =>
                   filePolicyMode === "override" ? (
-                    <FilePolicySwitches value={field.value} onChange={field.onChange} idPrefix="task-fp" />
+                    <FilePolicySwitches value={field.value} onChange={field.onChange} idPrefix="task-fp" groups={supportsFiles ? undefined : ["images"]} />
                   ) : (
                     <div className="space-y-2">
                       <p className="text-xs text-muted-foreground">{t("filePolicy.globalPreview")}</p>
                       <FilePolicySwitches
+                        groups={supportsFiles ? undefined : ["images"]}
                         value={settings.data?.filePolicy ?? DEFAULT_FILE_POLICY}
                         onChange={() => undefined}
                         disabled
@@ -638,6 +646,27 @@ export function TaskEditor({ task }: { task?: Task }) {
                   )
                 }
               />
+            </EditorSection>
+          )}
+
+          {/* Inline media */}
+          {supportsInline && (
+            <EditorSection id="inline" icon={Sparkles} title={t("inlineMultimodal.title")} description={t("inlineMultimodal.description")}>
+              <Controller control={control} name="inlineMultimodalMode" render={({ field }) => (
+                <RadioGroup value={field.value} onValueChange={field.onChange} className="flex flex-wrap gap-6">
+                  {(["global", "override"] as const).map((mode) => (
+                    <label key={mode} htmlFor={`inline-${mode}`} className="flex items-center gap-2">
+                      <RadioGroupItem id={`inline-${mode}`} value={mode} />{t(`filePolicy.mode.${mode}`)}
+                    </label>
+                  ))}
+                </RadioGroup>
+              )} />
+              <FieldRow label={t("inlineMultimodal.enabled")} htmlFor="task-inline" help={t("inlineMultimodal.policyHelp")}>
+                <Controller control={control} name="inlineMultimodalEnabled" render={({ field }) => (
+                  <Switch id="task-inline" checked={effectiveInline} disabled={inlineMode === "global"} onCheckedChange={field.onChange} />
+                )} />
+              </FieldRow>
+              <p className="text-sm text-muted-foreground">{t(effectiveInline && effectiveImages ? "inlineMultimodal.active" : "inlineMultimodal.inactive")}</p>
             </EditorSection>
           )}
 

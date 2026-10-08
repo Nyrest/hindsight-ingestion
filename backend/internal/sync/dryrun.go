@@ -12,11 +12,12 @@ import (
 )
 
 type DryRunItem struct {
-	SourceItemID string `json:"sourceItemId"`
-	Name         string `json:"name"`
-	Path         string `json:"path"`
-	Action       string `json:"action"`
-	Reason       string `json:"reason"`
+	Warnings     []string `json:"warnings,omitempty"`
+	SourceItemID string   `json:"sourceItemId"`
+	Name         string   `json:"name"`
+	Path         string   `json:"path"`
+	Action       string   `json:"action"`
+	Reason       string   `json:"reason"`
 }
 
 type DryRunResult struct {
@@ -68,7 +69,7 @@ func (e *Engine) DryRun(ctx context.Context, taskID string) (DryRunResult, error
 	if result.Complete {
 		for id, row := range r.ledger {
 			if _, seen := observed[id]; !seen && row.DestinationPresent {
-				observed[id] = DryRunItem{id, row.SourceName, row.SourcePath, "delete", "removed from source"}
+				observed[id] = DryRunItem{SourceItemID: id, Name: row.SourceName, Path: row.SourcePath, Action: "delete", Reason: "removed from source"}
 			}
 		}
 	}
@@ -114,11 +115,12 @@ func (r *runner) previewItem(item connectors.SourceItem) DryRunItem {
 	tags, md := r.documentTagsAndMetadata(item)
 	if row.DestinationPresent && row.PreviousDocumentID == "" &&
 		row.DestinationDocumentID == CanonicalIdentity(r.task.SourceType, r.cred, r.srcCfg, item) &&
-		row.SyncedFingerprint == Fingerprint(item.Revision, r.task.PolicyRevision, r.task.RetainStrategy, tags, md) {
+		row.SyncedFingerprint == r.itemFingerprint(item, tags, md) && !(r.includesImages() && row.NeedsImageRetry) {
 		preview.Action = "unchanged"
 		return preview
 	}
-	content, err := r.src.OpenContent(r.ctx, connectors.ContentRequest{Credential: r.cred, Config: r.srcCfg, Item: item})
+	content, err := r.src.OpenContent(r.ctx, r.contentRequest(item))
+	preview.Warnings = content.Warnings
 	if errors.Is(err, connectors.ErrSkip) {
 		return scopePreview(preview, row, err.Error())
 	}
@@ -126,7 +128,7 @@ func (r *runner) previewItem(item connectors.SourceItem) DryRunItem {
 		// Consume the stream to test readability; never submit it to Hindsight.
 		_, err = io.Copy(io.Discard, &limitedReader{r: content.Body, n: r.maxSz})
 		_ = content.Body.Close()
-	} else if err == nil && strings.TrimSpace(content.Text) == "" {
+	} else if err == nil && strings.TrimSpace(content.Text) == "" && len(content.Blocks) == 0 {
 		return scopePreview(preview, row, "empty content")
 	}
 	if err != nil {

@@ -44,6 +44,8 @@ type taskDTO struct {
 	CustomMetadata          map[string]string     `json:"customMetadata"`
 	FilePolicyMode          string                `json:"filePolicyMode" enum:"global,override"`
 	FilePolicy              connectors.FilePolicy `json:"filePolicy"`
+	InlineMultimodalMode    string                `json:"inlineMultimodalMode" enum:"global,override"`
+	InlineMultimodalEnabled bool                  `json:"inlineMultimodalEnabled"`
 	CronExpression          string                `json:"cronExpression"`
 	CronTimezone            string                `json:"cronTimezone"`
 	ConfigRevision          int64                 `json:"configRevision"`
@@ -65,6 +67,7 @@ func (s *Server) taskView(ctx context.Context, t *models.Task) taskDTO {
 		SourceCredentialID: t.SourceCredentialID, DestinationCredentialID: t.DestinationCredentialID,
 		DestinationBankID: t.DestinationBankID, RetainStrategy: t.RetainStrategy,
 		FilePolicyMode: t.FilePolicyMode, CronExpression: t.CronExpression, CronTimezone: t.CronTimezone,
+		InlineMultimodalMode: t.InlineMultimodalMode, InlineMultimodalEnabled: t.InlineMultimodalEnabled,
 		ConfigRevision: t.ConfigRevision, PolicyRevision: t.PolicyRevision,
 		ReconcileRequired: t.ReconcileRequired, DestinationLocked: t.DestinationLocked,
 		CreatedAt: timeStr(t.CreatedAt), UpdatedAt: timeStr(t.UpdatedAt),
@@ -141,6 +144,8 @@ type taskBody struct {
 	CustomMetadata          *map[string]string     `json:"customMetadata"`
 	FilePolicyMode          *string                `json:"filePolicyMode" enum:"global,override"`
 	FilePolicy              *connectors.FilePolicy `json:"filePolicy"`
+	InlineMultimodalMode    *string                `json:"inlineMultimodalMode" enum:"global,override"`
+	InlineMultimodalEnabled *bool                  `json:"inlineMultimodalEnabled"`
 	CronExpression          *string                `json:"cronExpression"`
 	CronTimezone            *string                `json:"cronTimezone"`
 }
@@ -330,12 +335,24 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 		}
 	}
 
+	if b.InlineMultimodalMode != nil {
+		t.InlineMultimodalMode = *b.InlineMultimodalMode
+	}
+	if t.InlineMultimodalMode == "" {
+		t.InlineMultimodalMode = models.FilePolicyGlobal
+	}
+	if t.InlineMultimodalMode != models.FilePolicyGlobal && t.InlineMultimodalMode != models.FilePolicyOverride {
+		errs.add("inlineMultimodalMode", "Must be global or override")
+	}
+	if b.InlineMultimodalEnabled != nil {
+		t.InlineMultimodalEnabled = *b.InlineMultimodalEnabled
+	}
 	if creating {
 		return true, errs
 	}
-
 	policyChanged := old.RetainStrategy != t.RetainStrategy || old.CustomTagsJSON != t.CustomTagsJSON ||
-		old.CustomMetadataJSON != t.CustomMetadataJSON
+		old.CustomMetadataJSON != t.CustomMetadataJSON || old.InlineMultimodalMode != t.InlineMultimodalMode ||
+		old.InlineMultimodalEnabled != t.InlineMultimodalEnabled
 	if policyChanged {
 		t.PolicyRevision++
 		// Re-retain matching items: requires observing every item.
