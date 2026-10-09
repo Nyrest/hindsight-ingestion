@@ -529,8 +529,7 @@ func attributes(item connectors.SourceItem) map[string]any {
 }
 
 func (r *runner) documentTagsAndMetadata(item connectors.SourceItem) ([]string, map[string]string) {
-	tags := append(append([]string(nil), r.baseTags...), item.Tags...)
-	tags = dedupe(tags)
+	tags := dedupe(append([]string(nil), r.baseTags...))
 	md := map[string]string{}
 	maps.Copy(md, r.customMD)
 	for k, v := range item.Metadata {
