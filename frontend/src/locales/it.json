@@ -461,6 +461,10 @@
         "title": "Mantieni la strategia",
         "description": "Come Hindsight elabora il contenuto."
       },
+      "observations": {
+        "title": "Ambito delle osservazioni",
+        "description": ""
+      },
       "files": {
         "title": "Tipi di file",
         "description": "Quali tipi di file vengono acquisiti."
@@ -595,6 +599,44 @@
       "title": "Fallimenti recenti",
       "empty": "Nessun fallimento recente"
     }
+  },
+  "observationScope": {
+    "title": "Ambito delle osservazioni",
+    "rule": "Ambito di consolidamento",
+    "learnMore": "Documentazione ufficiale",
+    "inherit": "Usa l’impostazione globale",
+    "inheritHelp": "Usa l’ambito delle osservazioni definito nelle impostazioni globali.",
+    "inheritedRule": "Regola attuale: {{rule}}.",
+    "rules": {
+      "combined": "Tutti i tag insieme (predefinito)",
+      "shared": "Globale condiviso",
+      "per_tag": "Per tag",
+      "all_combinations": "Tutte le combinazioni",
+      "custom": "Personalizzato"
+    },
+    "descriptions": {
+      "combined": "Esegue un solo consolidamento con tutti i tag insieme. Le osservazioni appartengono all’insieme completo dei tag e accumulano conoscenze specifiche di quella combinazione.",
+      "shared": "Consolida ricordi con tag diversi in un unico ambito globale senza tag. Utile per accumulare conoscenze condivise tra sessioni senza separarle in base ai tag di sessione.",
+      "per_tag": "Consolida separatamente ciascun tag. Ogni tag accumula osservazioni indipendenti dai ricordi, senza creare ambiti per le combinazioni di tag.",
+      "all_combinations": "Consolida ogni sottoinsieme non vuoto di tag, inclusi i singoli tag e le loro combinazioni. Tre tag generano sette ambiti e sette passaggi di consolidamento.",
+      "custom": "Scegli esattamente quali gruppi di tag consolidare. Ogni gruppo crea un ambito indipendente, evitando combinazioni inutili."
+    },
+    "customHelp": "Aggiungi almeno un tag a ogni ambito. I tag dinamici seguono l’attività, la sorgente o il gruppo di sorgenti corrente. Per un ambito globale senza tag, scegli «Globale condiviso».",
+    "dynamic": {
+      "task": "Attività corrente",
+      "source": "Sorgente corrente",
+      "source_group": "Gruppo di sorgenti corrente"
+    },
+    "group": "Ambito {{number}}",
+    "removeGroup": "Rimuovi l’ambito {{number}}",
+    "addGroup": "Aggiungi ambito",
+    "addTag": "Aggiungi tag",
+    "searchTags": "Cerca o inserisci un tag…",
+    "useTag": "Usa «{{tag}}»",
+    "emptyGroup": "Aggiungi almeno un tag a ogni ambito.",
+    "exponentialWarning": "Il numero di ambiti cresce in modo esponenziale: n tag generano 2ⁿ − 1 ambiti per documento, aumentando i tempi di elaborazione e i costi.",
+    "fileLimitation": "Gli ambiti delle osservazioni si applicano al testo e ai contenuti incorporati. I file caricati usano tutti i tag insieme.",
+    "tagsUnavailable": "Impossibile caricare i tag dell’archivio di memoria. Puoi comunque inserire un tag manualmente."
   },
   "settings": {
     "title": "Impostazioni",

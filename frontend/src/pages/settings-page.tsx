@@ -115,25 +115,6 @@ export default function SettingsPage() {
       ) : (
         <div className="space-y-6">
           <Card>
-            <CardHeader><CardTitle>{t("proxy.title")}</CardTitle></CardHeader>
-            <CardContent>
-              <Controller control={form.control} name="proxy" render={({ field }) => (
-                <ProxyEditor value={field.value} onChange={field.onChange}
-                  error={errText(errors.proxy?.address?.message ?? errors.proxy?.message)} />
-              )} />
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader><CardTitle>{t("observationScope.title")}</CardTitle></CardHeader>
-            <CardContent>
-              <Controller control={form.control} name="observationScope" render={({ field }) => (
-                <ObservationScopeEditor value={field.value} onChange={field.onChange} showFileLimitation
-                  suggestions={(tasks.data ?? []).flatMap(taskTagSuggestions)}
-                  error={errText(errors.observationScope?.scopes?.message ?? errors.observationScope?.message)} />
-              )} />
-            </CardContent>
-          </Card>
-          <Card>
             <CardHeader>
               <CardTitle>{t("settings.sync.title")}</CardTitle>
               <CardDescription>{t("settings.sync.description")}</CardDescription>
@@ -226,6 +207,16 @@ export default function SettingsPage() {
           </Card>
 
           <Card>
+            <CardHeader><CardTitle>{t("observationScope.title")}</CardTitle></CardHeader>
+            <CardContent>
+              <Controller control={form.control} name="observationScope" render={({ field }) => (
+                <ObservationScopeEditor value={field.value} onChange={field.onChange} showFileLimitation
+                  suggestions={(tasks.data ?? []).flatMap(taskTagSuggestions)}
+                  error={errText(errors.observationScope?.scopes?.message ?? errors.observationScope?.message)} />
+              )} />
+            </CardContent>
+          </Card>
+          <Card>
             <CardHeader>
               <CardTitle>{t("settings.oauth.title")}</CardTitle>
               <CardDescription>{t("settings.oauth.description")}</CardDescription>
@@ -237,6 +228,15 @@ export default function SettingsPage() {
                   <CopyButton value={settings.data?.oauthRedirectUri ?? ""} />
                 </div>
               </FieldRow>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader><CardTitle>{t("proxy.title")}</CardTitle></CardHeader>
+            <CardContent>
+              <Controller control={form.control} name="proxy" render={({ field }) => (
+                <ProxyEditor value={field.value} onChange={field.onChange}
+                  error={errText(errors.proxy?.address?.message ?? errors.proxy?.message)} />
+              )} />
             </CardContent>
           </Card>
         </div>

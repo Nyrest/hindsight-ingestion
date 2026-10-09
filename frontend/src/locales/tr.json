@@ -461,6 +461,10 @@
         "title": "Stratejiyi koru",
         "description": "Hindsight'nun içeriği nasıl işlediği."
       },
+      "observations": {
+        "title": "Gözlem kapsamı",
+        "description": ""
+      },
       "files": {
         "title": "Dosya türleri",
         "description": "Hangi tür dosyaların alındığı."
@@ -595,6 +599,44 @@
       "title": "Son başarısızlıklar",
       "empty": "Yakın zamanda başarısızlık yok"
     }
+  },
+  "observationScope": {
+    "title": "Gözlem kapsamı",
+    "rule": "Birleştirme kapsamı",
+    "learnMore": "Resmî belgeler",
+    "inherit": "Genel ayarı kullan",
+    "inheritHelp": "Genel ayarlarda belirlenen gözlem kapsamını kullanır.",
+    "inheritedRule": "Geçerli kural: {{rule}}.",
+    "rules": {
+      "combined": "Tüm etiketler birlikte (varsayılan)",
+      "shared": "Genel ortak kapsam",
+      "per_tag": "Etiket başına",
+      "all_combinations": "Tüm etiket kombinasyonları",
+      "custom": "Özel"
+    },
+    "descriptions": {
+      "combined": "Tüm etiketleri birlikte kullanarak tek bir birleştirme işlemi yapar. Gözlemler, etiket kümesinin tamamına ait olur ve bu kombinasyona özgü bilgileri biriktirir.",
+      "shared": "Farklı etiketlere sahip anıları, etiketsiz tek bir genel kapsamda birleştirir. Oturum etiketleriyle ayırmadan oturumlar arasında ortak bilgi biriktirmek için uygundur.",
+      "per_tag": "Her etiketi ayrı ayrı birleştirir. Her etiket, anılardan bağımsız gözlemler biriktirir; etiket kombinasyonları için kapsam oluşturulmaz.",
+      "all_combinations": "Tek tek etiketler ve kombinasyonları dâhil, etiketlerin boş olmayan her alt kümesi için birleştirme yapar. Üç etiket, yedi kapsam ve yedi birleştirme işlemi oluşturur.",
+      "custom": "Birleştirilecek etiket gruplarını doğrudan seçin. Her grup bağımsız bir kapsam oluşturur ve gereksiz kombinasyonların işlenmesini önler."
+    },
+    "customHelp": "Her kapsama en az bir etiket ekleyin. Dinamik etiketler geçerli göreve, kaynağa veya kaynak grubuna göre değişir. Etiketsiz bir genel kapsam için “Genel ortak kapsam”ı seçin.",
+    "dynamic": {
+      "task": "Geçerli görev",
+      "source": "Geçerli kaynak",
+      "source_group": "Geçerli kaynak grubu"
+    },
+    "group": "Kapsam {{number}}",
+    "removeGroup": "{{number}} numaralı kapsamı kaldır",
+    "addGroup": "Kapsam ekle",
+    "addTag": "Etiket ekle",
+    "searchTags": "Etiket arayın veya girin…",
+    "useTag": "“{{tag}}” etiketini kullan",
+    "emptyGroup": "Her kapsama en az bir etiket ekleyin.",
+    "exponentialWarning": "Kapsam sayısı üstel olarak artar: n etiket, belge başına 2ⁿ − 1 kapsam oluşturur ve işlem süresini ve maliyeti artırır.",
+    "fileLimitation": "Gözlem kapsamları metin ve gömülü içerik için geçerlidir. Dosya yüklemelerinde tüm etiketler birlikte kullanılır.",
+    "tagsUnavailable": "Bellek bankasının etiketleri yüklenemedi. Yine de bir etiketi elle girebilirsiniz."
   },
   "settings": {
     "title": "Ayarlar",

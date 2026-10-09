@@ -461,6 +461,10 @@
         "title": "Estratégia de retenção",
         "description": "Como Hindsight processa o conteúdo."
       },
+      "observations": {
+        "title": "Escopo das observações",
+        "description": ""
+      },
       "files": {
         "title": "Tipos de arquivo",
         "description": "Quais tipos de arquivos são ingeridos."
@@ -595,6 +599,44 @@
       "title": "Falhas recentes",
       "empty": "Nenhuma falha recente"
     }
+  },
+  "observationScope": {
+    "title": "Escopo das observações",
+    "rule": "Escopo de consolidação",
+    "learnMore": "Documentação oficial",
+    "inherit": "Usar a configuração global",
+    "inheritHelp": "Usa o escopo das observações definido nas configurações globais.",
+    "inheritedRule": "Regra atual: {{rule}}.",
+    "rules": {
+      "combined": "Todas as tags juntas (padrão)",
+      "shared": "Global compartilhado",
+      "per_tag": "Por tag",
+      "all_combinations": "Todas as combinações",
+      "custom": "Personalizado"
+    },
+    "descriptions": {
+      "combined": "Consolida uma única vez com todas as tags juntas. As observações pertencem ao conjunto completo de tags e acumulam conhecimento específico dessa combinação.",
+      "shared": "Consolida memórias com tags diferentes em um único escopo global sem tags. Útil para acumular conhecimento compartilhado entre sessões sem separá-lo pelas tags de sessão.",
+      "per_tag": "Consolida cada tag separadamente. Cada uma acumula observações independentes a partir das memórias, sem criar escopos para combinações de tags.",
+      "all_combinations": "Consolida cada subconjunto não vazio de tags, incluindo tags individuais e suas combinações. Três tags geram sete escopos e sete etapas de consolidação.",
+      "custom": "Escolha exatamente quais grupos de tags consolidar. Cada grupo cria um escopo independente, evitando combinações desnecessárias."
+    },
+    "customHelp": "Adicione pelo menos uma tag a cada escopo. As tags dinâmicas acompanham a tarefa, a fonte ou o grupo de fontes atual. Para um escopo global sem tags, escolha “Global compartilhado”.",
+    "dynamic": {
+      "task": "Tarefa atual",
+      "source": "Fonte atual",
+      "source_group": "Grupo de fontes atual"
+    },
+    "group": "Escopo {{number}}",
+    "removeGroup": "Remover escopo {{number}}",
+    "addGroup": "Adicionar escopo",
+    "addTag": "Adicionar tag",
+    "searchTags": "Buscar ou inserir uma tag…",
+    "useTag": "Usar “{{tag}}”",
+    "emptyGroup": "Adicione pelo menos uma tag a cada escopo.",
+    "exponentialWarning": "O número de escopos cresce exponencialmente: n tags geram 2ⁿ − 1 escopos por documento, aumentando o tempo de processamento e o custo.",
+    "fileLimitation": "Os escopos das observações se aplicam ao texto e ao conteúdo incorporado. Os arquivos enviados usam todas as tags juntas.",
+    "tagsUnavailable": "Não foi possível carregar as tags do banco de memória. Você ainda pode inserir uma tag manualmente."
   },
   "settings": {
     "title": "Configurações",

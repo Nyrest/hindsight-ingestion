@@ -19,6 +19,7 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -192,13 +193,43 @@ export function ObservationScopeEditor({
   const id = useId();
   const inherited = mode === "global";
   const effective = inherited ? globalValue : value;
+  const rules = [
+    "combined",
+    "shared",
+    "per_tag",
+    "all_combinations",
+    "custom",
+  ] as const;
+  const options = [
+    ...(onModeChange
+      ? [{
+          rule: "global",
+          label: t("observationScope.inherit"),
+          description: globalValue
+            ? `${t("observationScope.inheritedRule", { rule: t(`observationScope.rules.${globalValue.rule}`) })} ${t(`observationScope.descriptions.${globalValue.rule}`)}`
+            : t("observationScope.inheritHelp"),
+        }]
+      : []),
+    ...rules.map((rule) => ({
+      rule,
+      label: t(`observationScope.rules.${rule}`),
+      description: t(`observationScope.descriptions.${rule}`),
+    })),
+  ];
+  const selected = options.find((option) => option.rule === (inherited ? "global" : value.rule));
   return (
-    <div className="space-y-4">
-      <FieldRow label={t("observationScope.rule")} htmlFor={id} error={error}>
+    <div className="flex flex-col gap-3">
+      <FieldRow label={t("observationScope.rule")} htmlFor={id}
+        hint={
+          <a href="https://hindsight.vectorize.io/developer/observations#observation-scopes"
+            target="_blank" rel="noreferrer"
+            className="text-xs text-muted-foreground underline underline-offset-4 hover:text-foreground">
+            {t("observationScope.learnMore")}
+          </a>
+        }>
         <Select
           value={inherited ? "global" : value.rule}
           onValueChange={(rule) => {
-            // The native select can emit an empty value during form reset.
             if (!rule) return;
             if (rule === "global") {
               onModeChange?.("global");
@@ -216,33 +247,34 @@ export function ObservationScopeEditor({
             });
           }}
         >
-          <SelectTrigger id={id} className="w-full">
-            <SelectValue />
+          <SelectTrigger id={id} className="w-full" aria-invalid={!!error}
+            aria-describedby={`${id}-help${error ? ` ${id}-error` : ""}`}>
+            <SelectValue>{selected?.label}</SelectValue>
           </SelectTrigger>
-          <SelectContent>
-            {onModeChange && (
-              <SelectItem value="global">
-                {t("proxy.global")}
-                {globalValue
-                  ? ` (${t(`observationScope.rules.${globalValue.rule}`)})`
-                  : ""}
-              </SelectItem>
-            )}
-            {(
-              [
-                "combined",
-                "shared",
-                "per_tag",
-                "all_combinations",
-                "custom",
-              ] as const
-            ).map((rule) => (
-              <SelectItem key={rule} value={rule}>
-                {t(`observationScope.rules.${rule}`)}
-              </SelectItem>
-            ))}
+          <SelectContent position="popper" align="start"
+            className="w-[var(--radix-select-trigger-width)] max-w-[calc(100vw-2rem)]">
+            <SelectGroup>
+              {options.map((option) => (
+                <SelectItem key={option.rule} value={option.rule} textValue={option.label}
+                  aria-labelledby={`${id}-${option.rule}-label`}
+                  aria-describedby={`${id}-${option.rule}-help`}>
+                  <span className="flex min-w-0 flex-col gap-1 py-1">
+                    <span id={`${id}-${option.rule}-label`} className="font-medium">
+                      {option.label}
+                    </span>
+                    <span id={`${id}-${option.rule}-help`} className="text-xs leading-relaxed text-muted-foreground">
+                      {option.description}
+                    </span>
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectGroup>
           </SelectContent>
         </Select>
+        <p id={`${id}-help`} className="text-xs leading-relaxed text-muted-foreground">
+          {selected?.description}
+        </p>
+        {error && <p id={`${id}-error`} role="alert" className="text-sm font-medium text-destructive">{error}</p>}
       </FieldRow>
       {effective?.rule === "all_combinations" && (
         <Alert className="border-amber-500/30 bg-amber-500/8 text-amber-800 dark:text-amber-300">
@@ -253,12 +285,15 @@ export function ObservationScopeEditor({
         </Alert>
       )}
       {showFileLimitation && (
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs leading-relaxed text-muted-foreground">
           {t("observationScope.fileLimitation")}
         </p>
       )}
       {!inherited && value.rule === "custom" && (
         <div className="space-y-3">
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            {t("observationScope.customHelp")}
+          </p>
           {value.scopes.map((tags, index) => (
             <div key={index} className="space-y-2 rounded-md border p-3">
               <div className="flex items-center justify-between">
@@ -272,6 +307,7 @@ export function ObservationScopeEditor({
                   aria-label={t("observationScope.removeGroup", {
                     number: index + 1,
                   })}
+                  disabled={value.scopes.length <= 1}
                   onClick={() =>
                     onChange({
                       ...value,

@@ -461,6 +461,10 @@
         "title": "Pertahankan strategi",
         "description": "Bagaimana Hindsight memproses konten."
       },
+      "observations": {
+        "title": "Cakupan observasi",
+        "description": ""
+      },
       "files": {
         "title": "Jenis berkas",
         "description": "Jenis file apa yang diserap."
@@ -595,6 +599,44 @@
       "title": "Kegagalan baru-baru ini",
       "empty": "Tidak ada kegagalan baru-baru ini"
     }
+  },
+  "observationScope": {
+    "title": "Cakupan observasi",
+    "rule": "Cakupan konsolidasi",
+    "learnMore": "Dokumentasi resmi",
+    "inherit": "Gunakan pengaturan global",
+    "inheritHelp": "Ikuti cakupan observasi yang ditetapkan dalam pengaturan global.",
+    "inheritedRule": "Aturan saat ini: {{rule}}.",
+    "rules": {
+      "combined": "Semua tag sekaligus (default)",
+      "shared": "Berbagi secara global",
+      "per_tag": "Per tag",
+      "all_combinations": "Semua kombinasi tag",
+      "custom": "Kustom"
+    },
+    "descriptions": {
+      "combined": "Melakukan satu kali konsolidasi dengan semua tag sekaligus. Observasi menjadi bagian dari kumpulan tag lengkap dan menghimpun pengetahuan khusus untuk kombinasi tersebut.",
+      "shared": "Mengonsolidasikan memori dengan tag berbeda ke dalam satu cakupan global tanpa tag. Cocok untuk menghimpun pengetahuan bersama lintas sesi tanpa memisahkannya berdasarkan tag sesi.",
+      "per_tag": "Mengonsolidasikan setiap tag secara terpisah. Setiap tag menghimpun observasi independen dari memori, tanpa membuat cakupan untuk kombinasi tag.",
+      "all_combinations": "Mengonsolidasikan setiap himpunan bagian tag yang tidak kosong, termasuk tag tunggal dan kombinasinya. Tiga tag menghasilkan tujuh cakupan dan tujuh proses konsolidasi.",
+      "custom": "Pilih kelompok tag yang ingin dikonsolidasikan. Setiap kelompok membentuk cakupan independen sehingga kombinasi yang tidak diperlukan tidak diproses."
+    },
+    "customHelp": "Tambahkan setidaknya satu tag ke setiap cakupan. Tag dinamis mengikuti tugas, sumber, atau kelompok sumber saat ini. Untuk cakupan global tanpa tag, pilih “Berbagi secara global”.",
+    "dynamic": {
+      "task": "Tugas saat ini",
+      "source": "Sumber saat ini",
+      "source_group": "Kelompok sumber saat ini"
+    },
+    "group": "Cakupan {{number}}",
+    "removeGroup": "Hapus cakupan {{number}}",
+    "addGroup": "Tambah cakupan",
+    "addTag": "Tambah tag",
+    "searchTags": "Cari atau masukkan tag…",
+    "useTag": "Gunakan “{{tag}}”",
+    "emptyGroup": "Tambahkan setidaknya satu tag ke setiap cakupan.",
+    "exponentialWarning": "Jumlah cakupan bertambah secara eksponensial: n tag menghasilkan 2ⁿ − 1 cakupan per dokumen, sehingga waktu pemrosesan dan biaya meningkat.",
+    "fileLimitation": "Cakupan observasi berlaku untuk teks dan konten tersemat. Unggahan file menggunakan semua tag sekaligus.",
+    "tagsUnavailable": "Tag bank memori tidak dapat dimuat. Anda masih dapat memasukkan tag secara manual."
   },
   "settings": {
     "title": "Pengaturan",

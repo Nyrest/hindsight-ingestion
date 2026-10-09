@@ -461,6 +461,10 @@
         "title": "Stratégie de rétention",
         "description": "Comment Hindsight traite le contenu."
       },
+      "observations": {
+        "title": "Portée des observations",
+        "description": ""
+      },
       "files": {
         "title": "Types de fichiers",
         "description": "Quels types de fichiers sont ingérés."
@@ -595,6 +599,44 @@
       "title": "Échecs récents",
       "empty": "Aucun échec récent"
     }
+  },
+  "observationScope": {
+    "title": "Portée des observations",
+    "rule": "Portée de consolidation",
+    "learnMore": "Documentation officielle",
+    "inherit": "Utiliser le réglage global",
+    "inheritHelp": "Utiliser la portée des observations définie dans les réglages globaux.",
+    "inheritedRule": "Règle actuelle : {{rule}}.",
+    "rules": {
+      "combined": "Toutes les étiquettes ensemble (par défaut)",
+      "shared": "Partage global",
+      "per_tag": "Par étiquette",
+      "all_combinations": "Toutes les combinaisons",
+      "custom": "Personnalisée"
+    },
+    "descriptions": {
+      "combined": "Effectue une seule consolidation avec toutes les étiquettes réunies. Les observations appartiennent à cet ensemble complet et accumulent des connaissances propres à cette combinaison.",
+      "shared": "Consolide les souvenirs portant différentes étiquettes dans une seule portée globale sans étiquette. Utile pour accumuler des connaissances communes à plusieurs sessions.",
+      "per_tag": "Consolide chaque étiquette séparément. Chacune accumule ses propres observations à partir des souvenirs, sans créer de portée pour les combinaisons d’étiquettes.",
+      "all_combinations": "Consolide chaque sous-ensemble non vide d’étiquettes, y compris les étiquettes seules et leurs combinaisons. Trois étiquettes génèrent sept portées et sept passes de consolidation.",
+      "custom": "Choisissez précisément les groupes d’étiquettes à consolider. Chaque groupe crée une portée indépendante, sans traiter les combinaisons inutiles."
+    },
+    "customHelp": "Ajoutez au moins une étiquette à chaque portée. Les étiquettes dynamiques suivent la tâche, la source ou le groupe de sources actuel. Pour une portée globale sans étiquette, choisissez « Partage global ».",
+    "dynamic": {
+      "task": "Tâche actuelle",
+      "source": "Source actuelle",
+      "source_group": "Groupe de sources actuel"
+    },
+    "group": "Portée {{number}}",
+    "removeGroup": "Supprimer la portée {{number}}",
+    "addGroup": "Ajouter une portée",
+    "addTag": "Ajouter une étiquette",
+    "searchTags": "Rechercher ou saisir une étiquette…",
+    "useTag": "Utiliser « {{tag}} »",
+    "emptyGroup": "Ajoutez au moins une étiquette à chaque portée.",
+    "exponentialWarning": "Le nombre de portées augmente de façon exponentielle : n étiquettes génèrent 2ⁿ − 1 portées par document, ce qui augmente le temps de traitement et le coût.",
+    "fileLimitation": "Les portées des observations s’appliquent au texte et au contenu intégré. Les fichiers importés utilisent toutes les étiquettes ensemble.",
+    "tagsUnavailable": "Impossible de charger les étiquettes de la banque mémoire. Vous pouvez toujours saisir une étiquette."
   },
   "settings": {
     "title": "Paramètres",

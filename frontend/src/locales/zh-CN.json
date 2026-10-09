@@ -458,6 +458,10 @@
         "title": "保留策略",
         "description": "设置 Hindsight 如何处理写入记忆库的内容。"
       },
+      "observations": {
+        "title": "观察范围",
+        "description": ""
+      },
       "files": {
         "title": "文件类型",
         "description": "选择要导入的文件类型。"
@@ -592,6 +596,44 @@
       "title": "最近失败",
       "empty": "最近没有失败"
     }
+  },
+  "observationScope": {
+    "title": "观察范围",
+    "rule": "知识归纳范围",
+    "learnMore": "官方文档",
+    "inherit": "使用全局设置",
+    "inheritHelp": "沿用全局设置中的观察范围。",
+    "inheritedRule": "当前规则：{{rule}}。",
+    "rules": {
+      "combined": "完整标签组合（默认）",
+      "shared": "全局共享",
+      "per_tag": "按单个标签",
+      "all_combinations": "所有标签组合",
+      "custom": "自定义"
+    },
+    "descriptions": {
+      "combined": "将全部标签作为一个范围进行一次归纳。生成的观察结论属于完整标签集合，知识按这一标签组合独立积累。",
+      "shared": "不同标签的记忆在同一个无标签的全局范围内归纳。适合保留会话等来源标签，同时让知识跨会话共同积累。",
+      "per_tag": "为每个标签分别归纳，独立积累带有该标签的记忆中的知识。不会生成多个标签组合的范围。",
+      "all_combinations": "为标签的每个非空子集分别归纳，涵盖单个标签及各种组合。例如，3 个标签会生成 7 个范围，执行 7 次归纳。",
+      "custom": "明确指定需要归纳的标签组。每组形成一个独立范围，避免处理不需要的标签组合。"
+    },
+    "customHelp": "每个范围至少添加一个标签。动态标签会随当前任务、来源或来源分组自动变化；如需无标签的全局范围，请选择「全局共享」。",
+    "dynamic": {
+      "task": "当前任务",
+      "source": "当前来源",
+      "source_group": "当前来源分组"
+    },
+    "group": "范围 {{number}}",
+    "removeGroup": "移除范围 {{number}}",
+    "addGroup": "添加范围",
+    "addTag": "添加标签",
+    "searchTags": "搜索或输入标签…",
+    "useTag": "使用「{{tag}}」",
+    "emptyGroup": "请为每个范围至少添加一个标签。",
+    "exponentialWarning": "范围数量呈指数增长：n 个标签会为每份文档生成 2ⁿ − 1 个范围，增加处理时间和费用。",
+    "fileLimitation": "观察范围设置适用于文本和内联内容。文件上传使用完整标签组合。",
+    "tagsUnavailable": "无法加载记忆库标签。你仍可手动输入标签。"
   },
   "settings": {
     "title": "设置",

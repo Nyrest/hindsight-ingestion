@@ -467,6 +467,10 @@
         "title": "Zachowaj strategię",
         "description": "Jak Hindsight przetwarza zawartość."
       },
+      "observations": {
+        "title": "Zakres obserwacji",
+        "description": ""
+      },
       "files": {
         "title": "Typy plików",
         "description": "Jakie rodzaje plików są pozyskiwane."
@@ -607,6 +611,44 @@
       "title": "Ostatnie awarie",
       "empty": "Żadnych ostatnich awarii"
     }
+  },
+  "observationScope": {
+    "title": "Zakres obserwacji",
+    "rule": "Zakres konsolidacji",
+    "learnMore": "Oficjalna dokumentacja",
+    "inherit": "Użyj ustawienia globalnego",
+    "inheritHelp": "Użyj zakresu obserwacji określonego w ustawieniach globalnych.",
+    "inheritedRule": "Bieżąca reguła: {{rule}}.",
+    "rules": {
+      "combined": "Wszystkie tagi razem (domyślnie)",
+      "shared": "Wspólny zakres globalny",
+      "per_tag": "Osobno dla każdego tagu",
+      "all_combinations": "Wszystkie kombinacje tagów",
+      "custom": "Niestandardowy"
+    },
+    "descriptions": {
+      "combined": "Wykonuje jedną konsolidację dla wszystkich tagów razem. Obserwacje należą do pełnego zestawu tagów i gromadzą wiedzę dotyczącą tej konkretnej kombinacji.",
+      "shared": "Konsoliduje wspomnienia z różnymi tagami w jednym globalnym zakresie bez tagów. Pozwala gromadzić wspólną wiedzę z wielu sesji bez rozdzielania jej według tagów sesji.",
+      "per_tag": "Konsoliduje każdy tag osobno. Każdy tag gromadzi niezależne obserwacje ze wspomnień, bez tworzenia zakresów dla kombinacji tagów.",
+      "all_combinations": "Konsoliduje każdy niepusty podzbiór tagów, w tym pojedyncze tagi i ich kombinacje. Trzy tagi tworzą siedem zakresów i wymagają siedmiu przebiegów konsolidacji.",
+      "custom": "Wybierz dokładnie, które grupy tagów mają być konsolidowane. Każda grupa tworzy niezależny zakres, bez przetwarzania zbędnych kombinacji."
+    },
+    "customHelp": "Dodaj co najmniej jeden tag do każdego zakresu. Tagi dynamiczne odpowiadają bieżącemu zadaniu, źródłu lub grupie źródeł. Aby użyć globalnego zakresu bez tagów, wybierz „Wspólny zakres globalny”.",
+    "dynamic": {
+      "task": "Bieżące zadanie",
+      "source": "Bieżące źródło",
+      "source_group": "Bieżąca grupa źródeł"
+    },
+    "group": "Zakres {{number}}",
+    "removeGroup": "Usuń zakres {{number}}",
+    "addGroup": "Dodaj zakres",
+    "addTag": "Dodaj tag",
+    "searchTags": "Wyszukaj lub wpisz tag…",
+    "useTag": "Użyj „{{tag}}”",
+    "emptyGroup": "Dodaj co najmniej jeden tag do każdego zakresu.",
+    "exponentialWarning": "Liczba zakresów rośnie wykładniczo: n tagów tworzy 2ⁿ − 1 zakresów na dokument, zwiększając czas przetwarzania i koszty.",
+    "fileLimitation": "Zakresy obserwacji dotyczą tekstu i treści osadzonych. Przesyłane pliki używają wszystkich tagów razem.",
+    "tagsUnavailable": "Nie udało się wczytać tagów banku pamięci. Nadal możesz wpisać tag ręcznie."
   },
   "settings": {
     "title": "Ustawienia",

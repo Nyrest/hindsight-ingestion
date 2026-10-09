@@ -461,6 +461,10 @@
         "title": "Strategie beibehalten",
         "description": "Wie Hindsight den Inhalt verarbeitet."
       },
+      "observations": {
+        "title": "Beobachtungsbereich",
+        "description": ""
+      },
       "files": {
         "title": "Dateitypen",
         "description": "Welche Arten von Dateien werden aufgenommen?"
@@ -595,6 +599,44 @@
       "title": "Aktuelle Misserfolge",
       "empty": "Keine aktuellen Ausfälle"
     }
+  },
+  "observationScope": {
+    "title": "Beobachtungsbereich",
+    "rule": "Konsolidierungsbereich",
+    "learnMore": "Offizielle Dokumentation",
+    "inherit": "Globale Einstellung verwenden",
+    "inheritHelp": "Den in den globalen Einstellungen festgelegten Beobachtungsbereich verwenden.",
+    "inheritedRule": "Aktuell: {{rule}}.",
+    "rules": {
+      "combined": "Alle Tags zusammen (Standard)",
+      "shared": "Global gemeinsam",
+      "per_tag": "Pro Tag",
+      "all_combinations": "Alle Tag-Kombinationen",
+      "custom": "Benutzerdefiniert"
+    },
+    "descriptions": {
+      "combined": "Alle Tags werden gemeinsam in einem Durchlauf konsolidiert. Die Beobachtungen gehören zum vollständigen Tag-Satz; Wissen wird für genau diese Kombination gesammelt.",
+      "shared": "Erinnerungen mit unterschiedlichen Tags werden in einem einzigen globalen Bereich ohne Tags konsolidiert. So können gemeinsame Erkenntnisse über Sitzungsgrenzen hinweg entstehen.",
+      "per_tag": "Für jedes Tag erfolgt eine eigene Konsolidierung. Jedes Tag sammelt unabhängig Beobachtungen aus Erinnerungen; Bereiche für Tag-Kombinationen werden nicht erstellt.",
+      "all_combinations": "Jede nicht leere Teilmenge der Tags wird separat konsolidiert, einschließlich einzelner Tags und ihrer Kombinationen. Drei Tags erzeugen sieben Bereiche und sieben Konsolidierungsdurchläufe.",
+      "custom": "Die zu konsolidierenden Tag-Gruppen gezielt auswählen. Jede Gruppe bildet einen unabhängigen Bereich; unnötige Kombinationen entfallen."
+    },
+    "customHelp": "Jedem Bereich mindestens ein Tag hinzufügen. Dynamische Tags beziehen sich auf die aktuelle Aufgabe, Quelle oder Quellengruppe. Für einen globalen Bereich ohne Tags „Global gemeinsam“ wählen.",
+    "dynamic": {
+      "task": "Aktuelle Aufgabe",
+      "source": "Aktuelle Quelle",
+      "source_group": "Aktuelle Quellengruppe"
+    },
+    "group": "Bereich {{number}}",
+    "removeGroup": "Bereich {{number}} entfernen",
+    "addGroup": "Bereich hinzufügen",
+    "addTag": "Tag hinzufügen",
+    "searchTags": "Tag suchen oder eingeben…",
+    "useTag": "„{{tag}}“ verwenden",
+    "emptyGroup": "Jedem Bereich mindestens ein Tag hinzufügen.",
+    "exponentialWarning": "Die Anzahl der Bereiche wächst exponentiell: n Tags erzeugen 2ⁿ − 1 Bereiche pro Dokument und erhöhen die Verarbeitungszeit und die Kosten.",
+    "fileLimitation": "Beobachtungsbereiche gelten für Text und eingebettete Inhalte. Bei Dateiuploads werden alle Tags gemeinsam verwendet.",
+    "tagsUnavailable": "Die Tags des Erinnerungsspeichers konnten nicht geladen werden. Ein Tag kann weiterhin manuell eingegeben werden."
   },
   "settings": {
     "title": "Einstellungen",

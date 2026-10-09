@@ -461,6 +461,10 @@
         "title": "保留策略",
         "description": "Hindsight 如何处理内容。"
       },
+      "observations": {
+        "title": "觀察範圍",
+        "description": ""
+      },
       "files": {
         "title": "文件類型",
         "description": "摄取哪些类型的文件。"
@@ -595,6 +599,44 @@
       "title": "最近的失敗",
       "empty": "最近沒有失敗"
     }
+  },
+  "observationScope": {
+    "title": "觀察範圍",
+    "rule": "知識歸納範圍",
+    "learnMore": "官方文件",
+    "inherit": "使用全域設定",
+    "inheritHelp": "沿用全域設定中的觀察範圍。",
+    "inheritedRule": "目前規則：{{rule}}。",
+    "rules": {
+      "combined": "完整標籤組合（預設）",
+      "shared": "全域共用",
+      "per_tag": "依個別標籤",
+      "all_combinations": "所有標籤組合",
+      "custom": "自訂"
+    },
+    "descriptions": {
+      "combined": "將全部標籤視為一個範圍，進行一次歸納。產生的觀察結論屬於完整標籤集合，知識依此標籤組合獨立累積。",
+      "shared": "不同標籤的記憶會在同一個無標籤的全域範圍內歸納。適合保留工作階段等來源標籤，同時讓知識跨工作階段共同累積。",
+      "per_tag": "為每個標籤分別歸納，獨立累積帶有該標籤的記憶中的知識。不會產生多個標籤組合的範圍。",
+      "all_combinations": "為標籤的每個非空子集分別歸納，涵蓋個別標籤及各種組合。例如，3 個標籤會產生 7 個範圍，執行 7 次歸納。",
+      "custom": "明確指定需要歸納的標籤群組。每組形成一個獨立範圍，避免處理不需要的標籤組合。"
+    },
+    "customHelp": "每個範圍至少新增一個標籤。動態標籤會隨目前的任務、來源或來源群組自動變化；如需無標籤的全域範圍，請選擇「全域共用」。",
+    "dynamic": {
+      "task": "目前任務",
+      "source": "目前來源",
+      "source_group": "目前來源群組"
+    },
+    "group": "範圍 {{number}}",
+    "removeGroup": "移除範圍 {{number}}",
+    "addGroup": "新增範圍",
+    "addTag": "新增標籤",
+    "searchTags": "搜尋或輸入標籤…",
+    "useTag": "使用「{{tag}}」",
+    "emptyGroup": "請為每個範圍至少新增一個標籤。",
+    "exponentialWarning": "範圍數量呈指數成長：n 個標籤會為每份文件產生 2ⁿ − 1 個範圍，增加處理時間與費用。",
+    "fileLimitation": "觀察範圍設定適用於文字與內嵌內容。檔案上傳使用完整標籤組合。",
+    "tagsUnavailable": "無法載入記憶庫標籤。你仍可手動輸入標籤。"
   },
   "settings": {
     "title": "設定",

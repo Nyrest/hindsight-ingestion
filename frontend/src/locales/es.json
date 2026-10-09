@@ -462,6 +462,10 @@
         "title": "Mantener la estrategia",
         "description": "Cómo procesa Hindsight el contenido."
       },
+      "observations": {
+        "title": "Ámbito de las observaciones",
+        "description": ""
+      },
       "files": {
         "title": "Tipos de archivos",
         "description": "Qué tipos de archivos se ingieren."
@@ -596,6 +600,44 @@
       "title": "Fallos recientes",
       "empty": "Sin fallos recientes"
     }
+  },
+  "observationScope": {
+    "title": "Ámbito de las observaciones",
+    "rule": "Ámbito de consolidación",
+    "learnMore": "Documentación oficial",
+    "inherit": "Usar la configuración global",
+    "inheritHelp": "Usar el ámbito de observaciones definido en la configuración global.",
+    "inheritedRule": "Regla actual: {{rule}}.",
+    "rules": {
+      "combined": "Todas las etiquetas juntas (predeterminado)",
+      "shared": "Global compartido",
+      "per_tag": "Por etiqueta",
+      "all_combinations": "Todas las combinaciones",
+      "custom": "Personalizado"
+    },
+    "descriptions": {
+      "combined": "Consolida una sola vez con todas las etiquetas juntas. Las observaciones pertenecen al conjunto completo de etiquetas y acumulan conocimiento específico de esa combinación.",
+      "shared": "Consolida recuerdos con distintas etiquetas en un único ámbito global sin etiquetas. Útil para acumular conocimiento compartido entre sesiones sin separarlo por sus etiquetas.",
+      "per_tag": "Consolida cada etiqueta por separado. Cada una acumula observaciones independientes a partir de los recuerdos, sin crear ámbitos para combinaciones de etiquetas.",
+      "all_combinations": "Consolida cada subconjunto no vacío de etiquetas, incluidas las etiquetas individuales y sus combinaciones. Tres etiquetas generan siete ámbitos y siete pasadas de consolidación.",
+      "custom": "Elige los grupos exactos de etiquetas que se consolidarán. Cada grupo crea un ámbito independiente y evita combinaciones innecesarias."
+    },
+    "customHelp": "Añade al menos una etiqueta a cada ámbito. Las etiquetas dinámicas se adaptan a la tarea, fuente o grupo de fuentes actual. Para un ámbito global sin etiquetas, elige «Global compartido».",
+    "dynamic": {
+      "task": "Tarea actual",
+      "source": "Fuente actual",
+      "source_group": "Grupo de fuentes actual"
+    },
+    "group": "Ámbito {{number}}",
+    "removeGroup": "Eliminar el ámbito {{number}}",
+    "addGroup": "Añadir ámbito",
+    "addTag": "Añadir etiqueta",
+    "searchTags": "Buscar o introducir una etiqueta…",
+    "useTag": "Usar «{{tag}}»",
+    "emptyGroup": "Añade al menos una etiqueta a cada ámbito.",
+    "exponentialWarning": "El número de ámbitos crece exponencialmente: n etiquetas generan 2ⁿ − 1 ámbitos por documento, lo que aumenta el tiempo de procesamiento y el coste.",
+    "fileLimitation": "Los ámbitos de observaciones se aplican al texto y al contenido integrado. Los archivos subidos usan todas las etiquetas juntas.",
+    "tagsUnavailable": "No se pudieron cargar las etiquetas del banco de memoria. Puedes introducir una etiqueta manualmente."
   },
   "settings": {
     "title": "Configuración",

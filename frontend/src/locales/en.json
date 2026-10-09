@@ -649,14 +649,26 @@
   },
   "observationScope": {
     "title": "Observation scope",
-    "rule": "Rule",
+    "rule": "Consolidation scope",
+    "learnMore": "Official documentation",
+    "inherit": "Use global setting",
+    "inheritHelp": "Follow the observation scope configured in global settings.",
+    "inheritedRule": "Currently: {{rule}}.",
     "rules": {
-      "combined": "Combined",
+      "combined": "Combined (default)",
       "shared": "Shared",
       "per_tag": "Per tag",
       "all_combinations": "All combinations",
       "custom": "Custom"
     },
+    "descriptions": {
+      "combined": "Consolidate once using all tags together. Observations belong to the full tag set, keeping knowledge specific to that combination.",
+      "shared": "Consolidate into one global, untagged scope across memories with different tags. Useful when session tags should not separate shared knowledge.",
+      "per_tag": "Consolidate separately for each tag. Each tag builds independent observations across memories, without creating scopes for tag combinations.",
+      "all_combinations": "Consolidate for every non-empty subset of tags, including individual tags and combinations. Three tags create seven scopes and seven consolidation passes.",
+      "custom": "Choose the exact tag groups to consolidate. Each group creates one independent scope, avoiding combinations you do not need."
+    },
+    "customHelp": "Add at least one tag to each scope. Use dynamic tags to follow the current task, source or source group; choose Shared for a global, untagged scope.",
     "dynamic": {
       "task": "Current task",
       "source": "Current source",
