@@ -1,12 +1,11 @@
-# Default deployment: single container, SQLite on a named volume.
+# Default deployment: GHCR image, SQLite on a named volume.
 #   cp .env.example .env   # then set BASIC_AUTH_PASSWORD and CREDENTIAL_ENCRYPTION_KEY
 #   docker compose up -d
 #
 # gocron is an in-process scheduler: run exactly one replica.
 services:
   hindsight-ingestion:
-    build: .
-    image: hindsight-ingestion:latest
+    image: ghcr.io/nyrest/hindsight-ingestion:latest
     restart: unless-stopped
     environment:
       DB_TYPE: sqlite

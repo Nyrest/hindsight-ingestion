@@ -5,7 +5,9 @@
 
 Sync **Notion, SiYuan, S3, WebDAV, Google Drive, OneDrive and local files** into [Hindsight](https://github.com/vectorize-io/hindsight) memory banks. Self-host with Docker and manage everything from the WebUI.
 
-[Features](#-features) · [Quick start](#-quick-start) · [Sources](#-supported-sources) · [Usage](#-usage) · [Configuration](#-configuration) · [Development](#-development)
+<p align="center">
+  <a href="#-features">Features</a> · <a href="#-quick-start">Quick start</a> · <a href="#-supported-sources">Sources</a> · <a href="#-usage">Usage</a> · <a href="#-configuration">Configuration</a> · <a href="#-development">Development</a>
+</p>
 
 <p align="center">
   <img src="docs/hero.jpg" alt="Hindsight Ingestion task dashboard" width="600">
@@ -29,13 +31,14 @@ You need **Docker with Compose**, an existing **Hindsight instance**, and access
 
 ### 1. Download and configure
 
-```bash
-git clone https://github.com/Nyrest/hindsight-ingestion.git
-cd hindsight-ingestion
-cp .env.example .env
-```
+Create a deployment folder and download the two configuration files:
 
-In PowerShell, use `Copy-Item .env.example .env` for the copy step.
+```bash
+mkdir hindsight-ingestion
+cd hindsight-ingestion
+curl -fLo docker-compose.yml https://raw.githubusercontent.com/Nyrest/hindsight-ingestion/main/docker-compose.yml
+curl -fLo .env https://raw.githubusercontent.com/Nyrest/hindsight-ingestion/main/.env.example
+```
 
 Edit `.env` and fill in:
 
@@ -49,10 +52,10 @@ Keep the encryption key for restarts, upgrades and backups. Losing or changing i
 ### 2. Start the service
 
 ```bash
-docker compose up -d --build
+docker compose up -d
 ```
 
-Open [http://localhost:8080](http://localhost:8080) and sign in. Docker builds the application; no local Go or Bun installation is needed.
+Open [http://localhost:8080](http://localhost:8080) and sign in with `admin` and the password you set.
 
 ### 3. Create your first task
 
@@ -60,6 +63,25 @@ Open [http://localhost:8080](http://localhost:8080) and sign in. Docker builds t
 2. In **Tasks**, choose the source, content to sync and destination bank. Leave the retain strategy empty to use the bank's default.
 3. Choose a schedule and timezone; the default is **Every hour**. Save the task disabled if you want to preview first.
 4. Use **Dry-run** to preview, then **Run now** to sync. Check **Runs** for results and enable the task for scheduled syncs.
+
+The Hindsight URL must be reachable from inside the container. On Docker Desktop, use `http://host.docker.internal:<port>` for Hindsight running on your host; on a shared Docker network, use its service name.
+
+### Updates and logs
+
+To update to the latest stable release, run from the deployment folder:
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+Keep the same `.env` and data volume when updating. Back up both before upgrades; the encryption key is needed to read saved credentials.
+
+To follow service logs:
+
+```bash
+docker compose logs -f --tail=100
+```
 
 ## 🔌 Supported Sources
 
@@ -161,9 +183,9 @@ For these additional variables, edit the Compose service's `environment` section
 
 ### Docker releases
 
-Publishing a GitHub Release builds `linux/amd64` and `linux/arm64` images at `ghcr.io/nyrest/hindsight-ingestion`.
+Published images are available on [GHCR](https://github.com/Nyrest/hindsight-ingestion/pkgs/container/hindsight-ingestion) for `linux/amd64` and `linux/arm64`. Docker automatically selects the matching architecture.
 
-A release tagged `v1.2.3` publishes `v1.2.3`, `1.2.3`, `1.2`, `1` and `latest`. Pre-releases publish their version tags without updating `latest`; `0.x` releases omit the `0` tag.
+The bundled Compose deployment uses `latest`, which tracks the latest stable GitHub Release. Pre-releases do not update `latest`.
 
 ## 🛠️ Development
 
