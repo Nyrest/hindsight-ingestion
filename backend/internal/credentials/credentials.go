@@ -318,10 +318,11 @@ func (s *Service) SaveOAuthToken(ctx context.Context, id string, tok *connectors
 		}
 		exp := tok.Expiry
 		updates := map[string]any{
-			"encrypted_secret": enc,
-			"status":           models.CredentialActive,
-			"status_message":   "",
-			"o_auth_state":     "",
+			"encrypted_secret":    enc,
+			"status":              models.CredentialActive,
+			"status_message":      "",
+			"o_auth_state":        "",
+			"o_auth_redirect_uri": "",
 		}
 		if exp.IsZero() {
 			updates["o_auth_expires_at"] = nil

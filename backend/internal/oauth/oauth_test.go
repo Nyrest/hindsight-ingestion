@@ -90,6 +90,9 @@ func TestRefreshRotationAndInvalidGrant(t *testing.T) {
 	var mode string
 	tokenSrv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
+		if r.Form.Get("redirect_uri") != "" {
+			t.Error("refresh unexpectedly depends on a redirect URI")
+		}
 		w.Header().Set("Content-Type", "application/json")
 		if mode == "invalid" {
 			w.WriteHeader(400)
@@ -131,7 +134,7 @@ func TestRefreshRotationAndInvalidGrant(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	mgr := NewManager(&config.Config{ListenAddr: ":8080"}, db, creds, log)
+	mgr := NewManager(&config.Config{ListenAddr: ":8080", PublicURL: ""}, db, creds, log)
 	sched := &recSched{scheduled: map[string]time.Time{}}
 	mgr.SetScheduler(sched)
 

@@ -86,7 +86,7 @@ func (m *Manager) ProviderConfig(cred connectors.Credential) (*oauth2.Config, er
 }
 
 // Start begins an authorization flow, returning the provider URL.
-func (m *Manager) Start(ctx context.Context, credentialID string) (string, error) {
+func (m *Manager) Start(ctx context.Context, credentialID, redirectURI string) (string, error) {
 	cred, err := m.creds.Load(ctx, credentialID)
 	if err != nil {
 		return "", err
@@ -95,13 +95,19 @@ func (m *Manager) Start(ctx context.Context, credentialID string) (string, error
 	if err != nil {
 		return "", err
 	}
+	if oc.RedirectURL == "" {
+		oc.RedirectURL = redirectURI
+	}
+	if oc.RedirectURL == "" {
+		return "", errors.New("OAuth redirect URI is required")
+	}
 	b := make([]byte, 24)
 	if _, err := rand.Read(b); err != nil {
 		return "", err
 	}
 	state := hex.EncodeToString(b)
 	if err := m.db.WithContext(ctx).Model(&models.Credential{}).Where("id = ?", credentialID).
-		Update("o_auth_state", state).Error; err != nil {
+		Updates(map[string]any{"o_auth_state": state, "o_auth_redirect_uri": oc.RedirectURL}).Error; err != nil {
 		return "", err
 	}
 	opts := []oauth2.AuthCodeOption{oauth2.AccessTypeOffline}
@@ -129,6 +135,9 @@ func (m *Manager) Callback(ctx context.Context, state, code string) (string, err
 	oc, err := m.ProviderConfig(cred)
 	if err != nil {
 		return row.ID, err
+	}
+	if row.OAuthRedirectURI != "" {
+		oc.RedirectURL = row.OAuthRedirectURI
 	}
 	tok, err := oc.Exchange(oauthContext(ctx, cred.Proxy), code)
 	if err != nil {

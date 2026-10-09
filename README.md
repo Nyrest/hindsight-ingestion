@@ -140,7 +140,7 @@ Use `.env` for the bundled Compose deployment. Configure source credentials, tas
 | `BASIC_AUTH_USERNAME` | ✅ | WebUI and API username. Compose default: `admin`. |
 | `BASIC_AUTH_PASSWORD` | ✅ | WebUI and API password. |
 | `CREDENTIAL_ENCRYPTION_KEY` | ✅ | Credential encryption key: 64 hex characters, base64-encoded 32 bytes, or a passphrase of at least 16 characters. |
-| `PUBLIC_URL` | — | Compose default: `http://localhost:8080`. Use your external service URL for OAuth. |
+| `PUBLIC_URL` | — | Empty by default; OAuth uses the current browser origin. Set to use a fixed external URL. |
 | `MAX_CONCURRENT_TASKS` | — | `4`. Maximum number of task runs at the same time. |
 | `LOG_LEVEL` | — | `info`. Also accepts `debug`, `warn` and `error`. |
 | `TZ` | — | `UTC`. Default application timezone. |

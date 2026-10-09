@@ -69,7 +69,7 @@ clears it.
   "fullReconcileIntervalHours": 24,
   "maxFileSizeMB": 100,
   "filePolicy": { "plainText": true, "documents": true, "images": false, "audios": false },
-  "oauthRedirectUri": "http://localhost:8080/api/oauth/callback"   // read-only
+  "oauthRedirectUri": ""   // read-only; empty means use the current browser origin + /api/oauth/callback
 }
 ```
 
@@ -194,6 +194,7 @@ Credential {
 - `POST /api/credentials/:id/oauth/start` → `{ "authUrl": "https://accounts.google.com/…" }` — the UI navigates the
   browser to it; the provider redirects to `/api/oauth/callback`, which then redirects to
   `/credentials?oauth=success&id=…` or `/credentials?oauth=error&message=…`.
+  When `PUBLIC_URL` is empty, the callback uses the request's `Origin` (or its scheme and host if `Origin` is absent). The callback URL is saved for that authorization flow.
 - `POST /api/credentials/:id/refresh` → `Credential` (force OAuth refresh)
 - `POST /api/credentials/:id/browse` body `{ "parentId": "", "kind": "" }` →
 

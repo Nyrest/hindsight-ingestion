@@ -239,7 +239,12 @@ func validateCredential(ctx context.Context, cred connectors.Credential) (string
 }
 
 func (s *Server) oauthStart(w http.ResponseWriter, r *http.Request) {
-	u, err := s.OAuth.Start(r.Context(), r.PathValue("id"))
+	redirectURI, err := s.oauthRedirectURI(r)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "bad_request", err.Error())
+		return
+	}
+	u, err := s.OAuth.Start(r.Context(), r.PathValue("id"), redirectURI)
 	if err != nil {
 		if errors.Is(err, credentials.ErrNotFound) {
 			s.fail(w, err)
@@ -249,6 +254,25 @@ func (s *Server) oauthStart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, oauthStartDTO{u})
+}
+
+func (s *Server) oauthRedirectURI(r *http.Request) (string, error) {
+	if configured := s.Cfg.OAuthRedirectURI(); configured != "" {
+		return configured, nil
+	}
+	origin := r.Header.Get("Origin")
+	if origin == "" {
+		scheme := "http"
+		if r.TLS != nil {
+			scheme = "https"
+		}
+		origin = (&url.URL{Scheme: scheme, Host: r.Host}).String()
+	}
+	u, err := url.Parse(origin)
+	if err != nil || (u.Scheme != "http" && u.Scheme != "https") || u.Host == "" || u.User != nil || u.Path != "" || u.RawQuery != "" || u.Fragment != "" {
+		return "", errors.New("invalid OAuth request origin")
+	}
+	return origin + "/api/oauth/callback", nil
 }
 
 func (s *Server) oauthCallback(w http.ResponseWriter, r *http.Request) {

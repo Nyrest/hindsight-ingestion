@@ -101,15 +101,10 @@ func Load() (*Config, error) {
 
 // OAuthRedirectURI is the callback URL registered with OAuth providers.
 func (c *Config) OAuthRedirectURI() string {
-	base := c.PublicURL
-	if base == "" {
-		port := c.ListenAddr
-		if strings.HasPrefix(port, ":") {
-			port = "localhost" + port
-		}
-		base = "http://" + port
+	if c.PublicURL == "" {
+		return ""
 	}
-	return base + "/api/oauth/callback"
+	return c.PublicURL + "/api/oauth/callback"
 }
 
 // parseKey accepts a 32-byte key encoded as hex (64 chars), base64, or raw

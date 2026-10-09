@@ -32,10 +32,11 @@ type Credential struct {
 	ProxyMode       string `gorm:"size:16;not null;default:global"`
 	ProxyJSON       string `gorm:"type:text"`
 
-	Status         string `gorm:"size:32;not null;default:active"`
-	StatusMessage  string `gorm:"type:text"`
-	OAuthExpiresAt *time.Time
-	OAuthState     string `gorm:"size:128;index"`
+	Status           string `gorm:"size:32;not null;default:active"`
+	StatusMessage    string `gorm:"type:text"`
+	OAuthExpiresAt   *time.Time
+	OAuthState       string `gorm:"size:128;index"`
+	OAuthRedirectURI string `gorm:"type:text"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

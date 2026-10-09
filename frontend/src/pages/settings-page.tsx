@@ -39,6 +39,7 @@ export default function SettingsPage() {
   const { t } = useTranslation();
   const settings = useSettings();
   const tasks = useTasks();
+  const oauthRedirectUri = settings.data?.oauthRedirectUri || `${window.location.origin}/api/oauth/callback`;
   const update = useUpdateSettings();
   const form = useForm<Values>({
     resolver: zodResolver(schema),
@@ -233,8 +234,8 @@ export default function SettingsPage() {
             <CardContent>
               <FieldRow label={t("settings.oauth.redirectUri")} htmlFor="s-redirect">
                 <div className="flex gap-2">
-                  <Input id="s-redirect" readOnly value={settings.data?.oauthRedirectUri ?? ""} className="font-mono text-xs sm:text-xs" onFocus={(e) => e.currentTarget.select()} />
-                  <CopyButton value={settings.data?.oauthRedirectUri ?? ""} />
+                  <Input id="s-redirect" readOnly value={oauthRedirectUri} className="font-mono text-xs sm:text-xs" onFocus={(e) => e.currentTarget.select()} />
+                  <CopyButton value={oauthRedirectUri} />
                 </div>
               </FieldRow>
             </CardContent>
