@@ -122,6 +122,15 @@ export function localInputToIso(value: string, timeZone: string): string {
   return isoToLocalInput(iso, timeZone) === value ? iso : "";
 }
 
+export function formatTimeZone(timeZone: string, at: Date = new Date()): string {
+  if (timeZone === "UTC") return timeZone;
+  const offset = new Intl.DateTimeFormat("en", {
+    timeZone,
+    timeZoneName: "shortOffset",
+  }).formatToParts(at).find((part) => part.type === "timeZoneName")?.value.replace("GMT", "UTC");
+  return `${timeZone} (${offset === "UTC" ? "UTC+0" : offset})`;
+}
+
 export function getTimeZones(): string[] {
   try {
     const intl = Intl as unknown as { supportedValuesOf?: (key: string) => string[] };

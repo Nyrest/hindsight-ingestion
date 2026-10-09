@@ -11,7 +11,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { browserTimeZone, getTimeZones } from "@/lib/format";
+import { browserTimeZone, formatTimeZone, getTimeZones } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 export function TimezoneCombobox({
@@ -46,7 +46,7 @@ export function TimezoneCombobox({
           aria-invalid={invalid}
           className="w-full justify-between font-normal"
         >
-          <span className="truncate">{value || t("schedule.selectTimezone")}</span>
+          <span className="truncate">{value ? formatTimeZone(value) : t("schedule.selectTimezone")}</span>
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -73,10 +73,11 @@ export function TimezoneCombobox({
 }
 
 function TzItem({ tz, value, onSelect }: { tz: string; value: string; onSelect: (tz: string) => void }) {
+  const label = formatTimeZone(tz);
   return (
-    <CommandItem value={tz} onSelect={() => onSelect(tz)}>
+    <CommandItem value={tz} keywords={[label]} onSelect={() => onSelect(tz)}>
       <Check className={cn("size-4", value === tz ? "opacity-100" : "opacity-0")} />
-      {tz}
+      {label}
     </CommandItem>
   );
 }
