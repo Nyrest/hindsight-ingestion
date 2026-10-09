@@ -7,6 +7,10 @@ Sync **Notion, SiYuan, S3, WebDAV, Google Drive, OneDrive and local files** into
 
 [Features](#-features) · [Quick start](#-quick-start) · [Sources](#-supported-sources) · [Usage](#-usage) · [Configuration](#-configuration) · [Development](#-development)
 
+<p align="center">
+  <img src="docs/hero.jpg" alt="Hindsight Ingestion task dashboard" width="600">
+</p>
+
 ## ✨ Features
 
 - ⚡ **Smart incremental sync** — Native change feeds, sync tokens and revision tracking detect what changed. Upload new or updated content and skip the rest.
