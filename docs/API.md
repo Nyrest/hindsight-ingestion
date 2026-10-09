@@ -63,6 +63,7 @@ clears it.
 ```json
 {
   "proxy": { "type": "default", "address": "", "username": "", "password": "" },
+  "timezone": "UTC",
   "observationScope": { "rule": "combined", "scopes": [] },
   "incrementalSyncEnabled": true,
   "fullReconcileIntervalHours": 24,
@@ -237,7 +238,6 @@ Task {
   "filePolicyMode": "global",      // global | override
   "filePolicy": { "plainText": true, "documents": true, "images": false, "audios": false },
   "cronExpression": "*/15 * * * *",
-  "cronTimezone": "UTC",
   "configRevision": 3,
   "policyRevision": 1,
   "reconcileRequired": false,
@@ -264,7 +264,7 @@ Task {
 - `POST /api/tasks/:id/full-reingest` → same as run, re-retains every matching item
 - `POST /api/tasks/:id/cancel` → `202` cancels the active run (`409` if not running)
 - `GET /api/tasks/:id/runs?limit=50&offset=0` → `{ "items": Run[], "total": 10 }`
-- `POST /api/tasks/validate-cron` body `{ "cronExpression": "…", "cronTimezone": "…" }` →
+- `POST /api/tasks/validate-cron` body `{ "cronExpression": "…" }` →
   `{ "valid": true, "error": "", "nextRuns": ["…", "…", "…"] }`
 
 ## Runs

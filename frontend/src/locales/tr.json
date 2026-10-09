@@ -34,7 +34,7 @@
   },
   "common": {
     "actions": "Eylemler",
-    "backTo": "{{page}}'e geri dön",
+    "backTo": "{{page}} sayfasına dön",
     "cancel": "İptal",
     "close": "Kapat",
     "confirm": "Onayla",
@@ -46,8 +46,8 @@
     "create": "Oluştur",
     "delete": "Sil",
     "edit": "Düzenle",
-    "false": "Yanlış",
-    "true": "Doğru",
+    "false": "Hayır",
+    "true": "Evet",
     "loadFailed": "Veriler yüklenemedi",
     "loading": "Yükleniyor…",
     "moreActions": "Diğer işlemler",
@@ -55,7 +55,7 @@
     "next": "Sonraki sayfa",
     "previous": "Önceki sayfa",
     "none": "Yok",
-    "pageOf": "{{pages}}'nun {{page}} sayfası",
+    "pageOf": "Sayfa {{page}} / {{pages}}",
     "refresh": "Yenile",
     "retry": "Yeniden dene",
     "save": "Kaydet",
@@ -89,7 +89,7 @@
   "chips": {
     "placeholder": "Yazın ve Enter'a basın",
     "duplicate": "\"{{value}}\" zaten eklenmiş",
-    "remove": "{{value}}'yu kaldırın",
+    "remove": "Kaldır: {{value}}",
     "automatic": "Otomatik olarak eklendi"
   },
   "kv": {
@@ -99,14 +99,14 @@
     "remove": "Satırı kaldır"
   },
   "secret": {
-    "keepHint": "Bir değer saklanır. Maskeyi korumak için değiştirmeden bırakın veya değiştirmek için yeni bir değer yazın.",
+    "keepHint": "Kayıtlı bir değer var. Mevcut değeri korumak için maskeyi değiştirmeyin; değiştirmek için yeni bir değer girin.",
     "clear": "Saklanan değeri temizle"
   },
   "headers": {
     "title": "Özel başlıklar",
     "help": "Bu sağlayıcıya her istekle birlikte gönderilir. Bağlayıcı kimlik doğrulama üstbilgileri önceliklidir.",
     "mode": "Editör modu",
-    "ui": "kullanıcı arayüzü",
+    "ui": "Form",
     "json": "JSON",
     "name": "Başlık adı",
     "value": "Değer",
@@ -125,13 +125,13 @@
   "browse": {
     "button": "Göz at…",
     "title": "Göz at",
-    "titleFor": "{{label}}'yu seçin",
+    "titleFor": "Seçim: {{label}}",
     "description": "Klasörlere gidin ve bir öğe seçin.",
     "breadcrumbs": "Konum",
     "root": "Kök",
     "empty": "Burada hiçbir şey yok",
     "hint": "Bir öğe seçin veya okla bir klasörü açın",
-    "open": "{{name}}'yu açın",
+    "open": "Aç: {{name}}",
     "select": "Seç",
     "selected": "Seçildi",
     "kinds": {
@@ -152,9 +152,9 @@
   },
   "capabilities": {
     "incremental": {
-      "high_water_mark": "Yüksek su işareti",
+      "high_water_mark": "Değişiklik zamanı imleci",
       "delta_token": "Delta belirteci",
-      "sync_token": "Jeton senkronizasyonu",
+      "sync_token": "Eşitleme belirteci",
       "inventory": "Envanter farkı"
     },
     "deletion": {
@@ -173,17 +173,17 @@
     "createTitle": "Yeni kimlik bilgisi",
     "createDescription": "Bir sağlayıcı seçin ve bağlantı ayrıntılarını girin.",
     "editTitle": "Kimlik bilgisini düzenle",
-    "editDescription": "Sırlar asla gösterilmez. Maskelenmiş değerleri korumak için değiştirmeden bırakın.",
+    "editDescription": "Kayıtlı anahtarlar maskelenmiş olarak gösterilir. Kayıtlı değerleri korumak için maskelenmiş değerleri değiştirmeyin.",
     "createInline": "Yeni bir kimlik bilgisi oluştur",
-    "namePlaceholder": "örneğin {{type}}'yu çalıştırın",
+    "namePlaceholder": "ör. {{type}} — İş",
     "pick": "Bir kimlik bilgisi seçin",
     "noneOfType": "Henüz {{type}} kimlik bilgisi yok",
     "notActiveWarning": "Bu kimlik bilgisi şu anda “{{status}}”dur. Sorun giderilene kadar çalıştırmalar başarısız olabilir.",
     "oauthHint": "Kaydettikten sonra “Bağlan”a tıklayın ve erişim izni vermek için yönergeleri izleyin.",
-    "usedByCount_one": "{{count}} görevi",
-    "usedByCount_other": "{{count}} görevleri",
+    "usedByCount_one": "{{count}} görev",
+    "usedByCount_other": "{{count}} görev",
     "fields": {
-      "type": "sağlayıcı",
+      "type": "Sağlayıcı",
       "name": "İsim"
     },
     "columns": {
@@ -194,10 +194,10 @@
       "oauth": "OAuth"
     },
     "actions": {
-      "test": "testi",
+      "test": "Bağlantıyı test et",
       "connect": "Bağlan",
       "reconnect": "Yeniden bağlan",
-      "refresh": "Jetonu yenile"
+      "refresh": "Belirteci yenile"
     },
     "empty": {
       "title": "Henüz kimlik bilgisi yok",
@@ -213,7 +213,7 @@
       "startFailed": "OAuth başlatılamadı",
       "connected": "Bağlı",
       "notConnected": "Bağlı değil",
-      "expires": "Tokenın süresi doluyor {{when}}"
+      "expires": "Belirtecin süresi {{when}} dolacak"
     },
     "toast": {
       "created": "Kimlik bilgisi oluşturuldu",
@@ -221,14 +221,14 @@
       "deleted": "Kimlik bilgisi silindi",
       "deleteFailed": "Kimlik bilgisi silinemedi",
       "inUse": "Kimlik bilgisi kullanılıyor",
-      "refreshed": "Jeton yenilendi",
-      "refreshFailed": "Jeton yenileme başarısız oldu"
+      "refreshed": "Belirteç yenilendi",
+      "refreshFailed": "Belirteç yenilenemedi"
     },
     "delete": {
       "title": "“{{name}}” silinsin mi?",
       "description": "Bu, kimlik bilgilerini ve saklanan sırlarını kalıcı olarak kaldırır.",
-      "inUse_one": "Bu kimlik bilgisi {{count}} görevi tarafından kullanılır. Önce o görevi kaldırın veya değiştirin.",
-      "inUse_other": "Bu kimlik bilgisi {{count}} görevleri tarafından kullanılır. Önce bu görevleri kaldırın veya değiştirin."
+      "inUse_one": "Bu kimlik bilgisi {{count}} görevde kullanılıyor. Önce görevi silin veya kullandığı kimlik bilgisini değiştirin.",
+      "inUse_other": "Bu kimlik bilgisi {{count}} görevde kullanılıyor. Önce görevleri silin veya kullandıkları kimlik bilgisini değiştirin."
     }
   },
   "filters": {
@@ -242,8 +242,8 @@
     "simple": "Basit",
     "advanced": "Gelişmiş",
     "advancedQuery": "Sorgu",
-    "advancedHint": "Ham sağlayıcı sorgusu sözdizimi.",
-    "driveHint": "Google Drive sorgu sözdizimi. Örnek: mimeType = 'application/pdf' ve modifiedTime > '2024-01-01T00:00:00'. Çöp kutusundaki dosyalar her zaman hariç tutulur.",
+    "advancedHint": "Sağlayıcının sorgu sözdizimini doğrudan kullanın.",
+    "driveHint": "Google Drive sorgu sözdizimi. Örnek: mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'. Çöp kutusundaki dosyalar her zaman hariç tutulur.",
     "noFields": "Bu kaynak filtreleri desteklemiyor.",
     "selectValues": "Değerleri seç…",
     "valuePlaceholder": "Değer",
@@ -278,7 +278,7 @@
     "mode": {
       "global": "Genel ayarları kullan",
       "globalHelp": "Ayarlar'da belirlenen dosya türlerini kullanır.",
-      "override": "Geçersiz kıl",
+      "override": "Özelleştir",
       "overrideHelp": "Yalnızca bu görev için dosya türlerini seçin."
     }
   },
@@ -298,7 +298,7 @@
     "lockNotice": "Hedef, ilk başarılı çalıştırmanın ardından salt okunur hale gelir."
   },
   "retain": {
-    "label": "Stratejiyi koru",
+    "label": "İşleme stratejisi",
     "bankDefault": "Bellek bankasının varsayılan stratejisi",
     "bankDefaultNamed": "Bellek bankasının varsayılan stratejisi ({{name}})",
     "help": "Hindsight’ın bellek bankasına gönderilen içeriği nasıl işleyeceğini belirler. Varsayılan seçenek, bu bankada yapılandırılan stratejiyi kullanır.",
@@ -324,16 +324,16 @@
   },
   "schedule": {
     "cron": "Cron ifadesi",
-    "cronHelp": "Standart 5 alanlı cron: dakika saat gün ay hafta içi",
+    "cronHelp": "Standart 5 alanlı Cron: dakika, saat, ayın günü, ay, haftanın günü",
     "timezone": "Saat dilimi",
     "selectTimezone": "Saat dilimini seçin",
     "searchTimezone": "Saat dilimlerini arayın…",
     "noTimezone": "Saat dilimi bulunamadı",
     "suggested": "Önerilen",
-    "allTimezones": "Tüm zaman dilimleri",
+    "allTimezones": "Tüm saat dilimleri",
     "nextRuns": "Sonraki çalıştırmalar",
     "enterCron": "Yaklaşan çalıştırmaları önizlemek için bir cron ifadesi girin.",
-    "invalid": "Geçersiz program",
+    "invalid": "Geçersiz zamanlama",
     "previewUnavailable": "Önizleme kullanılamıyor",
     "presets": {
       "every15m": "Her 15 dakikada bir",
@@ -345,18 +345,18 @@
   },
   "tasks": {
     "title": "Görevler",
-    "description": "Her görev, ayarlanan zamanlamaya göre bir kaynağı Hindsight bellek alanıyla eşitler.",
+    "description": "Her görev, ayarlanan zamanlamaya göre bir kaynağı Hindsight bellek bankasıyla eşitler.",
     "new": "Yeni görev",
     "neverRun": "Henüz çalıştırılmadı",
     "reconcileRequired": "Tam eşitleme gerekli",
-    "itemCount_one": "{{count}} öğesi",
-    "itemCount_other": "{{count}} öğeleri",
+    "itemCount_one": "{{count}} öğe",
+    "itemCount_other": "{{count}} öğe",
     "columns": {
       "enabled": "Açık",
       "name": "İsim",
       "source": "Kaynak",
       "destination": "Hedef",
-      "schedule": "Program",
+      "schedule": "Zamanlama",
       "lastRun": "Son çalıştırma",
       "nextRun": "Sonraki çalıştırma",
       "status": "Durum"
@@ -369,12 +369,13 @@
     "actions": {
       "runNow": "Şimdi çalıştır",
       "fullReconcile": "Tümünü eşitle",
-      "fullReingest": "Tam yeniden alım",
+      "fullReingest": "Tümünü yeniden içe aktar",
       "cancel": "Çalıştırmayı iptal et",
       "enable": "Etkinleştir",
       "disable": "Devre dışı bırak",
       "viewRuns": "Çalıştırma geçmişini görüntüle",
-      "dryRun": "Deneme çalıştırması"
+      "dryRun": "Deneme çalıştırması",
+      "deleteDocuments": "Belgeleri sil"
     },
     "empty": {
       "title": "Henüz görev yok",
@@ -388,7 +389,7 @@
         "success": "Tam eşitleme başlatıldı"
       },
       "fullReingest": {
-        "success": "Tam yeniden alım başlatıldı"
+        "success": "Tüm içeriklerin yeniden içe aktarılması başlatıldı"
       },
       "alreadyRunning": "Görev zaten çalışıyor",
       "failed": "Görev başlatılamadı"
@@ -404,26 +405,34 @@
       "updateFailed": "Görev güncellenemedi",
       "deleted": "Görev silindi",
       "deleteFailed": "Görev silinemedi",
-      "deleteRunning": "Görev çalışıyor; silmeden önce iptal edin"
+      "deleteRunning": "Görev meşgul. Geçerli işlem tamamlandıktan sonra yeniden deneyin."
     },
     "delete": {
       "title": "“{{name}}” silinsin mi?",
-      "description": "Görev, çalıştırma geçmişi ve senkronizasyon durumu kaldırılacak. Zaten Hindsight'da bulunan belgeler silinmez."
+      "description": "Görevi, çalıştırma geçmişini ve eşitleme durumunu siler. Varsayılan olarak Hindsight belgeleri korunur.",
+      "alsoDeleteDocuments": "Hindsight belgelerini de sil",
+      "documentsHelp": "Seçildiğinde, bu görevin etiketiyle işaretlenmiş belgeler ve ilişkili anılar da Hindsight’tan silinir."
     },
     "reingest": {
-      "title": "\"{{name}}\" için her şey yeniden alınsın mı?",
-      "description": "Eşleşen her öğe, değiştirilmese bile Hindsight'da yeniden tutulacaktır. Bu uzun zaman alabilir ve Hindsight işleminin tamamlanmasını gerektirebilir."
+      "title": "“{{name}}” için tüm içerikler yeniden içe aktarılsın mı?",
+      "description": "Kriterlere uyan tüm içerikler, değişmemiş olanlar da dahil, Hindsight’a yeniden gönderilir. Bu işlem uzun sürebilir ve ek işleme kaynakları kullanabilir."
+    },
+    "clearDocuments": {
+      "title": "“{{name}}” görevinin belgeleri silinsin mi?",
+      "description": "Bu görevin etiketiyle işaretlenmiş belgeleri ve ilişkili anıları Hindsight’tan siler. Görev duraklatılır. Kaynak içerik etkilenmez.",
+      "success": "{{count}} belge silindi",
+      "failed": "Belgeler silinemedi"
     }
   },
   "taskEditor": {
     "newTitle": "Yeni görev",
     "create": "Görev oluştur",
     "namePlaceholder": "örneğin Notion → Kişisel",
-    "enabledHelp": "Devre dışı bırakılan görevler senkronizasyon durumlarını korur ancak planlanmaz.",
+    "enabledHelp": "Devre dışı bırakılan görevler eşitleme durumlarını korur ancak planlanmaz.",
     "notFound": "Görev bulunamadı",
     "nextRun": "Sonraki çalıştırma: {{when}}",
-    "itemCount_one": "{{count}} öğesi senkronize edildi",
-    "itemCount_other": "{{count}} öğeleri senkronize edildi",
+    "itemCount_one": "{{count}} öğe eşitlendi",
+    "itemCount_other": "{{count}} öğe eşitlendi",
     "recentRuns": "Son çalıştırmalar",
     "saveBeforeRun": "Çalıştırmadan önce değişikliklerinizi kaydedin",
     "saveError": "Görev kaydedilemedi",
@@ -438,7 +447,7 @@
       "sourceTypeLocked": "Kaynak türü oluşturulduktan sonra değiştirilemez. Farklı bir kaynak kullanmak için yeni bir görev oluşturun.",
       "filtersReconcile": "Filtreleri değiştirmek görevi tam eşitleme için işaretler. Filtrelere artık uymayan öğeler Hindsight’tan silinir.",
       "filesReconcile": "Dosya türlerini değiştirmek tam eşitlemeyi başlatır. Hariç tutulan dosyalar Hindsight’tan silinir.",
-      "policyRevision": "Tutma stratejisini, etiketleri veya meta verileri değiştirmek, eşleşen tüm öğeleri bir sonraki çalıştırmada yeniden korur."
+      "policyRevision": "İşleme stratejisi, etiketler veya meta veriler değiştirildiğinde, kriterlere uyan tüm içerikler sonraki çalıştırmada Hindsight’a yeniden gönderilir."
     },
     "sections": {
       "general": {
@@ -458,8 +467,8 @@
         "description": "İçeriği alan Hindsight bellek bankası."
       },
       "retain": {
-        "title": "Stratejiyi koru",
-        "description": "Hindsight'nun içeriği nasıl işlediği."
+        "title": "İşleme stratejisi",
+        "description": "Hindsight’ın içeriği nasıl işleyeceği."
       },
       "observations": {
         "title": "Gözlem kapsamı",
@@ -482,8 +491,8 @@
         "description": "Her belgeye eklenen anahtar/değer meta verileri."
       },
       "schedule": {
-        "title": "Program",
-        "description": "Görev otomatik olarak çalıştırıldığında."
+        "title": "Zamanlama",
+        "description": "Görevin otomatik olarak ne zaman çalışacağını ayarlayın."
       }
     },
     "toast": {
@@ -509,13 +518,13 @@
       "counters": "Sonuçlar"
     },
     "trigger": {
-      "scheduled": "planlanmış",
+      "scheduled": "Zamanlanmış",
       "manual": "Elle"
     },
     "mode": {
       "incremental": "Artımlı",
       "full": "Tam",
-      "reingest": "Tümünü yeniden al"
+      "reingest": "Tümünü yeniden içe aktar"
     },
     "counters": {
       "discoveredCount": "Bulunan",
@@ -566,21 +575,21 @@
   },
   "dashboard": {
     "title": "Kontrol Paneli",
-    "description": "Senkronizasyon etkinliğine genel bakış.",
+    "description": "Eşitleme etkinliğine genel bakış.",
     "stats": {
       "enabledTasks": "Etkinleştirilen görevler",
       "ofTotal": "toplam {{total}}",
       "running": "Çalışıyor",
       "runs24h_one": "Son 24 saatte {{count}} çalıştırma",
       "runs24h_other": "Son 24 saatte {{count}} çalıştırma",
-      "items": "Öğeler senkronize edildi",
+      "items": "Eşitlenen öğeler",
       "itemsSub": "tüm görevler genelinde",
-      "failures24h": "Arızalar (24 saat)",
+      "failures24h": "Başarısız (24 saat)",
       "needsAttention": "Dikkat edilmesi gerekiyor",
       "allGood": "Her şey yolunda"
     },
     "getStarted": {
-      "title": "İlk senkronizasyonunuzu ayarlayın",
+      "title": "İlk eşitlemenizi ayarlayın",
       "description": "Bir kaynak ve Hindsight için kimlik bilgilerini ekleyin, ardından bir görev oluşturun.",
       "credentials": "Kimlik bilgileri ekle"
     },
@@ -640,14 +649,14 @@
   },
   "settings": {
     "title": "Ayarlar",
-    "description": "Küresel senkronizasyon davranışı.",
+    "description": "Tüm görevler için genel eşitleme ayarları.",
     "units": {
       "hours": "saat"
     },
     "sync": {
-      "title": "Senkronizasyon",
+      "title": "Eşitleme",
       "description": "Tüm görevlere uygulanır.",
-      "incremental": "Artımlı senkronizasyon",
+      "incremental": "Artımlı eşitleme",
       "incrementalHelp": "Mümkün olduğunda sağlayıcıya özgü değişiklik izlemeyi kullanın. Kapalıyken her çalıştırma tam bir envanter gerçekleştirir (değişmeyen içerik yine de yeniden yüklenmez).",
       "reconcileInterval": "Tam eşitleme aralığı",
       "reconcileIntervalHelp": "Son tam eşitlemenin üzerinden bu aralıktan daha uzun süre geçtiyse, sonraki çalıştırmada tam tarama yapılır.",
@@ -656,16 +665,20 @@
     },
     "files": {
       "title": "Genel dosya türleri",
-      "description": "Görevler için varsayılan dosya türleri \"Global takip et\" olarak ayarlanmıştır. Hariç tutulan dosyalar mutabakat sırasında kaldırılır."
+      "description": "Genel ayarları kullanan görevler için varsayılan dosya türleri. Hariç tutulan içerikler tam eşitleme sırasında Hindsight’tan silinir."
     },
     "oauth": {
       "title": "OAuth",
-      "description": "Bu yönlendirmeyi URI, Google Drive ve OneDrive kimlik bilgileri için Google Cloud ve Microsoft Entra (Azure) uygulama yapılandırmanıza kaydedin.",
-      "redirectUri": "URI'yu yönlendir"
+      "description": "Google Drive ve OneDrive bağlantısı için bu yönlendirme URI’sini Google Cloud ve Microsoft Entra (Azure) uygulama ayarlarına kaydedin.",
+      "redirectUri": "Yönlendirme URI’si"
     },
     "toast": {
       "saved": "Ayarlar kaydedildi",
       "failed": "Ayarlar kaydedilemedi"
+    },
+    "timezone": {
+      "help": "Tüm görevler bu saat dilimini kullanır. Varsayılan değer sunucunun TZ ayarıdır; TZ ayarlanmamışsa UTC kullanılır.",
+      "invalid": "Geçerli bir saat dilimi seçin."
     }
   },
   "notFound": {
@@ -688,9 +701,9 @@
     "reason": "Sebep",
     "actions": {
       "create": "Oluştur",
-      "update": "Güncelleme",
+      "update": "Güncelle",
       "delete": "Sil",
-      "unchanged": "değişmedi",
+      "unchanged": "Değişmedi",
       "skip": "Atla",
       "fail": "Başarısız"
     }
@@ -766,5 +779,21 @@
     "hindsightApiKeyHelp": "Bearer belirteci olarak gönderilir. Örnek kimlik doğrulama istemiyorsa boş bırakın.",
     "syncCollectionHelp": "Sunucu destekliyorsa sync-collection (RFC 6578) kullanılır.",
     "fileSystem": "Dosya sistemi"
+  },
+  "proxy": {
+    "title": "Proxy",
+    "global": "Genel ayarları kullan",
+    "types": {
+      "default": "Ortam değişkenlerini kullan",
+      "none": "Proxy kullanma",
+      "http": "HTTP",
+      "https": "HTTPS",
+      "socks5": "SOCKS5"
+    },
+    "defaultHelp": "Sunucunun ortam değişkenlerinde tanımlanan proxy ayarlarını kullanır.",
+    "address": "Adres",
+    "username": "Kullanıcı adı (isteğe bağlı)",
+    "password": "Parola (isteğe bağlı)",
+    "invalidAddress": "Proxy adresini host:port biçiminde girin. Port numarası 1–65535 arasında olmalıdır."
   }
 }

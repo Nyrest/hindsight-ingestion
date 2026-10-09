@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router";
 import { RunStatusBadge } from "@/components/status-badge";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useTimezone } from "@/features/settings/api";
 import { formatDateTime, formatDuration, formatRelative, runDuration } from "@/lib/format";
 import { useNow } from "@/lib/hooks";
 import type { Run } from "@/lib/types";
@@ -31,6 +32,7 @@ export function ModeLabel({ mode }: { mode: string }) {
 
 /** Responsive runs table (cards on mobile). */
 export function RunsTable({ runs, showTask = true }: { runs: Run[]; showTask?: boolean }) {
+  const timezone = useTimezone();
   const { t } = useTranslation();
   const now = useNow(5_000);
   const navigate = useNavigate();
@@ -73,7 +75,7 @@ export function RunsTable({ runs, showTask = true }: { runs: Run[]; showTask?: b
                 <TableCell>
                   <ModeLabel mode={r.syncMode} />
                 </TableCell>
-                <TableCell className="text-sm whitespace-nowrap" title={formatDateTime(r.startedAt)}>
+                <TableCell className="text-sm whitespace-nowrap" title={formatDateTime(r.startedAt, timezone)}>
                   {r.startedAt ? formatRelative(r.startedAt, now) : t("runs.notStarted")}
                 </TableCell>
                 <TableCell className="text-sm tabular-nums">
@@ -93,7 +95,7 @@ export function RunsTable({ runs, showTask = true }: { runs: Run[]; showTask?: b
           <Link key={r.id} to={`/runs/${r.id}`}>
             <Card className="gap-2 p-3.5 transition-colors hover:bg-accent/40">
               <div className="flex items-center justify-between gap-2">
-                <span className="truncate text-sm font-medium">{showTask ? r.taskName || r.taskId : formatDateTime(r.startedAt)}</span>
+                <span className="truncate text-sm font-medium">{showTask ? r.taskName || r.taskId : formatDateTime(r.startedAt, timezone)}</span>
                 <RunStatusBadge status={r.status} />
               </div>
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">

@@ -1328,9 +1328,13 @@
           },
           "proxy": {
             "$ref": "#/components/schemas/Config"
+          },
+          "timezone": {
+            "type": "string"
           }
         },
         "required": [
+          "timezone",
           "proxy",
           "observationScope",
           "inlineMultimodalEnabled",
@@ -1369,9 +1373,6 @@
             "type": "string"
           },
           "cronExpression": {
-            "type": "string"
-          },
-          "cronTimezone": {
             "type": "string"
           },
           "customMetadata": {
@@ -1509,7 +1510,6 @@
           "inlineMultimodalMode",
           "inlineMultimodalEnabled",
           "cronExpression",
-          "cronTimezone",
           "configRevision",
           "policyRevision",
           "reconcileRequired",
@@ -2557,6 +2557,9 @@
                   },
                   "proxy": {
                     "$ref": "#/components/schemas/Config"
+                  },
+                  "timezone": {
+                    "type": "string"
                   }
                 },
                 "type": "object"
@@ -2646,9 +2649,6 @@
               "schema": {
                 "properties": {
                   "cronExpression": {
-                    "type": "string"
-                  },
-                  "cronTimezone": {
                     "type": "string"
                   },
                   "customMetadata": {
@@ -2779,14 +2779,10 @@
                 "properties": {
                   "cronExpression": {
                     "type": "string"
-                  },
-                  "cronTimezone": {
-                    "type": "string"
                   }
                 },
                 "required": [
-                  "cronExpression",
-                  "cronTimezone"
+                  "cronExpression"
                 ],
                 "type": "object"
               }
@@ -2938,9 +2934,6 @@
               "schema": {
                 "properties": {
                   "cronExpression": {
-                    "type": "string"
-                  },
-                  "cronTimezone": {
                     "type": "string"
                   },
                   "customMetadata": {

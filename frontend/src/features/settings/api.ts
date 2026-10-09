@@ -7,6 +7,10 @@ export function useSettings() {
   return useQuery({ queryKey: qk.settings, queryFn: api.getSettings });
 }
 
+export function useTimezone() {
+  return useSettings().data?.timezone ?? "UTC";
+}
+
 export function useUpdateSettings() {
   const qc = useQueryClient();
   return useMutation({
@@ -14,6 +18,8 @@ export function useUpdateSettings() {
     onSuccess: (s) => {
       qc.setQueryData(qk.settings, s);
       void qc.invalidateQueries({ queryKey: qk.tasks });
+      void qc.invalidateQueries({ queryKey: ["cron"] });
+      void qc.invalidateQueries({ queryKey: qk.dashboard });
     },
   });
 }

@@ -33,7 +33,7 @@
     "system": "시스템"
   },
   "common": {
-    "actions": "작업",
+    "actions": "동작",
     "backTo": "{{page}}로 돌아가기",
     "cancel": "취소",
     "close": "닫기",
@@ -46,16 +46,16 @@
     "create": "만들기",
     "delete": "삭제",
     "edit": "편집",
-    "false": "거짓",
-    "true": "참",
-    "loadFailed": "데이터를 로드할 수 없습니다.",
-    "loading": "로드 중…",
+    "false": "아니요",
+    "true": "예",
+    "loadFailed": "데이터를 불러올 수 없습니다.",
+    "loading": "불러오는 중…",
     "moreActions": "추가 작업",
     "new": "새로 만들기",
     "next": "다음 페이지",
     "previous": "이전 페이지",
     "none": "없음",
-    "pageOf": "{{pages}}의 {{page}} 페이지",
+    "pageOf": "{{page}} / {{pages}} 페이지",
     "refresh": "새로고침",
     "retry": "재시도",
     "save": "저장",
@@ -69,13 +69,13 @@
     "integer": "정수여야 합니다.",
     "min1": "1 이상이어야 합니다.",
     "url": "유효한 URL여야 합니다.",
-    "tooLong": "너무 길다"
+    "tooLong": "입력한 내용이 너무 깁니다."
   },
   "runStatus": {
-    "pending": "보류 중",
+    "pending": "대기 중",
     "running": "실행 중",
-    "waiting_operations": "작업을 기다리는 중",
-    "succeeded": "성공함",
+    "waiting_operations": "비동기 작업 완료 대기 중",
+    "succeeded": "성공",
     "failed": "실패",
     "interrupted": "중단됨",
     "cancelled": "취소됨"
@@ -93,23 +93,23 @@
     "automatic": "자동으로 추가됨"
   },
   "kv": {
-    "key": "열쇠",
-    "value": "가치",
+    "key": "키",
+    "value": "값",
     "add": "추가",
     "remove": "행 삭제"
   },
   "secret": {
-    "keepHint": "값이 저장됩니다. 유지하려면 마스크를 변경하지 않고 그대로 두고, 바꾸려면 새 값을 입력하세요.",
+    "keepHint": "값이 저장되어 있습니다. 기존 값을 유지하려면 마스킹된 값을 그대로 두고, 바꾸려면 새 값을 입력하세요.",
     "clear": "저장된 값 지우기"
   },
   "headers": {
     "title": "맞춤 헤더",
     "help": "이 공급자에게 요청할 때마다 전송됩니다. 커넥터 인증 헤더가 우선적으로 적용됩니다.",
     "mode": "에디터 모드",
-    "ui": "UI",
+    "ui": "양식",
     "json": "JSON",
     "name": "헤더 이름",
-    "value": "가치",
+    "value": "값",
     "valuePlaceholder": "헤더 값",
     "add": "헤더 추가",
     "empty": "맞춤 헤더 없음",
@@ -117,7 +117,7 @@
     "errors": {
       "duplicate": "중복된 헤더 이름 \"{{name}}\"(이름은 대/소문자를 구분하지 않음)",
       "invalidJson": "잘못된 JSON: {{detail}}",
-      "notObject": "JSON는 {\"Header\": \"Value\"}와 같은 객체여야 합니다.",
+      "notObject": "JSON은 {\"Header\": \"Value\"}와 같은 객체여야 합니다.",
       "nonString": "\"{{name}}\"의 값은 문자열이어야 합니다.",
       "emptyName": "헤더 이름은 비워둘 수 없습니다."
     }
@@ -138,7 +138,7 @@
       "folder": "폴더",
       "file": "파일",
       "data_source": "데이터 소스",
-      "notebook": "노트북",
+      "notebook": "노트 모음",
       "bucket": "버킷",
       "bank": "메모리 뱅크",
       "drive": "드라이브",
@@ -148,14 +148,14 @@
     "drives": "드라이브",
     "buckets": "버킷",
     "dataSources": "데이터 소스",
-    "notebooks": "노트북"
+    "notebooks": "노트 모음"
   },
   "capabilities": {
     "incremental": {
-      "high_water_mark": "최고 수위 표시",
+      "high_water_mark": "변경 시각 기준",
       "delta_token": "델타 토큰",
       "sync_token": "동기화 토큰",
-      "inventory": "재고 차이"
+      "inventory": "항목 목록 비교"
     },
     "deletion": {
       "full_reconcile": "전체 대조 시 삭제",
@@ -169,19 +169,19 @@
   "credentials": {
     "title": "자격 증명",
     "description": "소스 및 Hindsight 대상에 대한 재사용 가능한 연결 세부 정보입니다.",
-    "new": "새 자격증명",
-    "createTitle": "새 자격증명",
+    "new": "새 자격 증명",
+    "createTitle": "새 자격 증명",
     "createDescription": "공급자를 선택하고 연결 세부정보를 입력하세요.",
-    "editTitle": "자격증명 편집",
-    "editDescription": "비밀은 표시되지 않습니다. 마스크된 값을 그대로 유지하려면 변경하지 마세요.",
+    "editTitle": "자격 증명 편집",
+    "editDescription": "저장된 키는 마스킹되어 표시됩니다. 기존 값을 유지하려면 마스킹된 값을 그대로 두세요.",
     "createInline": "새 자격 증명 만들기",
-    "namePlaceholder": "예를 들어 {{type}} 작업",
+    "namePlaceholder": "예: {{type}} — 업무용",
     "pick": "자격 증명을 선택하세요",
     "noneOfType": "아직 {{type}} 자격 증명이 없습니다.",
     "notActiveWarning": "이 자격 증명은 현재 \"{{status}}\"입니다. 문제가 해결될 때까지 실행이 실패할 수 있습니다.",
     "oauthHint": "저장한 뒤 ‘연결’을 클릭하고 안내에 따라 액세스를 승인하세요.",
-    "usedByCount_one": "{{count}} 작업",
-    "usedByCount_other": "{{count}} 작업",
+    "usedByCount_one": "작업 {{count}}개",
+    "usedByCount_other": "작업 {{count}}개",
     "fields": {
       "type": "공급자",
       "name": "이름"
@@ -195,12 +195,12 @@
     },
     "actions": {
       "test": "테스트",
-      "connect": "연결하다",
+      "connect": "연결",
       "reconnect": "다시 연결",
-      "refresh": "새로고침 토큰"
+      "refresh": "토큰 갱신"
     },
     "empty": {
-      "title": "아직 자격증명 없음",
+      "title": "아직 자격 증명 없음",
       "description": "작업을 생성하려면 소스(예: Notion)에 대한 자격 증명과 Hindsight 인스턴스에 대한 자격 증명을 추가하세요."
     },
     "test": {
@@ -213,40 +213,40 @@
       "startFailed": "OAuth를 시작할 수 없습니다.",
       "connected": "연결됨",
       "notConnected": "연결되지 않음",
-      "expires": "토큰이 {{when}} 만료됨"
+      "expires": "토큰 만료: {{when}}"
     },
     "toast": {
       "created": "자격 증명이 생성되었습니다.",
       "updated": "자격 증명이 업데이트되었습니다.",
-      "deleted": "사용자 인증 정보가 삭제되었습니다.",
-      "deleteFailed": "자격증명을 삭제할 수 없습니다.",
-      "inUse": "자격증명을 사용 중입니다.",
-      "refreshed": "토큰 새로고침",
-      "refreshFailed": "토큰 새로고침 실패"
+      "deleted": "자격 증명이 삭제되었습니다.",
+      "deleteFailed": "자격 증명을 삭제할 수 없습니다.",
+      "inUse": "자격 증명을 사용 중입니다.",
+      "refreshed": "토큰이 갱신되었습니다.",
+      "refreshFailed": "토큰을 갱신할 수 없습니다."
     },
     "delete": {
       "title": "'{{name}}'를 삭제하시겠습니까?",
       "description": "그러면 자격 증명과 저장된 비밀이 영구적으로 제거됩니다.",
-      "inUse_one": "이 자격 증명은 {{count}} 작업에서 사용됩니다. 먼저 해당 작업을 제거하거나 변경하세요.",
-      "inUse_other": "이 자격 증명은 {{count}} 작업에서 사용됩니다. 먼저 해당 작업을 제거하거나 변경하세요."
+      "inUse_one": "작업 {{count}}개에서 이 자격 증명을 사용 중입니다. 먼저 해당 작업을 삭제하거나 작업의 자격 증명을 변경하세요.",
+      "inUse_other": "작업 {{count}}개에서 이 자격 증명을 사용 중입니다. 먼저 해당 작업을 삭제하거나 작업의 자격 증명을 변경하세요."
     }
   },
   "filters": {
     "add": "필터 추가",
     "remove": "필터 제거",
-    "where": "어디에",
+    "where": "조건",
     "and": "그리고",
     "field": "필드",
-    "operator": "운영자",
+    "operator": "연산자",
     "mode": "필터 모드",
     "simple": "단순",
     "advanced": "고급",
     "advancedQuery": "쿼리",
-    "advancedHint": "원시 공급자 쿼리 구문.",
-    "driveHint": "Google Drive 검색 문법 예: mimeType = 'application/pdf', modifiedTime > '2024-01-01T00:00:00'. 휴지통의 파일은 항상 제외됩니다.",
+    "advancedHint": "공급자의 쿼리 구문을 직접 입력합니다.",
+    "driveHint": "Google Drive 검색 문법 예: mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'. 휴지통의 파일은 항상 제외됩니다.",
     "noFields": "이 소스는 필터를 지원하지 않습니다.",
     "selectValues": "값 선택…",
-    "valuePlaceholder": "가치",
+    "valuePlaceholder": "값",
     "valuesPlaceholder": "값을 입력하고 Enter를 누르세요.",
     "empty": {
       "title": "필터 없음",
@@ -298,7 +298,7 @@
     "lockNotice": "첫 번째 성공적인 실행 후에 대상은 읽기 전용이 됩니다."
   },
   "retain": {
-    "label": "유지 전략",
+    "label": "콘텐츠 처리 전략",
     "bankDefault": "메모리 뱅크 기본 전략",
     "bankDefaultNamed": "메모리 뱅크 기본 전략({{name}})",
     "help": "메모리 뱅크로 보내는 콘텐츠를 Hindsight가 처리하는 방식을 정합니다. 기본값을 선택하면 해당 메모리 뱅크에 설정된 전략을 사용합니다.",
@@ -317,14 +317,14 @@
     "empty": "맞춤 메타데이터 없음",
     "reservedHint": "_ingestion_으로 시작하는 키는 시스템 출처 필드용으로 예약되어 있습니다.",
     "errors": {
-      "emptyKey": "열쇠는 필수입니다",
+      "emptyKey": "키를 입력하세요.",
       "reserved": "_ingestion_으로 시작하는 키는 예약되어 있습니다.",
       "duplicate": "중복 키"
     }
   },
   "schedule": {
     "cron": "Cron 표현식",
-    "cronHelp": "표준 5필드 크론: 분 시 일 월 주중",
+    "cronHelp": "표준 5필드 Cron: 분, 시, 일, 월, 요일",
     "timezone": "시간대",
     "selectTimezone": "시간대 선택",
     "searchTimezone": "시간대 검색…",
@@ -349,13 +349,13 @@
     "new": "새 작업",
     "neverRun": "아직 실행되지 않음",
     "reconcileRequired": "전체 동기화 필요",
-    "itemCount_one": "{{count}} 항목",
-    "itemCount_other": "{{count}} 항목",
+    "itemCount_one": "항목 {{count}}개",
+    "itemCount_other": "항목 {{count}}개",
     "columns": {
-      "enabled": "켜기",
+      "enabled": "활성화",
       "name": "이름",
       "source": "소스",
-      "destination": "목적지",
+      "destination": "대상",
       "schedule": "일정",
       "lastRun": "마지막 실행",
       "nextRun": "다음 실행",
@@ -363,22 +363,23 @@
     },
     "status": {
       "idle": "유휴",
-      "disabled": "장애인",
+      "disabled": "비활성화됨",
       "reconcilePending": "전체 동기화 대기 중"
     },
     "actions": {
       "runNow": "지금 실행",
       "fullReconcile": "전체 동기화",
-      "fullReingest": "전체 재흡수",
+      "fullReingest": "전체 다시 가져오기",
       "cancel": "실행 취소",
       "enable": "활성화",
       "disable": "비활성화",
       "viewRuns": "실행 기록 보기",
-      "dryRun": "시험 실행"
+      "dryRun": "시험 실행",
+      "deleteDocuments": "문서 삭제"
     },
     "empty": {
-      "title": "아직 할 일이 없습니다.",
-      "description": "Hindsight에 소스 동기화를 시작하는 작업을 만듭니다."
+      "title": "아직 작업이 없습니다.",
+      "description": "작업을 만들어 원본 콘텐츠를 Hindsight에 동기화하세요."
     },
     "trigger": {
       "run": {
@@ -388,7 +389,7 @@
         "success": "전체 동기화를 시작했습니다"
       },
       "fullReingest": {
-        "success": "전체 재수집이 시작되었습니다."
+        "success": "전체 콘텐츠를 다시 가져오기 시작했습니다."
       },
       "alreadyRunning": "작업이 이미 실행 중입니다.",
       "failed": "실행을 시작할 수 없습니다."
@@ -401,18 +402,26 @@
     "toast": {
       "enabled": "작업 활성화됨",
       "disabled": "작업이 비활성화되었습니다.",
-      "updateFailed": "할 일을 업데이트할 수 없습니다.",
+      "updateFailed": "작업을 업데이트할 수 없습니다.",
       "deleted": "작업이 삭제되었습니다.",
-      "deleteFailed": "할 일을 삭제할 수 없습니다.",
-      "deleteRunning": "작업이 실행 중입니다. 삭제하기 전에 취소하세요"
+      "deleteFailed": "작업을 삭제할 수 없습니다.",
+      "deleteRunning": "작업이 처리 중입니다. 현재 작업이 완료된 후 다시 시도하세요."
     },
     "delete": {
       "title": "'{{name}}'를 삭제하시겠습니까?",
-      "description": "작업, 실행 기록 및 동기화 상태가 제거됩니다. Hindsight에 이미 있는 문서는 삭제되지 않습니다."
+      "description": "작업, 실행 기록 및 동기화 상태를 삭제합니다. 기본적으로 Hindsight의 문서는 유지됩니다.",
+      "alsoDeleteDocuments": "Hindsight의 문서도 삭제",
+      "documentsHelp": "선택하면 이 작업의 태그가 지정된 Hindsight 문서와 관련 기억도 삭제됩니다."
     },
     "reingest": {
-      "title": "“{{name}}”에 대한 모든 것을 다시 수집하시겠습니까?",
-      "description": "일치하는 모든 항목은 변경되지 않더라도 Hindsight에 다시 유지됩니다. 이 작업은 시간이 오래 걸리고 Hindsight 처리를 소모할 수 있습니다."
+      "title": "“{{name}}”의 전체 콘텐츠를 다시 가져올까요?",
+      "description": "조건에 맞는 모든 콘텐츠를 변경 여부와 관계없이 Hindsight로 다시 전송합니다. 시간이 오래 걸리고 추가 처리 리소스를 사용할 수 있습니다."
+    },
+    "clearDocuments": {
+      "title": "“{{name}}”의 문서를 삭제할까요?",
+      "description": "이 작업의 태그가 지정된 Hindsight 문서와 관련 기억을 삭제하고 작업을 일시 중지합니다. 원본 콘텐츠에는 영향을 주지 않습니다.",
+      "success": "문서 {{count}}개 삭제됨",
+      "failed": "문서를 삭제할 수 없습니다"
     }
   },
   "taskEditor": {
@@ -422,8 +431,8 @@
     "enabledHelp": "비활성화된 작업은 동기화 상태를 유지하지만 예약되지는 않습니다.",
     "notFound": "작업을 찾을 수 없습니다",
     "nextRun": "다음 실행 시간: {{when}}",
-    "itemCount_one": "{{count}} 항목이 동기화되었습니다.",
-    "itemCount_other": "{{count}} 항목이 동기화되었습니다.",
+    "itemCount_one": "항목 {{count}}개 동기화됨",
+    "itemCount_other": "항목 {{count}}개 동기화됨",
     "recentRuns": "최근 실행",
     "saveBeforeRun": "실행하기 전에 변경 사항을 저장하세요.",
     "saveError": "작업을 저장할 수 없습니다.",
@@ -434,11 +443,11 @@
       "enabled": "활성화됨"
     },
     "hints": {
-      "sourceReset": "소스 자격 증명이나 루트(버킷, 폴더, 데이터베이스, 노트북 등)를 변경하면 증분 커서가 초기화되고 전체 항목을 다시 스캔해 동기화 기준을 새로 설정합니다.",
+      "sourceReset": "소스 자격 증명이나 루트(버킷, 폴더, 데이터베이스, 노트 모음 등)를 변경하면 증분 커서가 초기화되고 전체 항목을 다시 스캔해 동기화 기준을 새로 설정합니다.",
       "sourceTypeLocked": "생성 후에는 소스 유형을 변경할 수 없습니다. 다른 소스를 사용하려면 새 작업을 만드세요.",
       "filtersReconcile": "필터를 변경하면 전체 동기화가 예약됩니다. 이때 필터에 더 이상 맞지 않는 항목은 Hindsight에서 삭제됩니다.",
       "filesReconcile": "파일 형식을 변경하면 전체 동기화가 실행됩니다. 제외된 파일은 Hindsight에서 삭제됩니다.",
-      "policyRevision": "보존 전략, 태그 또는 메타데이터를 변경하면 다음 실행 시 일치하는 모든 항목이 다시 유지됩니다."
+      "policyRevision": "처리 전략, 태그 또는 메타데이터를 변경하면 다음 실행 시 조건에 맞는 모든 콘텐츠를 Hindsight로 다시 전송합니다."
     },
     "sections": {
       "general": {
@@ -454,11 +463,11 @@
         "description": "동기화되는 항목을 제한합니다."
       },
       "destination": {
-        "title": "목적지",
+        "title": "대상",
         "description": "콘텐츠를 받는 Hindsight 메모리 뱅크."
       },
       "retain": {
-        "title": "유지 전략",
+        "title": "콘텐츠 처리 전략",
         "description": "Hindsight가 콘텐츠를 처리하는 방법."
       },
       "observations": {
@@ -467,7 +476,7 @@
       },
       "files": {
         "title": "파일 형식",
-        "description": "어떤 종류의 파일이 수집됩니까?"
+        "description": "동기화할 파일 형식을 선택합니다."
       },
       "inline": {
         "title": "인라인 멀티모달 콘텐츠",
@@ -483,14 +492,14 @@
       },
       "schedule": {
         "title": "일정",
-        "description": "작업이 자동으로 실행되는 경우."
+        "description": "작업이 자동으로 실행될 시간을 설정합니다."
       }
     },
     "toast": {
       "created": "작업이 생성되었습니다.",
       "updated": "작업이 저장되었습니다",
       "saveFailed": "작업을 저장할 수 없습니다.",
-      "conflict": "갈등"
+      "conflict": "변경 사항 충돌"
     }
   },
   "runs": {
@@ -505,7 +514,7 @@
       "trigger": "실행 방식",
       "mode": "실행 모드",
       "started": "시작 시간",
-      "duration": "기간",
+      "duration": "소요 시간",
       "counters": "결과"
     },
     "trigger": {
@@ -515,7 +524,7 @@
     "mode": {
       "incremental": "증분",
       "full": "전체",
-      "reingest": "전체 다시 수집"
+      "reingest": "전체 다시 가져오기"
     },
     "counters": {
       "discoveredCount": "발견",
@@ -523,7 +532,7 @@
       "updatedCount": "업데이트됨",
       "deletedCount": "삭제됨",
       "unchangedCount": "변경되지 않음",
-      "skippedCount": "건너뛰었습니다.",
+      "skippedCount": "건너뜀",
       "failedCount": "실패"
     },
     "filters": {
@@ -569,15 +578,15 @@
     "description": "동기화 활동 개요.",
     "stats": {
       "enabledTasks": "활성화된 작업",
-      "ofTotal": "{{total}} 총계 중",
+      "ofTotal": "총 {{total}}개",
       "running": "실행 중",
       "runs24h_one": "최근 24시간 동안 {{count}}회 실행",
       "runs24h_other": "최근 24시간 동안 {{count}}회 실행",
       "items": "동기화된 항목",
-      "itemsSub": "모든 작업에 걸쳐",
+      "itemsSub": "전체 작업 합계",
       "failures24h": "실패(24시간)",
       "needsAttention": "주의가 필요함",
-      "allGood": "다 좋아"
+      "allGood": "문제 없음"
     },
     "getStarted": {
       "title": "첫 번째 동기화 설정",
@@ -585,7 +594,7 @@
       "credentials": "자격 증명 추가"
     },
     "reauth": {
-      "title": "자격증명을 다시 연결해야 합니다."
+      "title": "자격 증명을 다시 연결해야 합니다."
     },
     "running": {
       "title": "현재 실행 중",
@@ -648,7 +657,7 @@
       "title": "동기화",
       "description": "모든 작업에 적용됩니다.",
       "incremental": "증분 동기화",
-      "incrementalHelp": "가능한 경우 공급자 기본 변경 내용 추적을 사용합니다. 끄면 실행될 때마다 전체 인벤토리가 수행됩니다(변경되지 않은 콘텐츠는 여전히 다시 업로드되지 않음).",
+      "incrementalHelp": "지원되는 경우 공급자의 변경 추적 기능을 사용합니다. 끄면 매번 전체 콘텐츠를 스캔하지만 변경되지 않은 콘텐츠는 다시 업로드하지 않습니다.",
       "reconcileInterval": "전체 동기화 간격",
       "reconcileIntervalHelp": "마지막 전체 동기화 후 이 간격보다 오래 지나면 다음 작업에서 전체 스캔을 수행합니다.",
       "maxFileSize": "최대 파일 크기",
@@ -656,16 +665,20 @@
     },
     "files": {
       "title": "전역 파일 형식",
-      "description": "\"글로벌 팔로우\"로 설정된 작업의 기본 파일 형식입니다. 제외된 파일은 조정 중에 제거됩니다."
+      "description": "전역 설정을 사용하는 작업에 적용할 기본 파일 형식입니다. 제외된 콘텐츠는 전체 동기화 시 Hindsight에서 삭제됩니다."
     },
     "oauth": {
       "title": "OAuth",
-      "description": "Google Drive 및 OneDrive 자격 증명에 대한 Google Cloud 및 Microsoft Entra(Azure) 앱 구성에서 이 리디렉션 URI를 등록합니다.",
-      "redirectUri": "URI 리디렉션"
+      "description": "Google Drive와 OneDrive를 연결하려면 Google Cloud 및 Microsoft Entra(Azure)의 앱 설정에 이 리디렉션 URI를 등록하세요.",
+      "redirectUri": "리디렉션 URI"
     },
     "toast": {
       "saved": "설정이 저장되었습니다.",
       "failed": "설정을 저장할 수 없습니다."
+    },
+    "timezone": {
+      "help": "모든 작업에 적용됩니다. 기본값은 서버의 TZ 설정이며, 설정이 없으면 UTC를 사용합니다.",
+      "invalid": "유효한 시간대를 선택하세요."
     }
   },
   "notFound": {
@@ -684,7 +697,7 @@
     "incomplete_other": "스캔 미완료({{count}}개 항목). 누락된 항목은 삭제 대상으로 표시되지 않습니다.",
     "truncated": "처음 100개 항목을 표시합니다. 전체 항목 수를 기준으로 집계합니다.",
     "file": "소스 항목",
-    "action": "액션",
+    "action": "동작",
     "reason": "이유",
     "actions": {
       "create": "만들기",
@@ -729,7 +742,7 @@
     "baseUrl": "기본 URL",
     "instanceId": "인스턴스 ID",
     "apiToken": "API 토큰",
-    "notebook": "노트북",
+    "notebook": "노트 모음",
     "pathPrefix": "경로 접두사",
     "bucket": "버킷",
     "prefix": "접두사",
@@ -762,9 +775,25 @@
     "tenantHelp": "common, organizations, consumers 또는 테넌트 ID를 입력하세요.",
     "oneDriveHelp": "개인 OneDrive를 사용하려면 비워 두세요.",
     "siYuanPathHelp": "사람이 읽을 수 있는 경로가 이 접두사로 시작하는 문서만 포함합니다.",
-    "siYuanNotebookHelp": "비워 두면 열린 노트북을 모두 동기화합니다.",
+    "siYuanNotebookHelp": "비워 두면 열려 있는 모든 노트 모음을 동기화합니다.",
     "hindsightApiKeyHelp": "Bearer 토큰으로 전송됩니다. 인스턴스에서 인증을 사용하지 않으면 비워 두세요.",
     "syncCollectionHelp": "서버에서 지원하면 sync-collection(RFC 6578)을 사용합니다.",
     "fileSystem": "파일 시스템"
+  },
+  "proxy": {
+    "title": "프록시",
+    "global": "전역 설정 사용",
+    "types": {
+      "default": "환경 변수 사용",
+      "none": "프록시 사용 안 함",
+      "http": "HTTP",
+      "https": "HTTPS",
+      "socks5": "SOCKS5"
+    },
+    "defaultHelp": "서버 환경 변수에 지정된 프록시 설정을 사용합니다.",
+    "address": "주소",
+    "username": "사용자 이름(선택 사항)",
+    "password": "비밀번호(선택 사항)",
+    "invalidAddress": "프록시 주소를 host:port 형식으로 입력하세요. 포트 번호는 1~65535여야 합니다."
   }
 }

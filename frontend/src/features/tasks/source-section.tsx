@@ -10,27 +10,6 @@ import { providerCopy } from "@/lib/provider-copy";
 import { cn } from "@/lib/utils";
 import { CredentialPicker } from "./credential-picker";
 
-export function CapabilityBadges({ source }: { source: SourceSpec }) {
-  const { t } = useTranslation();
-  const c = source.capabilities;
-  const badges: string[] = [
-    t(`capabilities.incremental.${c.incrementalMode}`, { defaultValue: c.incrementalMode }),
-    t(`capabilities.deletion.${c.deletionMode}`, { defaultValue: c.deletionMode }),
-  ];
-  if (c.supportsFiles) badges.push(t("capabilities.files"));
-  if (c.supportsOAuth) badges.push(t("capabilities.oauth"));
-  if (c.supportsAdvancedFilter) badges.push(t("capabilities.advancedFilter"));
-  return (
-    <div className="flex flex-wrap gap-1">
-      {badges.map((b) => (
-        <span key={b} className="rounded border bg-background px-1.5 py-px text-[10px] font-medium text-muted-foreground">
-          {b}
-        </span>
-      ))}
-    </div>
-  );
-}
-
 export function SourceTypePicker({
   sources,
   value,
@@ -47,7 +26,7 @@ export function SourceTypePicker({
     return (
       <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
-          <Skeleton key={i} className="h-20" />
+          <Skeleton key={i} className="h-16" />
         ))}
       </div>
     );
@@ -64,7 +43,7 @@ export function SourceTypePicker({
             aria-checked={active}
             onClick={() => !active && onChange(s.type)}
             className={cn(
-              "flex flex-col gap-2 rounded-lg border p-3 text-left transition-colors",
+              "rounded-lg border p-3 text-left transition-colors",
               active ? "border-primary bg-primary/5 ring-1 ring-primary" : "hover:bg-accent/50",
             )}
           >
@@ -72,7 +51,6 @@ export function SourceTypePicker({
               <TypeIcon type={s.type} boxed />
               <span className="text-sm font-medium">{providerCopy(s.name, t)}</span>
             </span>
-            <CapabilityBadges source={s} />
           </button>
         );
       })}

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { useTimezone } from "@/features/settings/api";
 import { isoToLocalInput, localInputToIso } from "@/lib/format";
 import { providerCopy } from "@/lib/provider-copy";
 import type { FilterFieldSpec, FilterOperator, FilterRule, FilterValue } from "@/lib/types";
@@ -199,6 +200,7 @@ function ValueControl({
   invalid: boolean;
 }) {
   const { t } = useTranslation();
+  const timezone = useTimezone();
   const multi = isMultiOperator(rule.operator);
   const type = spec?.type ?? "string";
 
@@ -299,8 +301,9 @@ function ValueControl({
         type="datetime-local"
         className="bg-background"
         aria-invalid={invalid}
-        value={typeof rule.value === "string" ? isoToLocalInput(rule.value) : ""}
-        onChange={(e) => onChange(localInputToIso(e.target.value))}
+        title={timezone}
+        value={typeof rule.value === "string" ? isoToLocalInput(rule.value, timezone) : ""}
+        onChange={(e) => onChange(localInputToIso(e.target.value, timezone))}
       />
     );
   }

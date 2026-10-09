@@ -33,7 +33,6 @@ type cancelDTO struct {
 }
 type cronBody struct {
 	CronExpression string `json:"cronExpression"`
-	CronTimezone   string `json:"cronTimezone"`
 }
 type cronDTO struct {
 	Valid    bool     `json:"valid"`

@@ -3,11 +3,11 @@ import { useTranslation } from "react-i18next";
 import { FieldRow } from "@/components/field-row";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useTimezone } from "@/features/settings/api";
 import { describeCron, formatDateTime, formatRelative } from "@/lib/format";
 import { useDebounced, useNow } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 import { useValidateCron } from "./api";
-import { TimezoneCombobox } from "./timezone-combobox";
 
 const CRON_PRESETS = [
   { key: "every15m", expr: "*/15 * * * *" },
@@ -19,24 +19,18 @@ const CRON_PRESETS = [
 
 export function ScheduleFields({
   cron,
-  timezone,
   onCronChange,
-  onTimezoneChange,
   cronError,
-  timezoneError,
 }: {
   cron: string;
-  timezone: string;
   onCronChange: (v: string) => void;
-  onTimezoneChange: (v: string) => void;
   cronError?: string;
-  timezoneError?: string;
 }) {
   const { t } = useTranslation();
+  const timezone = useTimezone();
   const now = useNow(30_000);
   const debouncedCron = useDebounced(cron.trim(), 450);
-  const debouncedTz = useDebounced(timezone, 450);
-  const validation = useValidateCron(debouncedCron, debouncedTz || "UTC");
+  const validation = useValidateCron(debouncedCron, timezone);
   const description = describeCron(cron);
   const pending = cron.trim() !== debouncedCron || validation.isFetching;
   const serverError = validation.data && !validation.data.valid ? validation.data.error : null;
@@ -59,33 +53,28 @@ export function ScheduleFields({
         ))}
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <FieldRow
-          label={t("schedule.cron")}
-          htmlFor="task-cron"
-          required
-          error={cronError ?? serverError ?? undefined}
-          help={description ?? t("schedule.cronHelp")}
-        >
-          <Input
-            id="task-cron"
-            value={cron}
-            onChange={(e) => onCronChange(e.target.value)}
-            placeholder="*/15 * * * *"
-            spellCheck={false}
-            aria-invalid={!!(cronError || serverError)}
-            className="font-mono"
-          />
-        </FieldRow>
-        <FieldRow label={t("schedule.timezone")} htmlFor="task-tz" required error={timezoneError}>
-          <TimezoneCombobox id="task-tz" value={timezone} onChange={onTimezoneChange} invalid={!!timezoneError} />
-        </FieldRow>
-      </div>
+      <FieldRow
+        label={t("schedule.cron")}
+        htmlFor="task-cron"
+        required
+        error={cronError ?? (serverError ? t("schedule.invalid") : undefined)}
+        help={description ?? t("schedule.cronHelp")}
+      >
+        <Input
+          id="task-cron"
+          value={cron}
+          onChange={(e) => onCronChange(e.target.value)}
+          placeholder="*/15 * * * *"
+          spellCheck={false}
+          aria-invalid={!!(cronError || serverError)}
+          className="font-mono"
+        />
+      </FieldRow>
 
       <div className="rounded-md border bg-muted/30 px-3 py-2.5">
         <div className="mb-1.5 flex items-center gap-2 text-xs font-medium text-muted-foreground">
           <CalendarClock className="size-3.5" />
-          {t("schedule.nextRuns")}
+          {t("schedule.nextRuns")} ({timezone})
           {pending && debouncedCron && <Loader2 className="size-3 animate-spin" />}
         </div>
         {!cron.trim() ? (
@@ -99,7 +88,7 @@ export function ScheduleFields({
           <ul className="space-y-0.5 text-sm">
             {validation.data.nextRuns.slice(0, 3).map((r) => (
               <li key={r} className="flex flex-wrap items-baseline justify-between gap-x-3">
-                <span className="font-mono text-xs">{formatDateTime(r, timezone || undefined)}</span>
+                <span className="font-mono text-xs">{formatDateTime(r, timezone)}</span>
                 <span className="text-xs text-muted-foreground">{formatRelative(r, now)}</span>
               </li>
             ))}

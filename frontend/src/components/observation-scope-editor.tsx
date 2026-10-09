@@ -129,13 +129,13 @@ function ScopeTagPicker({
           className="w-[min(22rem,calc(100vw-2rem))] p-0"
           align="start"
         >
-          <Command shouldFilter={false}>
+          <Command shouldFilter={false} label={t("observationScope.searchTags")}>
             <CommandInput
               value={search}
               onValueChange={setSearch}
               placeholder={t("observationScope.searchTags")}
             />
-            <CommandList>
+            <CommandList label={t("observationScope.addTag")}>
               {visible.map((tag) => (
                 <CommandItem
                   key={`${tag.kind}:${tag.value}`}
@@ -248,7 +248,7 @@ export function ObservationScopeEditor({
           }}
         >
           <SelectTrigger id={id} className="w-full" aria-invalid={!!error}
-            aria-describedby={`${id}-help${error ? ` ${id}-error` : ""}`}>
+            aria-describedby={error ? `${id}-error` : undefined}>
             <SelectValue>{selected?.label}</SelectValue>
           </SelectTrigger>
           <SelectContent position="popper" align="start"
@@ -271,9 +271,6 @@ export function ObservationScopeEditor({
             </SelectGroup>
           </SelectContent>
         </Select>
-        <p id={`${id}-help`} className="text-xs leading-relaxed text-muted-foreground">
-          {selected?.description}
-        </p>
         {error && <p id={`${id}-error`} role="alert" className="text-sm font-medium text-destructive">{error}</p>}
       </FieldRow>
       {effective?.rule === "all_combinations" && (

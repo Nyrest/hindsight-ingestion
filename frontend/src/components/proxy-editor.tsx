@@ -61,11 +61,6 @@ export function ProxyEditor({
           </SelectContent>
         </Select>
       </FieldRow>
-      {!inherited && value.type === "default" && (
-        <p className="text-sm text-muted-foreground">
-          {t("proxy.defaultHelp")}
-        </p>
-      )}
       {manual && (
         <>
           <FieldRow

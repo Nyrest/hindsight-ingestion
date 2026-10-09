@@ -234,7 +234,7 @@ export function TaskEditor({ task }: { task?: Task }) {
           else if (k.startsWith("sourceFilter")) setRuleErrorsFromServer(k, msg);
           else if (k.startsWith("customMetadata")) form.setError("metadataRows", { message: msg });
           else if (k === "sourceFilter.advancedQuery") form.setError("advancedQuery", { message: msg });
-          else if (k in values) form.setError(k as keyof TaskFormValues, { message: msg });
+          else if (k in values) form.setError(k as keyof TaskFormValues, { message: k === "cronExpression" ? "schedule.invalid" : msg });
           else unknown.push(`${k}: ${msg}`);
         }
         setConfigErrors(cfg);
@@ -399,7 +399,7 @@ export function TaskEditor({ task }: { task?: Task }) {
           )}
 
           {/* General */}
-          <EditorSection id="general" icon={Settings2} title={t("taskEditor.sections.general.title")} description={t("taskEditor.sections.general.description")}>
+          <EditorSection id="general" icon={Settings2} title={t("taskEditor.sections.general.title")}>
             <FieldRow label={t("taskEditor.fields.name")} htmlFor="task-name" required error={errText(errors.name?.message)}>
               <Input id="task-name" placeholder={t("taskEditor.namePlaceholder")} aria-invalid={!!errors.name} {...register("name")} />
             </FieldRow>
@@ -408,10 +408,7 @@ export function TaskEditor({ task }: { task?: Task }) {
               name="enabled"
               render={({ field }) => (
                 <label htmlFor="task-enabled" className="flex items-center justify-between gap-4 rounded-md border px-3 py-2.5">
-                  <span>
-                    <span className="block text-sm font-medium">{t("taskEditor.fields.enabled")}</span>
-                    <span className="block text-xs text-muted-foreground">{t("taskEditor.enabledHelp")}</span>
-                  </span>
+                  <span className="text-sm font-medium">{t("taskEditor.fields.enabled")}</span>
                   <Switch id="task-enabled" checked={field.value} onCheckedChange={field.onChange} />
                 </label>
               )}
@@ -419,16 +416,13 @@ export function TaskEditor({ task }: { task?: Task }) {
           </EditorSection>
 
           {/* Source */}
-          <EditorSection id="source" icon={Database} title={t("taskEditor.sections.source.title")} description={t("taskEditor.sections.source.description")}>
+          <EditorSection id="source" icon={Database} title={t("taskEditor.sections.source.title")}>
             {editing && <Hint tone="warning">{t("taskEditor.hints.sourceReset")}</Hint>}
             <FieldRow label={t("source.type")} required error={errText(errors.sourceType?.message)}>
               {editing ? (
                 <div className="flex items-center gap-3 rounded-md border px-3 py-2.5">
                   <TypeIcon type={sourceType} boxed />
-                  <div className="min-w-0 flex-1 space-y-1">
-                    <div className="text-sm font-medium">{providerCopy(typeName(connectors.data, sourceType), t)}</div>
-                    {source && <SourceCapabilityLine sourceType={sourceType} />}
-                  </div>
+                  <span className="min-w-0 flex-1 text-sm font-medium">{providerCopy(typeName(connectors.data, sourceType), t)}</span>
                 </div>
               ) : (
                 <SourceTypePicker
@@ -477,7 +471,6 @@ export function TaskEditor({ task }: { task?: Task }) {
             id="filters"
             icon={Filter}
             title={t("taskEditor.sections.filters.title")}
-            description={t("taskEditor.sections.filters.description")}
             actions={
               source?.capabilities.supportsAdvancedFilter ? (
                 <Segmented
@@ -527,7 +520,7 @@ export function TaskEditor({ task }: { task?: Task }) {
           </EditorSection>
 
           {/* Destination */}
-          <EditorSection id="destination" icon={Brain} title={t("taskEditor.sections.destination.title")} description={t("taskEditor.sections.destination.description")}>
+          <EditorSection id="destination" icon={Brain} title={t("taskEditor.sections.destination.title")}>
             {locked ? (
               <>
                 <Hint tone="locked">{t("destination.locked")}</Hint>
@@ -583,7 +576,7 @@ export function TaskEditor({ task }: { task?: Task }) {
           </EditorSection>
 
           {/* Retain strategy */}
-          <EditorSection id="retain" icon={Sparkles} title={t("taskEditor.sections.retain.title")} description={t("taskEditor.sections.retain.description")}>
+          <EditorSection id="retain" icon={Sparkles} title={t("taskEditor.sections.retain.title")}>
             {editing && <Hint>{t("taskEditor.hints.policyRevision")}</Hint>}
             <FieldRow label={t("retain.label")} htmlFor="task-retain" error={errText(errors.retainStrategy?.message)}>
               <Controller
@@ -700,7 +693,7 @@ export function TaskEditor({ task }: { task?: Task }) {
           )}
 
           {/* Tags */}
-          <EditorSection id="tags" icon={Tags} title={t("taskEditor.sections.tags.title")} description={t("taskEditor.sections.tags.description")}>
+          <EditorSection id="tags" icon={Tags} title={t("taskEditor.sections.tags.title")}>
             <FieldRow label={t("tags.custom")} help={t("tags.help")} error={errText(errors.customTags?.message)}>
               <Controller
                 control={control}
@@ -713,7 +706,7 @@ export function TaskEditor({ task }: { task?: Task }) {
           </EditorSection>
 
           {/* Metadata */}
-          <EditorSection id="metadata" icon={Braces} title={t("taskEditor.sections.metadata.title")} description={t("taskEditor.sections.metadata.description")}>
+          <EditorSection id="metadata" icon={Braces} title={t("taskEditor.sections.metadata.title")}>
             <Controller
               control={control}
               name="metadataRows"
@@ -736,14 +729,11 @@ export function TaskEditor({ task }: { task?: Task }) {
           </EditorSection>
 
           {/* Schedule */}
-          <EditorSection id="schedule" icon={CalendarClock} title={t("taskEditor.sections.schedule.title")} description={t("taskEditor.sections.schedule.description")}>
+          <EditorSection id="schedule" icon={CalendarClock} title={t("taskEditor.sections.schedule.title")}>
             <ScheduleFields
               cron={watch("cronExpression")}
-              timezone={watch("cronTimezone")}
               onCronChange={(v) => setValue("cronExpression", v, { shouldDirty: true, shouldValidate: formState.isSubmitted })}
-              onTimezoneChange={(v) => setValue("cronTimezone", v, { shouldDirty: true, shouldValidate: formState.isSubmitted })}
               cronError={errText(errors.cronExpression?.message)}
-              timezoneError={errText(errors.cronTimezone?.message)}
             />
           </EditorSection>
 
@@ -788,20 +778,6 @@ export function TaskEditor({ task }: { task?: Task }) {
       </div>
       {task && dryRunOpen && <DryRunDialog task={task} onClose={() => setDryRunOpen(false)} />}
     </form>
-  );
-}
-
-function SourceCapabilityLine({ sourceType }: { sourceType: string }) {
-  const connectors = useConnectors();
-  const source = findSource(connectors.data, sourceType);
-  const { t } = useTranslation();
-  if (!source) return null;
-  const c = source.capabilities;
-  return (
-    <div className="text-xs text-muted-foreground">
-      {t(`capabilities.incremental.${c.incrementalMode}`, { defaultValue: c.incrementalMode })} ·{" "}
-      {t(`capabilities.deletion.${c.deletionMode}`, { defaultValue: c.deletionMode })}
-    </div>
   );
 }
 

@@ -313,7 +313,7 @@ func newHarness(t *testing.T) *harness {
 		SourceConfigJSON: "{}", SourceFilterJSON: `{"mode":"simple","rules":[]}`,
 		DestinationCredentialID: dstCred, DestinationBankID: "bank", CustomTagsJSON: `["team:a"]`,
 		CustomMetadataJSON: `{"project":"x","_ingestion_task_id":"spoof"}`, FilePolicyMode: "global",
-		FilePolicyJSON: "{}", CronExpression: "*/15 * * * *", CronTimezone: "UTC", ConfigRevision: 1, PolicyRevision: 1,
+		FilePolicyJSON: "{}", CronExpression: "*/15 * * * *", ConfigRevision: 1, PolicyRevision: 1,
 	}
 	if err := db.Create(&task).Error; err != nil {
 		t.Fatal(err)

@@ -5,6 +5,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"os"
+	"strings"
+	"time"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -18,6 +21,7 @@ import (
 
 // Settings are the global, UI-editable settings.
 type Settings struct {
+	Timezone                   string                `json:"timezone"`
 	Proxy                      proxy.Config          `json:"proxy"`
 	ObservationScope           observations.Scope    `json:"observationScope"`
 	InlineMultimodalEnabled    bool                  `json:"inlineMultimodalEnabled"`
@@ -29,6 +33,7 @@ type Settings struct {
 
 // Defaults are applied for missing settings.
 var Defaults = Settings{
+	Timezone:                   "UTC",
 	Proxy:                      proxy.Default,
 	ObservationScope:           observations.Default,
 	IncrementalSyncEnabled:     true,
@@ -38,6 +43,16 @@ var Defaults = Settings{
 }
 
 const key = "global"
+
+var ErrInvalidTimezone = errors.New("invalid timezone")
+
+// DefaultTimezone uses the server's TZ environment setting, or UTC.
+func DefaultTimezone() string {
+	if tz := strings.TrimSpace(os.Getenv("TZ")); tz != "" {
+		return tz
+	}
+	return "UTC"
+}
 
 // Store reads and writes settings.
 type Store struct {
@@ -55,6 +70,7 @@ func (v Settings) Masked() Settings { v.Proxy = v.Proxy.Masked(); return v }
 // Get returns the current settings.
 func (s *Store) Get(ctx context.Context) (Settings, error) {
 	out := Defaults
+	out.Timezone = DefaultTimezone()
 	var row models.Setting
 	err := s.db.WithContext(ctx).Where(&models.Setting{Key: key}).First(&row).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -64,7 +80,9 @@ func (s *Store) Get(ctx context.Context) (Settings, error) {
 		return out, err
 	}
 	if err := json.Unmarshal([]byte(row.Value), &out); err != nil {
-		return Defaults, nil
+		out = Defaults
+		out.Timezone = DefaultTimezone()
+		return out, nil
 	}
 	var secret struct {
 		ProxyPassword string `json:"proxyPassword"`
@@ -79,6 +97,9 @@ func (s *Store) Get(ctx context.Context) (Settings, error) {
 
 // Validate checks settings bounds.
 func (v Settings) Validate() error {
+	if _, err := time.LoadLocation(v.Timezone); v.Timezone == "" || err != nil {
+		return ErrInvalidTimezone
+	}
 	if err := v.Proxy.Validate(); err != nil {
 		return err
 	}

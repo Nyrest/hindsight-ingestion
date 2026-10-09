@@ -49,8 +49,8 @@
     "create": "Create",
     "delete": "Delete",
     "edit": "Edit",
-    "false": "False",
-    "true": "True",
+    "false": "No",
+    "true": "Yes",
     "loadFailed": "Could not load data",
     "loading": "Loading…",
     "moreActions": "More actions",
@@ -109,7 +109,7 @@
     "title": "Custom headers",
     "help": "Sent with every request to this provider. Connector authentication headers take precedence.",
     "mode": "Editor mode",
-    "ui": "UI",
+    "ui": "Form",
     "json": "JSON",
     "name": "Header name",
     "value": "Value",
@@ -155,7 +155,7 @@
   },
   "capabilities": {
     "incremental": {
-      "high_water_mark": "High-water mark",
+      "high_water_mark": "Timestamp cursor",
       "delta_token": "Delta token",
       "sync_token": "Sync token",
       "inventory": "Inventory diff"
@@ -355,7 +355,7 @@
     "itemCount_one": "{{count}} item",
     "itemCount_other": "{{count}} items",
     "columns": {
-      "enabled": "On",
+      "enabled": "Enabled",
       "name": "Name",
       "source": "Source",
       "destination": "Destination",
@@ -385,9 +385,15 @@
       "description": "Create a task to start syncing a source into Hindsight."
     },
     "trigger": {
-      "run": { "success": "Run started" },
-      "fullReconcile": { "success": "Full reconcile started" },
-      "fullReingest": { "success": "Full re-ingest started" },
+      "run": {
+        "success": "Run started"
+      },
+      "fullReconcile": {
+        "success": "Full reconcile started"
+      },
+      "fullReingest": {
+        "success": "Full re-ingest started"
+      },
       "alreadyRunning": "Task is already running",
       "failed": "Could not start run"
     },
@@ -412,13 +418,14 @@
     },
     "reingest": {
       "title": "Re-ingest everything for “{{name}}”?",
-      "description": "Every matching item will be re-retained into Hindsight, even if unchanged. This may take a long time and consume Hindsight processing."
+      "description": "Send every matching item to Hindsight again, including unchanged content. This may take a long time and use additional processing resources."
     },
     "clearDocuments": {
       "title": "Delete documents for “{{name}}”?",
       "description": "Delete documents tagged for this task and their associated memories from Hindsight. The task will be paused. Source content will not be affected.",
-      "success": "Deleted {{count}} documents",
-      "failed": "Could not delete documents"
+      "failed": "Could not delete documents",
+      "success_one": "Deleted {{count}} document",
+      "success_other": "Deleted {{count}} documents"
     }
   },
   "taskEditor": {
@@ -444,19 +451,49 @@
       "sourceTypeLocked": "The source type cannot be changed after creation. Create a new task to use a different source.",
       "filtersReconcile": "Changing filters marks the task for full reconciliation; items that no longer match are removed from Hindsight.",
       "filesReconcile": "Changing file types triggers full reconciliation; excluded files are removed from Hindsight.",
-      "policyRevision": "Changing retain strategy, tags or metadata re-retains all matching items on the next run."
+      "policyRevision": "Changing the processing strategy, tags or metadata sends all matching items to Hindsight again on the next run."
     },
     "sections": {
-      "general": { "title": "General", "description": "Name and activation." },
-      "source": { "title": "Source", "description": "Where content is read from." },
-      "filters": { "title": "Filters", "description": "Limit which items are synced." },
-      "destination": { "title": "Destination", "description": "The Hindsight memory bank that receives content." },
-      "retain": { "title": "Retain strategy", "description": "How Hindsight processes the content." },
-      "files": { "title": "File types", "description": "Which kinds of files are ingested." },
-      "inline": { "title": "Inline multimodal content", "description": "Media embedded in notes." },
-      "tags": { "title": "Tags", "description": "Tags attached to every document." },
-      "metadata": { "title": "Metadata", "description": "Key/value metadata attached to every document." },
-      "schedule": { "title": "Schedule", "description": "When the task runs automatically." },
+      "general": {
+        "title": "General",
+        "description": "Name and activation."
+      },
+      "source": {
+        "title": "Source",
+        "description": "Where content is read from."
+      },
+      "filters": {
+        "title": "Filters",
+        "description": "Limit which items are synced."
+      },
+      "destination": {
+        "title": "Destination",
+        "description": "The Hindsight memory bank that receives content."
+      },
+      "retain": {
+        "title": "Retain strategy",
+        "description": "How Hindsight processes the content."
+      },
+      "files": {
+        "title": "File types",
+        "description": "Which kinds of files are ingested."
+      },
+      "inline": {
+        "title": "Inline multimodal content",
+        "description": "Media embedded in notes."
+      },
+      "tags": {
+        "title": "Tags",
+        "description": "Tags attached to every document."
+      },
+      "metadata": {
+        "title": "Metadata",
+        "description": "Key/value metadata attached to every document."
+      },
+      "schedule": {
+        "title": "Schedule",
+        "description": "When the task runs automatically."
+      },
       "observations": {
         "title": "Observation scope",
         "description": ""
@@ -579,7 +616,9 @@
   "settings": {
     "title": "Settings",
     "description": "Global synchronization behaviour.",
-    "units": { "hours": "hours" },
+    "units": {
+      "hours": "hours"
+    },
     "sync": {
       "title": "Synchronization",
       "description": "Applies to all tasks.",
@@ -602,6 +641,10 @@
     "toast": {
       "saved": "Settings saved",
       "failed": "Could not save settings"
+    },
+    "timezone": {
+      "help": "All tasks use this timezone. Defaults to the server’s TZ setting, or UTC.",
+      "invalid": "Select a valid timezone."
     }
   },
   "notFound": {
@@ -635,7 +678,7 @@
     "title": "Proxy",
     "global": "Use global settings",
     "types": {
-      "default": "Default",
+      "default": "Use environment variables",
       "none": "No proxy",
       "http": "HTTP",
       "https": "HTTPS",

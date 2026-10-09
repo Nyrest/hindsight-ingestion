@@ -4,11 +4,11 @@ import { Switch } from "@/components/ui/switch";
 import type { FilePolicy } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-const GROUPS: Array<{ key: keyof FilePolicy; icon: typeof FileText; examples: string }> = [
-  { key: "plainText", icon: FileText, examples: ".txt .md .csv .json .html" },
-  { key: "documents", icon: FileType2, examples: ".pdf .docx .pptx .xlsx .odt" },
-  { key: "images", icon: Image, examples: ".png .jpg .webp .gif .heic" },
-  { key: "audios", icon: AudioLines, examples: ".mp3 .wav .m4a .ogg .flac" },
+const GROUPS: Array<{ key: keyof FilePolicy; icon: typeof FileText }> = [
+  { key: "plainText", icon: FileText },
+  { key: "documents", icon: FileType2 },
+  { key: "images", icon: Image },
+  { key: "audios", icon: AudioLines },
 ];
 
 export const DEFAULT_FILE_POLICY: FilePolicy = { plainText: true, documents: true, images: false, audios: false };
@@ -29,7 +29,7 @@ export function FilePolicySwitches({
   const { t } = useTranslation();
   return (
     <div className={cn("grid gap-2 sm:grid-cols-2", disabled && "opacity-60")}>
-      {GROUPS.filter((group) => !groups || groups.includes(group.key)).map(({ key, icon: Icon, examples }) => (
+      {GROUPS.filter((group) => !groups || groups.includes(group.key)).map(({ key, icon: Icon }) => (
         <label
           key={key}
           htmlFor={`${idPrefix}-${key}`}
@@ -38,10 +38,7 @@ export function FilePolicySwitches({
           <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
             <Icon className="size-4" />
           </span>
-          <span className="min-w-0 flex-1">
-            <span className="block text-sm font-medium">{t(`filePolicy.${key}`)}</span>
-            <span className="block truncate font-mono text-[11px] text-muted-foreground">{groups && key === "images" ? ".png .jpg .webp .gif" : examples}</span>
-          </span>
+          <span className="min-w-0 flex-1 text-sm font-medium">{t(`filePolicy.${key}`)}</span>
           <Switch
             id={`${idPrefix}-${key}`}
             checked={!!value[key]}

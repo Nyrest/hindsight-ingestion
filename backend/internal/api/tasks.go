@@ -51,7 +51,6 @@ type taskDTO struct {
 	InlineMultimodalMode    string                `json:"inlineMultimodalMode" enum:"global,override"`
 	InlineMultimodalEnabled bool                  `json:"inlineMultimodalEnabled"`
 	CronExpression          string                `json:"cronExpression"`
-	CronTimezone            string                `json:"cronTimezone"`
 	ConfigRevision          int64                 `json:"configRevision"`
 	PolicyRevision          int64                 `json:"policyRevision"`
 	ReconcileRequired       bool                  `json:"reconcileRequired"`
@@ -70,7 +69,7 @@ func (s *Server) taskView(ctx context.Context, t *models.Task) taskDTO {
 		ID: t.ID, Name: t.Name, Enabled: t.Enabled, SourceType: t.SourceType,
 		SourceCredentialID: t.SourceCredentialID, DestinationCredentialID: t.DestinationCredentialID,
 		DestinationBankID: t.DestinationBankID, RetainStrategy: t.RetainStrategy,
-		FilePolicyMode: t.FilePolicyMode, CronExpression: t.CronExpression, CronTimezone: t.CronTimezone,
+		FilePolicyMode: t.FilePolicyMode, CronExpression: t.CronExpression,
 		InlineMultimodalMode: t.InlineMultimodalMode, InlineMultimodalEnabled: t.InlineMultimodalEnabled,
 		ConfigRevision: t.ConfigRevision, PolicyRevision: t.PolicyRevision,
 		ReconcileRequired: t.ReconcileRequired, DestinationLocked: t.DestinationLocked,
@@ -159,7 +158,6 @@ type taskBody struct {
 	InlineMultimodalMode    *string                `json:"inlineMultimodalMode" enum:"global,override"`
 	InlineMultimodalEnabled *bool                  `json:"inlineMultimodalEnabled"`
 	CronExpression          *string                `json:"cronExpression"`
-	CronTimezone            *string                `json:"cronTimezone"`
 }
 
 type fieldErrors map[string]string
@@ -352,18 +350,8 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 	if b.CronExpression != nil {
 		t.CronExpression = strings.TrimSpace(*b.CronExpression)
 	}
-	if b.CronTimezone != nil {
-		t.CronTimezone = strings.TrimSpace(*b.CronTimezone)
-	}
-	if t.CronTimezone == "" {
-		t.CronTimezone = "UTC"
-	}
-	if _, err := scheduler.ValidateCron(t.CronExpression, t.CronTimezone, 1); err != nil {
-		if strings.Contains(err.Error(), "timezone") {
-			errs.add("cronTimezone", err.Error())
-		} else {
-			errs.add("cronExpression", err.Error())
-		}
+	if _, err := scheduler.ValidateCron(t.CronExpression, "UTC", 1); err != nil {
+		errs.add("cronExpression", err.Error())
 	}
 
 	if b.InlineMultimodalMode != nil {
@@ -432,7 +420,7 @@ func (s *Server) createTask(w http.ResponseWriter, r *http.Request) {
 	if !decode(w, r, &b) {
 		return
 	}
-	t := models.Task{ID: uuid.NewString(), Enabled: true, ConfigRevision: 1, PolicyRevision: 1, CronExpression: "0 * * * *", CronTimezone: "UTC"}
+	t := models.Task{ID: uuid.NewString(), Enabled: true, ConfigRevision: 1, PolicyRevision: 1, CronExpression: "0 * * * *"}
 	if _, errs := s.applyTask(r.Context(), &t, b, true); len(errs) > 0 {
 		writeValidation(w, "Please fix the highlighted fields", errs)
 		return
@@ -616,7 +604,12 @@ func (s *Server) validateCron(w http.ResponseWriter, r *http.Request) {
 	if !decode(w, r, &b) {
 		return
 	}
-	next, err := scheduler.ValidateCron(b.CronExpression, b.CronTimezone, 3)
+	global, err := s.Settings.Get(r.Context())
+	if err != nil {
+		s.fail(w, err)
+		return
+	}
+	next, err := scheduler.ValidateCron(b.CronExpression, global.Timezone, 3)
 	if err != nil {
 		writeJSON(w, http.StatusOK, cronDTO{false, err.Error(), []string{}})
 		return

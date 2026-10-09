@@ -9,7 +9,7 @@
   },
   "app": {
     "name": "Hindsight Ingestion",
-    "tagline": "Synchronisez vos sources avec les banques mémoire de Hindsight",
+    "tagline": "Synchronisez vos sources avec les espaces mémoire de Hindsight",
     "version": "v{{version}}",
     "authDisabled": "authentification désactivée"
   },
@@ -20,7 +20,7 @@
     "dashboard": "Tableau de bord",
     "tasks": "Tâches",
     "runs": "Exécutions",
-    "credentials": "Informations d'identification",
+    "credentials": "Identifiants",
     "settings": "Paramètres",
     "open": "Ouvrir la navigation",
     "title": "Navigation",
@@ -46,8 +46,8 @@
     "create": "Créer",
     "delete": "Supprimer",
     "edit": "Modifier",
-    "false": "Faux",
-    "true": "Vrai",
+    "false": "Non",
+    "true": "Oui",
     "loadFailed": "Impossible de charger les données",
     "loading": "Chargement…",
     "moreActions": "Autres actions",
@@ -68,8 +68,8 @@
     "number": "Doit être un nombre",
     "integer": "Doit être un nombre entier",
     "min1": "Doit être au moins 1",
-    "url": "Doit être un URL valide",
-    "tooLong": "Trop longtemps"
+    "url": "Doit être une URL valide",
+    "tooLong": "Le texte est trop long"
   },
   "runStatus": {
     "pending": "En attente",
@@ -99,14 +99,14 @@
     "remove": "Supprimer la ligne"
   },
   "secret": {
-    "keepHint": "Une valeur est stockée. Laissez le masque inchangé pour le conserver ou saisissez une nouvelle valeur pour le remplacer.",
+    "keepHint": "Une valeur est enregistrée. Laissez le masque inchangé pour conserver cette valeur ou saisissez une nouvelle valeur pour la remplacer.",
     "clear": "Effacer la valeur stockée"
   },
   "headers": {
     "title": "En-têtes personnalisés",
     "help": "Envoyé avec chaque demande à ce fournisseur. Les en-têtes d’authentification du connecteur sont prioritaires.",
     "mode": "Mode éditeur",
-    "ui": "Interface utilisateur",
+    "ui": "Formulaire",
     "json": "JSON",
     "name": "Nom de l'en-tête",
     "value": "Valeur",
@@ -140,11 +140,11 @@
       "data_source": "Source de données",
       "notebook": "Carnet",
       "bucket": "Bucket",
-      "bank": "Banque mémoire",
+      "bank": "Espace mémoire",
       "drive": "Lecteur",
       "site": "Site"
     },
-    "memoryBanks": "Banques de mémoire",
+    "memoryBanks": "Espaces mémoire",
     "drives": "Lecteurs",
     "buckets": "Buckets",
     "dataSources": "Sources de données",
@@ -152,7 +152,7 @@
   },
   "capabilities": {
     "incremental": {
-      "high_water_mark": "Ligne des hautes eaux",
+      "high_water_mark": "Curseur horodaté",
       "delta_token": "Jeton delta",
       "sync_token": "Jeton de synchronisation",
       "inventory": "Différence d'inventaire"
@@ -167,28 +167,28 @@
     "advancedFilter": "Filtre avancé"
   },
   "credentials": {
-    "title": "Informations d'identification",
+    "title": "Identifiants",
     "description": "Détails de connexion réutilisables pour les sources et les destinations Hindsight.",
-    "new": "Nouveau titre",
-    "createTitle": "Nouveau titre",
+    "new": "Nouveaux identifiants",
+    "createTitle": "Nouveaux identifiants",
     "createDescription": "Choisissez un fournisseur et saisissez ses détails de connexion.",
-    "editTitle": "Modifier les informations d'identification",
-    "editDescription": "Les secrets ne sont jamais montrés. Laissez les valeurs masquées inchangées pour les conserver.",
-    "createInline": "Créer un nouvel identifiant",
-    "namePlaceholder": "par ex. Travail {{type}}",
-    "pick": "Sélectionnez un identifiant",
-    "noneOfType": "Pas encore d'informations d'identification {{type}}",
+    "editTitle": "Modifier les identifiants",
+    "editDescription": "Les clés enregistrées sont masquées. Laissez les valeurs masquées inchangées pour conserver les valeurs enregistrées.",
+    "createInline": "Ajouter des identifiants",
+    "namePlaceholder": "p. ex. {{type}} — Travail",
+    "pick": "Sélectionnez des identifiants",
+    "noneOfType": "Aucun identifiant pour {{type}}",
     "notActiveWarning": "Cet identifiant est actuellement « {{status}} ». Les exécutions peuvent échouer jusqu'à ce que le problème soit corrigé.",
     "oauthHint": "Après l’enregistrement, cliquez sur « Connecter » et suivez les instructions pour autoriser l’accès.",
-    "usedByCount_one": "Tâche {{count}}",
-    "usedByCount_other": "Tâches {{count}}",
+    "usedByCount_one": "{{count}} tâche",
+    "usedByCount_other": "{{count}} tâches",
     "fields": {
       "type": "Fournisseur",
       "name": "Nom"
     },
     "columns": {
       "name": "Nom",
-      "type": "Tapez",
+      "type": "Type",
       "status": "Statut",
       "usedBy": "Utilisé par",
       "oauth": "OAuth"
@@ -197,10 +197,10 @@
       "test": "Tester",
       "connect": "Se connecter",
       "reconnect": "Reconnecter",
-      "refresh": "Jeton d'actualisation"
+      "refresh": "Actualiser le jeton"
     },
     "empty": {
-      "title": "Pas encore d'informations d'identification",
+      "title": "Aucun identifiant pour le moment",
       "description": "Ajoutez un identifiant pour une source (par exemple Notion) et un pour votre instance Hindsight afin de créer une tâche."
     },
     "test": {
@@ -226,9 +226,9 @@
     },
     "delete": {
       "title": "Supprimer « {{name}} » ?",
-      "description": "Cela supprime définitivement les informations d'identification et leurs secrets stockés.",
-      "inUse_one": "Ces informations d'identification sont utilisées par la tâche {{count}}. Supprimez ou modifiez d'abord cette tâche.",
-      "inUse_other": "Ces informations d'identification sont utilisées par les tâches {{count}}. Supprimez ou modifiez d'abord ces tâches."
+      "description": "Supprime définitivement ces identifiants et les clés enregistrées.",
+      "inUse_one": "Ces identifiants sont utilisés par {{count}} tâche. Supprimez la tâche ou modifiez ses identifiants au préalable.",
+      "inUse_other": "Ces identifiants sont utilisés par {{count}} tâches. Supprimez les tâches ou modifiez leurs identifiants au préalable."
     }
   },
   "filters": {
@@ -242,8 +242,8 @@
     "simple": "Simple",
     "advanced": "Avancé",
     "advancedQuery": "Requête",
-    "advancedHint": "Syntaxe de requête du fournisseur brut.",
-    "driveHint": "Syntaxe de requête Google Drive, par exemple : mimeType = 'application/pdf' et modifiedTime > '2024-01-01T00:00:00'. Les fichiers dans la corbeille sont toujours exclus.",
+    "advancedHint": "Saisissez directement une requête dans la syntaxe du fournisseur.",
+    "driveHint": "Syntaxe de requête Google Drive, par exemple : mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'. Les fichiers dans la corbeille sont toujours exclus.",
     "noFields": "Cette source ne prend pas en charge les filtres.",
     "selectValues": "Sélectionnez des valeurs…",
     "valuePlaceholder": "Valeur",
@@ -257,9 +257,9 @@
       "notEquals": "n'est pas égal",
       "contains": "contient",
       "in": "est l'un des",
-      "notIn": "n'est rien de",
+      "notIn": "n’est aucun des",
       "greaterThan": "supérieur à",
-      "lessThan": "moins que"
+      "lessThan": "inférieur à"
     },
     "errors": {
       "field": "Sélectionnez un champ valide",
@@ -278,7 +278,7 @@
     "mode": {
       "global": "Utiliser les paramètres globaux",
       "globalHelp": "Utilisez les types de fichiers définis dans les paramètres.",
-      "override": "Remplacer",
+      "override": "Personnaliser",
       "overrideHelp": "Choisissez les types de fichiers pour cette tâche uniquement."
     }
   },
@@ -290,25 +290,25 @@
   },
   "destination": {
     "credential": "Identifiant Hindsight",
-    "bank": "Banque mémoire",
+    "bank": "Espace mémoire",
     "bankPlaceholder": "ID de la banque",
-    "browseBanks": "Choisir une banque mémoire",
+    "browseBanks": "Choisir un espace mémoire",
     "pickCredentialFirst": "Sélectionnez d’abord les identifiants Hindsight.",
-    "locked": "Après la première exécution réussie, la destination est verrouillée. Pour utiliser d’autres identifiants ou une autre banque mémoire, créez une nouvelle tâche.",
+    "locked": "La destination est verrouillée après la première exécution réussie. Pour utiliser d’autres identifiants ou un autre espace mémoire, créez une nouvelle tâche.",
     "lockNotice": "La destination passe en lecture seule après la première exécution réussie."
   },
   "retain": {
-    "label": "Stratégie de rétention",
-    "bankDefault": "Valeur par défaut de la banque mémoire",
-    "bankDefaultNamed": "Valeur par défaut de la banque mémoire ({{name}})",
-    "help": "Définit comment Hindsight traite le contenu envoyé à la banque mémoire. L’option par défaut reprend la stratégie configurée dans cette banque.",
+    "label": "Stratégie de traitement",
+    "bankDefault": "Stratégie par défaut de l’espace mémoire",
+    "bankDefaultNamed": "Stratégie par défaut de l’espace mémoire ({{name}})",
+    "help": "Définit comment Hindsight traite le contenu. L’option par défaut utilise la stratégie configurée dans l’espace mémoire.",
     "freeTextPlaceholder": "Laissez vide pour utiliser la valeur par défaut de l’espace mémoire",
-    "pickDestinationFirst": "Sélectionnez les identifiants de destination et une banque mémoire pour charger les stratégies disponibles.",
+    "pickDestinationFirst": "Sélectionnez les identifiants de destination et une espace mémoire pour charger les stratégies disponibles.",
     "loadFailed": "Impossible de charger les stratégies depuis Hindsight ; saisissez manuellement un nom de stratégie."
   },
   "tags": {
-    "custom": "Balises personnalisées",
-    "help": "Les balises d'ingestion, de source et de tâche sont ajoutées automatiquement à chaque document.",
+    "custom": "Étiquettes personnalisées",
+    "help": "Les étiquettes d’importation, de source et de tâche sont ajoutées automatiquement à chaque document.",
     "placeholder": "équipe:alpha",
     "newTaskId": "<nouveau>"
   },
@@ -349,10 +349,10 @@
     "new": "Nouvelle tâche",
     "neverRun": "Jamais exécutée",
     "reconcileRequired": "Synchronisation complète en attente",
-    "itemCount_one": "{{count}} article",
-    "itemCount_other": "Articles {{count}}",
+    "itemCount_one": "{{count}} élément",
+    "itemCount_other": "{{count}} éléments",
     "columns": {
-      "enabled": "Sur",
+      "enabled": "Activée",
       "name": "Nom",
       "source": "Source",
       "destination": "Destination",
@@ -369,12 +369,13 @@
     "actions": {
       "runNow": "Exécuter maintenant",
       "fullReconcile": "Synchroniser tout",
-      "fullReingest": "Réabsorption complète",
+      "fullReingest": "Tout importer à nouveau",
       "cancel": "Annuler l’exécution",
       "enable": "Activer",
       "disable": "Désactiver",
       "viewRuns": "Voir les exécutions",
-      "dryRun": "Simulation"
+      "dryRun": "Simulation",
+      "deleteDocuments": "Supprimer les documents"
     },
     "empty": {
       "title": "Aucune tâche pour l'instant",
@@ -388,7 +389,7 @@
         "success": "Synchronisation complète lancée"
       },
       "fullReingest": {
-        "success": "Réingestion complète commencée"
+        "success": "Nouvelle importation de tout le contenu lancée"
       },
       "alreadyRunning": "La tâche est déjà en cours d'exécution",
       "failed": "Impossible de démarrer l'exécution"
@@ -404,15 +405,24 @@
       "updateFailed": "Impossible de mettre à jour la tâche",
       "deleted": "Tâche supprimée",
       "deleteFailed": "Impossible de supprimer la tâche",
-      "deleteRunning": "La tâche est en cours d'exécution ; annule-le avant de supprimer"
+      "deleteRunning": "La tâche est occupée. Réessayez lorsque l’opération en cours sera terminée."
     },
     "delete": {
       "title": "Supprimer « {{name}} » ?",
-      "description": "La tâche, son historique d'exécution et son état de synchronisation seront supprimés. Les documents déjà présents dans Hindsight ne sont pas supprimés."
+      "description": "Supprime la tâche, son historique d’exécution et son état de synchronisation. Par défaut, les documents dans Hindsight sont conservés.",
+      "alsoDeleteDocuments": "Supprimer aussi les documents dans Hindsight",
+      "documentsHelp": "Si cette option est cochée, les documents portant l’étiquette de cette tâche et les souvenirs associés seront aussi supprimés de Hindsight."
     },
     "reingest": {
-      "title": "Réingérer tout pour « {{name}} » ?",
-      "description": "Chaque élément correspondant sera conservé dans Hindsight, même s'il n'a pas été modifié. Cela peut prendre beaucoup de temps et consommer le traitement Hindsight."
+      "title": "Importer à nouveau tout le contenu de « {{name}} » ?",
+      "description": "Tout le contenu correspondant sera envoyé à nouveau à Hindsight, même sans modification. Cela peut prendre du temps et mobiliser des ressources de traitement supplémentaires."
+    },
+    "clearDocuments": {
+      "title": "Supprimer les documents de « {{name}} » ?",
+      "description": "Supprime de Hindsight les documents portant l’étiquette de cette tâche et les souvenirs associés. La tâche sera mise en pause. Le contenu source ne sera pas modifié.",
+      "failed": "Impossible de supprimer les documents",
+      "success_one": "{{count}} document supprimé",
+      "success_other": "{{count}} documents supprimés"
     }
   },
   "taskEditor": {
@@ -422,8 +432,8 @@
     "enabledHelp": "Les tâches désactivées conservent leur état de synchronisation mais ne sont pas planifiées.",
     "notFound": "Tâche introuvable",
     "nextRun": "Prochaine exécution : {{when}}",
-    "itemCount_one": "Élément {{count}} synchronisé",
-    "itemCount_other": "Éléments {{count}} synchronisés",
+    "itemCount_one": "{{count}} élément synchronisé",
+    "itemCount_other": "{{count}} éléments synchronisés",
     "recentRuns": "Exécutions récentes",
     "saveBeforeRun": "Enregistrez vos modifications avant d'exécuter",
     "saveError": "Impossible d'enregistrer la tâche",
@@ -438,7 +448,7 @@
       "sourceTypeLocked": "Le type de source ne peut pas être modifié après la création. Créez une nouvelle tâche pour utiliser une source différente.",
       "filtersReconcile": "Modifier les filtres programme une synchronisation complète. Les éléments qui ne correspondent plus aux filtres seront alors supprimés de Hindsight.",
       "filesReconcile": "Modifier les types de fichiers déclenche une synchronisation complète. Les fichiers exclus sont supprimés de Hindsight.",
-      "policyRevision": "La modification de la stratégie de conservation, des balises ou des métadonnées conserve à nouveau tous les éléments correspondants lors de la prochaine exécution."
+      "policyRevision": "La modification de la stratégie de traitement, des étiquettes ou des métadonnées renvoie tout le contenu correspondant à Hindsight lors de la prochaine exécution."
     },
     "sections": {
       "general": {
@@ -455,10 +465,10 @@
       },
       "destination": {
         "title": "Destination",
-        "description": "La banque mémoire Hindsight qui reçoit le contenu."
+        "description": "La espace mémoire Hindsight qui reçoit le contenu."
       },
       "retain": {
-        "title": "Stratégie de rétention",
+        "title": "Stratégie de traitement",
         "description": "Comment Hindsight traite le contenu."
       },
       "observations": {
@@ -474,8 +484,8 @@
         "description": "Médias intégrés aux notes."
       },
       "tags": {
-        "title": "Balises",
-        "description": "Balises attachées à chaque document."
+        "title": "Étiquettes",
+        "description": "Étiquettes jointes à chaque document."
       },
       "metadata": {
         "title": "Métadonnées",
@@ -483,7 +493,7 @@
       },
       "schedule": {
         "title": "Calendrier",
-        "description": "Lorsque la tâche s'exécute automatiquement."
+        "description": "Définissez quand la tâche doit s’exécuter automatiquement."
       }
     },
     "toast": {
@@ -515,15 +525,15 @@
     "mode": {
       "incremental": "Incrémentiel",
       "full": "Complète",
-      "reingest": "Tout réingérer"
+      "reingest": "Nouvelle importation complète"
     },
     "counters": {
       "discoveredCount": "Détectés",
-      "createdCount": "Créé",
+      "createdCount": "Créés",
       "updatedCount": "Mis à jour",
-      "deletedCount": "Supprimé",
-      "unchangedCount": "Inchangé",
-      "skippedCount": "Sauté",
+      "deletedCount": "Supprimés",
+      "unchangedCount": "Inchangés",
+      "skippedCount": "Ignorés",
       "failedCount": "Échec"
     },
     "filters": {
@@ -557,7 +567,7 @@
     "noLog": "Aucune ligne de journal.",
     "opColumns": {
       "remoteId": "ID distant",
-      "type": "Tapez",
+      "type": "Type",
       "status": "Statut",
       "retries": "Nouvelles tentatives",
       "created": "Créé",
@@ -575,17 +585,17 @@
       "runs24h_other": "{{count}} exécutions au cours des dernières 24 h",
       "items": "Éléments synchronisés",
       "itemsSub": "dans toutes les tâches",
-      "failures24h": "Pannes (24h)",
-      "needsAttention": "A besoin d'attention",
+      "failures24h": "Échecs (24 h)",
+      "needsAttention": "Action requise",
       "allGood": "Tout va bien"
     },
     "getStarted": {
       "title": "Configurez votre première synchronisation",
-      "description": "Ajoutez des informations d'identification pour une source et pour Hindsight, puis créez une tâche.",
-      "credentials": "Ajouter des informations d'identification"
+      "description": "Ajoutez les identifiants d’une source et de Hindsight, puis créez une tâche.",
+      "credentials": "Ajouter des identifiants"
     },
     "reauth": {
-      "title": "Les informations d'identification doivent être reconnectées"
+      "title": "Reconnexion des identifiants requise"
     },
     "running": {
       "title": "Tâches en cours",
@@ -636,7 +646,7 @@
     "emptyGroup": "Ajoutez au moins une étiquette à chaque portée.",
     "exponentialWarning": "Le nombre de portées augmente de façon exponentielle : n étiquettes génèrent 2ⁿ − 1 portées par document, ce qui augmente le temps de traitement et le coût.",
     "fileLimitation": "Les portées des observations s’appliquent au texte et au contenu intégré. Les fichiers importés utilisent toutes les étiquettes ensemble.",
-    "tagsUnavailable": "Impossible de charger les étiquettes de la banque mémoire. Vous pouvez toujours saisir une étiquette."
+    "tagsUnavailable": "Impossible de charger les étiquettes de l’espace mémoire. Vous pouvez toujours saisir une étiquette."
   },
   "settings": {
     "title": "Paramètres",
@@ -656,16 +666,20 @@
     },
     "files": {
       "title": "Types de fichiers globaux",
-      "description": "Types de fichiers par défaut pour les tâches définies sur « Suivre global ». Les fichiers exclus sont supprimés lors de la réconciliation."
+      "description": "Types de fichiers par défaut pour les tâches qui utilisent les paramètres globaux. Le contenu exclu est supprimé de Hindsight lors de la synchronisation complète."
     },
     "oauth": {
       "title": "OAuth",
-      "description": "Enregistrez cette redirection URI dans la configuration de votre application Google Cloud et Microsoft Entra (Azure) pour les informations d'identification Google Drive et OneDrive.",
-      "redirectUri": "Redirection URI"
+      "description": "Enregistrez cette URI de redirection dans les paramètres des applications Google Cloud et Microsoft Entra (Azure) pour connecter Google Drive et OneDrive.",
+      "redirectUri": "URI de redirection"
     },
     "toast": {
       "saved": "Paramètres enregistrés",
       "failed": "Impossible d'enregistrer les paramètres"
+    },
+    "timezone": {
+      "help": "Toutes les tâches utilisent ce fuseau horaire. Par défaut, il est défini par TZ sur le serveur, ou UTC si TZ est absent.",
+      "invalid": "Sélectionnez un fuseau horaire valide."
     }
   },
   "notFound": {
@@ -688,10 +702,10 @@
     "reason": "Raison",
     "actions": {
       "create": "Créer",
-      "update": "Mise à jour",
+      "update": "Mettre à jour",
       "delete": "Supprimer",
       "unchanged": "Inchangé",
-      "skip": "Sauter",
+      "skip": "Ignorer",
       "fail": "Échec"
     }
   },
@@ -738,7 +752,7 @@
     "tenant": "Locataire",
     "title": "Titre",
     "updated": "Mis à jour le",
-    "tags": "Tags",
+    "tags": "Étiquettes",
     "notionDescription": "Jeton d’intégration interne Notion avec accès en lecture aux sources de données partagées.",
     "siYuanDescription": "URL du point de terminaison de l’API du noyau SiYuan et jeton (Paramètres → À propos → Jeton API).",
     "filesystemDescription": "Fichiers locaux accessibles par l’application.",
@@ -766,5 +780,21 @@
     "hindsightApiKeyHelp": "Envoyée comme jeton Bearer. Laissez vide si l’instance n’exige pas d’authentification.",
     "syncCollectionHelp": "Utilise sync-collection (RFC 6578) si le serveur le prend en charge.",
     "fileSystem": "Système de fichiers"
+  },
+  "proxy": {
+    "title": "Proxy",
+    "global": "Utiliser les paramètres globaux",
+    "types": {
+      "default": "Utiliser les variables d’environnement",
+      "none": "Sans proxy",
+      "http": "HTTP",
+      "https": "HTTPS",
+      "socks5": "SOCKS5"
+    },
+    "defaultHelp": "Utilise les paramètres de proxy définis dans les variables d’environnement du serveur.",
+    "address": "Adresse",
+    "username": "Nom d’utilisateur (facultatif)",
+    "password": "Mot de passe (facultatif)",
+    "invalidAddress": "Saisissez une adresse de proxy au format hôte:port, avec un port compris entre 1 et 65535."
   }
 }

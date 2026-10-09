@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useTimezone } from "@/features/settings/api";
 import { useRun } from "@/features/runs/api";
 import { RunCountersGrid } from "@/features/runs/run-counters";
 import { ModeLabel, TriggerLabel } from "@/features/runs/runs-table";
@@ -30,6 +31,7 @@ const LEVEL_CLASSES: Record<string, string> = {
 };
 
 export default function RunDetailPage() {
+  const timezone = useTimezone();
   const { t } = useTranslation();
   const { id } = useParams();
   const run = useRun(id);
@@ -110,11 +112,11 @@ export default function RunDetailPage() {
           <Summary label={t("runs.columns.mode")}>
             <ModeLabel mode={r.syncMode} />
           </Summary>
-          <Summary label={t("runDetail.scheduledFor")}>{r.scheduledFor ? formatDateTime(r.scheduledFor) : "—"}</Summary>
+          <Summary label={t("runDetail.scheduledFor")}>{r.scheduledFor ? formatDateTime(r.scheduledFor, timezone) : "—"}</Summary>
           <Summary label={t("runs.columns.started")}>
-            <span title={r.startedAt ? formatRelative(r.startedAt, now) : undefined}>{formatDateTime(r.startedAt)}</span>
+            <span title={r.startedAt ? formatRelative(r.startedAt, now) : undefined}>{formatDateTime(r.startedAt, timezone)}</span>
           </Summary>
-          <Summary label={t("runDetail.finished")}>{active ? t("runDetail.inProgress") : formatDateTime(r.finishedAt)}</Summary>
+          <Summary label={t("runDetail.finished")}>{active ? t("runDetail.inProgress") : formatDateTime(r.finishedAt, timezone)}</Summary>
           <Summary label={t("runs.columns.duration")}>
             <span className="tabular-nums">{formatDuration(runDuration(r.startedAt, r.finishedAt, now))}</span>
           </Summary>
@@ -172,8 +174,8 @@ export default function RunDetailPage() {
                         </span>
                       </TableCell>
                       <TableCell className="tabular-nums">{op.retryCount}</TableCell>
-                      <TableCell className="text-xs whitespace-nowrap">{formatDateTime(op.createdAt)}</TableCell>
-                      <TableCell className="pr-5 text-xs whitespace-nowrap">{formatDateTime(op.updatedAt)}</TableCell>
+                      <TableCell className="text-xs whitespace-nowrap">{formatDateTime(op.createdAt, timezone)}</TableCell>
+                      <TableCell className="pr-5 text-xs whitespace-nowrap">{formatDateTime(op.updatedAt, timezone)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -200,8 +202,8 @@ export default function RunDetailPage() {
             <div className="max-h-[32rem] overflow-auto bg-muted/30 py-2 font-mono text-xs leading-relaxed">
               {log.map((l, i) => (
                 <div key={i} className="flex gap-3 px-5 py-px hover:bg-accent/50">
-                  <span className="shrink-0 text-muted-foreground tabular-nums" title={formatDateTime(l.time)}>
-                    {formatTime(l.time)}
+                  <span className="shrink-0 text-muted-foreground tabular-nums" title={formatDateTime(l.time, timezone)}>
+                    {formatTime(l.time, timezone)}
                   </span>
                   <span className={cn("w-12 shrink-0 font-semibold uppercase", LEVEL_CLASSES[l.level.toLowerCase()] ?? "text-muted-foreground")}>
                     {l.level}

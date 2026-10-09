@@ -1,4 +1,4 @@
-import cronstrue from "cronstrue";
+import cronstrue from "./cron-locales";
 import i18n from "./i18n";
 
 function locale(): string {
@@ -50,10 +50,10 @@ export function formatDateTime(value: string | Date | null | undefined, timeZone
   }
 }
 
-export function formatTime(value: string | null | undefined): string {
+export function formatTime(value: string | null | undefined, timeZone?: string): string {
   const d = parseDate(value);
   if (!d) return "—";
-  return new Intl.DateTimeFormat(locale(), { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).format(d);
+  return new Intl.DateTimeFormat(locale(), { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false, timeZone }).format(d);
 }
 
 export function formatDuration(ms: number | null | undefined): string {
@@ -88,24 +88,38 @@ export function describeCron(expr: string): string | null {
       use24HourTimeFormat: true,
       throwExceptionOnParseError: true,
       verbose: false,
+      locale: locale().replaceAll("-", "_"),
     });
   } catch {
     return null;
   }
 }
 
-/** Converts an ISO string to the value format of <input type="datetime-local"> in local time. */
-export function isoToLocalInput(iso: string): string {
+/** Converts an ISO instant to a datetime-local value in the application timezone. */
+export function isoToLocalInput(iso: string, timeZone: string): string {
   const d = parseDate(iso);
   if (!d) return "";
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone, year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+  }).formatToParts(d);
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((p) => p.type === type)?.value;
+  return `${part("year")}-${part("month")}-${part("day")}T${part("hour")}:${part("minute")}`;
 }
 
-export function localInputToIso(value: string): string {
+export function localInputToIso(value: string, timeZone: string): string {
   if (!value) return "";
-  const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? "" : d.toISOString();
+  const wallTime = Date.parse(`${value}Z`);
+  if (Number.isNaN(wallTime)) return "";
+  let instant = wallTime;
+  // Resolve the zone's offset at the chosen instant, including daylight saving changes.
+  for (let i = 0; i < 3; i++) {
+    const local = isoToLocalInput(new Date(instant).toISOString(), timeZone);
+    const offset = Date.parse(`${local}Z`) - instant;
+    instant = wallTime - offset;
+  }
+  const iso = new Date(instant).toISOString();
+  return isoToLocalInput(iso, timeZone) === value ? iso : "";
 }
 
 export function getTimeZones(): string[] {

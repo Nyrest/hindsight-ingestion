@@ -3,8 +3,10 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"reflect"
+	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -156,6 +158,7 @@ func (s *Server) patchSettings(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	v.Proxy = v.Proxy.Normalize()
+	v.Timezone = strings.TrimSpace(v.Timezone)
 	if v.Proxy.Password == proxy.Mask {
 		v.Proxy.Password = previous.Proxy.Password
 	}
@@ -165,12 +168,22 @@ func (s *Server) patchSettings(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := v.Validate(); err != nil {
-		writeValidation(w, err.Error(), nil)
+		var fields map[string]string
+		if errors.Is(err, settings.ErrInvalidTimezone) {
+			fields = map[string]string{"timezone": "settings.timezone.invalid"}
+		}
+		writeValidation(w, err.Error(), fields)
 		return
 	}
 	if err := s.saveSettings(r.Context(), previous, v); err != nil {
 		s.fail(w, err)
 		return
+	}
+	if previous.Timezone != v.Timezone {
+		if err := s.Sched.LoadTasks(r.Context()); err != nil {
+			s.fail(w, err)
+			return
+		}
 	}
 	writeJSON(w, http.StatusOK, settingsDTO{v.Masked(), s.Cfg.OAuthRedirectURI()})
 }

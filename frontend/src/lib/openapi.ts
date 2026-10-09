@@ -711,6 +711,7 @@ export interface components {
             oauthRedirectUri: string;
             observationScope: components["schemas"]["Scope"];
             proxy: components["schemas"]["Config"];
+            timezone: string;
         };
         strategiesDTO: {
             defaultStrategy: string;
@@ -720,7 +721,6 @@ export interface components {
             configRevision: number;
             createdAt: string;
             cronExpression: string;
-            cronTimezone: string;
             customMetadata: {
                 [key: string]: string;
             };
@@ -1532,6 +1532,7 @@ export interface operations {
                     maxFileSizeMB?: number;
                     observationScope?: components["schemas"]["Scope"];
                     proxy?: components["schemas"]["Config"];
+                    timezone?: string;
                 };
             };
         };
@@ -1614,7 +1615,6 @@ export interface operations {
             content: {
                 "application/json": {
                     cronExpression?: string;
-                    cronTimezone?: string;
                     customMetadata?: {
                         [key: string]: string;
                     };
@@ -1683,7 +1683,6 @@ export interface operations {
             content: {
                 "application/json": {
                     cronExpression: string;
-                    cronTimezone: string;
                 };
             };
         };
@@ -1810,7 +1809,6 @@ export interface operations {
             content: {
                 "application/json": {
                     cronExpression?: string;
-                    cronTimezone?: string;
                     customMetadata?: {
                         [key: string]: string;
                     };

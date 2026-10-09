@@ -21,6 +21,7 @@ import { CredentialStatusBadge, RunStatusBadge } from "@/components/status-badge
 import { TypeIcon } from "@/components/type-icon";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTimezone } from "@/features/settings/api";
 import { useOAuthStart } from "@/features/credentials/api";
 import { useDashboard } from "@/features/dashboard/api";
 import { Panel, StatCard } from "@/features/dashboard/stat-card";
@@ -39,6 +40,7 @@ function ListSkeleton() {
 }
 
 export default function DashboardPage() {
+  const timezone = useTimezone();
   const { t } = useTranslation();
   const now = useNow(5_000);
   const dash = useDashboard();
@@ -189,7 +191,7 @@ export default function DashboardPage() {
                   <Link to={`/runs/${r.runId}`} className="flex items-center gap-3 px-4 py-3 hover:bg-accent/40">
                     <RunStatusBadge status="running" />
                     <span className="min-w-0 flex-1 truncate text-sm font-medium">{r.taskName}</span>
-                    <span className="text-xs text-muted-foreground tabular-nums" title={formatDateTime(r.startedAt)}>
+                    <span className="text-xs text-muted-foreground tabular-nums" title={formatDateTime(r.startedAt, timezone)}>
                       {formatDuration(runDuration(r.startedAt, null, now))}
                     </span>
                   </Link>
@@ -218,7 +220,7 @@ export default function DashboardPage() {
                   <Link to={`/tasks/${r.taskId}`} className="flex items-center gap-3 px-4 py-3 hover:bg-accent/40">
                     <CalendarClock className="size-4 text-muted-foreground" />
                     <span className="min-w-0 flex-1 truncate text-sm font-medium">{r.taskName}</span>
-                    <span className="text-xs text-muted-foreground" title={formatDateTime(r.nextRunAt)}>
+                    <span className="text-xs text-muted-foreground" title={formatDateTime(r.nextRunAt, timezone)}>
                       {formatRelative(r.nextRunAt, now)}
                     </span>
                   </Link>
@@ -253,7 +255,7 @@ export default function DashboardPage() {
                     <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground" title={r.errorMessage}>
                       {r.errorMessage}
                     </span>
-                    <span className="shrink-0 text-xs text-muted-foreground" title={formatDateTime(r.startedAt)}>
+                    <span className="shrink-0 text-xs text-muted-foreground" title={formatDateTime(r.startedAt, timezone)}>
                       {formatRelative(r.finishedAt ?? r.startedAt, now)}
                     </span>
                   </Link>

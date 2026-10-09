@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { z } from "zod";
 import { ProxyEditor } from "@/components/proxy-editor";
+import { TimezoneCombobox } from "@/components/timezone-combobox";
 import { ObservationScopeEditor } from "@/components/observation-scope-editor";
 import { useTasks } from "@/features/tasks/api";
 import { defaultProxy, defaultObservationScope, proxySchema, observationScopeSchema, taskTagSuggestions } from "@/features/settings/config-model";
@@ -23,6 +24,7 @@ import { useSettings, useUpdateSettings } from "@/features/settings/api";
 import { errorMessage, isApiError } from "@/lib/api";
 
 const schema = z.object({
+  timezone: z.string().trim().min(1, "validation.required"),
   proxy: proxySchema,
   observationScope: observationScopeSchema,
   inlineMultimodalEnabled: z.boolean(),
@@ -41,6 +43,7 @@ export default function SettingsPage() {
   const form = useForm<Values>({
     resolver: zodResolver(schema),
     defaultValues: {
+      timezone: "UTC",
       proxy: defaultProxy,
       observationScope: defaultObservationScope,
       inlineMultimodalEnabled: false,
@@ -73,7 +76,9 @@ export default function SettingsPage() {
           if (k in v) form.setError(k as keyof Values, { message: msg });
         }
       }
-      toast.error(t("settings.toast.failed"), { description: errorMessage(e) });
+      toast.error(t("settings.toast.failed"), {
+        description: isApiError(e) && e.fields.timezone ? t("settings.timezone.invalid") : errorMessage(e),
+      });
     }
   }
 
@@ -97,7 +102,6 @@ export default function SettingsPage() {
     <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="max-w-3xl">
       <PageHeader
         title={t("settings.title")}
-        description={t("settings.description")}
         actions={
           <Button type="submit" disabled={!isDirty || update.isPending || settings.isLoading}>
             {update.isPending ? <Loader2 className="animate-spin" /> : <Save />}
@@ -113,13 +117,19 @@ export default function SettingsPage() {
           <Skeleton className="h-32" />
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-4 [&>[data-slot=card]]:gap-4 [&>[data-slot=card]]:py-4 [&_[data-slot=card-header]]:px-4 [&_[data-slot=card-content]]:px-4">
           <Card>
             <CardHeader>
               <CardTitle>{t("settings.sync.title")}</CardTitle>
-              <CardDescription>{t("settings.sync.description")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-5">
+              <FieldRow label={t("schedule.timezone")} htmlFor="s-timezone"
+                error={errText(errors.timezone?.message)}>
+                <Controller control={form.control} name="timezone" render={({ field }) => (
+                  <TimezoneCombobox id="s-timezone" value={field.value} onChange={field.onChange}
+                    invalid={!!errors.timezone} />
+                )} />
+              </FieldRow>
               <Controller
                 control={form.control}
                 name="incrementalSyncEnabled"
@@ -157,7 +167,6 @@ export default function SettingsPage() {
                 <FieldRow
                   label={t("settings.sync.maxFileSize")}
                   htmlFor="s-maxsize"
-                  help={t("settings.sync.maxFileSizeHelp")}
                   error={errText(errors.maxFileSizeMB?.message)}
                 >
                   <div className="relative">
@@ -231,7 +240,6 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
           <Card>
-            <CardHeader><CardTitle>{t("proxy.title")}</CardTitle></CardHeader>
             <CardContent>
               <Controller control={form.control} name="proxy" render={({ field }) => (
                 <ProxyEditor value={field.value} onChange={field.onChange}

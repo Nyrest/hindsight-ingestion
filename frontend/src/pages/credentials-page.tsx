@@ -36,6 +36,7 @@ import {
   useRefreshCredential,
   useTestCredential,
 } from "@/features/credentials/api";
+import { useTimezone } from "@/features/settings/api";
 import { CredentialSheet } from "@/features/credentials/credential-sheet";
 import { errorMessage, isApiError } from "@/lib/api";
 import { findCredentialType, typeName, useConnectors } from "@/lib/connectors";
@@ -45,6 +46,7 @@ import { useNow } from "@/lib/hooks";
 import type { Credential } from "@/lib/types";
 
 export default function CredentialsPage() {
+  const timezone = useTimezone();
   const { t } = useTranslation();
   const now = useNow();
   const connectors = useConnectors();
@@ -175,7 +177,7 @@ export default function CredentialsPage() {
     if (!c.oauthConnected) return <span className="text-muted-foreground">{t("credentials.oauth.notConnected")}</span>;
     if (!c.oauthExpiresAt) return <span>{t("credentials.oauth.connected")}</span>;
     return (
-      <span title={formatDateTime(c.oauthExpiresAt)}>
+      <span title={formatDateTime(c.oauthExpiresAt, timezone)}>
         {t("credentials.oauth.expires", { when: formatRelative(c.oauthExpiresAt, now) })}
       </span>
     );

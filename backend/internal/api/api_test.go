@@ -130,7 +130,10 @@ func newEnv(t *testing.T) *env {
 		NewDestination: func(c connectors.Credential) (sync.Destination, error) { return hindsight.NewClient(c) }}
 	sync.OperationPollInitial = time.Millisecond
 	runs := runner.NewManager(db, engine, 2, log)
-	sched, _ := scheduler.New(db, runs, log)
+	sched, err := scheduler.New(db, runs, store, log)
+	if err != nil {
+		t.Fatal(err)
+	}
 	om.SetScheduler(sched)
 	sched.Start()
 	t.Cleanup(func() { sched.Shutdown() })
@@ -247,7 +250,7 @@ func TestEndToEnd(t *testing.T) {
 	code = e.do("POST", "/api/tasks", map[string]any{
 		"name": "copy", "sourceType": "filesystem", "sourceCredentialId": sourceCredID,
 		"sourceConfig": map[string]any{"folder": "."}, "destinationCredentialId": credID, "destinationBankId": "dest",
-		"cronExpression": "*/15 * * * *", "cronTimezone": "Europe/Berlin", "customTags": []string{"copied"},
+		"cronExpression": "*/15 * * * *", "customTags": []string{"copied"},
 	}, &task)
 	if code != 201 {
 		t.Fatalf("create task: %d %v", code, task)
@@ -318,7 +321,7 @@ func TestEndToEnd(t *testing.T) {
 	}
 
 	var cron map[string]any
-	e.do("POST", "/api/tasks/validate-cron", map[string]any{"cronExpression": "bad", "cronTimezone": "UTC"}, &cron)
+	e.do("POST", "/api/tasks/validate-cron", map[string]any{"cronExpression": "bad"}, &cron)
 	if cron["valid"] != false {
 		t.Fatal("invalid cron accepted")
 	}

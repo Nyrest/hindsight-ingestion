@@ -74,7 +74,6 @@ type Task struct {
 	InlineMultimodalEnabled bool   `gorm:"not null;default:false"`
 
 	CronExpression string `gorm:"size:128;not null"`
-	CronTimezone   string `gorm:"size:64;not null;default:UTC"`
 
 	ConfigRevision    int64 `gorm:"not null;default:1"`
 	PolicyRevision    int64 `gorm:"not null;default:1"`

@@ -18,6 +18,7 @@ import (
 
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
 	"github.com/Nyrest/hindsight-ingestion/internal/runner"
+	"github.com/Nyrest/hindsight-ingestion/internal/settings"
 )
 
 // RefreshFunc refreshes an OAuth credential.
@@ -25,11 +26,12 @@ type RefreshFunc func(ctx context.Context, credentialID string) error
 
 // Scheduler wraps gocron.Scheduler.
 type Scheduler struct {
-	s       gocron.Scheduler
-	db      *gorm.DB
-	runs    *runner.Manager
-	refresh RefreshFunc
-	log     *slog.Logger
+	s        gocron.Scheduler
+	db       *gorm.DB
+	runs     *runner.Manager
+	refresh  RefreshFunc
+	log      *slog.Logger
+	settings *settings.Store
 
 	mu          stdsync.Mutex
 	taskJobs    map[string]uuid.UUID
@@ -37,16 +39,24 @@ type Scheduler struct {
 }
 
 // New creates the scheduler (not yet started).
-func New(db *gorm.DB, runs *runner.Manager, log *slog.Logger) (*Scheduler, error) {
+func New(db *gorm.DB, runs *runner.Manager, store *settings.Store, log *slog.Logger) (*Scheduler, error) {
+	global, err := store.Get(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	location, err := time.LoadLocation(global.Timezone)
+	if err != nil {
+		return nil, fmt.Errorf("global timezone: %w", err)
+	}
 	s, err := gocron.NewScheduler(
-		gocron.WithLocation(time.UTC),
+		gocron.WithLocation(location),
 		gocron.WithStopTimeout(30*time.Second),
 	)
 	if err != nil {
 		return nil, err
 	}
 	return &Scheduler{
-		s: s, db: db, runs: runs, log: log,
+		s: s, db: db, runs: runs, log: log, settings: store,
 		taskJobs:    map[string]uuid.UUID{},
 		refreshJobs: map[string]uuid.UUID{},
 	}, nil
@@ -92,7 +102,7 @@ func ValidateCron(expr, tz string, n int) ([]time.Time, error) {
 		return nil, errors.New("cron expression is required")
 	}
 	if strings.HasPrefix(expr, "TZ=") || strings.HasPrefix(expr, "CRON_TZ=") {
-		return nil, errors.New("set the timezone separately instead of a TZ= prefix")
+		return nil, errors.New("timezone prefixes are not supported; use the global timezone setting")
 	}
 	if len(strings.Fields(expr)) != 5 && !strings.HasPrefix(expr, "@") {
 		return nil, errors.New("use a standard 5-field cron expression (minute hour day month weekday)")
@@ -131,10 +141,14 @@ func (s *Scheduler) SyncTask(t models.Task) error {
 		}
 		return nil
 	}
-	if _, err := ValidateCron(t.CronExpression, t.CronTimezone, 1); err != nil {
+	global, err := s.settings.Get(context.Background())
+	if err != nil {
 		return err
 	}
-	def := gocron.CronJob(CronSpec(t.CronExpression, t.CronTimezone), false)
+	if _, err := ValidateCron(t.CronExpression, global.Timezone, 1); err != nil {
+		return err
+	}
+	def := gocron.CronJob(CronSpec(t.CronExpression, global.Timezone), false)
 	taskID := t.ID
 	task := gocron.NewTask(func() { s.runScheduled(taskID) })
 	opts := []gocron.JobOption{

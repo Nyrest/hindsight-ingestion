@@ -46,21 +46,21 @@
     "create": "Crear",
     "delete": "Eliminar",
     "edit": "Editar",
-    "false": "Falso",
-    "true": "Verdadero",
+    "false": "No",
+    "true": "Sí",
     "loadFailed": "No se pudieron cargar datos",
     "loading": "Cargando…",
     "moreActions": "Más acciones",
     "new": "Nuevo",
     "next": "Página siguiente",
-    "previous": "Pagina anterior",
+    "previous": "Página anterior",
     "none": "Ninguno",
     "pageOf": "Página {{page}} de {{pages}}",
     "refresh": "Actualizar",
     "retry": "Reintentar",
     "save": "Guardar",
     "saveChanges": "Guardar cambios",
-    "select": "Seleccione…",
+    "select": "Selecciona…",
     "viewAll": "Ver todo"
   },
   "validation": {
@@ -68,23 +68,23 @@
     "number": "Debe ser un número",
     "integer": "Debe ser un número entero",
     "min1": "Debe ser al menos 1",
-    "url": "Debe ser un URL válido",
-    "tooLong": "demasiado tiempo"
+    "url": "Debe ser una URL válida",
+    "tooLong": "El texto es demasiado largo"
   },
   "runStatus": {
     "pending": "Pendiente",
     "running": "En curso",
     "waiting_operations": "Esperando operaciones",
-    "succeeded": "Tuvo éxito",
+    "succeeded": "Completado",
     "failed": "Fallido",
-    "interrupted": "interrumpido",
+    "interrupted": "Interrumpido",
     "cancelled": "Cancelado"
   },
   "credentialStatus": {
     "active": "Activo",
     "reauth_required": "Se requiere reconectar",
     "pending_oauth": "Esperando OAuth",
-    "error": "error"
+    "error": "Error"
   },
   "chips": {
     "placeholder": "Escribe y presiona Enter",
@@ -93,24 +93,24 @@
     "automatic": "Agregado automáticamente"
   },
   "kv": {
-    "key": "clave",
+    "key": "Clave",
     "value": "Valor",
     "add": "Añadir",
     "remove": "Quitar fila"
   },
   "secret": {
-    "keepHint": "Se almacena un valor. Deje la máscara sin cambios para conservarla o escriba un nuevo valor para reemplazarla.",
+    "keepHint": "Hay un valor guardado. Deja la máscara sin cambios para conservarlo o introduce un valor nuevo para sustituirlo.",
     "clear": "Borrar valor almacenado"
   },
   "headers": {
     "title": "Encabezados personalizados",
     "help": "Enviado con cada solicitud a este proveedor. Los encabezados de autenticación del conector tienen prioridad.",
     "mode": "Modo editor",
-    "ui": "interfaz de usuario",
+    "ui": "Formulario",
     "json": "JSON",
     "name": "Nombre del encabezado",
     "value": "Valor",
-    "valuePlaceholder": "valor del encabezado",
+    "valuePlaceholder": "Valor del encabezado",
     "add": "Agregar encabezado",
     "empty": "Sin encabezados personalizados",
     "maskHint": "Los valores almacenados se muestran como {{mask}}; mantenga la máscara para dejar un valor sin cambios.",
@@ -128,7 +128,7 @@
     "titleFor": "Seleccione {{label}}",
     "description": "Navegue por las carpetas y seleccione un elemento.",
     "breadcrumbs": "Ubicación",
-    "root": "raíz",
+    "root": "Raíz",
     "empty": "Nada aquí",
     "hint": "Seleccione un elemento o abra una carpeta con la flecha",
     "open": "Abrir {{name}}",
@@ -152,7 +152,7 @@
   },
   "capabilities": {
     "incremental": {
-      "high_water_mark": "Marca de agua alta",
+      "high_water_mark": "Cursor por fecha de modificación",
       "delta_token": "Token delta",
       "sync_token": "token de sincronización",
       "inventory": "diferencia de inventario"
@@ -173,15 +173,15 @@
     "createTitle": "Nueva credencial",
     "createDescription": "Elija un proveedor e ingrese sus detalles de conexión.",
     "editTitle": "Editar credencial",
-    "editDescription": "Los secretos nunca se muestran. Deje los valores enmascarados sin cambios para conservarlos.",
+    "editDescription": "Las claves guardadas se muestran ocultas. Deja los valores ocultos sin cambios para conservarlos.",
     "createInline": "Crear una nueva credencial",
-    "namePlaceholder": "por ej. Trabajo {{type}}",
+    "namePlaceholder": "p. ej., {{type}} — Trabajo",
     "pick": "Seleccione una credencial",
     "noneOfType": "Aún no hay credenciales {{type}}",
     "notActiveWarning": "Esta credencial es actualmente \"{{status}}\". Las ejecuciones pueden fallar hasta que se solucione.",
     "oauthHint": "Después de guardar, pulsa «Conectar» y sigue las instrucciones para autorizar el acceso.",
-    "usedByCount_one": "Tarea {{count}}",
-    "usedByCount_other": "Tareas {{count}}",
+    "usedByCount_one": "{{count}} tarea",
+    "usedByCount_other": "{{count}} tareas",
     "fields": {
       "type": "Proveedor",
       "name": "Nombre"
@@ -194,7 +194,7 @@
       "oauth": "OAuth"
     },
     "actions": {
-      "test": "prueba",
+      "test": "Probar conexión",
       "connect": "Conectar",
       "reconnect": "Reconectar",
       "refresh": "Actualizar token"
@@ -227,23 +227,23 @@
     "delete": {
       "title": "¿Eliminar “{{name}}”?",
       "description": "Esto elimina permanentemente la credencial y sus secretos almacenados.",
-      "inUse_one": "Esta credencial es utilizada por la tarea {{count}}. Elimine o cambie esa tarea primero.",
-      "inUse_other": "Esta credencial es utilizada por las tareas {{count}}. Elimine o cambie esas tareas primero."
+      "inUse_one": "Esta credencial se usa en {{count}} tarea. Elimina la tarea o cambia su credencial primero.",
+      "inUse_other": "Esta credencial se usa en {{count}} tareas. Elimina las tareas o cambia su credencial primero."
     }
   },
   "filters": {
     "add": "Agregar filtro",
     "remove": "Quitar filtro",
-    "where": "donde",
+    "where": "Condición",
     "and": "y",
-    "field": "campo",
+    "field": "Campo",
     "operator": "Operador",
     "mode": "Modo de filtro",
     "simple": "Sencillo",
     "advanced": "Avanzado",
     "advancedQuery": "Consulta",
-    "advancedHint": "Sintaxis de consulta de proveedor sin formato.",
-    "driveHint": "Sintaxis de consulta de Google Drive; por ejemplo: mimeType = 'application/pdf' y modifiedTime > '2024-01-01T00:00:00'. Los archivos de la papelera siempre se excluyen.",
+    "advancedHint": "Usa directamente la sintaxis de consulta del proveedor.",
+    "driveHint": "Sintaxis de consulta de Google Drive; por ejemplo: mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'. Los archivos de la papelera siempre se excluyen.",
     "noFields": "Esta fuente no admite filtros.",
     "selectValues": "Seleccionar valores…",
     "valuePlaceholder": "Valor",
@@ -257,16 +257,16 @@
       "notEquals": "no es igual",
       "contains": "contiene",
       "in": "es cualquiera de",
-      "notIn": "es ninguno de",
+      "notIn": "no es ninguno de",
       "greaterThan": "mayor que",
-      "lessThan": "menos que"
+      "lessThan": "menor que"
     },
     "errors": {
       "field": "Seleccione un campo válido",
       "operator": "Operador no admitido para este campo",
       "value": "Introduce un valor",
       "valueList": "Añade al menos un valor",
-      "number": "debe ser un numero"
+      "number": "Debe ser un número"
     }
   },
   "filePolicy": {
@@ -278,8 +278,8 @@
     "mode": {
       "global": "Usar la configuración global",
       "globalHelp": "Usa los tipos de archivo definidos en Configuración.",
-      "override": "Anular",
-      "overrideHelp": "Elija tipos de archivos solo para esta tarea."
+      "override": "Personalizar",
+      "overrideHelp": "Elige los tipos de archivo solo para esta tarea."
     }
   },
   "source": {
@@ -298,7 +298,7 @@
     "lockNotice": "El destino pasa a ser de solo lectura después de la primera ejecución exitosa."
   },
   "retain": {
-    "label": "Estrategia de retención",
+    "label": "Estrategia de procesamiento",
     "bankDefault": "Valor predeterminado del banco de memoria",
     "bankDefaultNamed": "Valor predeterminado del banco de memoria ({{name}})",
     "help": "Define cómo procesa Hindsight el contenido que recibe. La opción predeterminada usa la estrategia configurada en el banco de memoria.",
@@ -325,12 +325,12 @@
   },
   "schedule": {
     "cron": "Expresión Cron",
-    "cronHelp": "Cron estándar de 5 campos: minuto hora día mes día laborable",
+    "cronHelp": "Cron estándar de 5 campos: minuto, hora, día del mes, mes y día de la semana",
     "timezone": "Zona horaria",
     "selectTimezone": "Seleccionar zona horaria",
     "searchTimezone": "Buscar zonas horarias…",
     "noTimezone": "No se encontró zona horaria",
-    "suggested": "sugerido",
+    "suggested": "Sugeridas",
     "allTimezones": "Todas las zonas horarias",
     "nextRuns": "Próximas ejecuciones",
     "enterCron": "Ingrese una expresión cron para obtener una vista previa de las próximas ejecuciones.",
@@ -338,7 +338,7 @@
     "previewUnavailable": "Vista previa no disponible",
     "presets": {
       "every15m": "Cada 15 minutos",
-      "everyHour": "cada hora",
+      "everyHour": "Cada hora",
       "every6h": "Cada 6 horas",
       "daily3": "Diariamente 03:00",
       "weeklyMon8": "Lunes 08:00"
@@ -350,10 +350,10 @@
     "new": "Nueva tarea",
     "neverRun": "Nunca se ha ejecutado",
     "reconcileRequired": "Sincronización completa pendiente",
-    "itemCount_one": "{{count}} artículo",
-    "itemCount_other": "Artículos {{count}}",
+    "itemCount_one": "{{count}} elemento",
+    "itemCount_other": "{{count}} elementos",
     "columns": {
-      "enabled": "encendido",
+      "enabled": "Habilitada",
       "name": "Nombre",
       "source": "Fuente",
       "destination": "Destino",
@@ -363,19 +363,20 @@
       "status": "Estado"
     },
     "status": {
-      "idle": "inactivo",
-      "disabled": "Discapacitado",
+      "idle": "En espera",
+      "disabled": "Deshabilitada",
       "reconcilePending": "Sincronización completa pendiente"
     },
     "actions": {
       "runNow": "Ejecutar ahora",
       "fullReconcile": "Sincronizar todo",
-      "fullReingest": "Reingestión completa",
+      "fullReingest": "Volver a importar todo",
       "cancel": "Cancelar ejecución",
       "enable": "Habilitar",
       "disable": "Desactivar",
       "viewRuns": "Ver ejecuciones",
-      "dryRun": "Prueba de ejecución"
+      "dryRun": "Prueba de ejecución",
+      "deleteDocuments": "Eliminar documentos"
     },
     "empty": {
       "title": "Aún no hay tareas",
@@ -389,7 +390,7 @@
         "success": "Se inició la sincronización completa"
       },
       "fullReingest": {
-        "success": "Se inició la reingestión completa"
+        "success": "Se inició la importación de todo el contenido"
       },
       "alreadyRunning": "La tarea ya se está ejecutando",
       "failed": "No se pudo iniciar la ejecución"
@@ -405,15 +406,24 @@
       "updateFailed": "No se pudo actualizar la tarea",
       "deleted": "Tarea eliminada",
       "deleteFailed": "No se pudo eliminar la tarea",
-      "deleteRunning": "La tarea se está ejecutando; cancelarlo antes de borrar"
+      "deleteRunning": "La tarea está ocupada. Inténtalo de nuevo cuando termine la operación actual."
     },
     "delete": {
       "title": "¿Eliminar “{{name}}”?",
-      "description": "Se eliminarán la tarea, su historial de ejecución y su estado de sincronización. Los documentos que ya están en Hindsight no se eliminan."
+      "description": "Se eliminarán la tarea, su historial y su estado de sincronización. Por defecto, los documentos de Hindsight se conservarán.",
+      "alsoDeleteDocuments": "Eliminar también los documentos de Hindsight",
+      "documentsHelp": "Si se selecciona, también se eliminarán de Hindsight los documentos etiquetados para esta tarea y sus recuerdos asociados."
     },
     "reingest": {
-      "title": "¿Volver a ingerir todo para “{{name}}”?",
-      "description": "Todos los elementos coincidentes se volverán a conservar en Hindsight, incluso si no se modifican. Esto puede llevar mucho tiempo y consumir el procesamiento Hindsight."
+      "title": "¿Volver a importar todo el contenido de «{{name}}»?",
+      "description": "Todo el contenido que cumpla los criterios se volverá a enviar a Hindsight, incluido el que no haya cambiado. Puede tardar bastante y consumir recursos de procesamiento adicionales."
+    },
+    "clearDocuments": {
+      "title": "¿Eliminar los documentos de «{{name}}»?",
+      "description": "Se eliminarán de Hindsight los documentos etiquetados para esta tarea y sus recuerdos asociados. La tarea se pausará. El contenido de origen no se verá afectado.",
+      "failed": "No se pudieron eliminar los documentos",
+      "success_one": "Se eliminó {{count}} documento",
+      "success_other": "Se eliminaron {{count}} documentos"
     }
   },
   "taskEditor": {
@@ -423,8 +433,8 @@
     "enabledHelp": "Las tareas deshabilitadas mantienen su estado de sincronización pero no están programadas.",
     "notFound": "Tarea no encontrada",
     "nextRun": "Próxima ejecución: {{when}}",
-    "itemCount_one": "Elemento {{count}} sincronizado",
-    "itemCount_other": "Elementos {{count}} sincronizados",
+    "itemCount_one": "{{count}} elemento sincronizado",
+    "itemCount_other": "{{count}} elementos sincronizados",
     "recentRuns": "Ejecuciones recientes",
     "saveBeforeRun": "Guarde sus cambios antes de ejecutar",
     "saveError": "No se pudo guardar la tarea",
@@ -439,11 +449,11 @@
       "sourceTypeLocked": "El tipo de fuente no se puede cambiar después de la creación. Cree una nueva tarea para utilizar una fuente diferente.",
       "filtersReconcile": "Al cambiar los filtros, la tarea queda pendiente de una sincronización completa. En ella se eliminan de Hindsight los elementos que ya no coincidan.",
       "filesReconcile": "Al cambiar los tipos de archivo, se inicia una sincronización completa. Los archivos excluidos se eliminan de Hindsight.",
-      "policyRevision": "Al cambiar la estrategia de retención, las etiquetas o los metadatos se vuelven a conservar todos los elementos coincidentes en la siguiente ejecución."
+      "policyRevision": "Al cambiar la estrategia de procesamiento, las etiquetas o los metadatos, todo el contenido que cumpla los criterios se volverá a enviar a Hindsight en la próxima ejecución."
     },
     "sections": {
       "general": {
-        "title": "generales",
+        "title": "General",
         "description": "Configura el nombre y la activación de la tarea."
       },
       "source": {
@@ -459,7 +469,7 @@
         "description": "Banco de memoria de Hindsight que recibe el contenido."
       },
       "retain": {
-        "title": "Mantener la estrategia",
+        "title": "Estrategia de procesamiento",
         "description": "Cómo procesa Hindsight el contenido."
       },
       "observations": {
@@ -514,18 +524,18 @@
       "manual": "Manual"
     },
     "mode": {
-      "incremental": "incremental",
+      "incremental": "Incremental",
       "full": "Completa",
-      "reingest": "Volver a ingerir"
+      "reingest": "Importación completa de nuevo"
     },
     "counters": {
       "discoveredCount": "Detectados",
-      "createdCount": "Creado",
-      "updatedCount": "Actualizado",
-      "deletedCount": "Eliminado",
+      "createdCount": "Creados",
+      "updatedCount": "Actualizados",
+      "deletedCount": "Eliminados",
       "unchangedCount": "Sin cambios",
       "skippedCount": "Omitidos",
-      "failedCount": "Fallido"
+      "failedCount": "Fallidos"
     },
     "filters": {
       "status": "Filtrar por estado",
@@ -577,7 +587,7 @@
       "items": "Elementos sincronizados",
       "itemsSub": "en todas las tareas",
       "failures24h": "Fallos (24h)",
-      "needsAttention": "necesita atencion",
+      "needsAttention": "Requiere atención",
       "allGood": "Todo bien"
     },
     "getStarted": {
@@ -657,16 +667,20 @@
     },
     "files": {
       "title": "Tipos de archivos globales",
-      "description": "Tipos de archivos predeterminados para tareas configuradas en \"Seguir global\". Los archivos excluidos se eliminan durante la conciliación."
+      "description": "Tipos de archivo predeterminados para las tareas que usan la configuración global. El contenido excluido se elimina de Hindsight durante la sincronización completa."
     },
     "oauth": {
       "title": "OAuth",
-      "description": "Registre esta redirección URI en la configuración de su aplicación Google Cloud y Microsoft Entra (Azure) para las credenciales Google Drive y OneDrive.",
-      "redirectUri": "Redirigir URI"
+      "description": "Registra esta URI de redirección en la configuración de las aplicaciones de Google Cloud y Microsoft Entra (Azure) para conectar Google Drive y OneDrive.",
+      "redirectUri": "URI de redirección"
     },
     "toast": {
       "saved": "Configuración guardada",
       "failed": "No se pudo guardar la configuración"
+    },
+    "timezone": {
+      "help": "Todas las tareas usan esta zona horaria. Por defecto se usa TZ del servidor o UTC si no está definida.",
+      "invalid": "Selecciona una zona horaria válida."
     }
   },
   "notFound": {
@@ -685,10 +699,10 @@
     "incomplete_other": "Análisis incompleto ({{count}} elementos). Los elementos que faltan no se marcarán para su eliminación.",
     "truncated": "Se muestran los primeros 100 elementos. El recuento incluye todos los elementos.",
     "file": "Elemento del origen",
-    "action": "acción",
+    "action": "Acción",
     "reason": "Razón",
     "actions": {
-      "create": "crear",
+      "create": "Crear",
       "update": "Actualizar",
       "delete": "Eliminar",
       "unchanged": "Sin cambios",
@@ -767,5 +781,21 @@
     "hindsightApiKeyHelp": "Se envía como token Bearer. Déjalo vacío si la instancia no requiere autenticación.",
     "syncCollectionHelp": "Usa sync-collection (RFC 6578) si el servidor lo admite.",
     "fileSystem": "Sistema de archivos"
+  },
+  "proxy": {
+    "title": "Proxy",
+    "global": "Usar la configuración global",
+    "types": {
+      "default": "Usar variables de entorno",
+      "none": "Sin proxy",
+      "http": "HTTP",
+      "https": "HTTPS",
+      "socks5": "SOCKS5"
+    },
+    "defaultHelp": "Usa la configuración de proxy de las variables de entorno del servidor.",
+    "address": "Dirección",
+    "username": "Usuario (opcional)",
+    "password": "Contraseña (opcional)",
+    "invalidAddress": "Introduce una dirección de proxy con el formato host:puerto y un puerto entre 1 y 65535."
   }
 }

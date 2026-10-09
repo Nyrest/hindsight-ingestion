@@ -35,6 +35,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useTimezone } from "@/features/settings/api";
 import { useCredentials } from "@/features/credentials/api";
 import {
   useCancelTask,
@@ -56,6 +57,7 @@ import { ToneBadge } from "@/components/status-badge";
 import { DryRunDialog } from "@/features/tasks/dry-run-dialog";
 
 export default function TasksPage() {
+  const timezone = useTimezone();
   const { t } = useTranslation();
   const now = useNow();
   const navigate = useNavigate();
@@ -128,7 +130,7 @@ export default function TasksPage() {
       <div className="min-w-0">
         <div className="font-mono text-xs">{task.cronExpression}</div>
         <div className="truncate text-xs text-muted-foreground" title={desc ?? undefined}>
-          {desc ?? ""} {task.cronTimezone && task.cronTimezone !== "UTC" ? `(${task.cronTimezone})` : task.cronTimezone ? "(UTC)" : ""}
+          {desc ?? ""} ({timezone})
         </div>
       </div>
     );
@@ -139,7 +141,7 @@ export default function TasksPage() {
     return (
       <Link to={`/runs/${task.lastRun.id}`} className="flex flex-col items-start gap-0.5" onClick={(e) => e.stopPropagation()}>
         <RunStatusBadge status={task.lastRun.status} />
-        <span className="text-xs text-muted-foreground" title={formatDateTime(task.lastRun.startedAt)}>
+        <span className="text-xs text-muted-foreground" title={formatDateTime(task.lastRun.startedAt, timezone)}>
           {formatRelative(task.lastRun.finishedAt ?? task.lastRun.startedAt, now)}
         </span>
       </Link>
@@ -149,7 +151,7 @@ export default function TasksPage() {
   function nextRunCell(task: Task) {
     if (!task.enabled || !task.nextRunAt) return <span className="text-xs text-muted-foreground">—</span>;
     return (
-      <span className="text-sm" title={formatDateTime(task.nextRunAt)}>
+      <span className="text-sm" title={formatDateTime(task.nextRunAt, timezone)}>
         {formatRelative(task.nextRunAt, now)}
       </span>
     );

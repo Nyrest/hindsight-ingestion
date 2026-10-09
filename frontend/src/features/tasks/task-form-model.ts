@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { defaultObservationScope, observationScopeSchema } from "@/features/settings/config-model";
 import type { KeyValueRow } from "@/components/key-value-editor";
-import { browserTimeZone } from "@/lib/format";
 import type { FilePolicy, FilterRule, SourceFilter, Task, TaskInput } from "@/lib/types";
 
 export const RESERVED_METADATA_PREFIX = "_ingestion_";
@@ -36,7 +35,6 @@ export const taskFormSchema = z
     inlineMultimodalEnabled: z.boolean(),
     filePolicy: filePolicySchema,
     cronExpression: z.string().trim().min(1, "validation.required"),
-    cronTimezone: z.string().min(1, "validation.required"),
   })
   .superRefine((v, ctx) => {
     metadataRowErrors(v.metadataRows).forEach((msg, i) => {
@@ -86,7 +84,6 @@ export function emptyTaskForm(): TaskFormValues {
     inlineMultimodalEnabled: false,
     filePolicy: { ...DEFAULT_POLICY },
     cronExpression: "0 * * * *",
-    cronTimezone: browserTimeZone(),
   };
 }
 
@@ -113,7 +110,6 @@ export function taskToForm(t: Task): TaskFormValues {
     inlineMultimodalEnabled: t.inlineMultimodalEnabled ?? false,
     filePolicy: { ...DEFAULT_POLICY, ...(t.filePolicy ?? {}) },
     cronExpression: t.cronExpression,
-    cronTimezone: t.cronTimezone || "UTC",
   };
 }
 
@@ -146,7 +142,6 @@ export function formToInput(v: TaskFormValues, normalizedConfig: Record<string, 
     inlineMultimodalEnabled: v.inlineMultimodalEnabled,
     filePolicy: v.filePolicy,
     cronExpression: v.cronExpression.trim(),
-    cronTimezone: v.cronTimezone,
   } satisfies TaskInput;
 }
 

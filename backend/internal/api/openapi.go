@@ -62,7 +62,7 @@ func OpenAPIDocument() ([]byte, error) {
 				case "/api/credentials":
 					schema["required"] = []string{"name", "type", "config"}
 				case "/api/tasks/validate-cron":
-					schema["required"] = []string{"cronExpression", "cronTimezone"}
+					schema["required"] = []string{"cronExpression"}
 				}
 			}
 			// Pointers denote omission in requests, rather than nullable response fields.

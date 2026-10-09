@@ -76,7 +76,7 @@ export const api = {
   fullReingestTask: (id: string) => unwrap(client.POST("/api/tasks/{id}/full-reingest", { params: pathParams(id) })),
   cancelTask: (id: string) => unwrap(client.POST("/api/tasks/{id}/cancel", { params: pathParams(id) })),
   taskRuns: (id: string, limit = 50, offset = 0) => unwrap(client.GET("/api/tasks/{id}/runs", { params: { ...pathParams(id), query: { limit, offset } } })),
-  validateCron: (cronExpression: string, cronTimezone: string) => unwrap(client.POST("/api/tasks/validate-cron", { body: { cronExpression, cronTimezone } })),
+  validateCron: (cronExpression: string) => unwrap(client.POST("/api/tasks/validate-cron", { body: { cronExpression } })),
   listRuns: (query: RunsQuery) => unwrap(client.GET("/api/runs", { params: { query } })),
   getRun: (id: string) => unwrap(client.GET("/api/runs/{id}", { params: pathParams(id) })),
   dashboard: () => unwrap(client.GET("/api/dashboard")),

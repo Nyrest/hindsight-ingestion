@@ -85,7 +85,7 @@ func run() error {
 		log.Warn("marked interrupted runs from previous process", "count", n)
 	}
 
-	sched, err := scheduler.New(db, runs, log)
+	sched, err := scheduler.New(db, runs, store, log)
 	if err != nil {
 		return err
 	}

@@ -143,6 +143,7 @@ Use `.env` for the bundled Compose deployment. Configure source credentials, tas
 | `PUBLIC_URL` | — | Compose default: `http://localhost:8080`. Use your external service URL for OAuth. |
 | `MAX_CONCURRENT_TASKS` | — | `4`. Maximum number of task runs at the same time. |
 | `LOG_LEVEL` | — | `info`. Also accepts `debug`, `warn` and `error`. |
+| `TZ` | — | `UTC`. Default application timezone. |
 | `DISABLE_AUTH` | — | `false`. Set to `true` to allow access without signing in; DO THIS ONLY IF YOU HAVE EXTERNAL AUTHENTICATION SETUP LIKE CLOUDFLARE ACCESS. |
 
 For these additional variables, edit the Compose service's `environment` section. Setting them only in `.env` does not override the bundled configuration.

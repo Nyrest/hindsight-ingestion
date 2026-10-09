@@ -9,7 +9,7 @@
   },
   "app": {
     "name": "Hindsight Ingestion",
-    "tagline": "Sincronizza le fonti con i archivio di memoria di Hindsight",
+    "tagline": "Sincronizza le fonti con gli archivi di memoria di Hindsight",
     "version": "v{{version}}",
     "authDisabled": "autenticazione disabilitata"
   },
@@ -18,7 +18,7 @@
   },
   "nav": {
     "dashboard": "Cruscotto",
-    "tasks": "Compiti",
+    "tasks": "Attività",
     "runs": "Esecuzioni",
     "credentials": "Credenziali",
     "settings": "Impostazioni",
@@ -46,8 +46,8 @@
     "create": "Crea",
     "delete": "Elimina",
     "edit": "Modifica",
-    "false": "Falso",
-    "true": "Vero",
+    "false": "No",
+    "true": "Sì",
     "loadFailed": "Impossibile caricare i dati",
     "loading": "Caricamento…",
     "moreActions": "Altre azioni",
@@ -89,7 +89,7 @@
   "chips": {
     "placeholder": "Digita e premi Invio",
     "duplicate": "\"{{value}}\" è già aggiunto",
-    "remove": "Rimuovere {{value}}",
+    "remove": "Rimuovi {{value}}",
     "automatic": "Aggiunto automaticamente"
   },
   "kv": {
@@ -99,14 +99,14 @@
     "remove": "Rimuovi riga"
   },
   "secret": {
-    "keepHint": "Viene memorizzato un valore. Lasciare invariata la maschera per mantenerla oppure digitare un nuovo valore per sostituirla.",
+    "keepHint": "È presente un valore salvato. Lascia invariata la maschera per conservarlo o inserisci un nuovo valore per sostituirlo.",
     "clear": "Cancella il valore memorizzato"
   },
   "headers": {
     "title": "Intestazioni personalizzate",
     "help": "Inviato con ogni richiesta a questo fornitore. Le intestazioni di autenticazione del connettore hanno la precedenza.",
-    "mode": "Modalità editore",
-    "ui": "interfaccia utente",
+    "mode": "Modalità di modifica",
+    "ui": "Modulo",
     "json": "JSON",
     "name": "Nome dell'intestazione",
     "value": "Valore",
@@ -140,11 +140,11 @@
       "data_source": "Origine dati",
       "notebook": "Taccuino",
       "bucket": "Bucket",
-      "bank": "archivio di memoria",
+      "bank": "Archivio di memoria",
       "drive": "Unità",
       "site": "Sito"
     },
-    "memoryBanks": "archivi di memoria",
+    "memoryBanks": "Archivi di memoria",
     "drives": "Unità",
     "buckets": "Bucket",
     "dataSources": "Origini dati",
@@ -152,7 +152,7 @@
   },
   "capabilities": {
     "incremental": {
-      "high_water_mark": "Livello di alta marea",
+      "high_water_mark": "Cursore basato sulla data di modifica",
       "delta_token": "Token delta",
       "sync_token": "Token di sincronizzazione",
       "inventory": "Differenza inventario"
@@ -173,22 +173,22 @@
     "createTitle": "Nuova credenziale",
     "createDescription": "Scegli un provider e inserisci i dettagli della sua connessione.",
     "editTitle": "Modifica credenziale",
-    "editDescription": "I segreti non vengono mai mostrati. Lasciare invariati i valori mascherati per mantenerli.",
+    "editDescription": "Le chiavi salvate sono nascoste. Lascia invariati i valori mascherati per mantenere quelli salvati.",
     "createInline": "Crea una nuova credenziale",
-    "namePlaceholder": "ad es. Lavora {{type}}",
+    "namePlaceholder": "es. {{type}} — Lavoro",
     "pick": "Seleziona una credenziale",
     "noneOfType": "Nessuna credenziale {{type}} ancora",
     "notActiveWarning": "Questa credenziale è attualmente \"{{status}}\". Le esecuzioni potrebbero non riuscire finché il problema non viene risolto.",
     "oauthHint": "Dopo aver salvato, fai clic su “Connetti” e segui le istruzioni per autorizzare l’accesso.",
-    "usedByCount_one": "Attività {{count}}",
-    "usedByCount_other": "Attività {{count}}",
+    "usedByCount_one": "{{count}} attività",
+    "usedByCount_other": "{{count}} attività",
     "fields": {
       "type": "Fornitore",
       "name": "Nome"
     },
     "columns": {
       "name": "Nome",
-      "type": "Digitare",
+      "type": "Tipo",
       "status": "Stato",
       "usedBy": "Utilizzato da",
       "oauth": "OAuth"
@@ -227,8 +227,8 @@
     "delete": {
       "title": "Eliminare \"{{name}}\"?",
       "description": "Ciò rimuove permanentemente la credenziale e i relativi segreti archiviati.",
-      "inUse_one": "Questa credenziale viene utilizzata dall'attività {{count}}. Rimuovi o modifica prima l'attività.",
-      "inUse_other": "Questa credenziale viene utilizzata dalle attività {{count}}. Rimuovi o modifica prima tali attività."
+      "inUse_one": "Questa credenziale è usata da {{count}} attività. Prima elimina l’attività o modifica la credenziale usata.",
+      "inUse_other": "Questa credenziale è usata da {{count}} attività. Prima elimina le attività o modifica la credenziale usata."
     }
   },
   "filters": {
@@ -241,9 +241,9 @@
     "mode": "Modalità filtro",
     "simple": "Semplice",
     "advanced": "Avanzato",
-    "advancedQuery": "Domanda",
-    "advancedHint": "Sintassi della query del provider non elaborata.",
-    "driveHint": "Sintassi di ricerca di Google Drive, ad esempio: mimeType = 'application/pdf' e modifiedTime > '2024-01-01T00:00:00'. I file nel cestino sono sempre esclusi.",
+    "advancedQuery": "Query",
+    "advancedHint": "Inserisci una query usando la sintassi del provider.",
+    "driveHint": "Sintassi di ricerca di Google Drive, ad esempio: mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'. I file nel cestino sono sempre esclusi.",
     "noFields": "Questa fonte non supporta i filtri.",
     "selectValues": "Seleziona i valori...",
     "valuePlaceholder": "Valore",
@@ -259,7 +259,7 @@
       "in": "è uno qualsiasi di",
       "notIn": "non è nessuno di",
       "greaterThan": "maggiore di",
-      "lessThan": "meno di"
+      "lessThan": "minore di"
     },
     "errors": {
       "field": "Seleziona un campo valido",
@@ -278,7 +278,7 @@
     "mode": {
       "global": "Usa le impostazioni globali",
       "globalHelp": "Usa i tipi di file configurati nelle impostazioni.",
-      "override": "Sostituisci",
+      "override": "Personalizza",
       "overrideHelp": "Scegli i tipi di file solo per questa attività."
     }
   },
@@ -290,7 +290,7 @@
   },
   "destination": {
     "credential": "Credenziale Hindsight",
-    "bank": "archivio di memoria",
+    "bank": "Archivio di memoria",
     "bankPlaceholder": "ID archivio di memoria",
     "browseBanks": "Seleziona un archivio di memoria",
     "pickCredentialFirst": "Seleziona prima le credenziali Hindsight.",
@@ -298,10 +298,10 @@
     "lockNotice": "La destinazione diventa di sola lettura dopo la prima esecuzione riuscita."
   },
   "retain": {
-    "label": "Mantieni la strategia",
-    "bankDefault": "Strategia predefinita del archivio di memoria",
-    "bankDefaultNamed": "Strategia predefinita del archivio di memoria ({{name}})",
-    "help": "Definisce come Hindsight elabora i contenuti inviati al archivio di memoria. L’opzione predefinita usa la strategia configurata nel archivio di memoria.",
+    "label": "Strategia di elaborazione",
+    "bankDefault": "Strategia predefinita dell’archivio di memoria",
+    "bankDefaultNamed": "Strategia predefinita dell’archivio di memoria ({{name}})",
+    "help": "Definisce come Hindsight elabora i contenuti. L’opzione predefinita usa la strategia configurata nell’archivio di memoria.",
     "freeTextPlaceholder": "Lascia vuoto per usare l’impostazione predefinita dell’archivio di memoria",
     "pickDestinationFirst": "Seleziona le credenziali di destinazione e un archivio di memoria per caricare le strategie disponibili.",
     "loadFailed": "Impossibile caricare le strategie da Hindsight; inserisci manualmente il nome di una strategia."
@@ -344,19 +344,19 @@
     }
   },
   "tasks": {
-    "title": "Compiti",
+    "title": "Attività",
     "description": "Ogni attività sincronizza una sorgente con un archivio di memoria Hindsight secondo la pianificazione impostata.",
-    "new": "Nuovo compito",
+    "new": "Nuova attività",
     "neverRun": "Mai eseguita",
     "reconcileRequired": "Sincronizzazione completa in sospeso",
-    "itemCount_one": "Articolo {{count}}",
+    "itemCount_one": "{{count}} elemento",
     "itemCount_other": "{{count}} elementi",
     "columns": {
-      "enabled": "Su",
+      "enabled": "Abilitata",
       "name": "Nome",
       "source": "Fonte",
       "destination": "Destinazione",
-      "schedule": "Programma",
+      "schedule": "Pianificazione",
       "lastRun": "Ultima esecuzione",
       "nextRun": "Prossima esecuzione",
       "status": "Stato"
@@ -369,12 +369,13 @@
     "actions": {
       "runNow": "Esegui ora",
       "fullReconcile": "Sincronizza tutto",
-      "fullReingest": "Reintegrazione completa",
+      "fullReingest": "Importa di nuovo tutto",
       "cancel": "Annulla esecuzione",
       "enable": "Abilita",
       "disable": "Disabilita",
       "viewRuns": "Visualizza esecuzioni",
-      "dryRun": "Simulazione"
+      "dryRun": "Simulazione",
+      "deleteDocuments": "Elimina documenti"
     },
     "empty": {
       "title": "Nessuna attività ancora",
@@ -382,19 +383,19 @@
     },
     "trigger": {
       "run": {
-        "success": "La corsa è iniziata"
+        "success": "Esecuzione avviata"
       },
       "fullReconcile": {
         "success": "Sincronizzazione completa avviata"
       },
       "fullReingest": {
-        "success": "È iniziata la reimportazione completa"
+        "success": "Nuova importazione di tutti i contenuti avviata"
       },
       "alreadyRunning": "L'attività è già in esecuzione",
       "failed": "Impossibile avviare l'esecuzione"
     },
     "cancel": {
-      "success": "Richiesta cancellazione",
+      "success": "Annullamento richiesto",
       "notRunning": "L'attività non è in esecuzione",
       "failed": "Impossibile annullare l’esecuzione"
     },
@@ -404,26 +405,35 @@
       "updateFailed": "Impossibile aggiornare l'attività",
       "deleted": "Attività eliminata",
       "deleteFailed": "Impossibile eliminare l'attività",
-      "deleteRunning": "L'attività è in esecuzione; annullarlo prima di eliminare"
+      "deleteRunning": "L’attività è occupata. Riprova quando l’operazione in corso sarà terminata."
     },
     "delete": {
       "title": "Eliminare \"{{name}}\"?",
-      "description": "L'attività, la cronologia di esecuzione e lo stato di sincronizzazione verranno rimossi. I documenti già in Hindsight non vengono eliminati."
+      "description": "Elimina l’attività, la cronologia e lo stato della sincronizzazione. Per impostazione predefinita, i documenti in Hindsight vengono conservati.",
+      "alsoDeleteDocuments": "Elimina anche i documenti in Hindsight",
+      "documentsHelp": "Se selezionata, questa opzione elimina da Hindsight anche i documenti contrassegnati per questa attività e i ricordi associati."
     },
     "reingest": {
-      "title": "Reinserire tutto per \"{{name}}\"?",
-      "description": "Ogni elemento corrispondente verrà nuovamente conservato in Hindsight, anche se invariato. Questa operazione potrebbe richiedere molto tempo e consumare l'elaborazione Hindsight."
+      "title": "Importare di nuovo tutti i contenuti di “{{name}}”?",
+      "description": "Tutti i contenuti che corrispondono ai criteri verranno inviati di nuovo a Hindsight, anche se invariati. L’operazione può richiedere tempo e risorse di elaborazione aggiuntive."
+    },
+    "clearDocuments": {
+      "title": "Eliminare i documenti di “{{name}}”?",
+      "description": "Elimina da Hindsight i documenti contrassegnati per questa attività e i ricordi associati. L’attività verrà sospesa. Il contenuto di origine non verrà modificato.",
+      "failed": "Impossibile eliminare i documenti",
+      "success_one": "{{count}} documento eliminato",
+      "success_other": "{{count}} documenti eliminati"
     }
   },
   "taskEditor": {
-    "newTitle": "Nuovo compito",
+    "newTitle": "Nuova attività",
     "create": "Crea attività",
     "namePlaceholder": "ad es. Notion → Personale",
     "enabledHelp": "Le attività disabilitate mantengono il proprio stato di sincronizzazione ma non vengono pianificate.",
     "notFound": "Attività non trovata",
     "nextRun": "Prossima esecuzione: {{when}}",
-    "itemCount_one": "Elemento {{count}} sincronizzato",
-    "itemCount_other": "Elementi {{count}} sincronizzati",
+    "itemCount_one": "{{count}} elemento sincronizzato",
+    "itemCount_other": "{{count}} elementi sincronizzati",
     "recentRuns": "Esecuzioni recenti",
     "saveBeforeRun": "Salva le modifiche prima di eseguire",
     "saveError": "Impossibile salvare l'attività",
@@ -438,7 +448,7 @@
       "sourceTypeLocked": "Il tipo di origine non può essere modificato dopo la creazione. Crea una nuova attività per utilizzare una fonte diversa.",
       "filtersReconcile": "Quando modifichi i filtri, l’attività viene contrassegnata per una sincronizzazione completa. Gli elementi che non corrispondono più ai filtri verranno rimossi da Hindsight.",
       "filesReconcile": "Quando modifichi i tipi di file, viene eseguita una sincronizzazione completa. I file esclusi vengono rimossi da Hindsight.",
-      "policyRevision": "La modifica della strategia di conservazione, dei tag o dei metadati conserva nuovamente tutti gli elementi corrispondenti all'esecuzione successiva."
+      "policyRevision": "Modificando la strategia di elaborazione, i tag o i metadati, tutti i contenuti che corrispondono ai criteri verranno inviati di nuovo a Hindsight alla prossima esecuzione."
     },
     "sections": {
       "general": {
@@ -458,7 +468,7 @@
         "description": "Archivio di memoria Hindsight che riceve i contenuti."
       },
       "retain": {
-        "title": "Mantieni la strategia",
+        "title": "Strategia di elaborazione",
         "description": "Come Hindsight elabora il contenuto."
       },
       "observations": {
@@ -482,13 +492,13 @@
         "description": "Metadati chiave/valore allegati a ogni documento."
       },
       "schedule": {
-        "title": "Programma",
+        "title": "Pianificazione",
         "description": "Quando l'attività viene eseguita automaticamente."
       }
     },
     "toast": {
       "created": "Attività creata",
-      "updated": "Compito salvato",
+      "updated": "Attività salvata",
       "saveFailed": "Impossibile salvare l'attività",
       "conflict": "Conflitto"
     }
@@ -500,7 +510,7 @@
     "total_one": "{{formatted}} esecuzione",
     "total_other": "{{formatted}} esecuzioni",
     "columns": {
-      "task": "Compito",
+      "task": "Attività",
       "status": "Stato",
       "trigger": "Avvio",
       "mode": "Modalità di esecuzione",
@@ -530,7 +540,7 @@
       "status": "Filtra per stato",
       "task": "Filtra per attività",
       "allStatuses": "Tutti gli stati",
-      "allTasks": "Tutti i compiti",
+      "allTasks": "Tutte le attività",
       "clear": "Cancella filtri"
     },
     "empty": {
@@ -551,13 +561,13 @@
     "cursorBefore": "Cursore prima dell’esecuzione",
     "cursorAfter": "Cursore dopo l’esecuzione",
     "noCursor": "nessuno",
-    "operations": "Hindsight operazioni",
+    "operations": "Operazioni Hindsight",
     "noOperations": "Nessuna operazione asincrona per questa esecuzione.",
     "log": "Registro",
     "noLog": "Nessuna riga di registro.",
     "opColumns": {
-      "remoteId": "Identificazione remota",
-      "type": "Digitare",
+      "remoteId": "ID remoto",
+      "type": "Tipo",
       "status": "Stato",
       "retries": "Nuovi tentativi",
       "created": "Creato",
@@ -574,8 +584,8 @@
       "runs24h_one": "{{count}} esecuzione nelle ultime 24 ore",
       "runs24h_other": "{{count}} esecuzioni nelle ultime 24 ore",
       "items": "Elementi sincronizzati",
-      "itemsSub": "in tutti i compiti",
-      "failures24h": "Guasti (24 ore)",
+      "itemsSub": "in tutte le attività",
+      "failures24h": "Errori (24 ore)",
       "needsAttention": "Ha bisogno di attenzione",
       "allGood": "Tutto bene"
     },
@@ -596,8 +606,8 @@
       "empty": "Nessuna esecuzione in programma"
     },
     "failures": {
-      "title": "Fallimenti recenti",
-      "empty": "Nessun fallimento recente"
+      "title": "Errori recenti",
+      "empty": "Nessun errore recente"
     }
   },
   "observationScope": {
@@ -656,16 +666,20 @@
     },
     "files": {
       "title": "Tipi di file globali",
-      "description": "Tipi di file predefiniti per le attività impostate su \"Segui globale\". I file esclusi vengono rimossi durante la riconciliazione."
+      "description": "Tipi di file predefiniti per le attività che usano le impostazioni globali. I contenuti esclusi vengono rimossi da Hindsight durante la sincronizzazione completa."
     },
     "oauth": {
       "title": "OAuth",
-      "description": "Registrare questo reindirizzamento URI nella configurazione dell'app Google Cloud e Microsoft Entra (Azure) per le credenziali Google Drive e OneDrive.",
-      "redirectUri": "Reindirizzare URI"
+      "description": "Registra questo URI di reindirizzamento nelle impostazioni delle app Google Cloud e Microsoft Entra (Azure) per collegare Google Drive e OneDrive.",
+      "redirectUri": "URI di reindirizzamento"
     },
     "toast": {
       "saved": "Impostazioni salvate",
       "failed": "Impossibile salvare le impostazioni"
+    },
+    "timezone": {
+      "help": "Tutte le attività usano questo fuso orario. Il valore predefinito è TZ del server, oppure UTC se TZ non è impostata.",
+      "invalid": "Seleziona un fuso orario valido."
     }
   },
   "notFound": {
@@ -766,5 +780,21 @@
     "hindsightApiKeyHelp": "Inviata come token Bearer. Lascia vuoto se l’istanza non richiede autenticazione.",
     "syncCollectionHelp": "Usa sync-collection (RFC 6578) se supportato dal server.",
     "fileSystem": "Sistema di file"
+  },
+  "proxy": {
+    "title": "Proxy",
+    "global": "Usa le impostazioni globali",
+    "types": {
+      "default": "Usa le variabili d’ambiente",
+      "none": "Nessun proxy",
+      "http": "HTTP",
+      "https": "HTTPS",
+      "socks5": "SOCKS5"
+    },
+    "defaultHelp": "Usa le impostazioni del proxy definite nelle variabili d’ambiente del server.",
+    "address": "Indirizzo",
+    "username": "Nome utente (facoltativo)",
+    "password": "Password (facoltativa)",
+    "invalidAddress": "Inserisci un indirizzo proxy nel formato host:porta, con una porta compresa tra 1 e 65535."
   }
 }

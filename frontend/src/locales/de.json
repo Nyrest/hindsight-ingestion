@@ -5,11 +5,11 @@
     "enabled": "Eingebettete Medien verarbeiten",
     "policyHelp": "Bilder werden nur einbezogen, wenn sowohl eingebettete Medien als auch „Bilder“ in der Dateityprichtlinie aktiviert sind.",
     "active": "Eingebettete Bilder werden einbezogen.",
-    "inactive": "Notizen werden als Text synchronisiert. Aktiviere eingebettete Medien und „Bilder“, wenn Bilder einbezogen werden sollen."
+    "inactive": "Notizen werden als Text synchronisiert. Aktivieren Sie eingebettete Medien und „Bilder“, um Bilder einzubeziehen."
   },
   "app": {
     "name": "Hindsight Ingestion",
-    "tagline": "Datenquellen mit den Hindsight-Erinnerungsspeicher synchronisieren",
+    "tagline": "Datenquellen mit dem Hindsight-Erinnerungsspeicher synchronisieren",
     "version": "v{{version}}",
     "authDisabled": "Authentifizierung deaktiviert"
   },
@@ -17,10 +17,10 @@
     "label": "Sprache"
   },
   "nav": {
-    "dashboard": "Armaturenbrett",
+    "dashboard": "Übersicht",
     "tasks": "Aufgaben",
     "runs": "Ausführungen",
-    "credentials": "Anmeldeinformationen",
+    "credentials": "Zugangsdaten",
     "settings": "Einstellungen",
     "open": "Navigation öffnen",
     "title": "Navigation",
@@ -46,8 +46,8 @@
     "create": "Erstellen",
     "delete": "Löschen",
     "edit": "Bearbeiten",
-    "false": "Falsch",
-    "true": "Wahr",
+    "false": "Nein",
+    "true": "Ja",
     "loadFailed": "Daten konnten nicht geladen werden",
     "loading": "Laden…",
     "moreActions": "Weitere Aktionen",
@@ -68,7 +68,7 @@
     "number": "Muss eine Zahl sein",
     "integer": "Muss eine ganze Zahl sein",
     "min1": "Muss mindestens 1 sein",
-    "url": "Muss ein gültiges URL sein",
+    "url": "Muss eine gültige URL sein",
     "tooLong": "Zu lang"
   },
   "runStatus": {
@@ -78,7 +78,7 @@
     "succeeded": "Erfolgreich",
     "failed": "Fehlgeschlagen",
     "interrupted": "Unterbrochen",
-    "cancelled": "Abgesagt"
+    "cancelled": "Abgebrochen"
   },
   "credentialStatus": {
     "active": "Aktiv",
@@ -87,7 +87,7 @@
     "error": "Fehler"
   },
   "chips": {
-    "placeholder": "Geben Sie ein und drücken Sie die Eingabetaste",
+    "placeholder": "Wert eingeben und die Eingabetaste drücken",
     "duplicate": "„{{value}}“ ist bereits hinzugefügt",
     "remove": "Entfernen Sie {{value}}",
     "automatic": "Automatisch hinzugefügt"
@@ -99,19 +99,19 @@
     "remove": "Zeile entfernen"
   },
   "secret": {
-    "keepHint": "Ein Wert wird gespeichert. Lassen Sie die Maske unverändert, um sie beizubehalten, oder geben Sie einen neuen Wert ein, um sie zu ersetzen.",
+    "keepHint": "Ein Wert ist gespeichert. Lassen Sie die Maske unverändert, um den Wert beizubehalten, oder geben Sie einen neuen Wert ein.",
     "clear": "Gespeicherten Wert löschen"
   },
   "headers": {
     "title": "Benutzerdefinierte Header",
     "help": "Wird bei jeder Anfrage an diesen Anbieter gesendet. Connector-Authentifizierungsheader haben Vorrang.",
     "mode": "Editormodus",
-    "ui": "Benutzeroberfläche",
+    "ui": "Formular",
     "json": "JSON",
     "name": "Headername",
     "value": "Wert",
     "valuePlaceholder": "Header-Wert",
-    "add": "Kopfzeile hinzufügen",
+    "add": "Header hinzufügen",
     "empty": "Keine benutzerdefinierten Header",
     "maskHint": "Gespeicherte Werte werden als {{mask}} angezeigt; Behalten Sie die Maske bei, um einen Wert unverändert zu lassen.",
     "errors": {
@@ -128,7 +128,7 @@
     "titleFor": "Wählen Sie {{label}}",
     "description": "Navigieren Sie in Ordner und wählen Sie ein Element aus.",
     "breadcrumbs": "Standort",
-    "root": "Wurzel",
+    "root": "Stammverzeichnis",
     "empty": "Nichts hier",
     "hint": "Wählen Sie ein Element aus oder öffnen Sie einen Ordner mit dem Pfeil",
     "open": "Öffnen Sie {{name}}",
@@ -152,7 +152,7 @@
   },
   "capabilities": {
     "incremental": {
-      "high_water_mark": "Hochwassermarke",
+      "high_water_mark": "Zeitstempel-Cursor",
       "delta_token": "Delta-Token",
       "sync_token": "Synchronisierungstoken",
       "inventory": "Bestandsdifferenz"
@@ -167,21 +167,21 @@
     "advancedFilter": "Erweiterter Filter"
   },
   "credentials": {
-    "title": "Anmeldeinformationen",
+    "title": "Zugangsdaten",
     "description": "Wiederverwendbare Verbindungsdetails für Quellen und Hindsight-Ziele.",
-    "new": "Neuer Ausweis",
-    "createTitle": "Neuer Ausweis",
+    "new": "Neue Zugangsdaten",
+    "createTitle": "Neue Zugangsdaten",
     "createDescription": "Wählen Sie einen Anbieter und geben Sie dessen Verbindungsdaten ein.",
-    "editTitle": "Anmeldeinformationen bearbeiten",
-    "editDescription": "Geheimnisse werden nie gezeigt. Lassen Sie maskierte Werte unverändert, um sie beizubehalten.",
-    "createInline": "Erstellen Sie einen neuen Berechtigungsnachweis",
-    "namePlaceholder": "z.B. Arbeiten Sie {{type}}",
-    "pick": "Wählen Sie einen Berechtigungsnachweis aus",
-    "noneOfType": "Noch keine {{type}}-Anmeldeinformationen",
-    "notActiveWarning": "Dieser Berechtigungsnachweis lautet derzeit „{{status}}“. Läufe können fehlschlagen, bis das Problem behoben ist.",
+    "editTitle": "Zugangsdaten bearbeiten",
+    "editDescription": "Gespeicherte Schlüssel werden maskiert angezeigt. Lassen Sie maskierte Werte unverändert, um die gespeicherten Werte beizubehalten.",
+    "createInline": "Zugangsdaten hinzufügen",
+    "namePlaceholder": "z. B. {{type}} – Arbeit",
+    "pick": "Zugangsdaten auswählen",
+    "noneOfType": "Noch keine Zugangsdaten für {{type}}",
+    "notActiveWarning": "Diese Zugangsdaten haben den Status „{{status}}“. Ausführungen können fehlschlagen, bis das Problem behoben ist.",
     "oauthHint": "Klicken Sie nach dem Speichern auf „Verbinden“ und folgen Sie den Anweisungen zur Freigabe des Zugriffs.",
-    "usedByCount_one": "{{count}}-Aufgabe",
-    "usedByCount_other": "{{count}}-Aufgaben",
+    "usedByCount_one": "{{count}} Aufgabe",
+    "usedByCount_other": "{{count}} Aufgaben",
     "fields": {
       "type": "Anbieter",
       "name": "Name"
@@ -197,11 +197,11 @@
       "test": "Testen",
       "connect": "Verbinden",
       "reconnect": "Wieder verbinden",
-      "refresh": "Aktualisierungstoken"
+      "refresh": "Token aktualisieren"
     },
     "empty": {
-      "title": "Noch keine Anmeldedaten",
-      "description": "Fügen Sie einen Berechtigungsnachweis für eine Quelle (z. B. Notion) und einen für Ihre Hindsight-Instanz hinzu, um eine Aufgabe zu erstellen."
+      "title": "Noch keine Zugangsdaten",
+      "description": "Fügen Sie Zugangsdaten für eine Quelle (z. B. Notion) und für Hindsight hinzu, um eine Aufgabe zu erstellen."
     },
     "test": {
       "ok": "{{name}}: Verbindung OK",
@@ -216,19 +216,19 @@
       "expires": "Token läuft ab {{when}}"
     },
     "toast": {
-      "created": "Ausweis erstellt",
-      "updated": "Anmeldeinformationen aktualisiert",
-      "deleted": "Anmeldedaten gelöscht",
-      "deleteFailed": "Anmeldeinformationen konnten nicht gelöscht werden",
-      "inUse": "Anmeldedaten werden verwendet",
+      "created": "Zugangsdaten erstellt",
+      "updated": "Zugangsdaten aktualisiert",
+      "deleted": "Zugangsdaten gelöscht",
+      "deleteFailed": "Zugangsdaten konnten nicht gelöscht werden",
+      "inUse": "Zugangsdaten werden verwendet",
       "refreshed": "Token aktualisiert",
       "refreshFailed": "Die Aktualisierung des Tokens ist fehlgeschlagen"
     },
     "delete": {
       "title": "„{{name}}“ löschen?",
-      "description": "Dadurch werden die Anmeldeinformationen und die darin gespeicherten Geheimnisse dauerhaft entfernt.",
-      "inUse_one": "Diese Anmeldeinformationen werden von der {{count}}-Task verwendet. Entfernen oder ändern Sie zuerst diese Aufgabe.",
-      "inUse_other": "Diese Anmeldeinformationen werden von {{count}}-Aufgaben verwendet. Entfernen oder ändern Sie diese Aufgaben zuerst."
+      "description": "Löscht diese Zugangsdaten und die gespeicherten Schlüssel dauerhaft.",
+      "inUse_one": "Diese Zugangsdaten werden von {{count}} Aufgabe verwendet. Löschen Sie zuerst die Aufgabe oder ändern Sie deren Zugangsdaten.",
+      "inUse_other": "Diese Zugangsdaten werden von {{count}} Aufgaben verwendet. Löschen Sie zuerst die Aufgaben oder ändern Sie deren Zugangsdaten."
     }
   },
   "filters": {
@@ -237,13 +237,13 @@
     "where": "Wo",
     "and": "Und",
     "field": "Feld",
-    "operator": "Betreiber",
+    "operator": "Operator",
     "mode": "Filtermodus",
     "simple": "Einfach",
-    "advanced": "Fortgeschritten",
+    "advanced": "Erweitert",
     "advancedQuery": "Abfrage",
-    "advancedHint": "Rohe Abfragesyntax des Anbieters.",
-    "driveHint": "Google-Drive-Abfragesyntax, z. B. mimeType = 'application/pdf' und modifiedTime > '2024-01-01T00:00:00'. Dateien im Papierkorb werden immer ausgeschlossen.",
+    "advancedHint": "Abfragesyntax des Anbieters direkt verwenden.",
+    "driveHint": "Google-Drive-Abfragesyntax, z. B. mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'. Dateien im Papierkorb werden immer ausgeschlossen.",
     "noFields": "Diese Quelle unterstützt keine Filter.",
     "selectValues": "Werte auswählen…",
     "valuePlaceholder": "Wert",
@@ -253,13 +253,13 @@
       "description": "Alles im Quellbereich wird synchronisiert."
     },
     "operators": {
-      "equals": "gleicht",
+      "equals": "ist gleich",
       "notEquals": "ist nicht gleich",
       "contains": "enthält",
       "in": "ist einer von",
       "notIn": "ist keiner von",
       "greaterThan": "größer als",
-      "lessThan": "weniger als"
+      "lessThan": "kleiner als"
     },
     "errors": {
       "field": "Wählen Sie ein gültiges Feld aus",
@@ -270,7 +270,7 @@
     }
   },
   "filePolicy": {
-    "plainText": "Klartext",
+    "plainText": "Textdateien",
     "documents": "Dokumente",
     "images": "Bilder",
     "audios": "Audio",
@@ -278,7 +278,7 @@
     "mode": {
       "global": "Globale Einstellungen verwenden",
       "globalHelp": "Verwendet die in den Einstellungen festgelegten Dateitypen.",
-      "override": "Überschreiben",
+      "override": "Benutzerdefiniert",
       "overrideHelp": "Wählen Sie Dateitypen nur für diese Aufgabe aus."
     }
   },
@@ -286,24 +286,24 @@
     "type": "Quelltyp",
     "credential": "Quellzugangsdaten",
     "pickTypeFirst": "Wählen Sie zunächst einen Quelltyp aus.",
-    "pickCredentialFirst": "Wählen Sie zunächst einen Berechtigungsnachweis aus"
+    "pickCredentialFirst": "Wählen Sie zuerst Zugangsdaten aus."
   },
   "destination": {
-    "credential": "Hindsight-Anmeldeinformationen",
+    "credential": "Hindsight-Zugangsdaten",
     "bank": "Erinnerungsspeicher",
     "bankPlaceholder": "Erinnerungsspeicher-ID",
     "browseBanks": "Erinnerungsspeicher auswählen",
-    "pickCredentialFirst": "Wählen Sie zuerst die Hindsight-Anmeldedaten aus.",
-    "locked": "Nach dem ersten erfolgreichen Lauf ist das Ziel gesperrt. Wenn Sie andere Anmeldedaten oder eine andere Erinnerungsspeicher verwenden möchten, legen Sie eine neue Aufgabe an.",
+    "pickCredentialFirst": "Wählen Sie zuerst die Hindsight-Zugangsdaten aus.",
+    "locked": "Nach der ersten erfolgreichen Ausführung ist das Ziel gesperrt. Erstellen Sie eine neue Aufgabe, um andere Zugangsdaten oder einen anderen Erinnerungsspeicher zu verwenden.",
     "lockNotice": "Das Ziel wird nach der ersten erfolgreichen Ausführung schreibgeschützt."
   },
   "retain": {
-    "label": "Strategie beibehalten",
-    "bankDefault": "Standard der Erinnerungsspeicher",
-    "bankDefaultNamed": "Standard der Erinnerungsspeicher ({{name}})",
-    "help": "Legt fest, wie Hindsight die an die Erinnerungsspeicher gesendeten Inhalte verarbeitet. Mit der Standardeinstellung wird die dort konfigurierte Strategie verwendet.",
+    "label": "Verarbeitungsstrategie",
+    "bankDefault": "Standardstrategie des Erinnerungsspeichers",
+    "bankDefaultNamed": "Standardstrategie des Erinnerungsspeichers ({{name}})",
+    "help": "Legt fest, wie Hindsight die Inhalte verarbeitet. Die Standardoption verwendet die im Erinnerungsspeicher konfigurierte Strategie.",
     "freeTextPlaceholder": "Leer lassen, um die Standardeinstellung der Speicherbank zu verwenden",
-    "pickDestinationFirst": "Wählen Sie zuerst die Ziel-Anmeldedaten und eine Erinnerungsspeicher aus, um verfügbare Strategien zu laden.",
+    "pickDestinationFirst": "Wählen Sie zuerst die Zugangsdaten für das Ziel und einen Erinnerungsspeicher, um verfügbare Strategien zu laden.",
     "loadFailed": "Strategien konnten nicht von Hindsight geladen werden; Geben Sie manuell einen Strategienamen ein."
   },
   "tags": {
@@ -349,10 +349,10 @@
     "new": "Neue Aufgabe",
     "neverRun": "Noch nie ausgeführt",
     "reconcileRequired": "Vollständiger Abgleich erforderlich",
-    "itemCount_one": "{{count}}-Artikel",
-    "itemCount_other": "{{count}}-Elemente",
+    "itemCount_one": "{{count}} Element",
+    "itemCount_other": "{{count}} Elemente",
     "columns": {
-      "enabled": "Auf",
+      "enabled": "Aktiv",
       "name": "Name",
       "source": "Quelle",
       "destination": "Ziel",
@@ -369,12 +369,13 @@
     "actions": {
       "runNow": "Jetzt ausführen",
       "fullReconcile": "Vollständigen Abgleich starten",
-      "fullReingest": "Vollständige Neuaufnahme",
+      "fullReingest": "Alles erneut importieren",
       "cancel": "Lauf abbrechen",
       "enable": "Aktivieren",
       "disable": "Deaktivieren",
       "viewRuns": "Ausführungen anzeigen",
-      "dryRun": "Probelauf"
+      "dryRun": "Probelauf",
+      "deleteDocuments": "Dokumente löschen"
     },
     "empty": {
       "title": "Noch keine Aufgaben",
@@ -388,13 +389,13 @@
         "success": "Vollständiger Abgleich gestartet"
       },
       "fullReingest": {
-        "success": "Vollständige Neuaufnahme gestartet"
+        "success": "Erneuter Import aller Inhalte gestartet"
       },
       "alreadyRunning": "Aufgabe läuft bereits",
       "failed": "Der Lauf konnte nicht gestartet werden"
     },
     "cancel": {
-      "success": "Stornierung beantragt",
+      "success": "Abbruch angefordert",
       "notRunning": "Aufgabe wird nicht ausgeführt",
       "failed": "Ausführung konnte nicht abgebrochen werden"
     },
@@ -404,15 +405,24 @@
       "updateFailed": "Aufgabe konnte nicht aktualisiert werden",
       "deleted": "Aufgabe gelöscht",
       "deleteFailed": "Aufgabe konnte nicht gelöscht werden",
-      "deleteRunning": "Aufgabe läuft; Brechen Sie es ab, bevor Sie es löschen"
+      "deleteRunning": "Die Aufgabe ist beschäftigt. Versuchen Sie es erneut, sobald der aktuelle Vorgang abgeschlossen ist."
     },
     "delete": {
       "title": "„{{name}}“ löschen?",
-      "description": "Die Aufgabe, ihr Ausführungsverlauf und ihr Synchronisierungsstatus werden entfernt. Dokumente, die sich bereits in Hindsight befinden, werden nicht gelöscht."
+      "description": "Löscht die Aufgabe, ihren Ausführungsverlauf und ihren Synchronisierungsstatus. Dokumente in Hindsight bleiben standardmäßig erhalten.",
+      "alsoDeleteDocuments": "Dokumente in Hindsight ebenfalls löschen",
+      "documentsHelp": "Bei Auswahl werden auch die mit dieser Aufgabe markierten Dokumente und die zugehörigen Erinnerungen aus Hindsight gelöscht."
     },
     "reingest": {
-      "title": "Alles für „{{name}}“ erneut aufnehmen?",
-      "description": "Jedes übereinstimmende Element bleibt in Hindsight erhalten, auch wenn es unverändert bleibt. Dies kann lange dauern und die Hindsight-Verarbeitung beanspruchen."
+      "title": "Alle Inhalte für „{{name}}“ erneut importieren?",
+      "description": "Alle passenden Inhalte werden erneut an Hindsight übertragen, auch unveränderte. Das kann lange dauern und zusätzliche Verarbeitungsressourcen beanspruchen."
+    },
+    "clearDocuments": {
+      "title": "Dokumente für „{{name}}“ löschen?",
+      "description": "Löscht die mit dieser Aufgabe markierten Dokumente und die zugehörigen Erinnerungen aus Hindsight. Die Aufgabe wird pausiert. Die Quelldaten bleiben erhalten.",
+      "failed": "Dokumente konnten nicht gelöscht werden",
+      "success_one": "{{count}} Dokument gelöscht",
+      "success_other": "{{count}} Dokumente gelöscht"
     }
   },
   "taskEditor": {
@@ -422,7 +432,7 @@
     "enabledHelp": "Deaktivierte Aufgaben behalten ihren Synchronisierungsstatus, werden jedoch nicht geplant.",
     "notFound": "Aufgabe nicht gefunden",
     "nextRun": "Nächste Ausführung: {{when}}",
-    "itemCount_one": "{{count}}-Element synchronisiert",
+    "itemCount_one": "{{count}} Element synchronisiert",
     "itemCount_other": "{{count}} Elemente synchronisiert",
     "recentRuns": "Letzte Ausführungen",
     "saveBeforeRun": "Speichern Sie Ihre Änderungen vor der Ausführung",
@@ -438,7 +448,7 @@
       "sourceTypeLocked": "Der Quelltyp kann nach der Erstellung nicht mehr geändert werden. Erstellen Sie eine neue Aufgabe, um eine andere Quelle zu verwenden.",
       "filtersReconcile": "Wenn Sie Filter ändern, wird ein vollständiger Abgleich vorgemerkt. Dabei werden Inhalte, die nicht mehr den Filtern entsprechen, aus Hindsight entfernt.",
       "filesReconcile": "Wenn Sie die Dateitypen ändern, wird ein vollständiger Abgleich durchgeführt. Ausgeschlossene Dateien werden aus Hindsight entfernt.",
-      "policyRevision": "Durch das Ändern der Aufbewahrungsstrategie, der Tags oder der Metadaten werden alle übereinstimmenden Elemente beim nächsten Durchlauf erneut beibehalten."
+      "policyRevision": "Wenn Sie die Verarbeitungsstrategie, Tags oder Metadaten ändern, werden beim nächsten Lauf alle passenden Inhalte erneut an Hindsight übertragen."
     },
     "sections": {
       "general": {
@@ -458,7 +468,7 @@
         "description": "Hindsight-Speicherbank, an die Inhalte gesendet werden."
       },
       "retain": {
-        "title": "Strategie beibehalten",
+        "title": "Verarbeitungsstrategie",
         "description": "Wie Hindsight den Inhalt verarbeitet."
       },
       "observations": {
@@ -483,7 +493,7 @@
       },
       "schedule": {
         "title": "Zeitplan",
-        "description": "Wenn die Aufgabe automatisch ausgeführt wird."
+        "description": "Legen Sie fest, wann die Aufgabe automatisch ausgeführt wird."
       }
     },
     "toast": {
@@ -565,7 +575,7 @@
     }
   },
   "dashboard": {
-    "title": "Armaturenbrett",
+    "title": "Übersicht",
     "description": "Übersicht über die Synchronisierungsaktivität.",
     "stats": {
       "enabledTasks": "Aktivierte Aufgaben",
@@ -575,17 +585,17 @@
       "runs24h_other": "{{count}} Ausführungen in den letzten 24 Stunden",
       "items": "Elemente synchronisiert",
       "itemsSub": "über alle Aufgaben hinweg",
-      "failures24h": "Ausfälle (24h)",
-      "needsAttention": "Braucht Aufmerksamkeit",
+      "failures24h": "Fehlgeschlagen (24 Std.)",
+      "needsAttention": "Handlungsbedarf",
       "allGood": "Alles gut"
     },
     "getStarted": {
       "title": "Richten Sie Ihre erste Synchronisierung ein",
-      "description": "Fügen Sie Anmeldeinformationen für eine Quelle und für Hindsight hinzu und erstellen Sie dann eine Aufgabe.",
-      "credentials": "Anmeldeinformationen hinzufügen"
+      "description": "Fügen Sie Zugangsdaten für eine Quelle und für Hindsight hinzu und erstellen Sie dann eine Aufgabe.",
+      "credentials": "Zugangsdaten hinzufügen"
     },
     "reauth": {
-      "title": "Anmeldeinformationen müssen erneut verbunden werden"
+      "title": "Zugangsdaten müssen erneut verbunden werden"
     },
     "running": {
       "title": "Aktuell in Ausführung",
@@ -596,8 +606,8 @@
       "empty": "Keine anstehenden Ausführungen"
     },
     "failures": {
-      "title": "Aktuelle Misserfolge",
-      "empty": "Keine aktuellen Ausfälle"
+      "title": "Letzte fehlgeschlagene Ausführungen",
+      "empty": "Keine kürzlich fehlgeschlagenen Ausführungen"
     }
   },
   "observationScope": {
@@ -656,22 +666,26 @@
     },
     "files": {
       "title": "Globale Dateitypen",
-      "description": "Standarddateitypen für Aufgaben, die auf „Global folgen“ eingestellt sind. Ausgeschlossene Dateien werden während des Abgleichs entfernt."
+      "description": "Standard-Dateitypen für Aufgaben, die globale Einstellungen verwenden. Ausgeschlossene Inhalte werden beim vollständigen Abgleich aus Hindsight entfernt."
     },
     "oauth": {
       "title": "OAuth",
-      "description": "Registrieren Sie diese Umleitung URI in Ihrer App-Konfiguration Google Cloud und Microsoft Entra (Azure) für die Anmeldeinformationen Google Drive und OneDrive.",
-      "redirectUri": "Leiten Sie URI um"
+      "description": "Registrieren Sie diese Weiterleitungs-URI in den App-Einstellungen von Google Cloud und Microsoft Entra (Azure), um Google Drive und OneDrive zu verbinden.",
+      "redirectUri": "Weiterleitungs-URI"
     },
     "toast": {
       "saved": "Einstellungen gespeichert",
       "failed": "Die Einstellungen konnten nicht gespeichert werden"
+    },
+    "timezone": {
+      "help": "Alle Aufgaben verwenden diese Zeitzone. Standardmäßig gilt TZ des Servers, andernfalls UTC.",
+      "invalid": "Wählen Sie eine gültige Zeitzone."
     }
   },
   "notFound": {
     "title": "Seite nicht gefunden",
     "description": "Die gesuchte Seite existiert nicht.",
-    "home": "Gehen Sie zum Dashboard"
+    "home": "Zur Übersicht"
   },
   "dryRun": {
     "title": "Probelauf: {{name}}",
@@ -748,7 +762,7 @@
     "webdavDescription": "Unterstützt unter anderem Nextcloud, ownCloud, Synology, Apache mod_dav und rclone serve.",
     "hindsightDescription": "Hindsight-API-Adresse, an die Inhalte gesendet werden.",
     "filesystemRootHelp": "Absoluter Pfad auf dem Anwendungsserver. Bei Docker den in den Container eingebundenen Pfad verwenden.",
-    "filesystemFolderHelp": "Relativ zum Stammverzeichnis dieser Anmeldedaten. . steht für das Stammverzeichnis.",
+    "filesystemFolderHelp": "Relativ zum Stammverzeichnis dieser Zugangsdaten. . steht für das Stammverzeichnis.",
     "notionDataSourceHelp": "Notion-Datenquellen-ID (nicht die Datenbank-ID). Wählen Sie über „Durchsuchen“ eine für diese Integration freigegebene Quelle aus.",
     "siYuanInstanceHelp": "Feste Kennung dieser SiYuan-Instanz. Wenn das Feld leer bleibt, wird die Basis-URL verwendet.",
     "s3EndpointHelp": "Für AWS S3 leer lassen.",
@@ -766,5 +780,21 @@
     "hindsightApiKeyHelp": "Wird als Bearer-Token gesendet. Leer lassen, wenn für die Instanz keine Authentifizierung erforderlich ist.",
     "syncCollectionHelp": "sync-collection (RFC 6578) verwenden, wenn der Server dies unterstützt.",
     "fileSystem": "Dateisystem"
+  },
+  "proxy": {
+    "title": "Proxy",
+    "global": "Globale Einstellungen verwenden",
+    "types": {
+      "default": "Umgebungsvariablen verwenden",
+      "none": "Kein Proxy",
+      "http": "HTTP",
+      "https": "HTTPS",
+      "socks5": "SOCKS5"
+    },
+    "defaultHelp": "Verwendet die Proxy-Einstellungen aus den Umgebungsvariablen des Servers.",
+    "address": "Adresse",
+    "username": "Benutzername (optional)",
+    "password": "Passwort (optional)",
+    "invalidAddress": "Geben Sie eine Proxy-Adresse im Format Host:Port mit einem Port zwischen 1 und 65535 ein."
   }
 }

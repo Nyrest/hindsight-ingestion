@@ -46,8 +46,8 @@
     "create": "Buat",
     "delete": "Hapus",
     "edit": "Sunting",
-    "false": "Salah",
-    "true": "Benar",
+    "false": "Tidak",
+    "true": "Ya",
     "loadFailed": "Tidak dapat memuat data",
     "loading": "Memuat…",
     "moreActions": "Tindakan lainnya",
@@ -69,7 +69,7 @@
     "integer": "Harus bilangan bulat",
     "min1": "Minimal harus 1",
     "url": "Harus berupa URL yang valid",
-    "tooLong": "Terlalu lama"
+    "tooLong": "Teks terlalu panjang"
   },
   "runStatus": {
     "pending": "Tertunda",
@@ -99,21 +99,21 @@
     "remove": "Hapus baris"
   },
   "secret": {
-    "keepHint": "Sebuah nilai disimpan. Biarkan masker tidak berubah untuk mempertahankannya, atau ketikkan nilai baru untuk menggantikannya.",
+    "keepHint": "Nilai sudah tersimpan. Biarkan nilai tersamarkan tetap sama untuk mempertahankannya, atau masukkan nilai baru untuk menggantinya.",
     "clear": "Hapus nilai yang disimpan"
   },
   "headers": {
     "title": "Header khusus",
     "help": "Dikirim dengan setiap permintaan ke penyedia ini. Header autentikasi konektor diutamakan.",
-    "mode": "Modus penyunting",
-    "ui": "UI",
+    "mode": "Mode editor",
+    "ui": "Formulir",
     "json": "JSON",
     "name": "Nama tajuk",
     "value": "Nilai",
     "valuePlaceholder": "Nilai tajuk",
     "add": "Tambahkan tajuk",
     "empty": "Tidak ada tajuk khusus",
-    "maskHint": "Nilai yang disimpan ditampilkan sebagai {{mask}}; pertahankan topeng agar nilai tidak berubah.",
+    "maskHint": "Nilai tersimpan ditampilkan sebagai {{mask}}. Biarkan nilai tersamarkan tetap sama untuk mempertahankan nilai tersimpan.",
     "errors": {
       "duplicate": "Nama header duplikat \"{{name}}\" (nama tidak peka huruf besar-kecil)",
       "invalidJson": "JSON tidak valid: {{detail}}",
@@ -128,14 +128,14 @@
     "titleFor": "Pilih {{label}}",
     "description": "Navigasikan ke dalam folder dan pilih item.",
     "breadcrumbs": "Lokasi",
-    "root": "Akar",
+    "root": "Direktori utama",
     "empty": "Tidak ada apa pun di sini",
     "hint": "Pilih item, atau buka folder dengan panah",
     "open": "Buka {{name}}",
     "select": "Pilih",
     "selected": "Dipilih",
     "kinds": {
-      "folder": "Map",
+      "folder": "Folder",
       "file": "Berkas",
       "data_source": "Sumber data",
       "notebook": "Buku catatan",
@@ -152,7 +152,7 @@
   },
   "capabilities": {
     "incremental": {
-      "high_water_mark": "Tanda air tinggi",
+      "high_water_mark": "Kursor waktu perubahan",
       "delta_token": "Token delta",
       "sync_token": "Token sinkronisasi",
       "inventory": "Perbedaan inventaris"
@@ -173,31 +173,31 @@
     "createTitle": "Kredensial baru",
     "createDescription": "Pilih penyedia dan masukkan detail koneksinya.",
     "editTitle": "Edit kredensial",
-    "editDescription": "Rahasia tidak pernah diperlihatkan. Biarkan nilai yang disamarkan tidak berubah untuk mempertahankannya.",
+    "editDescription": "Kunci yang tersimpan ditampilkan dalam bentuk tersamarkan. Biarkan nilai tersamarkan tetap sama untuk menggunakan nilai yang sudah tersimpan.",
     "createInline": "Buat kredensial baru",
-    "namePlaceholder": "misalnya Bekerja {{type}}",
+    "namePlaceholder": "misalnya {{type}} — Kantor",
     "pick": "Pilih kredensial",
     "noneOfType": "Belum ada kredensial {{type}}",
     "notActiveWarning": "Kredensial ini saat ini adalah “{{status}}”. Proses mungkin gagal sampai diperbaiki.",
     "oauthHint": "Setelah menyimpan, klik “Hubungkan” dan ikuti petunjuk untuk memberikan izin akses.",
-    "usedByCount_one": "tugas {{count}}",
-    "usedByCount_other": "tugas {{count}}",
+    "usedByCount_one": "{{count}} tugas",
+    "usedByCount_other": "{{count}} tugas",
     "fields": {
       "type": "Penyedia",
       "name": "Nama"
     },
     "columns": {
       "name": "Nama",
-      "type": "Ketik",
+      "type": "Jenis",
       "status": "Status",
       "usedBy": "Digunakan oleh",
       "oauth": "OAuth"
     },
     "actions": {
-      "test": "Tes",
+      "test": "Uji koneksi",
       "connect": "Hubungkan",
       "reconnect": "Hubungkan kembali",
-      "refresh": "Segarkan token"
+      "refresh": "Perbarui token"
     },
     "empty": {
       "title": "Belum ada kredensial",
@@ -221,29 +221,29 @@
       "deleted": "Kredensial dihapus",
       "deleteFailed": "Tidak dapat menghapus kredensial",
       "inUse": "Kredensial sedang digunakan",
-      "refreshed": "Token disegarkan",
-      "refreshFailed": "Penyegaran token gagal"
+      "refreshed": "Token diperbarui",
+      "refreshFailed": "Tidak dapat memperbarui token"
     },
     "delete": {
       "title": "Hapus “{{name}}”?",
       "description": "Tindakan ini secara permanen menghapus kredensial dan rahasia yang tersimpan.",
-      "inUse_one": "Kredensial ini digunakan oleh tugas {{count}}. Hapus atau ubah tugas itu terlebih dahulu.",
-      "inUse_other": "Kredensial ini digunakan oleh tugas {{count}}. Hapus atau ubah tugas tersebut terlebih dahulu."
+      "inUse_one": "Kredensial ini digunakan oleh {{count}} tugas. Hapus tugas atau ubah kredensialnya terlebih dahulu.",
+      "inUse_other": "Kredensial ini digunakan oleh {{count}} tugas. Hapus tugas atau ubah kredensialnya terlebih dahulu."
     }
   },
   "filters": {
-    "add": "Tambahkan penyaring",
-    "remove": "Hapus penyaring",
+    "add": "Tambah filter",
+    "remove": "Hapus filter",
     "where": "Dimana",
     "and": "Dan",
     "field": "Bidang",
     "operator": "Operator",
-    "mode": "Modus penyaring",
+    "mode": "Mode filter",
     "simple": "Sederhana",
     "advanced": "Lanjutan",
-    "advancedQuery": "Pertanyaan",
-    "advancedHint": "Sintaks kueri penyedia mentah.",
-    "driveHint": "Sintaks kueri Google Drive, misalnya mimeType = 'application/pdf' dan modifiedTime > '2024-01-01T00:00:00'. File di sampah selalu dikecualikan.",
+    "advancedQuery": "Kueri",
+    "advancedHint": "Masukkan kueri menggunakan sintaks penyedia.",
+    "driveHint": "Sintaks kueri Google Drive, misalnya mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'. File di sampah selalu dikecualikan.",
     "noFields": "Sumber ini tidak mendukung filter.",
     "selectValues": "Pilih nilai…",
     "valuePlaceholder": "Nilai",
@@ -298,7 +298,7 @@
     "lockNotice": "Tujuannya menjadi hanya-baca setelah proses pertama berhasil."
   },
   "retain": {
-    "label": "Pertahankan strategi",
+    "label": "Strategi pemrosesan",
     "bankDefault": "Strategi bawaan bank memori",
     "bankDefaultNamed": "Strategi bawaan bank memori ({{name}})",
     "help": "Menentukan cara Hindsight memproses konten yang dikirim ke bank memori. Setelan bawaan menggunakan strategi yang dikonfigurasi pada bank tersebut.",
@@ -323,8 +323,8 @@
     }
   },
   "schedule": {
-    "cron": "ekspresi Cron",
-    "cronHelp": "Cron 5 bidang standar: menit jam hari bulan hari kerja",
+    "cron": "Ekspresi Cron",
+    "cronHelp": "Cron standar dengan 5 kolom: menit, jam, tanggal, bulan, hari dalam minggu",
     "timezone": "Zona waktu",
     "selectTimezone": "Pilih zona waktu",
     "searchTimezone": "Cari zona waktu…",
@@ -349,8 +349,8 @@
     "new": "Tugas baru",
     "neverRun": "Belum pernah dijalankan",
     "reconcileRequired": "Sinkronisasi penuh diperlukan",
-    "itemCount_one": "Barang {{count}}",
-    "itemCount_other": "item {{count}}",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} item",
     "columns": {
       "enabled": "Aktif",
       "name": "Nama",
@@ -362,19 +362,20 @@
       "status": "Status"
     },
     "status": {
-      "idle": "Menganggur",
-      "disabled": "Dengan disabilitas",
+      "idle": "Siaga",
+      "disabled": "Nonaktif",
       "reconcilePending": "Menunggu sinkronisasi penuh"
     },
     "actions": {
       "runNow": "Jalankan sekarang",
       "fullReconcile": "Sinkronkan semua",
-      "fullReingest": "Penyerapan ulang secara penuh",
+      "fullReingest": "Impor ulang semua",
       "cancel": "Batalkan eksekusi",
       "enable": "Aktifkan",
       "disable": "Nonaktifkan",
       "viewRuns": "Lihat riwayat eksekusi",
-      "dryRun": "Simulasi"
+      "dryRun": "Simulasi",
+      "deleteDocuments": "Hapus dokumen"
     },
     "empty": {
       "title": "Belum ada tugas",
@@ -382,16 +383,16 @@
     },
     "trigger": {
       "run": {
-        "success": "Jalankan dimulai"
+        "success": "Eksekusi dimulai"
       },
       "fullReconcile": {
         "success": "Sinkronisasi penuh dimulai"
       },
       "fullReingest": {
-        "success": "Penyerapan ulang penuh dimulai"
+        "success": "Impor ulang semua konten dimulai"
       },
       "alreadyRunning": "Tugas sudah berjalan",
-      "failed": "Tidak dapat mulai dijalankan"
+      "failed": "Tidak dapat memulai eksekusi"
     },
     "cancel": {
       "success": "Pembatalan diminta",
@@ -404,15 +405,23 @@
       "updateFailed": "Tidak dapat memperbarui tugas",
       "deleted": "Tugas dihapus",
       "deleteFailed": "Tidak dapat menghapus tugas",
-      "deleteRunning": "Tugas sedang berjalan; batalkan sebelum menghapus"
+      "deleteRunning": "Tugas sedang memproses. Coba lagi setelah operasi saat ini selesai."
     },
     "delete": {
       "title": "Hapus “{{name}}”?",
-      "description": "Tugas, riwayat pengoperasiannya, dan status sinkronisasinya akan dihapus. Dokumen yang sudah ada di Hindsight tidak dihapus."
+      "description": "Menghapus tugas, riwayat eksekusi, dan status sinkronisasi. Secara default, dokumen di Hindsight tetap disimpan.",
+      "alsoDeleteDocuments": "Hapus juga dokumen di Hindsight",
+      "documentsHelp": "Jika dipilih, dokumen berlabel tugas ini beserta memori terkait juga akan dihapus dari Hindsight."
     },
     "reingest": {
-      "title": "Serap ulang semuanya untuk “{{name}}”?",
-      "description": "Setiap item yang cocok akan disimpan kembali ke Hindsight, meskipun tidak diubah. Ini mungkin memerlukan waktu lama dan menghabiskan pemrosesan Hindsight."
+      "title": "Impor ulang semua konten untuk “{{name}}”?",
+      "description": "Semua konten yang memenuhi kriteria akan dikirim ulang ke Hindsight, termasuk konten yang tidak berubah. Proses ini bisa memakan waktu lama dan menggunakan sumber daya pemrosesan tambahan."
+    },
+    "clearDocuments": {
+      "title": "Hapus dokumen untuk “{{name}}”?",
+      "description": "Menghapus dokumen berlabel tugas ini beserta memori terkait dari Hindsight. Tugas akan dijeda. Konten sumber tidak terpengaruh.",
+      "success": "{{count}} dokumen dihapus",
+      "failed": "Tidak dapat menghapus dokumen"
     }
   },
   "taskEditor": {
@@ -422,8 +431,8 @@
     "enabledHelp": "Tugas yang dinonaktifkan tetap mempertahankan status sinkronisasinya tetapi tidak dijadwalkan.",
     "notFound": "Tugas tidak ditemukan",
     "nextRun": "Jadwal berikutnya: {{when}}",
-    "itemCount_one": "Item {{count}} disinkronkan",
-    "itemCount_other": "Item {{count}} disinkronkan",
+    "itemCount_one": "{{count}} item disinkronkan",
+    "itemCount_other": "{{count}} item disinkronkan",
     "recentRuns": "Eksekusi terbaru",
     "saveBeforeRun": "Simpan perubahan Anda sebelum dijalankan",
     "saveError": "Tidak dapat menyimpan tugas",
@@ -438,7 +447,7 @@
       "sourceTypeLocked": "Jenis sumber tidak dapat diubah setelah pembuatan. Buat tugas baru untuk menggunakan sumber yang berbeda.",
       "filtersReconcile": "Perubahan filter akan menandai tugas untuk sinkronisasi penuh. Item yang tidak lagi sesuai dengan filter akan dihapus dari Hindsight.",
       "filesReconcile": "Perubahan jenis file akan memicu sinkronisasi penuh. File yang dikecualikan akan dihapus dari Hindsight.",
-      "policyRevision": "Mengubah strategi penyimpanan, tag, atau metadata akan mempertahankan kembali semua item yang cocok pada proses berikutnya."
+      "policyRevision": "Jika strategi pemrosesan, tag, atau metadata diubah, semua konten yang memenuhi kriteria akan dikirim ulang ke Hindsight pada eksekusi berikutnya."
     },
     "sections": {
       "general": {
@@ -458,7 +467,7 @@
         "description": "Bank memori Hindsight yang menerima konten."
       },
       "retain": {
-        "title": "Pertahankan strategi",
+        "title": "Strategi pemrosesan",
         "description": "Bagaimana Hindsight memproses konten."
       },
       "observations": {
@@ -467,7 +476,7 @@
       },
       "files": {
         "title": "Jenis berkas",
-        "description": "Jenis file apa yang diserap."
+        "description": "Pilih jenis file yang akan disinkronkan."
       },
       "inline": {
         "title": "Konten multimodal tertanam",
@@ -483,7 +492,7 @@
       },
       "schedule": {
         "title": "Jadwal",
-        "description": "Saat tugas berjalan secara otomatis."
+        "description": "Atur waktu eksekusi otomatis tugas."
       }
     },
     "toast": {
@@ -513,9 +522,9 @@
       "manual": "Manual"
     },
     "mode": {
-      "incremental": "tambahan",
+      "incremental": "Inkremental",
       "full": "Penuh",
-      "reingest": "Muat ulang semua"
+      "reingest": "Impor ulang semua"
     },
     "counters": {
       "discoveredCount": "Ditemukan",
@@ -554,10 +563,10 @@
     "operations": "Operasi Hindsight",
     "noOperations": "Tidak ada operasi asinkron dalam eksekusi ini.",
     "log": "Log",
-    "noLog": "Tidak ada garis log.",
+    "noLog": "Belum ada entri log.",
     "opColumns": {
       "remoteId": "ID jarak jauh",
-      "type": "Ketik",
+      "type": "Jenis",
       "status": "Status",
       "retries": "Percobaan ulang",
       "created": "Dibuat",
@@ -647,8 +656,8 @@
     "sync": {
       "title": "Sinkronisasi",
       "description": "Berlaku untuk semua tugas.",
-      "incremental": "Sinkronisasi tambahan",
-      "incrementalHelp": "Gunakan pelacakan perubahan asli penyedia jika tersedia. Jika nonaktif, setiap proses akan melakukan inventarisasi penuh (konten yang tidak diubah tetap tidak diupload ulang).",
+      "incremental": "Sinkronisasi inkremental",
+      "incrementalHelp": "Gunakan pelacakan perubahan bawaan penyedia jika tersedia. Jika dinonaktifkan, setiap eksekusi memindai semua konten, tetapi konten yang tidak berubah tidak diunggah ulang.",
       "reconcileInterval": "Interval sinkronisasi penuh",
       "reconcileIntervalHelp": "Jika waktu sejak sinkronisasi penuh terakhir melebihi interval ini, pemindaian penuh akan dilakukan pada eksekusi berikutnya.",
       "maxFileSize": "Ukuran file maksimal",
@@ -656,16 +665,20 @@
     },
     "files": {
       "title": "Jenis file global",
-      "description": "Jenis file default untuk tugas diatur ke “Ikuti global”. File yang dikecualikan akan dihapus selama rekonsiliasi."
+      "description": "Jenis file default untuk tugas yang menggunakan pengaturan global. Konten yang dikecualikan akan dihapus dari Hindsight saat sinkronisasi penuh."
     },
     "oauth": {
       "title": "OAuth",
-      "description": "Daftarkan pengalihan ini URI di konfigurasi aplikasi Google Cloud dan Microsoft Entra (Azure) Anda untuk kredensial Google Drive dan OneDrive.",
-      "redirectUri": "Alihkan URI"
+      "description": "Daftarkan URI pengalihan ini di pengaturan aplikasi Google Cloud dan Microsoft Entra (Azure) untuk menghubungkan Google Drive dan OneDrive.",
+      "redirectUri": "URI pengalihan"
     },
     "toast": {
       "saved": "Pengaturan disimpan",
       "failed": "Tidak dapat menyimpan setelan"
+    },
+    "timezone": {
+      "help": "Semua tugas menggunakan zona waktu ini. Nilai awal mengikuti TZ server, atau UTC jika TZ belum diatur.",
+      "invalid": "Pilih zona waktu yang valid."
     }
   },
   "notFound": {
@@ -688,7 +701,7 @@
     "reason": "Alasan",
     "actions": {
       "create": "Buat",
-      "update": "Pembaruan",
+      "update": "Perbarui",
       "delete": "Hapus",
       "unchanged": "Tidak berubah",
       "skip": "Lewati",
@@ -766,5 +779,21 @@
     "hindsightApiKeyHelp": "Dikirim sebagai token Bearer. Kosongkan jika instans tidak memerlukan autentikasi.",
     "syncCollectionHelp": "Gunakan sync-collection (RFC 6578) jika didukung server.",
     "fileSystem": "Sistem berkas"
+  },
+  "proxy": {
+    "title": "Proksi",
+    "global": "Gunakan pengaturan global",
+    "types": {
+      "default": "Gunakan variabel lingkungan",
+      "none": "Tanpa proksi",
+      "http": "HTTP",
+      "https": "HTTPS",
+      "socks5": "SOCKS5"
+    },
+    "defaultHelp": "Menggunakan pengaturan proksi dari variabel lingkungan server.",
+    "address": "Alamat",
+    "username": "Nama pengguna (opsional)",
+    "password": "Kata sandi (opsional)",
+    "invalidAddress": "Masukkan alamat proksi dalam format host:port dengan port antara 1 dan 65535."
   }
 }

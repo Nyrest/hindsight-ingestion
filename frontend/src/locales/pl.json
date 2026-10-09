@@ -30,7 +30,7 @@
     "toggle": "Zmień motyw",
     "light": "Jasny",
     "dark": "Ciemny",
-    "system": "Systemu"
+    "system": "Systemowy"
   },
   "common": {
     "actions": "Działania",
@@ -69,14 +69,14 @@
     "integer": "Musi to być liczba całkowita",
     "min1": "Musi być co najmniej 1",
     "url": "Musi to być prawidłowy URL",
-    "tooLong": "Za długo"
+    "tooLong": "Tekst jest zbyt długi"
   },
   "runStatus": {
     "pending": "Oczekujące",
     "running": "W trakcie",
     "waiting_operations": "Oczekiwanie na operacje",
-    "succeeded": "Udało się",
-    "failed": "Nie udało się",
+    "succeeded": "Sukces",
+    "failed": "Błąd",
     "interrupted": "Przerwano",
     "cancelled": "Anulowano"
   },
@@ -99,14 +99,14 @@
     "remove": "Usuń wiersz"
   },
   "secret": {
-    "keepHint": "Wartość jest przechowywana. Pozostaw maskę niezmienioną, aby ją zachować, lub wpisz nową wartość, aby ją zastąpić.",
+    "keepHint": "Wartość została zapisana. Pozostaw maskę bez zmian, aby zachować wartość, lub wpisz nową, aby ją zastąpić.",
     "clear": "Wyczyść zapisaną wartość"
   },
   "headers": {
     "title": "Niestandardowe nagłówki",
     "help": "Wysyłane przy każdym żądaniu do tego dostawcy. Nagłówki uwierzytelniania łącznika mają pierwszeństwo.",
     "mode": "Tryb edytora",
-    "ui": "Interfejs użytkownika",
+    "ui": "Formularz",
     "json": "JSON",
     "name": "Nazwa nagłówka",
     "value": "Wartość",
@@ -128,7 +128,7 @@
     "titleFor": "Wybierz {{label}}",
     "description": "Przejdź do folderów i wybierz element.",
     "breadcrumbs": "Lokalizacja",
-    "root": "Korzeń",
+    "root": "Katalog główny",
     "empty": "Nic tutaj",
     "hint": "Wybierz element lub otwórz folder za pomocą strzałki",
     "open": "Otwórz {{name}}",
@@ -152,10 +152,10 @@
   },
   "capabilities": {
     "incremental": {
-      "high_water_mark": "Znak wysokiego poziomu wody",
+      "high_water_mark": "Kursor czasu modyfikacji",
       "delta_token": "Token delta",
       "sync_token": "Token synchronizacji",
-      "inventory": "Różnica w ekwipunku"
+      "inventory": "Porównanie listy elementów"
     },
     "deletion": {
       "full_reconcile": "Usuwa podczas pełnego uzgadniania",
@@ -173,22 +173,22 @@
     "createTitle": "Nowe poświadczenie",
     "createDescription": "Wybierz dostawcę i wprowadź szczegóły jego połączenia.",
     "editTitle": "Edytuj dane uwierzytelniające",
-    "editDescription": "Sekrety nigdy nie są ujawniane. Pozostaw zamaskowane wartości bez zmian, aby je zachować.",
+    "editDescription": "Zapisane klucze są zamaskowane. Pozostaw maskę bez zmian, aby zachować zapisaną wartość.",
     "createInline": "Utwórz nowe poświadczenie",
-    "namePlaceholder": "np. Pracuj {{type}}",
+    "namePlaceholder": "np. {{type}} — Praca",
     "pick": "Wybierz dane uwierzytelniające",
     "noneOfType": "Brak jeszcze poświadczeń {{type}}",
     "notActiveWarning": "To poświadczenie to obecnie „{{status}}”. Uruchamianie może zakończyć się niepowodzeniem, dopóki nie zostanie naprawione.",
     "oauthHint": "Po zapisaniu kliknij „Połącz” i postępuj zgodnie z instrukcjami, aby przyznać dostęp.",
-    "usedByCount_one": "Zadanie {{count}}",
-    "usedByCount_other": "Zadania {{count}}",
+    "usedByCount_one": "{{count}} zadanie",
+    "usedByCount_other": "{{count}} zadania",
     "fields": {
       "type": "Dostawca",
-      "name": "Imię"
+      "name": "Nazwa"
     },
     "columns": {
-      "name": "Imię",
-      "type": "Wpisz",
+      "name": "Nazwa",
+      "type": "Typ",
       "status": "Stan",
       "usedBy": "Używany przez",
       "oauth": "OAuth"
@@ -212,14 +212,14 @@
       "error": "Połączenie OAuth nie powiodło się",
       "startFailed": "Nie można uruchomić OAuth",
       "connected": "Połączono",
-      "notConnected": "Nie podłączony",
+      "notConnected": "Nie połączono",
       "expires": "Token wygasa {{when}}"
     },
     "toast": {
       "created": "Utworzono dane uwierzytelniające",
       "updated": "Dane uwierzytelniające zaktualizowane",
       "deleted": "Dane uwierzytelniające usunięte",
-      "deleteFailed": "Nie można usunąć danych logowania",
+      "deleteFailed": "Nie można usunąć poświadczenia",
       "inUse": "Poświadczenie jest w użyciu",
       "refreshed": "Token odświeżony",
       "refreshFailed": "Odświeżenie tokena nie powiodło się"
@@ -227,8 +227,8 @@
     "delete": {
       "title": "Usunąć „{{name}}”?",
       "description": "Spowoduje to trwałe usunięcie danych uwierzytelniających i przechowywanych w nich sekretów.",
-      "inUse_one": "To poświadczenie jest używane przez zadanie {{count}}. Najpierw usuń lub zmień to zadanie.",
-      "inUse_other": "To poświadczenie jest używane przez zadania {{count}}. Najpierw usuń lub zmień te zadania.",
+      "inUse_one": "Z tego poświadczenia korzysta {{count}} zadanie. Najpierw usuń zadanie lub zmień używane w nim poświadczenie.",
+      "inUse_other": "Z tego poświadczenia korzystają {{count}} zadania. Najpierw usuń zadania lub zmień używane w nich poświadczenie.",
       "inUse_few": "Z tego poświadczenia korzystają {{count}} zadania. Najpierw usuń te zadania lub zmień używane w nich poświadczenie.",
       "inUse_many": "Z tego poświadczenia korzysta {{count}} zadań. Najpierw usuń te zadania lub zmień używane w nich poświadczenie."
     },
@@ -241,13 +241,13 @@
     "where": "Gdzie",
     "and": "I",
     "field": "Pole",
-    "operator": "Operatora",
+    "operator": "Operator",
     "mode": "Tryb filtra",
     "simple": "Proste",
     "advanced": "Zaawansowane",
     "advancedQuery": "Zapytanie",
-    "advancedHint": "Składnia zapytania dostawcy surowego.",
-    "driveHint": "Składnia zapytań Google Drive, np. mimeType = 'application/pdf' i modifiedTime > '2024-01-01T00:00:00'. Pliki z kosza są zawsze pomijane.",
+    "advancedHint": "Wprowadź zapytanie w składni dostawcy.",
+    "driveHint": "Składnia zapytań Google Drive, np. mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'. Pliki z kosza są zawsze pomijane.",
     "noFields": "To źródło nie obsługuje filtrów.",
     "selectValues": "Wybierz wartości…",
     "valuePlaceholder": "Wartość",
@@ -260,10 +260,10 @@
       "equals": "równa się",
       "notEquals": "nie równa się",
       "contains": "zawiera",
-      "in": "jest którykolwiek z",
-      "notIn": "nie jest żadnym",
+      "in": "jest jednym z",
+      "notIn": "nie jest żadnym z",
       "greaterThan": "większy niż",
-      "lessThan": "mniej niż"
+      "lessThan": "mniejsze niż"
     },
     "errors": {
       "field": "Wybierz prawidłowe pole",
@@ -282,7 +282,7 @@
     "mode": {
       "global": "Użyj ustawień globalnych",
       "globalHelp": "Użyj typów plików ustawionych w Ustawieniach.",
-      "override": "Zastąp",
+      "override": "Dostosuj",
       "overrideHelp": "Wybierz typy plików tylko dla tego zadania."
     }
   },
@@ -302,7 +302,7 @@
     "lockNotice": "Miejsce docelowe staje się tylko do odczytu po pierwszym pomyślnym uruchomieniu."
   },
   "retain": {
-    "label": "Zachowaj strategię",
+    "label": "Strategia przetwarzania",
     "bankDefault": "Domyślna strategia banku pamięci",
     "bankDefaultNamed": "Domyślna strategia banku pamięci ({{name}})",
     "help": "Określa, jak Hindsight przetwarza treści wysyłane do banku pamięci. Opcja domyślna korzysta ze strategii ustawionej dla tego banku.",
@@ -319,16 +319,16 @@
   "metadata": {
     "add": "Dodaj pole",
     "empty": "Brak niestandardowych metadanych",
-    "reservedHint": "Klucze zaczynające się od _inggestion_ są zarezerwowane dla pól pochodzenia systemowego.",
+    "reservedHint": "Klucze zaczynające się od _ingestion_ są zarezerwowane dla pól pochodzenia systemowego.",
     "errors": {
       "emptyKey": "Klucz jest wymagany",
-      "reserved": "Klucze zaczynające się od _inggestion_ są zarezerwowane",
+      "reserved": "Klucze zaczynające się od _ingestion_ są zarezerwowane",
       "duplicate": "Zduplikowany klucz"
     }
   },
   "schedule": {
     "cron": "Wyrażenie Cron",
-    "cronHelp": "Standardowy cron z 5 polami: minuta, godzina, dzień, miesiąc, dzień powszedni",
+    "cronHelp": "Standardowy Cron z 5 polami: minuta, godzina, dzień miesiąca, miesiąc, dzień tygodnia",
     "timezone": "Strefa czasowa",
     "selectTimezone": "Wybierz strefę czasową",
     "searchTimezone": "Wyszukaj strefy czasowe…",
@@ -353,11 +353,11 @@
     "new": "Nowe zadanie",
     "neverRun": "Jeszcze nie uruchomiono",
     "reconcileRequired": "Wymagana pełna synchronizacja",
-    "itemCount_one": "Element {{count}}",
-    "itemCount_other": "Elementy {{count}}",
+    "itemCount_one": "{{count}} element",
+    "itemCount_other": "{{count}} elementy",
     "columns": {
       "enabled": "Włączone",
-      "name": "Imię",
+      "name": "Nazwa",
       "source": "Źródło",
       "destination": "Miejsce docelowe",
       "schedule": "Harmonogram",
@@ -367,18 +367,19 @@
     },
     "status": {
       "idle": "Bezczynny",
-      "disabled": "Niepełnosprawny",
+      "disabled": "Wyłączone",
       "reconcilePending": "Oczekuje na pełną synchronizację"
     },
     "actions": {
       "runNow": "Uruchom teraz",
       "fullReconcile": "Pełna synchronizacja",
-      "fullReingest": "Pełne ponowne spożycie",
+      "fullReingest": "Zaimportuj wszystko ponownie",
       "cancel": "Anuluj uruchomienie",
       "enable": "Włącz",
       "disable": "Wyłącz",
       "viewRuns": "Zobacz historię uruchomień",
-      "dryRun": "Symulacja"
+      "dryRun": "Symulacja",
+      "deleteDocuments": "Usuń dokumenty"
     },
     "empty": {
       "title": "Nie ma jeszcze żadnych zadań",
@@ -386,13 +387,13 @@
     },
     "trigger": {
       "run": {
-        "success": "Uruchomiono bieg"
+        "success": "Rozpoczęto wykonywanie zadania"
       },
       "fullReconcile": {
         "success": "Rozpoczęto pełną synchronizację"
       },
       "fullReingest": {
-        "success": "Rozpoczęło się pełne ponowne spożycie"
+        "success": "Rozpoczęto ponowny import wszystkich treści"
       },
       "alreadyRunning": "Zadanie już działa",
       "failed": "Nie udało się uruchomić zadania"
@@ -408,18 +409,26 @@
       "updateFailed": "Nie udało się zaktualizować zadania",
       "deleted": "Zadanie usunięte",
       "deleteFailed": "Nie można usunąć zadania",
-      "deleteRunning": "Zadanie jest uruchomione; anuluj je przed usunięciem"
+      "deleteRunning": "Zadanie jest zajęte. Spróbuj ponownie po zakończeniu bieżącej operacji."
     },
     "delete": {
       "title": "Usunąć „{{name}}”?",
-      "description": "Zadanie, jego historia uruchamiania i stan synchronizacji zostaną usunięte. Dokumenty znajdujące się już w Hindsight nie są usuwane."
+      "description": "Usuwa zadanie, historię uruchomień i stan synchronizacji. Domyślnie dokumenty w Hindsight zostają zachowane.",
+      "alsoDeleteDocuments": "Usuń także dokumenty z Hindsight",
+      "documentsHelp": "Po zaznaczeniu tej opcji z Hindsight zostaną też usunięte dokumenty oznaczone dla tego zadania oraz powiązane wspomnienia."
     },
     "reingest": {
-      "title": "Ponownie przełknąć wszystko dla „{{name}}”?",
-      "description": "Każdy pasujący element zostanie ponownie zapisany w Hindsight, nawet jeśli się nie zmienił. Może to zająć dużo czasu i obciążyć przetwarzanie Hindsight."
+      "title": "Zaimportować ponownie wszystkie treści dla „{{name}}”?",
+      "description": "Wszystkie treści spełniające kryteria zostaną ponownie wysłane do Hindsight, również te bez zmian. Może to zająć dużo czasu i wymagać dodatkowych zasobów przetwarzania."
     },
     "itemCount_few": "{{count}} elementy",
-    "itemCount_many": "{{count}} elementów"
+    "itemCount_many": "{{count}} elementów",
+    "clearDocuments": {
+      "title": "Usunąć dokumenty zadania „{{name}}”?",
+      "description": "Usuwa z Hindsight dokumenty oznaczone dla tego zadania oraz powiązane wspomnienia. Zadanie zostanie wstrzymane. Treść źródłowa pozostanie bez zmian.",
+      "success": "Usunięte dokumenty: {{count}}",
+      "failed": "Nie udało się usunąć dokumentów"
+    }
   },
   "taskEditor": {
     "newTitle": "Nowe zadanie",
@@ -428,15 +437,15 @@
     "enabledHelp": "Wyłączone zadania zachowują stan synchronizacji, ale nie są zaplanowane.",
     "notFound": "Nie znaleziono zadania",
     "nextRun": "Następne uruchomienie: {{when}}",
-    "itemCount_one": "Zsynchronizowano element {{count}}",
-    "itemCount_other": "Zsynchronizowano elementy {{count}}",
+    "itemCount_one": "Zsynchronizowano {{count}} element",
+    "itemCount_other": "Zsynchronizowano {{count}} elementy",
     "recentRuns": "Ostatnie uruchomienia",
     "saveBeforeRun": "Zapisz zmiany przed uruchomieniem",
     "saveError": "Nie udało się zapisać zadania",
     "unsaved": "Niezapisane zmiany",
     "saved": "Wszystkie zmiany zostały zapisane",
     "fields": {
-      "name": "Imię",
+      "name": "Nazwa",
       "enabled": "Włączone"
     },
     "hints": {
@@ -444,11 +453,11 @@
       "sourceTypeLocked": "Po utworzeniu nie można zmienić typu źródła. Utwórz nowe zadanie, aby użyć innego źródła.",
       "filtersReconcile": "Zmiana filtrów oznacza, że zadanie wymaga pełnej synchronizacji. Elementy, które przestaną pasować do filtrów, zostaną usunięte z Hindsight.",
       "filesReconcile": "Zmiana typów plików uruchamia pełną synchronizację. Wykluczone pliki zostaną usunięte z Hindsight.",
-      "policyRevision": "Zmiana strategii zachowywania, tagów lub metadanych powoduje ponowne zachowanie wszystkich pasujących elementów przy następnym uruchomieniu."
+      "policyRevision": "Zmiana strategii przetwarzania, tagów lub metadanych spowoduje ponowne wysłanie wszystkich pasujących treści do Hindsight przy następnym uruchomieniu."
     },
     "sections": {
       "general": {
-        "title": "Generał",
+        "title": "Ogólne",
         "description": "Nazwa i aktywacja."
       },
       "source": {
@@ -464,7 +473,7 @@
         "description": "Bank pamięci Hindsight, do którego trafiają treści."
       },
       "retain": {
-        "title": "Zachowaj strategię",
+        "title": "Strategia przetwarzania",
         "description": "Jak Hindsight przetwarza zawartość."
       },
       "observations": {
@@ -489,7 +498,7 @@
       },
       "schedule": {
         "title": "Harmonogram",
-        "description": "Gdy zadanie zostanie uruchomione automatycznie."
+        "description": "Ustaw, kiedy zadanie ma być wykonywane automatycznie."
       }
     },
     "toast": {
@@ -504,7 +513,7 @@
   "runs": {
     "title": "Historia uruchomień",
     "description": "Historia wykonań wszystkich zadań.",
-    "notStarted": "Nie rozpoczęte",
+    "notStarted": "Nie rozpoczęto",
     "total_one": "{{formatted}} uruchomienie",
     "total_other": "{{formatted}} uruchomień",
     "columns": {
@@ -567,7 +576,7 @@
     "noLog": "Brak linii dziennika.",
     "opColumns": {
       "remoteId": "Zdalny identyfikator",
-      "type": "Wpisz",
+      "type": "Typ",
       "status": "Stan",
       "retries": "Ponowne próby",
       "created": "Utworzono",
@@ -585,8 +594,8 @@
       "runs24h_other": "{{count}} uruchomień w ciągu ostatnich 24 godzin",
       "items": "Elementy zsynchronizowane",
       "itemsSub": "we wszystkich zadaniach",
-      "failures24h": "Awarie (24h)",
-      "needsAttention": "Potrzebuje uwagi",
+      "failures24h": "Błędy (24 godz.)",
+      "needsAttention": "Wymaga uwagi",
       "allGood": "Wszystko dobrze",
       "runs24h_few": "{{count}} uruchomienia w ciągu ostatnich 24 godzin",
       "runs24h_many": "{{count}} uruchomień w ciągu ostatnich 24 godzin"
@@ -608,8 +617,8 @@
       "empty": "Brak nadchodzących uruchomień"
     },
     "failures": {
-      "title": "Ostatnie awarie",
-      "empty": "Żadnych ostatnich awarii"
+      "title": "Ostatnie błędy",
+      "empty": "Brak ostatnich błędów"
     }
   },
   "observationScope": {
@@ -668,16 +677,20 @@
     },
     "files": {
       "title": "Globalne typy plików",
-      "description": "Domyślne typy plików dla zadań ustawione na „Śledź globalnie”. Wykluczone pliki są usuwane podczas uzgadniania."
+      "description": "Domyślne typy plików dla zadań używających ustawień globalnych. Wykluczone treści są usuwane z Hindsight podczas pełnej synchronizacji."
     },
     "oauth": {
       "title": "OAuth",
-      "description": "Zarejestruj to przekierowanie URI w konfiguracji aplikacji Google Cloud i Microsoft Entra (Azure) dla poświadczeń Google Drive i OneDrive.",
-      "redirectUri": "Przekieruj URI"
+      "description": "Zarejestruj ten URI przekierowania w ustawieniach aplikacji Google Cloud i Microsoft Entra (Azure), aby połączyć Google Drive i OneDrive.",
+      "redirectUri": "URI przekierowania"
     },
     "toast": {
       "saved": "Ustawienia zostały zapisane",
       "failed": "Nie udało się zapisać ustawień"
+    },
+    "timezone": {
+      "help": "Wszystkie zadania używają tej strefy czasowej. Domyślnie jest to TZ serwera lub UTC, jeśli TZ nie ustawiono.",
+      "invalid": "Wybierz prawidłową strefę czasową."
     }
   },
   "notFound": {
@@ -700,7 +713,7 @@
     "reason": "Powód",
     "actions": {
       "create": "Utwórz",
-      "update": "Aktualizacja",
+      "update": "Aktualizuj",
       "delete": "Usuń",
       "unchanged": "Niezmienione",
       "skip": "Pomiń",
@@ -764,7 +777,7 @@
     "webdavDescription": "Obsługuje m.in. Nextcloud, ownCloud, Synology, Apache mod_dav i rclone serve.",
     "hindsightDescription": "Adres API Hindsight, do którego trafiają treści.",
     "filesystemRootHelp": "Bezwzględna ścieżka na serwerze aplikacji. W Dockerze użyj ścieżki zamontowanej w kontenerze.",
-    "filesystemFolderHelp": "Ścieżka względem katalogu głównego tych danych dostępowych. Wpisz . , aby wskazać katalog główny.",
+    "filesystemFolderHelp": "Ścieżka względem katalogu głównego tych poświadczeń. Wpisz . aby wskazać katalog główny.",
     "notionDataSourceHelp": "Identyfikator źródła danych Notion (nie identyfikator bazy danych). Użyj opcji „Przeglądaj”, aby wybrać źródło udostępnione tej integracji.",
     "siYuanInstanceHelp": "Stały identyfikator tej instancji SiYuan. Jeśli pozostawisz pole puste, zostanie użyty podstawowy adres URL.",
     "s3EndpointHelp": "Pozostaw puste dla AWS S3.",
@@ -782,5 +795,21 @@
     "hindsightApiKeyHelp": "Wysyłany jako token Bearer. Pozostaw puste, jeśli instancja nie wymaga uwierzytelniania.",
     "syncCollectionHelp": "Jeśli serwer to obsługuje, używa sync-collection (RFC 6578).",
     "fileSystem": "System plików"
+  },
+  "proxy": {
+    "title": "Proxy",
+    "global": "Użyj ustawień globalnych",
+    "types": {
+      "default": "Użyj zmiennych środowiskowych",
+      "none": "Bez proxy",
+      "http": "HTTP",
+      "https": "HTTPS",
+      "socks5": "SOCKS5"
+    },
+    "defaultHelp": "Używa ustawień proxy ze zmiennych środowiskowych serwera.",
+    "address": "Adres",
+    "username": "Nazwa użytkownika (opcjonalnie)",
+    "password": "Hasło (opcjonalnie)",
+    "invalidAddress": "Podaj adres proxy w formacie host:port. Numer portu musi mieścić się w zakresie 1–65535."
   }
 }

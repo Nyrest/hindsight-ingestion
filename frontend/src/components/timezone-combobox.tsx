@@ -32,6 +32,7 @@ export function TimezoneCombobox({
     return value && !all.includes(value) ? [value, ...all] : all;
   }, [value]);
   const local = browserTimeZone();
+  const suggested = Array.from(new Set([value, "UTC", local].filter(Boolean)));
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -50,17 +51,17 @@ export function TimezoneCombobox({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-(--radix-popover-trigger-width) min-w-64 p-0" align="start">
-        <Command>
+        <Command label={t("schedule.searchTimezone")} defaultValue={value}>
           <CommandInput placeholder={t("schedule.searchTimezone")} />
-          <CommandList>
+          <CommandList label={t("schedule.allTimezones")}>
             <CommandEmpty>{t("schedule.noTimezone")}</CommandEmpty>
             <CommandGroup heading={t("schedule.suggested")}>
-              {Array.from(new Set(["UTC", local])).map((tz) => (
+              {suggested.map((tz) => (
                 <TzItem key={`s-${tz}`} tz={tz} value={value} onSelect={(v) => (onChange(v), setOpen(false))} />
               ))}
             </CommandGroup>
             <CommandGroup heading={t("schedule.allTimezones")}>
-              {zones.map((tz) => (
+              {zones.filter((tz) => !suggested.includes(tz)).map((tz) => (
                 <TzItem key={tz} tz={tz} value={value} onSelect={(v) => (onChange(v), setOpen(false))} />
               ))}
             </CommandGroup>

@@ -124,7 +124,7 @@ export function useCancelTask() {
 export function useValidateCron(expr: string, tz: string) {
   return useQuery({
     queryKey: qk.cron(expr, tz),
-    queryFn: () => api.validateCron(expr, tz),
+    queryFn: () => api.validateCron(expr),
     enabled: !!expr.trim(),
     staleTime: 60_000,
     retry: false,
