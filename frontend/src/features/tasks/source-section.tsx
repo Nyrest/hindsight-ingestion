@@ -42,6 +42,7 @@ export function SourceTypePicker({
   onChange: (type: string) => void;
   loading?: boolean;
 }) {
+  const { t } = useTranslation();
   if (loading) {
     return (
       <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
