@@ -20,7 +20,7 @@ Sync **Notion, SiYuan, S3, WebDAV, Google Drive, OneDrive and local files** into
 - 🖼️ **Multimodal ingestion** — Sync text, documents and multimodal files from S3, WebDAV, Google Drive, OneDrive and local storage into Hindsight.
 - 🔄 **Stay in sync, deletions included** — Clean up documents when source items disappear or leave your sync scope. Incomplete scans never treat missing items as deletions.
 - 🚀 **Streaming file ingestion** — Stream files directly into Hindsight without loading entire uploads into memory. Export Google Docs, Sheets and Slides as Markdown, CSV and PDF.
-- 🎛️ **Your sync, your rules** — Combine filters, file types, retain strategies, tags and metadata. Set a schedule and timezone for every task, or run on demand.
+- 🎛️ **Your sync, your rules** — Combine filters, file types, retain strategies, tags and metadata. Set a schedule for every task, or run on demand.
 - 🛡️ **Built to recover** — Persisted checkpoints and operation retries recover from failures and restarts. Overlap protection keeps each task from running twice at once.
 - 🧪 **Preview and trace every change** — Dry-run shows planned changes before ingestion. Follow real runs through sync counters, Hindsight operations and detailed logs.
 - 🔐 **Self-hosted, secrets encrypted** — Deploy with Docker, encrypt credentials with AES-256-GCM, and choose SQLite, PostgreSQL or MySQL for persistent storage.
@@ -63,25 +63,6 @@ Open [http://localhost:8080](http://localhost:8080) and sign in with `admin` and
 2. In **Tasks**, choose the source, content to sync and destination bank. Leave the retain strategy empty to use the bank's default.
 3. Choose a schedule and timezone; the default is **Every hour**. Save the task disabled if you want to preview first.
 4. Use **Dry-run** to preview, then **Run now** to sync. Check **Runs** for results and enable the task for scheduled syncs.
-
-The Hindsight URL must be reachable from inside the container. On Docker Desktop, use `http://host.docker.internal:<port>` for Hindsight running on your host; on a shared Docker network, use its service name.
-
-### Updates and logs
-
-To update to the latest stable release, run from the deployment folder:
-
-```bash
-docker compose pull
-docker compose up -d
-```
-
-Keep the same `.env` and data volume when updating. Back up both before upgrades; the encryption key is needed to read saved credentials.
-
-To follow service logs:
-
-```bash
-docker compose logs -f --tail=100
-```
 
 ## 🔌 Supported Sources
 
@@ -128,22 +109,9 @@ Task actions are available from the **Tasks** menu:
 - **Overlapping tasks share documents.** Tasks syncing the same source item into the same bank can overwrite or delete each other's documents.
 - **Each task runs once at a time.** Progress survives restarts and advances only after success; failed runs retry from the last committed progress.
 
-### Proxies and observation scopes
-
-In **Settings**, choose **Default** to follow the server's proxy environment, **No proxy** for a direct connection, or an **HTTP**, **HTTPS** or **SOCKS5** proxy with a `host:port` address and optional authentication. Credentials inherit this choice and can override it. Saved settings apply to newly created clients without a restart. Environment changes require restarting the service. Default follows [Go's proxy environment rules](https://pkg.go.dev/net/http#ProxyFromEnvironment); Docker must receive proxy variables inside the container, for example:
-
-```yaml
-services:
-  hindsight-ingestion:
-    environment:
-      HTTP_PROXY: ${HTTP_PROXY:-}
-      HTTPS_PROXY: ${HTTPS_PROXY:-}
-      NO_PROXY: ${NO_PROXY:-}
-```
+### Observation scopes
 
 Choose an **Observation scope** globally or per task: **Combined**, **Shared**, **Per tag**, **All combinations**, or **Custom**. Custom groups support existing bank tags, new tags, and dynamic **Current task**, **Current source** and **Current source group** references. Each group becomes one scope; literal tags do not change document tags. All combinations can grow exponentially (2ⁿ − 1 scopes for n tags). Changing scopes re-retains text on the next full scan. Observation scopes apply to Notion and SiYuan text and inline content; file uploads use Combined, following the [Hindsight request model](https://github.com/vectorize-io/hindsight/blob/main/hindsight-api-slim/hindsight_api/api/http.py). See [retain documentation](https://hindsight.vectorize.io/developer/api/retain) for rule behavior.
-
-The task menu's **Delete documents** action pauses the task and removes only documents tagged `ingestion_task:<id>` and their associated memories from its destination bank. It follows [Hindsight's strict document filtering](https://hindsight.vectorize.io/developer/api/documents). **Delete** also offers an optional **Also delete documents in Hindsight** checkbox, unchecked by default. Sources are unaffected. Failed cleanup keeps progress and the paused task for retry; re-enable the task to import again after successful cleanup.
 
 ### Inline images in Notion and SiYuan
 
