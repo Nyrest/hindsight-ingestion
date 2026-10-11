@@ -69,7 +69,8 @@
     "integer": "Debe ser un número entero",
     "min1": "Debe ser al menos 1",
     "url": "Debe ser una URL válida",
-    "tooLong": "El texto es demasiado largo"
+    "tooLong": "El texto es demasiado largo",
+    "list": "Introduce una lista válida"
   },
   "runStatus": {
     "pending": "Pendiente",
@@ -78,7 +79,8 @@
     "succeeded": "Completado",
     "failed": "Fallido",
     "interrupted": "Interrumpido",
-    "cancelled": "Cancelado"
+    "cancelled": "Cancelado",
+    "waiting_source": "Esperando el rastreo"
   },
   "credentialStatus": {
     "active": "Activo",
@@ -730,7 +732,8 @@
       "delete": "Eliminar",
       "unchanged": "Sin cambios",
       "skip": "Omitir",
-      "fail": "Fallido"
+      "fail": "Fallido",
+      "release": "Quitar referencia de esta tarea"
     }
   },
   "providerCopy": {
@@ -803,7 +806,36 @@
     "siYuanNotebookHelp": "Déjalo vacío para sincronizar todos los cuadernos abiertos.",
     "hindsightApiKeyHelp": "Se envía como token Bearer. Déjalo vacío si la instancia no requiere autenticación.",
     "syncCollectionHelp": "Usa sync-collection (RFC 6578) si el servidor lo admite.",
-    "fileSystem": "Sistema de archivos"
+    "fileSystem": "Sistema de archivos",
+    "cloudflareAccountId": "ID de cuenta",
+    "cloudflareWebsiteUrl": "URL del sitio",
+    "cloudflareDiscovery": "Descubrimiento de URL",
+    "cloudflareRender": "Renderizado JavaScript",
+    "cloudflareLimit": "Máximo de páginas",
+    "cloudflareDepth": "Profundidad máxima de enlaces",
+    "cloudflareMaxAge": "Duración de la caché (segundos)",
+    "cloudflareExternal": "Incluir sitios externos",
+    "cloudflareSubdomains": "Incluir subdominios",
+    "cloudflareInclude": "Patrones de URL incluidos",
+    "cloudflareExclude": "Patrones de URL excluidos",
+    "cloudflareSize": "Tamaño máximo por página (MiB)",
+    "cloudflareWaitUntil": "Condición de espera al navegar",
+    "cloudflareNavigationTimeout": "Tiempo límite de navegación (ms)",
+    "cloudflareSelector": "Selector CSS del contenido",
+    "cloudflareSelectorTimeout": "Tiempo límite del selector (ms)",
+    "cloudflareVisible": "Esperar a que el contenido sea visible",
+    "cloudflareExtraWait": "Espera adicional (ms)",
+    "cloudflareResources": "Tipos de recursos bloqueados",
+    "cloudflarePageUrl": "URL de la página",
+    "cloudflareAll": "Sitemaps y enlaces",
+    "cloudflareSitemaps": "Solo sitemaps",
+    "cloudflareLinks": "Solo enlaces",
+    "cloudflareCredentialHelp": "Cuenta de Cloudflare y token API con permiso de edición de Browser Run",
+    "cloudflareRenderHelp": "Actívalo para sitios que cargan contenido en el navegador. El tiempo del navegador puede tener un coste.",
+    "cloudflareLimitHelp": "Las cuentas gratuitas permiten hasta 100 páginas por rastreo. Si se alcanza el límite, no se deducen eliminaciones.",
+    "cloudflareCacheHelp": "La reconciliación completa siempre obtiene contenido actualizado.",
+    "cloudflareIncludeHelp": "Un patrón por línea. * coincide dentro de un segmento de ruta; ** puede abarcar varios segmentos.",
+    "cloudflareExcludeHelp": "Las exclusiones tienen prioridad sobre las inclusiones."
   },
   "proxy": {
     "title": "Proxy",
@@ -820,5 +852,23 @@
     "username": "Usuario (opcional)",
     "password": "Contraseña (opcional)",
     "invalidAddress": "Introduce una dirección de proxy con el formato host:puerto y un puerto entre 1 y 65535."
+  },
+  "cloudflare": {
+    "crawlProgress": "Rastreo del sitio",
+    "jobId": "ID del trabajo",
+    "phase": "Etapa",
+    "pages": "Páginas completadas / total",
+    "browserSeconds": "Uso del navegador (segundos)",
+    "previewNotice": "La vista previa realiza un rastreo real en Cloudflare y consume la cuota de la cuenta. No escribe en Hindsight.",
+    "phases": {
+      "submitting": "Enviando rastreo",
+      "running": "Esperando el rastreo",
+      "completed": "Importando resultados",
+      "consumed": "Finalizado",
+      "failed": "Fallido",
+      "cancelled": "Cancelado",
+      "superseded": "Reanudado en otra ejecución",
+      "cancel_failed": "Fallido"
+    }
   }
 }

@@ -69,7 +69,8 @@
     "integer": "Musi to być liczba całkowita",
     "min1": "Musi być co najmniej 1",
     "url": "Musi to być prawidłowy URL",
-    "tooLong": "Tekst jest zbyt długi"
+    "tooLong": "Tekst jest zbyt długi",
+    "list": "Wprowadź prawidłową listę"
   },
   "runStatus": {
     "pending": "Oczekujące",
@@ -78,7 +79,8 @@
     "succeeded": "Sukces",
     "failed": "Błąd",
     "interrupted": "Przerwano",
-    "cancelled": "Anulowano"
+    "cancelled": "Anulowano",
+    "waiting_source": "Oczekiwanie na skanowanie"
   },
   "credentialStatus": {
     "active": "Aktywny",
@@ -740,7 +742,8 @@
       "delete": "Usuń",
       "unchanged": "Niezmienione",
       "skip": "Pomiń",
-      "fail": "Nie udało się"
+      "fail": "Nie udało się",
+      "release": "Usuń odwołanie tego zadania"
     },
     "complete_few": "Zeskanowano {{count}} elementy.",
     "complete_many": "Zeskanowano {{count}} elementów.",
@@ -817,7 +820,36 @@
     "siYuanNotebookHelp": "Pozostaw puste, aby synchronizować wszystkie otwarte notatniki.",
     "hindsightApiKeyHelp": "Wysyłany jako token Bearer. Pozostaw puste, jeśli instancja nie wymaga uwierzytelniania.",
     "syncCollectionHelp": "Jeśli serwer to obsługuje, używa sync-collection (RFC 6578).",
-    "fileSystem": "System plików"
+    "fileSystem": "System plików",
+    "cloudflareAccountId": "ID konta",
+    "cloudflareWebsiteUrl": "URL witryny",
+    "cloudflareDiscovery": "Wykrywanie adresów URL",
+    "cloudflareRender": "Renderowanie JavaScript",
+    "cloudflareLimit": "Maksymalna liczba stron",
+    "cloudflareDepth": "Maksymalna głębokość linków",
+    "cloudflareMaxAge": "Czas pamięci podręcznej (sekundy)",
+    "cloudflareExternal": "Uwzględnij witryny zewnętrzne",
+    "cloudflareSubdomains": "Uwzględnij subdomeny",
+    "cloudflareInclude": "Wzorce URL do uwzględnienia",
+    "cloudflareExclude": "Wzorce URL do wykluczenia",
+    "cloudflareSize": "Maksymalny rozmiar strony (MiB)",
+    "cloudflareWaitUntil": "Warunek oczekiwania na nawigację",
+    "cloudflareNavigationTimeout": "Limit czasu nawigacji (ms)",
+    "cloudflareSelector": "Selektor CSS treści",
+    "cloudflareSelectorTimeout": "Limit czasu selektora (ms)",
+    "cloudflareVisible": "Czekaj na widoczną treść",
+    "cloudflareExtraWait": "Dodatkowe oczekiwanie (ms)",
+    "cloudflareResources": "Blokowane typy zasobów",
+    "cloudflarePageUrl": "URL strony",
+    "cloudflareAll": "Mapy witryn i linki",
+    "cloudflareSitemaps": "Tylko mapy witryn",
+    "cloudflareLinks": "Tylko linki",
+    "cloudflareCredentialHelp": "Konto Cloudflare i token API z uprawnieniem do edycji Browser Run",
+    "cloudflareRenderHelp": "Włącz dla witryn ładujących treść w przeglądarce. Czas korzystania z przeglądarki może być płatny.",
+    "cloudflareLimitHelp": "Darmowe konta pozwalają skanować do 100 stron naraz. Po osiągnięciu limitu usunięcia nie są wnioskowane.",
+    "cloudflareCacheHelp": "Pełne uzgodnienie zawsze pobiera aktualną treść.",
+    "cloudflareIncludeHelp": "Jeden wzorzec na wiersz. * pasuje w jednym segmencie ścieżki, ** również między segmentami.",
+    "cloudflareExcludeHelp": "Wykluczenia mają pierwszeństwo."
   },
   "proxy": {
     "title": "Proxy",
@@ -834,5 +866,23 @@
     "username": "Nazwa użytkownika (opcjonalnie)",
     "password": "Hasło (opcjonalnie)",
     "invalidAddress": "Podaj adres proxy w formacie host:port. Numer portu musi mieścić się w zakresie 1–65535."
+  },
+  "cloudflare": {
+    "crawlProgress": "Skanowanie witryny",
+    "jobId": "ID zadania crawl",
+    "phase": "Etap",
+    "pages": "Ukończone strony / łącznie",
+    "browserSeconds": "Użycie przeglądarki (sekundy)",
+    "previewNotice": "Podgląd wykonuje rzeczywiste skanowanie w Cloudflare i zużywa limit konta. Nie zapisuje nic w Hindsight.",
+    "phases": {
+      "submitting": "Wysyłanie skanowania",
+      "running": "Oczekiwanie na skanowanie",
+      "completed": "Importowanie wyników",
+      "consumed": "Ukończono",
+      "failed": "Błąd",
+      "cancelled": "Anulowano",
+      "superseded": "Wznowiono w innym uruchomieniu",
+      "cancel_failed": "Błąd"
+    }
   }
 }

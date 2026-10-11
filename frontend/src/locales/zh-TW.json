@@ -69,7 +69,8 @@
     "integer": "必須是整數",
     "min1": "必須至少為 1",
     "url": "必須是有效的 URL",
-    "tooLong": "內容過長"
+    "tooLong": "內容過長",
+    "list": "請輸入有效清單"
   },
   "runStatus": {
     "pending": "等待中",
@@ -78,7 +79,8 @@
     "succeeded": "成功",
     "failed": "失敗",
     "interrupted": "已中斷",
-    "cancelled": "已取消"
+    "cancelled": "已取消",
+    "waiting_source": "等待網站抓取"
   },
   "credentialStatus": {
     "active": "可用",
@@ -728,7 +730,8 @@
       "delete": "刪除",
       "unchanged": "不變",
       "skip": "跳過",
-      "fail": "失敗"
+      "fail": "失敗",
+      "release": "解除本任務參照"
     }
   },
   "providerCopy": {
@@ -801,7 +804,36 @@
     "siYuanNotebookHelp": "留白以同步所有已開啟的筆記本。",
     "hindsightApiKeyHelp": "會以 Bearer 權杖傳送。若執行個體不需要驗證，請留白。",
     "syncCollectionHelp": "伺服器支援時使用 sync-collection（RFC 6578）。",
-    "fileSystem": "檔案系統"
+    "fileSystem": "檔案系統",
+    "cloudflareAccountId": "帳戶 ID",
+    "cloudflareWebsiteUrl": "網站 URL",
+    "cloudflareDiscovery": "URL 探索方式",
+    "cloudflareRender": "JavaScript 渲染",
+    "cloudflareLimit": "最大頁數",
+    "cloudflareDepth": "最大連結深度",
+    "cloudflareMaxAge": "快取時間（秒）",
+    "cloudflareExternal": "包含外部網站",
+    "cloudflareSubdomains": "包含子網域",
+    "cloudflareInclude": "包含 URL 規則",
+    "cloudflareExclude": "排除 URL 規則",
+    "cloudflareSize": "單頁大小上限（MiB）",
+    "cloudflareWaitUntil": "導覽等待條件",
+    "cloudflareNavigationTimeout": "導覽逾時（毫秒）",
+    "cloudflareSelector": "內容 CSS 選取器",
+    "cloudflareSelectorTimeout": "選取器逾時（毫秒）",
+    "cloudflareVisible": "等待內容可見",
+    "cloudflareExtraWait": "額外等待（毫秒）",
+    "cloudflareResources": "封鎖資源類型",
+    "cloudflarePageUrl": "網頁 URL",
+    "cloudflareAll": "網站地圖與連結",
+    "cloudflareSitemaps": "僅網站地圖",
+    "cloudflareLinks": "僅連結",
+    "cloudflareCredentialHelp": "Cloudflare 帳戶及具有 Browser Run 編輯權限的 API Token",
+    "cloudflareRenderHelp": "適用於透過瀏覽器載入內容的網站。瀏覽器使用時間可能產生費用。",
+    "cloudflareLimitHelp": "免費帳戶每次最多抓取 100 頁。達到頁數上限時不會執行刪除對帳。",
+    "cloudflareCacheHelp": "完整對帳一律抓取最新內容。",
+    "cloudflareIncludeHelp": "每行一個規則。* 比對單一路徑區段，** 可跨路徑區段比對。",
+    "cloudflareExcludeHelp": "排除規則優先於包含規則。"
   },
   "proxy": {
     "title": "代理伺服器",
@@ -818,5 +850,23 @@
     "username": "使用者名稱（選填）",
     "password": "密碼（選填）",
     "invalidAddress": "請輸入 host:port 格式的代理位址，連接埠範圍為 1–65535。"
+  },
+  "cloudflare": {
+    "crawlProgress": "網站抓取",
+    "jobId": "Job ID",
+    "phase": "階段",
+    "pages": "完成頁數 / 總頁數",
+    "browserSeconds": "瀏覽器使用量（秒）",
+    "previewNotice": "預演會執行實際的 Cloudflare 抓取並消耗帳戶額度，不會寫入 Hindsight。",
+    "phases": {
+      "submitting": "提交抓取",
+      "running": "等待網站抓取",
+      "completed": "匯入抓取結果",
+      "consumed": "已完成",
+      "failed": "失敗",
+      "cancelled": "已取消",
+      "superseded": "已由復原執行接續",
+      "cancel_failed": "失敗"
+    }
   }
 }

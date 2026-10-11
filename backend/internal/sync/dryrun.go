@@ -6,9 +6,11 @@ import (
 	"io"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
+	"github.com/Nyrest/hindsight-ingestion/internal/shared"
 )
 
 type DryRunItem struct {
@@ -21,6 +23,7 @@ type DryRunItem struct {
 }
 
 type DryRunResult struct {
+	ReleasedCount   int          `json:"releasedCount"`
 	Complete        bool         `json:"complete"`
 	Error           string       `json:"error"`
 	DiscoveredCount int          `json:"discoveredCount"`
@@ -37,6 +40,10 @@ type DryRunResult struct {
 // DryRun inventories the saved task and verifies changed content without
 // writing destination documents, run history, ledger rows or cursors.
 func (e *Engine) DryRun(ctx context.Context, taskID string) (DryRunResult, error) {
+	return e.DryRunWithOptions(ctx, taskID, RunOptions{})
+}
+
+func (e *Engine) DryRunWithOptions(ctx context.Context, taskID string, opts RunOptions) (DryRunResult, error) {
 	result := DryRunResult{Items: []DryRunItem{}}
 	r := &runner{e: e, ctx: ctx}
 	if err := e.DB.WithContext(ctx).First(&r.task, "id = ?", taskID).Error; err != nil {
@@ -45,11 +52,27 @@ func (e *Engine) DryRun(ctx context.Context, taskID string) (DryRunResult, error
 	if _, err := r.prepareSource(); err != nil {
 		return result, err
 	}
+	if r.task.SourceType == connectors.SourceCloudflareCrawl {
+		cred, err := e.Creds.Load(ctx, r.task.DestinationCredentialID)
+		if err != nil {
+			return result, err
+		}
+		key, err := shared.TargetKey(cred, r.task.DestinationBankID)
+		if err != nil {
+			return result, err
+		}
+		r.sharedDocs = &shared.Documents{DB: e.DB, TargetKey: key}
+	}
+	defer func() {
+		if r.releaseShared != nil {
+			r.releaseShared()
+		}
+	}()
 	if err := r.loadLedger(); err != nil {
 		return result, err
 	}
 	observed := map[string]DryRunItem{}
-	res, err := r.src.Scan(ctx, connectors.ScanRequest{
+	res, err := r.scanPreview(connectors.ScanRequest{
 		Credential: r.cred, Config: r.srcCfg, Filter: r.filter, Full: true,
 		Log: func(string, string) {},
 		Emit: func(item connectors.SourceItem) error {
@@ -57,15 +80,24 @@ func (e *Engine) DryRun(ctx context.Context, taskID string) (DryRunResult, error
 			observed[item.ID] = preview
 			return ctx.Err()
 		},
-	})
+	}, opts)
 	if ctx.Err() != nil {
 		return result, ctx.Err()
 	}
+	err = errors.Join(err, res.Error)
 	result.Complete = err == nil && res.Complete
 	if err != nil {
 		result.Error = err.Error()
 	}
 	result.DiscoveredCount = len(observed)
+	if !result.Complete && r.sharedDocs != nil {
+		for id, preview := range observed {
+			if preview.Action == "delete" {
+				preview.Action, preview.Reason = "skip", "incomplete crawl; reference unchanged"
+				observed[id] = preview
+			}
+		}
+	}
 	if result.Complete {
 		for id, row := range r.ledger {
 			if _, seen := observed[id]; !seen && row.DestinationPresent {
@@ -80,6 +112,15 @@ func (e *Engine) DryRun(ctx context.Context, taskID string) (DryRunResult, error
 	sort.Strings(ids)
 	for _, id := range ids {
 		preview := observed[id]
+		if preview.Action == "delete" && r.sharedDocs != nil {
+			other, err := r.sharedDocs.OtherReferences(ctx, r.ledger[id])
+			if err != nil {
+				return result, err
+			}
+			if other {
+				preview.Action, preview.Reason = "release", "another task still references this document"
+			}
+		}
 		switch preview.Action {
 		case "create":
 			result.CreatedCount++
@@ -87,6 +128,8 @@ func (e *Engine) DryRun(ctx context.Context, taskID string) (DryRunResult, error
 			result.UpdatedCount++
 		case "delete":
 			result.DeletedCount++
+		case "release":
+			result.ReleasedCount++
 		case "unchanged":
 			result.UnchangedCount++
 		case "skip":
@@ -105,6 +148,10 @@ func (e *Engine) DryRun(ctx context.Context, taskID string) (DryRunResult, error
 func (r *runner) previewItem(item connectors.SourceItem) DryRunItem {
 	preview := DryRunItem{SourceItemID: item.ID, Name: item.Name, Path: item.Path}
 	row := r.ledger[item.ID]
+	if item.ContentError != "" {
+		preview.Action, preview.Reason = "fail", item.ContentError
+		return preview
+	}
 	desired, reason := r.inScope(item)
 	if item.Deleted {
 		desired, reason = false, "removed from source"
@@ -117,6 +164,14 @@ func (r *runner) previewItem(item connectors.SourceItem) DryRunItem {
 		return preview
 	}
 	tags, md := r.documentTagsAndMetadata(item)
+	if r.sharedDocs != nil {
+		fingerprint, err := r.sharedDocs.Fingerprint(r.ctx, CanonicalIdentity(r.task.SourceType, r.cred, r.srcCfg, item))
+		if err != nil {
+			preview.Action, preview.Reason = "fail", err.Error()
+			return preview
+		}
+		row.SyncedFingerprint = fingerprint
+	}
 	if row.DestinationPresent && row.PreviousDocumentID == "" &&
 		row.DestinationDocumentID == CanonicalIdentity(r.task.SourceType, r.cred, r.srcCfg, item) &&
 		row.SyncedFingerprint == r.itemFingerprint(item, tags, md) && !(r.includesImages() && row.NeedsImageRetry) {
@@ -144,6 +199,80 @@ func (r *runner) previewItem(item connectors.SourceItem) DryRunItem {
 		preview.Action = "update"
 	}
 	return preview
+}
+
+func (r *runner) scanPreview(req connectors.ScanRequest, opts RunOptions) (connectors.ScanResult, error) {
+	source, async := r.src.(connectors.AsyncSourceConnector)
+	if !async {
+		return r.src.Scan(r.ctx, req)
+	}
+	job, err := source.StartJob(r.ctx, req)
+	if err != nil {
+		return connectors.ScanResult{}, err
+	}
+	defer func() {
+		cleanup, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+		if err := source.CancelJob(cleanup, req.Credential, job); err != nil {
+			r.e.Log.Warn("preview source cleanup failed", "task", r.task.ID, "error", err)
+		}
+	}()
+	wait := func() error {
+		for {
+			var err error
+			job, err = source.PollJob(r.ctx, req.Credential, job)
+			if err != nil {
+				return err
+			}
+			if job.Status == "completed" {
+				return nil
+			}
+			if err := sleepCtx(r.ctx, SourcePollInterval); err != nil {
+				return err
+			}
+		}
+	}
+	err = opts.waitSource(wait)
+	if err != nil {
+		return connectors.ScanResult{}, err
+	}
+	if r.sharedDocs != nil {
+		r.releaseShared, err = shared.Lock(r.ctx, r.sharedDocs.TargetKey)
+		if err != nil {
+			return connectors.ScanResult{}, err
+		}
+		if err := r.previewSharedOperations(); err != nil {
+			return connectors.ScanResult{}, err
+		}
+	}
+	return source.ReadJob(r.ctx, req, job)
+}
+
+func (r *runner) previewSharedOperations() error {
+	operations, err := r.sharedOperations()
+	if err != nil || len(operations) == 0 {
+		return err
+	}
+	cred, err := r.e.Creds.Load(r.ctx, r.task.DestinationCredentialID)
+	if err != nil {
+		return err
+	}
+	destination, err := r.e.NewDestination(cred)
+	if err != nil {
+		return err
+	}
+	for _, operation := range operations {
+		status, err := destination.GetOperation(r.ctx, r.task.DestinationBankID, operation.RemoteOperationID)
+		if err != nil {
+			return err
+		}
+		switch status.Status {
+		case "completed", "failed", "not_found", "cancelled":
+		default:
+			return errors.New("shared bank has unconfirmed Hindsight writes; deletion preview is unavailable")
+		}
+	}
+	return nil
 }
 
 func scopePreview(preview DryRunItem, row models.TaskItem, reason string) DryRunItem {

@@ -69,7 +69,8 @@
     "integer": "整数でなければなりません",
     "min1": "少なくとも 1 でなければなりません",
     "url": "有効な URL である必要があります",
-    "tooLong": "長すぎます"
+    "tooLong": "長すぎます",
+    "list": "有効なリストを入力してください"
   },
   "runStatus": {
     "pending": "待機中",
@@ -78,7 +79,8 @@
     "succeeded": "成功",
     "failed": "失敗",
     "interrupted": "中断",
-    "cancelled": "キャンセル済み"
+    "cancelled": "キャンセル済み",
+    "waiting_source": "クロール待機中"
   },
   "credentialStatus": {
     "active": "アクティブ",
@@ -728,7 +730,8 @@
       "delete": "削除",
       "unchanged": "変更なし",
       "skip": "スキップ",
-      "fail": "失敗"
+      "fail": "失敗",
+      "release": "このタスクの参照を解除"
     }
   },
   "providerCopy": {
@@ -801,7 +804,36 @@
     "siYuanNotebookHelp": "空欄の場合は、開いているすべてのノートブックを同期します。",
     "hindsightApiKeyHelp": "Bearer トークンとして送信されます。インスタンスで認証を使わない場合は空欄にします。",
     "syncCollectionHelp": "サーバーが対応している場合は sync-collection（RFC 6578）を使用します。",
-    "fileSystem": "ファイルシステム"
+    "fileSystem": "ファイルシステム",
+    "cloudflareAccountId": "アカウント ID",
+    "cloudflareWebsiteUrl": "サイトの URL",
+    "cloudflareDiscovery": "URL の検出方法",
+    "cloudflareRender": "JavaScript レンダリング",
+    "cloudflareLimit": "ページ数の上限",
+    "cloudflareDepth": "リンクの最大深度",
+    "cloudflareMaxAge": "キャッシュ期間（秒）",
+    "cloudflareExternal": "外部サイトを含める",
+    "cloudflareSubdomains": "サブドメインを含める",
+    "cloudflareInclude": "対象 URL パターン",
+    "cloudflareExclude": "除外 URL パターン",
+    "cloudflareSize": "ページサイズの上限（MiB）",
+    "cloudflareWaitUntil": "ナビゲーションの待機条件",
+    "cloudflareNavigationTimeout": "ナビゲーションのタイムアウト（ミリ秒）",
+    "cloudflareSelector": "コンテンツの CSS セレクター",
+    "cloudflareSelectorTimeout": "セレクターのタイムアウト（ミリ秒）",
+    "cloudflareVisible": "コンテンツの表示を待つ",
+    "cloudflareExtraWait": "追加の待機時間（ミリ秒）",
+    "cloudflareResources": "ブロックするリソースの種類",
+    "cloudflarePageUrl": "ページの URL",
+    "cloudflareAll": "サイトマップとリンク",
+    "cloudflareSitemaps": "サイトマップのみ",
+    "cloudflareLinks": "リンクのみ",
+    "cloudflareCredentialHelp": "Browser Run の編集権限を持つ Cloudflare アカウントと API トークン",
+    "cloudflareRenderHelp": "ブラウザーでコンテンツを読み込むサイトで有効にします。ブラウザーの使用時間に料金がかかる場合があります。",
+    "cloudflareLimitHelp": "無料アカウントは 1 回につき最大 100 ページです。上限に達すると削除の照合を行いません。",
+    "cloudflareCacheHelp": "全件照合では常に最新のコンテンツを取得します。",
+    "cloudflareIncludeHelp": "1 行に 1 パターン。* はパスの 1 区間内、** は区間をまたいで一致します。",
+    "cloudflareExcludeHelp": "除外パターンが優先されます。"
   },
   "proxy": {
     "title": "プロキシ",
@@ -818,5 +850,23 @@
     "username": "ユーザー名（任意）",
     "password": "パスワード（任意）",
     "invalidAddress": "プロキシのアドレスを host:port 形式で入力してください。ポート番号は 1～65535 です。"
+  },
+  "cloudflare": {
+    "crawlProgress": "サイトのクロール",
+    "jobId": "ジョブ ID",
+    "phase": "段階",
+    "pages": "完了ページ数 / 総ページ数",
+    "browserSeconds": "ブラウザー使用量（秒）",
+    "previewNotice": "プレビューでは実際に Cloudflare でクロールし、アカウントの利用枠を消費します。Hindsight への書き込みは行いません。",
+    "phases": {
+      "submitting": "クロールを送信中",
+      "running": "クロール待機中",
+      "completed": "結果を取り込み中",
+      "consumed": "完了",
+      "failed": "失敗",
+      "cancelled": "キャンセル済み",
+      "superseded": "別の実行で再開",
+      "cancel_failed": "失敗"
+    }
   }
 }

@@ -152,17 +152,18 @@ func (f *fakeSource) OpenContent(ctx context.Context, req connectors.ContentRequ
 // --- fake hindsight -------------------------------------------------------
 
 type fakeDest struct {
-	mu         stdsync.Mutex
-	docs       map[string]hindsight.MemoryItem
-	files      map[string]string
-	deleted    []string
-	opStatus   map[string]string
-	opSeq      int
-	retains    int
-	batchSizes []int
-	failNext   bool
-	failOps    bool
-	opIDsSeen  map[string]bool
+	mu           stdsync.Mutex
+	docs         map[string]hindsight.MemoryItem
+	files        map[string]string
+	deleted      []string
+	opStatus     map[string]string
+	opSeq        int
+	retains      int
+	batchSizes   []int
+	failNext     bool
+	loseResponse bool
+	failOps      bool
+	opIDsSeen    map[string]bool
 }
 
 func newFakeDest() *fakeDest {
@@ -187,6 +188,10 @@ func (d *fakeDest) RetainBatch(ctx context.Context, bank string, items []hindsig
 	d.opStatus[id] = "completed"
 	if d.failOps {
 		d.opStatus[id] = "failed"
+	}
+	if d.loseResponse {
+		d.opStatus[opID] = "processing"
+		return nil, errors.New("retain response lost after remote acceptance")
 	}
 	return []string{id}, nil
 }
@@ -224,7 +229,11 @@ func (d *fakeDest) DeleteDocument(ctx context.Context, bank, docID string) error
 func (d *fakeDest) GetOperation(ctx context.Context, bank, op string) (hindsight.OperationStatus, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return hindsight.OperationStatus{Status: d.opStatus[op], RetryCount: 99}, nil
+	status, exists := d.opStatus[op]
+	if !exists {
+		status = "not_found"
+	}
+	return hindsight.OperationStatus{Status: status, RetryCount: 99}, nil
 }
 
 func (d *fakeDest) RetryOperation(ctx context.Context, bank, op string) error { return nil }

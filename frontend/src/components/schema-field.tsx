@@ -2,6 +2,7 @@ import { FolderSearch } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { FieldRow } from "@/components/field-row";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
@@ -17,6 +18,9 @@ export function isSecretField(f: FieldSpec): boolean {
 export function defaultFieldValue(f: FieldSpec): unknown {
   if (f.default !== undefined && f.default !== null) return f.default;
   switch (f.type) {
+    case "string_list":
+    case "multi_select":
+      return [];
     case "boolean":
       return false;
     case "number":
@@ -40,7 +44,7 @@ export function mergeConfig(fields: FieldSpec[], stored: Record<string, unknown>
 }
 
 export function isEmptyValue(v: unknown): boolean {
-  return v === undefined || v === null || (typeof v === "string" && v.trim() === "");
+  return v === undefined || v === null || (typeof v === "string" && v.trim() === "") || (Array.isArray(v) && v.length === 0);
 }
 
 /** Validate required / number / url constraints. Returns key → i18n message. */
@@ -51,12 +55,19 @@ export function validateConfig(
 ): Record<string, string> {
   const errors: Record<string, string> = {};
   for (const f of fields) {
+    if (f.renderOnly && !config.render) continue;
     const v = config[f.key];
     if (f.required && f.type !== "boolean" && isEmptyValue(v)) {
       errors[f.key] = t("validation.required");
       continue;
     }
     if (isEmptyValue(v)) continue;
+    if (f.type === "multi_select" && (!Array.isArray(v) || v.some((entry) => !(f.options ?? []).some((option) => option.value === entry)))) {
+      errors[f.key] = t("validation.list");
+    }
+    if (f.type === "string_list" && typeof v !== "string" && (!Array.isArray(v) || v.some((entry) => typeof entry !== "string"))) {
+      errors[f.key] = t("validation.list");
+    }
     if (f.type === "number" && typeof v !== "number" && Number.isNaN(Number(v))) {
       errors[f.key] = t("validation.number");
     }
@@ -76,6 +87,8 @@ export function normalizeConfig(fields: FieldSpec[], config: Record<string, unkn
   const out: Record<string, unknown> = { ...config };
   for (const f of fields) {
     const v = out[f.key];
+    if (f.type === "string_list") out[f.key] = typeof v === "string" ? v.split(/\r?\n/).map((entry) => entry.trim()).filter(Boolean) : v ?? [];
+    if (f.type === "multi_select") out[f.key] = v ?? [];
     if (f.type === "number") {
       if (isEmptyValue(v)) delete out[f.key];
       else out[f.key] = typeof v === "number" ? v : Number(v);
@@ -124,6 +137,27 @@ export function SchemaField({
 
   let control: React.ReactNode;
   switch (f.type) {
+    case "string_list":
+      control = (
+        <Textarea id={id} value={Array.isArray(value) ? value.join("\n") : str}
+          onChange={(event) => onChange(event.target.value)} aria-invalid={!!error} rows={4} placeholder={f.placeholder} />
+      );
+      break;
+    case "multi_select": {
+      const selected = Array.isArray(value) ? value : [];
+      control = (
+        <fieldset id={id} className="grid grid-cols-2 gap-2 sm:grid-cols-3" aria-label={label} aria-invalid={!!error}>
+          {(f.options ?? []).map((option) => (
+            <label key={option.value} className="flex items-center gap-2 text-sm">
+              <Checkbox checked={selected.includes(option.value)}
+                onCheckedChange={(checked) => onChange(checked ? [...selected, option.value] : selected.filter((entry) => entry !== option.value))} />
+              {providerCopy(option.label, t)}
+            </label>
+          ))}
+        </fieldset>
+      );
+      break;
+    }
     case "boolean":
       return (
         <div className="flex items-start justify-between gap-4 rounded-md border px-3 py-2.5">

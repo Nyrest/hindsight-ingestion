@@ -69,7 +69,8 @@
     "integer": "정수여야 합니다.",
     "min1": "1 이상이어야 합니다.",
     "url": "유효한 URL여야 합니다.",
-    "tooLong": "입력한 내용이 너무 깁니다."
+    "tooLong": "입력한 내용이 너무 깁니다.",
+    "list": "유효한 목록을 입력하세요"
   },
   "runStatus": {
     "pending": "대기 중",
@@ -78,7 +79,8 @@
     "succeeded": "성공",
     "failed": "실패",
     "interrupted": "중단됨",
-    "cancelled": "취소됨"
+    "cancelled": "취소됨",
+    "waiting_source": "크롤링 대기 중"
   },
   "credentialStatus": {
     "active": "활성",
@@ -728,7 +730,8 @@
       "delete": "삭제",
       "unchanged": "변경되지 않음",
       "skip": "건너뛰기",
-      "fail": "실패"
+      "fail": "실패",
+      "release": "이 작업의 참조 해제"
     }
   },
   "providerCopy": {
@@ -801,7 +804,36 @@
     "siYuanNotebookHelp": "비워 두면 열려 있는 모든 노트 모음을 동기화합니다.",
     "hindsightApiKeyHelp": "Bearer 토큰으로 전송됩니다. 인스턴스에서 인증을 사용하지 않으면 비워 두세요.",
     "syncCollectionHelp": "서버에서 지원하면 sync-collection(RFC 6578)을 사용합니다.",
-    "fileSystem": "파일 시스템"
+    "fileSystem": "파일 시스템",
+    "cloudflareAccountId": "계정 ID",
+    "cloudflareWebsiteUrl": "웹사이트 URL",
+    "cloudflareDiscovery": "URL 탐색 방식",
+    "cloudflareRender": "JavaScript 렌더링",
+    "cloudflareLimit": "최대 페이지 수",
+    "cloudflareDepth": "최대 링크 깊이",
+    "cloudflareMaxAge": "캐시 유지 시간(초)",
+    "cloudflareExternal": "외부 웹사이트 포함",
+    "cloudflareSubdomains": "하위 도메인 포함",
+    "cloudflareInclude": "포함할 URL 패턴",
+    "cloudflareExclude": "제외할 URL 패턴",
+    "cloudflareSize": "최대 페이지 크기(MiB)",
+    "cloudflareWaitUntil": "탐색 대기 조건",
+    "cloudflareNavigationTimeout": "탐색 제한 시간(ms)",
+    "cloudflareSelector": "콘텐츠 CSS 선택자",
+    "cloudflareSelectorTimeout": "선택자 제한 시간(ms)",
+    "cloudflareVisible": "콘텐츠가 표시될 때까지 대기",
+    "cloudflareExtraWait": "추가 대기 시간(ms)",
+    "cloudflareResources": "차단할 리소스 유형",
+    "cloudflarePageUrl": "페이지 URL",
+    "cloudflareAll": "사이트맵 및 링크",
+    "cloudflareSitemaps": "사이트맵만",
+    "cloudflareLinks": "링크만",
+    "cloudflareCredentialHelp": "Browser Run 편집 권한이 있는 Cloudflare 계정 및 API 토큰",
+    "cloudflareRenderHelp": "브라우저에서 콘텐츠를 로드하는 웹사이트에 사용합니다. 브라우저 사용 시간에 요금이 부과될 수 있습니다.",
+    "cloudflareLimitHelp": "무료 계정은 크롤링당 최대 100페이지입니다. 페이지 한도에 도달하면 삭제 대조를 수행하지 않습니다.",
+    "cloudflareCacheHelp": "전체 대조는 항상 최신 콘텐츠를 가져옵니다.",
+    "cloudflareIncludeHelp": "한 줄에 패턴 하나를 입력하세요. *는 경로 구간 내부, **는 여러 구간에 걸쳐 일치합니다.",
+    "cloudflareExcludeHelp": "제외 패턴이 포함 패턴보다 우선합니다."
   },
   "proxy": {
     "title": "프록시",
@@ -818,5 +850,23 @@
     "username": "사용자 이름(선택 사항)",
     "password": "비밀번호(선택 사항)",
     "invalidAddress": "프록시 주소를 host:port 형식으로 입력하세요. 포트 번호는 1~65535여야 합니다."
+  },
+  "cloudflare": {
+    "crawlProgress": "웹사이트 크롤링",
+    "jobId": "작업 ID",
+    "phase": "단계",
+    "pages": "완료 / 전체 페이지",
+    "browserSeconds": "브라우저 사용량(초)",
+    "previewNotice": "미리보기는 실제 Cloudflare 크롤링을 실행하고 계정 할당량을 사용합니다. Hindsight에는 기록하지 않습니다.",
+    "phases": {
+      "submitting": "크롤링 제출 중",
+      "running": "크롤링 대기 중",
+      "completed": "결과 가져오는 중",
+      "consumed": "완료됨",
+      "failed": "실패",
+      "cancelled": "취소됨",
+      "superseded": "다른 실행에서 재개됨",
+      "cancel_failed": "실패"
+    }
   }
 }

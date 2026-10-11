@@ -111,6 +111,8 @@ func (b *schemaBuilder) schema(t reflect.Type) schemaMap {
 		return schemaMap{"type": "boolean"}
 	case reflect.Int, reflect.Int64:
 		return schemaMap{"type": "integer"}
+	case reflect.Float64:
+		return schemaMap{"type": "number"}
 	case reflect.Slice:
 		return schemaMap{"type": "array", "items": b.schema(t.Elem())}
 	case reflect.Map:

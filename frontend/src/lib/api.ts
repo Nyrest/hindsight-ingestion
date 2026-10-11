@@ -71,7 +71,7 @@ export const api = {
   updateTask: (id: string, body: TaskPatch) => unwrap(client.PATCH("/api/tasks/{id}", { params: pathParams(id), body })),
   deleteTask: (id: string, deleteDocuments = false) => unwrap(client.DELETE("/api/tasks/{id}", { params: { ...pathParams(id), query: { deleteDocuments } } })),
   runTask: (id: string) => unwrap(client.POST("/api/tasks/{id}/run", { params: pathParams(id) })),
-  dryRunTask: (id: string) => unwrap(client.POST("/api/tasks/{id}/dry-run", { params: pathParams(id) })),
+  dryRunTask: (id: string, signal?: AbortSignal) => unwrap(client.POST("/api/tasks/{id}/dry-run", { params: pathParams(id), signal })),
   fullReconcileTask: (id: string) => unwrap(client.POST("/api/tasks/{id}/full-reconcile", { params: pathParams(id) })),
   fullReingestTask: (id: string) => unwrap(client.POST("/api/tasks/{id}/full-reingest", { params: pathParams(id) })),
   cancelTask: (id: string) => unwrap(client.POST("/api/tasks/{id}/cancel", { params: pathParams(id) })),

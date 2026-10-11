@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 	"gorm.io/gorm"
 
 	"github.com/Nyrest/hindsight-ingestion/internal/hindsight"
@@ -22,7 +23,7 @@ type deleteDocumentsDTO struct {
 func (s *Server) deleteTaskDocuments(w http.ResponseWriter, r *http.Request) {
 	ctx, release, err := s.Runs.BeginMaintenance(r.Context(), r.PathValue("id"))
 	if err != nil {
-		writeError(w, http.StatusConflict, "conflict", "Task is busy; finish or cancel its current operation first")
+		writeError(w, http.StatusConflict, "conflict", err.Error())
 		return
 	}
 	defer release()
@@ -42,6 +43,13 @@ func (s *Server) deleteTaskDocuments(w http.ResponseWriter, r *http.Request) {
 func (s *Server) clearDocuments(ctx context.Context, task *models.Task) (int, error) {
 	if err := s.pauseForCleanup(ctx, task); err != nil {
 		return 0, err
+	}
+	if task.SourceType == connectors.SourceCloudflareCrawl {
+		client, err := s.taskDestination(ctx, task)
+		if err != nil {
+			return 0, err
+		}
+		return s.clearSharedDocuments(ctx, task, client)
 	}
 	if err := s.checkPendingRetains(ctx, task); err != nil {
 		return 0, err

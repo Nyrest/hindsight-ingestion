@@ -21,6 +21,8 @@ var operationNamespace = uuid.MustParse("6f1c9a52-4b7e-4f0e-9a43-1b2d7c3e5f80")
 // document_id. It deliberately excludes the ingestion task ID.
 func CanonicalIdentity(sourceType string, cred connectors.Credential, config map[string]any, item connectors.SourceItem) string {
 	switch sourceType {
+	case connectors.SourceCloudflareCrawl:
+		return "cloudflare_crawl:" + item.ID
 	case "notion":
 		return "notion_page:" + item.ID
 	case "siyuan":

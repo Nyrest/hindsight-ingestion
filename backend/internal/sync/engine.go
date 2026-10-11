@@ -24,6 +24,7 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
 	"github.com/Nyrest/hindsight-ingestion/internal/observations"
 	"github.com/Nyrest/hindsight-ingestion/internal/settings"
+	"github.com/Nyrest/hindsight-ingestion/internal/shared"
 )
 
 // Tunables.
@@ -67,7 +68,8 @@ type Engine struct {
 
 // RunOptions control a single execution.
 type RunOptions struct {
-	Mode string // "", full, reingest
+	Mode       string // "", full, reingest
+	WaitSource func(func() error) error
 }
 
 // pendingItem is a ledger update applied once its destination write
@@ -79,6 +81,8 @@ type pendingItem struct {
 
 // runner holds the state of one execution.
 type runner struct {
+	sharedDocs       *shared.Documents
+	releaseShared    func()
 	e                *Engine
 	ctx              context.Context
 	task             models.Task
@@ -136,6 +140,11 @@ func (e *Engine) Execute(ctx context.Context, runID string, opts RunOptions) err
 		return fmt.Errorf("load run: %w", err)
 	}
 	r.run = &run
+	defer func() {
+		if r.releaseShared != nil {
+			r.releaseShared()
+		}
+	}()
 	err := r.execute(opts)
 	r.finish(err)
 	return err
@@ -180,6 +189,13 @@ func (r *runner) execute(opts RunOptions) error {
 	}
 	if r.dest, err = r.e.NewDestination(destCred); err != nil {
 		return err
+	}
+	if r.task.SourceType == connectors.SourceCloudflareCrawl {
+		key, err := shared.TargetKey(destCred, r.task.DestinationBankID)
+		if err != nil {
+			return err
+		}
+		r.sharedDocs = &shared.Documents{DB: r.e.DB, TargetKey: key}
 	}
 	if err := r.loadLedger(); err != nil {
 		return err
@@ -244,7 +260,7 @@ func (r *runner) execute(opts RunOptions) error {
 	}
 
 	// 1. Scan source; changes are submitted as they are discovered.
-	res, err := r.src.Scan(r.ctx, connectors.ScanRequest{
+	res, err := r.scanSource(connectors.ScanRequest{
 		Credential: r.cred,
 		Config:     r.srcCfg,
 		Filter:     r.filter,
@@ -252,7 +268,7 @@ func (r *runner) execute(opts RunOptions) error {
 		Full:       r.full,
 		Emit:       r.observe,
 		Log:        func(level, msg string) { r.logf(level, "%s", msg) },
-	})
+	}, opts)
 	if err != nil {
 		return fmt.Errorf("scan source: %w", err)
 	}
@@ -266,6 +282,9 @@ func (r *runner) execute(opts RunOptions) error {
 	// 2. Wait for Hindsight success, then record synced state.
 	if err := r.awaitPending(); err != nil {
 		return err
+	}
+	if r.sharedDocs != nil && (res.Error != nil || len(r.failed) > 0) {
+		return errors.Join(res.Error, fmt.Errorf("%d page(s) failed; cursor and references unchanged", len(r.failed)))
 	}
 
 	// 3. Reconcile deletions. Scope exits are always safe; disappearance is
@@ -300,7 +319,13 @@ func (r *runner) execute(opts RunOptions) error {
 				return err
 			}
 		}
-		return tx.Model(&models.Task{}).Where("id = ?", r.task.ID).Updates(taskUpdates).Error
+		if err := tx.Model(&models.Task{}).Where("id = ?", r.task.ID).Updates(taskUpdates).Error; err != nil {
+			return err
+		}
+		if r.sharedDocs != nil {
+			return tx.Model(&models.SourceJob{}).Where("run_id = ?", r.run.ID).Update("phase", "consumed").Error
+		}
+		return nil
 	})
 	if err != nil {
 		return fmt.Errorf("commit cursor: %w", err)
@@ -356,6 +381,13 @@ func (r *runner) observe(item connectors.SourceItem) error {
 	if !ok {
 		row = models.TaskItem{TaskID: r.task.ID, SourceItemID: item.ID}
 	}
+	if r.sharedDocs != nil {
+		row.SharedTargetKey = r.sharedDocs.TargetKey
+	}
+	if item.ContentError != "" {
+		row.LastSeenGeneration = r.gen
+		return r.fail(row, item, errors.New(item.ContentError))
+	}
 	previousDocumentID := row.DestinationDocumentID
 	canonicalDocumentID := CanonicalIdentity(r.task.SourceType, r.cred, r.srcCfg, item)
 	if !item.Deleted && (previousDocumentID != canonicalDocumentID || row.PreviousDocumentID != "") {
@@ -403,6 +435,13 @@ func (r *runner) observe(item connectors.SourceItem) error {
 	target := r.itemFingerprint(item, tags, md)
 	row.TargetFingerprint = target
 	row.SourceRevision = item.Revision
+	if r.sharedDocs != nil {
+		actual, err := r.sharedDocs.Fingerprint(r.ctx, canonicalDocumentID)
+		if err != nil {
+			return err
+		}
+		row.SyncedFingerprint = actual
+	}
 
 	if !r.reing && row.DestinationPresent && row.SyncedFingerprint == target && !(r.full && r.includesImages() && row.NeedsImageRetry) {
 		r.run.UnchangedCount++
@@ -576,7 +615,13 @@ func (r *runner) flushText() error {
 		items = append(items, mi)
 		keys = append(keys, j.row.DestinationDocumentID+"\x00"+j.row.TargetFingerprint)
 	}
-	ops, err := r.dest.RetainBatch(r.ctx, r.task.DestinationBankID, items, OperationID(r.run.ID, keys))
+	operationID := OperationID(r.run.ID, keys)
+	if r.sharedDocs != nil {
+		if err := r.reserveShared(batch, operationID); err != nil {
+			return err
+		}
+	}
+	ops, err := r.dest.RetainBatch(r.ctx, r.task.DestinationBankID, items, operationID)
 	if err != nil {
 		if r.ctx.Err() != nil {
 			return r.ctx.Err()
@@ -584,7 +629,12 @@ func (r *runner) flushText() error {
 		// A destination failure is run-fatal: no point continuing.
 		return fmt.Errorf("hindsight retain: %w", err)
 	}
-	if err := r.recordOps(ops, "retain"); err != nil {
+	if r.sharedDocs != nil {
+		err = r.recordSharedOperations(ops, operationID)
+	} else {
+		err = r.recordOps(ops, "retain")
+	}
+	if err != nil {
 		return err
 	}
 	for _, j := range batch {
@@ -640,13 +690,17 @@ func (r *runner) recordOps(ops []string, typ string) error {
 	if len(ops) == 0 {
 		return nil
 	}
+	return r.e.DB.WithContext(r.ctx).Create(r.operationRows(ops, typ)).Error
+}
+
+func (r *runner) operationRows(ops []string, typ string) []models.HindsightOperation {
 	rows := make([]models.HindsightOperation, 0, len(ops))
 	for _, op := range ops {
 		rows = append(rows, models.HindsightOperation{
 			ID: uuid.NewString(), RunID: r.run.ID, RemoteOperationID: op, Type: typ, Status: "pending",
 		})
 	}
-	return r.e.DB.WithContext(r.ctx).Create(&rows).Error
+	return rows
 }
 
 // awaitPending polls Hindsight until every submitted operation completed,
@@ -754,6 +808,11 @@ func (r *runner) awaitPending() error {
 			row.SyncedFingerprint = row.TargetFingerprint
 			row.LastSyncedAt = &now
 			row.LastError = ""
+			if r.sharedDocs != nil {
+				if err := r.sharedDocs.Confirm(r.ctx, row); err != nil {
+					return err
+				}
+			}
 		}
 		rows = append(rows, row)
 	}
@@ -786,11 +845,26 @@ func (r *runner) reconcileDeletions(complete bool) error {
 			continue
 		}
 		seen[row.SourceItemID] = true
-		if err := r.dest.DeleteDocument(r.ctx, r.task.DestinationBankID, row.DestinationDocumentID); err != nil {
-			if r.ctx.Err() != nil {
-				return r.ctx.Err()
+		sharedReference := false
+		if r.sharedDocs != nil {
+			var err error
+			sharedReference, err = r.sharedDocs.OtherReferences(r.ctx, row)
+			if err != nil {
+				return err
 			}
-			return fmt.Errorf("delete %s from Hindsight: %w", row.DestinationDocumentID, err)
+		}
+		if !sharedReference {
+			if err := r.dest.DeleteDocument(r.ctx, r.task.DestinationBankID, row.DestinationDocumentID); err != nil {
+				if r.ctx.Err() != nil {
+					return r.ctx.Err()
+				}
+				return fmt.Errorf("delete %s from Hindsight: %w", row.DestinationDocumentID, err)
+			}
+			if r.sharedDocs != nil {
+				if err := r.sharedDocs.Forget(r.ctx, row.DestinationDocumentID); err != nil {
+					return err
+				}
+			}
 		}
 		if row.PreviousDocumentID != "" && row.PreviousDocumentID != row.DestinationDocumentID {
 			if err := r.dest.DeleteDocument(r.ctx, r.task.DestinationBankID, row.PreviousDocumentID); err != nil {
@@ -798,8 +872,12 @@ func (r *runner) reconcileDeletions(complete bool) error {
 			}
 		}
 		row.PreviousDocumentID = ""
-		r.run.DeletedCount++
-		r.logf("info", "Deleted %s from Hindsight", orEmpty(row.SourcePath, orEmpty(row.SourceName, row.SourceItemID)))
+		if sharedReference {
+			r.logf("info", "Released shared reference: %s", row.SourcePath)
+		} else {
+			r.run.DeletedCount++
+			r.logf("info", "Deleted %s from Hindsight", orEmpty(row.SourcePath, orEmpty(row.SourceName, row.SourceItemID)))
+		}
 		row.DestinationPresent = false
 		row.SyncedFingerprint = ""
 		if row.LastSeenGeneration < r.gen && complete {

@@ -69,7 +69,8 @@
     "integer": "Muss eine ganze Zahl sein",
     "min1": "Muss mindestens 1 sein",
     "url": "Muss eine gültige URL sein",
-    "tooLong": "Zu lang"
+    "tooLong": "Zu lang",
+    "list": "Gültige Liste eingeben"
   },
   "runStatus": {
     "pending": "Ausstehend",
@@ -78,7 +79,8 @@
     "succeeded": "Erfolgreich",
     "failed": "Fehlgeschlagen",
     "interrupted": "Unterbrochen",
-    "cancelled": "Abgebrochen"
+    "cancelled": "Abgebrochen",
+    "waiting_source": "Warten auf Crawl"
   },
   "credentialStatus": {
     "active": "Aktiv",
@@ -729,7 +731,8 @@
       "delete": "Löschen",
       "unchanged": "Unverändert",
       "skip": "Überspringen",
-      "fail": "Fehlgeschlagen"
+      "fail": "Fehlgeschlagen",
+      "release": "Aufgabenreferenz lösen"
     }
   },
   "providerCopy": {
@@ -802,7 +805,36 @@
     "siYuanNotebookHelp": "Leer lassen, um alle geöffneten Notizbücher zu synchronisieren.",
     "hindsightApiKeyHelp": "Wird als Bearer-Token gesendet. Leer lassen, wenn für die Instanz keine Authentifizierung erforderlich ist.",
     "syncCollectionHelp": "sync-collection (RFC 6578) verwenden, wenn der Server dies unterstützt.",
-    "fileSystem": "Dateisystem"
+    "fileSystem": "Dateisystem",
+    "cloudflareAccountId": "Konto-ID",
+    "cloudflareWebsiteUrl": "Website-URL",
+    "cloudflareDiscovery": "URL-Erkennung",
+    "cloudflareRender": "JavaScript-Rendering",
+    "cloudflareLimit": "Maximale Seitenzahl",
+    "cloudflareDepth": "Maximale Linktiefe",
+    "cloudflareMaxAge": "Cache-Dauer (Sekunden)",
+    "cloudflareExternal": "Externe Websites einbeziehen",
+    "cloudflareSubdomains": "Subdomains einbeziehen",
+    "cloudflareInclude": "URL-Muster einschließen",
+    "cloudflareExclude": "URL-Muster ausschließen",
+    "cloudflareSize": "Maximale Seitengröße (MiB)",
+    "cloudflareWaitUntil": "Wartebedingung beim Laden",
+    "cloudflareNavigationTimeout": "Zeitlimit beim Laden (ms)",
+    "cloudflareSelector": "CSS-Selektor für Inhalte",
+    "cloudflareSelectorTimeout": "Zeitlimit für Selektor (ms)",
+    "cloudflareVisible": "Auf sichtbare Inhalte warten",
+    "cloudflareExtraWait": "Zusätzliche Wartezeit (ms)",
+    "cloudflareResources": "Blockierte Ressourcentypen",
+    "cloudflarePageUrl": "Seiten-URL",
+    "cloudflareAll": "Sitemaps und Links",
+    "cloudflareSitemaps": "Nur Sitemaps",
+    "cloudflareLinks": "Nur Links",
+    "cloudflareCredentialHelp": "Cloudflare-Konto und API-Token mit Bearbeitungsrechten für Browser Run",
+    "cloudflareRenderHelp": "Für Websites aktivieren, die Inhalte im Browser laden. Browser-Zeit kann kostenpflichtig sein.",
+    "cloudflareLimitHelp": "Kostenlose Konten erlauben bis zu 100 Seiten pro Crawl. Bei Erreichen des Limits werden keine Löschungen abgeglichen.",
+    "cloudflareCacheHelp": "Ein vollständiger Abgleich lädt immer aktuelle Inhalte.",
+    "cloudflareIncludeHelp": "Ein Muster pro Zeile. * gilt innerhalb eines Pfadsegments, ** auch über Segmentgrenzen hinweg.",
+    "cloudflareExcludeHelp": "Ausschluss hat Vorrang vor Einschluss."
   },
   "proxy": {
     "title": "Proxy",
@@ -819,5 +851,23 @@
     "username": "Benutzername (optional)",
     "password": "Passwort (optional)",
     "invalidAddress": "Geben Sie eine Proxy-Adresse im Format Host:Port mit einem Port zwischen 1 und 65535 ein."
+  },
+  "cloudflare": {
+    "crawlProgress": "Website-Crawl",
+    "jobId": "Job-ID",
+    "phase": "Phase",
+    "pages": "Fertige Seiten / Gesamtzahl",
+    "browserSeconds": "Browser-Nutzung (Sekunden)",
+    "previewNotice": "Die Vorschau führt einen echten Cloudflare-Crawl aus und verbraucht Kontingent. Sie schreibt keine Daten in Hindsight.",
+    "phases": {
+      "submitting": "Crawl wird übermittelt",
+      "running": "Warten auf Crawl",
+      "completed": "Ergebnisse werden importiert",
+      "consumed": "Abgeschlossen",
+      "failed": "Fehlgeschlagen",
+      "cancelled": "Abgebrochen",
+      "superseded": "In anderem Lauf fortgesetzt",
+      "cancel_failed": "Fehlgeschlagen"
+    }
   }
 }

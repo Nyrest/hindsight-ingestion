@@ -244,6 +244,9 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 	}
 	normalizeFilterGroup(&filter.Expression)
 	for _, f := range info.Fields {
+		if f.RenderOnly && !connectors.AsBool(cfg["render"]) {
+			continue
+		}
 		if f.Required && connectors.AsString(cfg[f.Key]) == "" {
 			errs.add("sourceConfig."+f.Key, f.Label+" is required")
 		}
@@ -462,7 +465,7 @@ func (s *Server) createTask(w http.ResponseWriter, r *http.Request) {
 func (s *Server) patchTask(w http.ResponseWriter, r *http.Request) {
 	release, err := s.Runs.BeginEdit(r.PathValue("id"))
 	if err != nil {
-		writeError(w, http.StatusConflict, "conflict", "Task is busy; try again after the current operation finishes")
+		writeError(w, http.StatusConflict, "conflict", err.Error())
 		return
 	}
 	defer release()
@@ -525,7 +528,7 @@ func (s *Server) deleteTask(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 	ctx, release, err := s.Runs.BeginMaintenance(r.Context(), id)
 	if err != nil {
-		writeError(w, http.StatusConflict, "conflict", "Task is busy; finish or cancel its current operation first")
+		writeError(w, http.StatusConflict, "conflict", err.Error())
 		return
 	}
 	defer release()
@@ -542,6 +545,14 @@ func (s *Server) deleteTask(w http.ResponseWriter, r *http.Request) {
 	if err = s.DB.WithContext(r.Context()).First(&t, "id = ?", id).Error; err != nil {
 		s.fail(w, err)
 		return
+	}
+	if t.SourceType == connectors.SourceCloudflareCrawl && !deleteDocuments {
+		_, releaseBank, err := s.lockSharedDocuments(ctx, &t)
+		if err != nil {
+			s.fail(w, err)
+			return
+		}
+		defer releaseBank()
 	}
 	if deleteDocuments {
 		deleted, err := s.clearDocuments(ctx, &t)
@@ -564,7 +575,7 @@ func (s *Server) deleteTask(w http.ResponseWriter, r *http.Request) {
 				return err
 			}
 		}
-		for _, m := range []any{&models.TaskRun{}, &models.TaskItem{}, &models.TaskState{}} {
+		for _, m := range []any{&models.SourceJob{}, &models.TaskRun{}, &models.TaskItem{}, &models.TaskState{}} {
 			if err := tx.Where("task_id = ?", id).Delete(m).Error; err != nil {
 				return err
 			}
@@ -589,7 +600,7 @@ func (s *Server) runTask(mode string) http.HandlerFunc {
 		}
 		runID, err := s.Runs.Start(id, models.TriggerManual, mode, nil, false)
 		if errors.Is(err, runner.ErrAlreadyRunning) {
-			writeError(w, http.StatusConflict, "conflict", "task is already running")
+			writeError(w, http.StatusConflict, "conflict", err.Error())
 			return
 		}
 		if err != nil {
@@ -602,6 +613,15 @@ func (s *Server) runTask(mode string) http.HandlerFunc {
 
 func (s *Server) cancelTask(w http.ResponseWriter, r *http.Request) {
 	if !s.Runs.Cancel(r.PathValue("id")) {
+		cancelled, err := s.Runs.RetrySourceCancellation(r.Context(), r.PathValue("id"))
+		if err != nil {
+			writeError(w, http.StatusBadGateway, "upstream", err.Error())
+			return
+		}
+		if cancelled {
+			writeJSON(w, http.StatusAccepted, cancelDTO{true})
+			return
+		}
 		writeError(w, http.StatusConflict, "conflict", "task is not running")
 		return
 	}

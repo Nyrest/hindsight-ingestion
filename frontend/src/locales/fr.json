@@ -69,7 +69,8 @@
     "integer": "Doit être un nombre entier",
     "min1": "Doit être au moins 1",
     "url": "Doit être une URL valide",
-    "tooLong": "Le texte est trop long"
+    "tooLong": "Le texte est trop long",
+    "list": "Saisissez une liste valide"
   },
   "runStatus": {
     "pending": "En attente",
@@ -78,7 +79,8 @@
     "succeeded": "Réussi",
     "failed": "Échec",
     "interrupted": "Interrompu",
-    "cancelled": "Annulé"
+    "cancelled": "Annulé",
+    "waiting_source": "En attente du crawl"
   },
   "credentialStatus": {
     "active": "Actif",
@@ -729,7 +731,8 @@
       "delete": "Supprimer",
       "unchanged": "Inchangé",
       "skip": "Ignorer",
-      "fail": "Échec"
+      "fail": "Échec",
+      "release": "Retirer la référence de cette tâche"
     }
   },
   "providerCopy": {
@@ -802,7 +805,36 @@
     "siYuanNotebookHelp": "Laissez vide pour synchroniser tous les carnets ouverts.",
     "hindsightApiKeyHelp": "Envoyée comme jeton Bearer. Laissez vide si l’instance n’exige pas d’authentification.",
     "syncCollectionHelp": "Utilise sync-collection (RFC 6578) si le serveur le prend en charge.",
-    "fileSystem": "Système de fichiers"
+    "fileSystem": "Système de fichiers",
+    "cloudflareAccountId": "ID du compte",
+    "cloudflareWebsiteUrl": "URL du site",
+    "cloudflareDiscovery": "Découverte des URL",
+    "cloudflareRender": "Rendu JavaScript",
+    "cloudflareLimit": "Nombre maximal de pages",
+    "cloudflareDepth": "Profondeur maximale des liens",
+    "cloudflareMaxAge": "Durée du cache (secondes)",
+    "cloudflareExternal": "Inclure les sites externes",
+    "cloudflareSubdomains": "Inclure les sous-domaines",
+    "cloudflareInclude": "Motifs d’URL à inclure",
+    "cloudflareExclude": "Motifs d’URL à exclure",
+    "cloudflareSize": "Taille maximale par page (MiB)",
+    "cloudflareWaitUntil": "Condition d’attente de navigation",
+    "cloudflareNavigationTimeout": "Délai de navigation (ms)",
+    "cloudflareSelector": "Sélecteur CSS du contenu",
+    "cloudflareSelectorTimeout": "Délai du sélecteur (ms)",
+    "cloudflareVisible": "Attendre que le contenu soit visible",
+    "cloudflareExtraWait": "Attente supplémentaire (ms)",
+    "cloudflareResources": "Types de ressources bloqués",
+    "cloudflarePageUrl": "URL de la page",
+    "cloudflareAll": "Sitemaps et liens",
+    "cloudflareSitemaps": "Sitemaps uniquement",
+    "cloudflareLinks": "Liens uniquement",
+    "cloudflareCredentialHelp": "Compte Cloudflare et jeton API avec permission de modification Browser Run",
+    "cloudflareRenderHelp": "À activer pour les sites dont le contenu se charge dans le navigateur. Le temps du navigateur peut être facturé.",
+    "cloudflareLimitHelp": "Les comptes gratuits sont limités à 100 pages par crawl. Si la limite est atteinte, aucune suppression n’est déduite.",
+    "cloudflareCacheHelp": "La réconciliation complète récupère toujours le contenu à jour.",
+    "cloudflareIncludeHelp": "Un motif par ligne. * correspond à un segment de chemin ; ** peut traverser plusieurs segments.",
+    "cloudflareExcludeHelp": "Les exclusions sont prioritaires."
   },
   "proxy": {
     "title": "Proxy",
@@ -819,5 +851,23 @@
     "username": "Nom d’utilisateur (facultatif)",
     "password": "Mot de passe (facultatif)",
     "invalidAddress": "Saisissez une adresse de proxy au format hôte:port, avec un port compris entre 1 et 65535."
+  },
+  "cloudflare": {
+    "crawlProgress": "Crawl du site",
+    "jobId": "ID du job",
+    "phase": "Étape",
+    "pages": "Pages terminées / total",
+    "browserSeconds": "Utilisation du navigateur (secondes)",
+    "previewNotice": "L’aperçu effectue un vrai crawl Cloudflare et consomme le quota du compte. Il n’écrit rien dans Hindsight.",
+    "phases": {
+      "submitting": "Envoi du crawl",
+      "running": "En attente du crawl",
+      "completed": "Importation des résultats",
+      "consumed": "Terminé",
+      "failed": "Échec",
+      "cancelled": "Annulé",
+      "superseded": "Repris dans une autre exécution",
+      "cancel_failed": "Échec"
+    }
   }
 }

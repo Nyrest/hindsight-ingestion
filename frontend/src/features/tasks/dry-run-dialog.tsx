@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { useEffect, useRef } from "react";
 import { Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -9,10 +10,17 @@ import type { Task } from "@/lib/types";
 
 export function DryRunDialog({ task, onClose }: { task: Task; onClose: () => void }) {
   const { t } = useTranslation();
-  const preview = useMutation({ mutationFn: () => api.dryRunTask(task.id) });
+  const controller = useRef<AbortController | null>(null);
+  useEffect(() => () => controller.current?.abort(), []);
+  const preview = useMutation({ mutationFn: () => {
+    controller.current?.abort();
+    controller.current = new AbortController();
+    return api.dryRunTask(task.id, controller.current.signal);
+  } });
   const result = preview.data;
   const counts = result ? [
     ["create", result.createdCount], ["update", result.updatedCount], ["delete", result.deletedCount],
+    ...(task.sourceType === "cloudflare_crawl" ? [["release", result.releasedCount] as const] : []),
     ["unchanged", result.unchangedCount], ["skip", result.skippedCount], ["fail", result.failedCount],
   ] as const : [];
 
@@ -22,6 +30,7 @@ export function DryRunDialog({ task, onClose }: { task: Task; onClose: () => voi
         <DialogHeader>
           <DialogTitle>{t("dryRun.title", { name: task.name })}</DialogTitle>
           <DialogDescription>{t("dryRun.description")}</DialogDescription>
+          {task.sourceType === "cloudflare_crawl" && <p className="text-sm text-muted-foreground">{t("cloudflare.previewNotice")}</p>}
         </DialogHeader>
         <Button onClick={() => preview.mutate()} disabled={preview.isPending}>
           {preview.isPending && <Loader2 className="animate-spin" />}
@@ -31,7 +40,7 @@ export function DryRunDialog({ task, onClose }: { task: Task; onClose: () => voi
         {result && <>
           <p className="text-sm">{t(result.complete ? "dryRun.complete" : "dryRun.incomplete", { count: result.discoveredCount })}</p>
           {result.error && <p role="alert" className="text-sm text-destructive">{result.error}</p>}
-          <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+          <div className={`grid grid-cols-3 gap-2 ${task.sourceType === "cloudflare_crawl" ? "sm:grid-cols-7" : "sm:grid-cols-6"}`}>
             {counts.map(([action, count]) => <div key={action} className="rounded-md border p-2 text-center">
               <div className="text-lg font-semibold">{count}</div>
               <div className="text-xs text-muted-foreground">{t(`dryRun.actions.${action}`)}</div>

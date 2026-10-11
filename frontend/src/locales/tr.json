@@ -69,7 +69,8 @@
     "integer": "Tam sayı olmalı",
     "min1": "En az 1 olmalı",
     "url": "Geçerli bir URL olmalıdır",
-    "tooLong": "Çok uzun"
+    "tooLong": "Çok uzun",
+    "list": "Geçerli bir liste girin"
   },
   "runStatus": {
     "pending": "Beklemede",
@@ -78,7 +79,8 @@
     "succeeded": "Başarılı",
     "failed": "Başarısız",
     "interrupted": "Kesintiye uğradı",
-    "cancelled": "İptal edildi"
+    "cancelled": "İptal edildi",
+    "waiting_source": "Tarama bekleniyor"
   },
   "credentialStatus": {
     "active": "Aktif",
@@ -728,7 +730,8 @@
       "delete": "Sil",
       "unchanged": "Değişmedi",
       "skip": "Atla",
-      "fail": "Başarısız"
+      "fail": "Başarısız",
+      "release": "Bu görevin başvurusunu kaldır"
     }
   },
   "providerCopy": {
@@ -801,7 +804,36 @@
     "siYuanNotebookHelp": "Açık tüm not defterlerini eşitlemek için boş bırakın.",
     "hindsightApiKeyHelp": "Bearer belirteci olarak gönderilir. Örnek kimlik doğrulama istemiyorsa boş bırakın.",
     "syncCollectionHelp": "Sunucu destekliyorsa sync-collection (RFC 6578) kullanılır.",
-    "fileSystem": "Dosya sistemi"
+    "fileSystem": "Dosya sistemi",
+    "cloudflareAccountId": "Hesap kimliği",
+    "cloudflareWebsiteUrl": "Web sitesi URL’si",
+    "cloudflareDiscovery": "URL keşfi",
+    "cloudflareRender": "JavaScript oluşturma",
+    "cloudflareLimit": "En fazla sayfa",
+    "cloudflareDepth": "En fazla bağlantı derinliği",
+    "cloudflareMaxAge": "Önbellek süresi (saniye)",
+    "cloudflareExternal": "Harici siteleri dahil et",
+    "cloudflareSubdomains": "Alt alan adlarını dahil et",
+    "cloudflareInclude": "Dahil edilecek URL kalıpları",
+    "cloudflareExclude": "Hariç tutulacak URL kalıpları",
+    "cloudflareSize": "En büyük sayfa boyutu (MiB)",
+    "cloudflareWaitUntil": "Gezinme bekleme koşulu",
+    "cloudflareNavigationTimeout": "Gezinme zaman aşımı (ms)",
+    "cloudflareSelector": "İçerik CSS seçicisi",
+    "cloudflareSelectorTimeout": "Seçici zaman aşımı (ms)",
+    "cloudflareVisible": "İçeriğin görünmesini bekle",
+    "cloudflareExtraWait": "Ek bekleme (ms)",
+    "cloudflareResources": "Engellenen kaynak türleri",
+    "cloudflarePageUrl": "Sayfa URL’si",
+    "cloudflareAll": "Site haritaları ve bağlantılar",
+    "cloudflareSitemaps": "Yalnızca site haritaları",
+    "cloudflareLinks": "Yalnızca bağlantılar",
+    "cloudflareCredentialHelp": "Browser Run düzenleme iznine sahip Cloudflare hesabı ve API belirteci",
+    "cloudflareRenderHelp": "İçeriği tarayıcıda yüklenen siteler için etkinleştirin. Tarayıcı süresi ücretlendirilebilir.",
+    "cloudflareLimitHelp": "Ücretsiz hesaplarda tarama başına en fazla 100 sayfa işlenir. Sınıra ulaşıldığında silme karşılaştırması yapılmaz.",
+    "cloudflareCacheHelp": "Tam karşılaştırma her zaman güncel içeriği alır.",
+    "cloudflareIncludeHelp": "Her satıra bir kalıp girin. * tek yol bölümü içinde, ** birden fazla bölüm arasında eşleşir.",
+    "cloudflareExcludeHelp": "Hariç tutma kuralları önceliklidir."
   },
   "proxy": {
     "title": "Proxy",
@@ -818,5 +850,23 @@
     "username": "Kullanıcı adı (isteğe bağlı)",
     "password": "Parola (isteğe bağlı)",
     "invalidAddress": "Proxy adresini host:port biçiminde girin. Port numarası 1–65535 arasında olmalıdır."
+  },
+  "cloudflare": {
+    "crawlProgress": "Web sitesi taraması",
+    "jobId": "İş kimliği",
+    "phase": "Aşama",
+    "pages": "Tamamlanan / toplam sayfa",
+    "browserSeconds": "Tarayıcı kullanımı (saniye)",
+    "previewNotice": "Önizleme gerçek bir Cloudflare taraması yapar ve hesap kotasını tüketir. Hindsight’a veri yazmaz.",
+    "phases": {
+      "submitting": "Tarama gönderiliyor",
+      "running": "Tarama bekleniyor",
+      "completed": "Sonuçlar içe aktarılıyor",
+      "consumed": "Tamamlandı",
+      "failed": "Başarısız",
+      "cancelled": "İptal edildi",
+      "superseded": "Başka bir çalıştırmada sürdürüldü",
+      "cancel_failed": "Başarısız"
+    }
   }
 }

@@ -69,7 +69,8 @@
     "integer": "Должно быть целое число",
     "min1": "Должно быть не менее 1",
     "url": "Должен быть действительный URL.",
-    "tooLong": "Слишком длинный текст"
+    "tooLong": "Слишком длинный текст",
+    "list": "Введите корректный список"
   },
   "runStatus": {
     "pending": "Ожидается",
@@ -78,7 +79,8 @@
     "succeeded": "Успешно",
     "failed": "Ошибка",
     "interrupted": "Прервано",
-    "cancelled": "Отменено"
+    "cancelled": "Отменено",
+    "waiting_source": "Ожидание сканирования"
   },
   "credentialStatus": {
     "active": "Активный",
@@ -740,7 +742,8 @@
       "delete": "Удалить",
       "unchanged": "Без изменений",
       "skip": "Пропустить",
-      "fail": "Не удалось"
+      "fail": "Не удалось",
+      "release": "Удалить ссылку этой задачи"
     },
     "complete_few": "Просканировано {{count}} элемента.",
     "complete_many": "Просканировано {{count}} элементов.",
@@ -817,7 +820,36 @@
     "siYuanNotebookHelp": "Оставьте пустым, чтобы синхронизировать все открытые блокноты.",
     "hindsightApiKeyHelp": "Отправляется как токен Bearer. Оставьте поле пустым, если экземпляр не требует аутентификации.",
     "syncCollectionHelp": "Использовать sync-collection (RFC 6578), если сервер поддерживает этот режим.",
-    "fileSystem": "Файловая система"
+    "fileSystem": "Файловая система",
+    "cloudflareAccountId": "ID аккаунта",
+    "cloudflareWebsiteUrl": "URL сайта",
+    "cloudflareDiscovery": "Обнаружение URL",
+    "cloudflareRender": "Рендеринг JavaScript",
+    "cloudflareLimit": "Максимум страниц",
+    "cloudflareDepth": "Максимальная глубина ссылок",
+    "cloudflareMaxAge": "Срок кеширования (секунды)",
+    "cloudflareExternal": "Включать внешние сайты",
+    "cloudflareSubdomains": "Включать поддомены",
+    "cloudflareInclude": "Включаемые шаблоны URL",
+    "cloudflareExclude": "Исключаемые шаблоны URL",
+    "cloudflareSize": "Максимальный размер страницы (МиБ)",
+    "cloudflareWaitUntil": "Условие ожидания навигации",
+    "cloudflareNavigationTimeout": "Тайм-аут навигации (мс)",
+    "cloudflareSelector": "CSS-селектор содержимого",
+    "cloudflareSelectorTimeout": "Тайм-аут селектора (мс)",
+    "cloudflareVisible": "Ждать появления содержимого",
+    "cloudflareExtraWait": "Дополнительное ожидание (мс)",
+    "cloudflareResources": "Блокируемые типы ресурсов",
+    "cloudflarePageUrl": "URL страницы",
+    "cloudflareAll": "Карты сайта и ссылки",
+    "cloudflareSitemaps": "Только карты сайта",
+    "cloudflareLinks": "Только ссылки",
+    "cloudflareCredentialHelp": "Аккаунт Cloudflare и API-токен с правом редактирования Browser Run",
+    "cloudflareRenderHelp": "Включите для сайтов, загружающих содержимое в браузере. За время работы браузера может взиматься плата.",
+    "cloudflareLimitHelp": "Бесплатные аккаунты позволяют сканировать до 100 страниц за раз. При достижении лимита удаление не выполняется.",
+    "cloudflareCacheHelp": "Полная сверка всегда получает актуальное содержимое.",
+    "cloudflareIncludeHelp": "Один шаблон на строку. * сопоставляет внутри сегмента пути, ** — также между сегментами.",
+    "cloudflareExcludeHelp": "Исключения имеют приоритет над включениями."
   },
   "proxy": {
     "title": "Прокси",
@@ -834,5 +866,23 @@
     "username": "Имя пользователя (необязательно)",
     "password": "Пароль (необязательно)",
     "invalidAddress": "Введите адрес прокси в формате хост:порт. Порт должен быть от 1 до 65535."
+  },
+  "cloudflare": {
+    "crawlProgress": "Сканирование сайта",
+    "jobId": "ID задания",
+    "phase": "Этап",
+    "pages": "Готовые страницы / всего",
+    "browserSeconds": "Использование браузера (секунды)",
+    "previewNotice": "Предпросмотр выполняет реальное сканирование в Cloudflare и расходует квоту аккаунта. В Hindsight ничего не записывается.",
+    "phases": {
+      "submitting": "Отправка задания",
+      "running": "Ожидание сканирования",
+      "completed": "Импорт результатов",
+      "consumed": "Завершено",
+      "failed": "Ошибка",
+      "cancelled": "Отменено",
+      "superseded": "Продолжено в другом запуске",
+      "cancel_failed": "Ошибка"
+    }
   }
 }

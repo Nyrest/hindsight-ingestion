@@ -40,7 +40,41 @@ func TestDialects(t *testing.T) {
 				t.Fatal(err)
 			}
 			exercise(t, db)
+			exerciseCloudflare(t, db)
 		})
+	}
+}
+
+func exerciseCloudflare(t *testing.T, db *gorm.DB) {
+	key := "cloud-" + time.Now().Format("150405.000000")
+	document := models.SharedDocument{TargetKey: key, DocumentID: "cloudflare_crawl:page", SyncedFingerprint: "one"}
+	t.Cleanup(func() {
+		db.Where("target_key = ?", key).Delete(&models.SharedDocument{})
+		db.Where("run_id = ?", key).Delete(&models.SourceJob{})
+	})
+	if err := db.Create(&document).Error; err != nil {
+		t.Fatal(err)
+	}
+	if err := db.Create(&document).Error; err == nil {
+		t.Fatal("missing shared-document composite uniqueness")
+	}
+	document.SyncedFingerprint = "two"
+	if err := db.Clauses(clause.OnConflict{Columns: []clause.Column{{Name: "target_key"}, {Name: "document_id"}}, DoUpdates: clause.AssignmentColumns([]string{"synced_fingerprint"})}).Create(&document).Error; err != nil {
+		t.Fatal(err)
+	}
+	var confirmed models.SharedDocument
+	if err := db.First(&confirmed, "target_key = ? AND document_id = ?", key, document.DocumentID).Error; err != nil || confirmed.SyncedFingerprint != "two" {
+		t.Fatal("shared fingerprint upsert failed", confirmed, err)
+	}
+	job := models.SourceJob{RunID: key, TaskID: key, Phase: "running", RequestJSON: "{}", JobJSON: "{}"}
+	if err := db.Create(&job).Error; err != nil {
+		t.Fatal(err)
+	}
+	if err := db.Create(&job).Error; err == nil {
+		t.Fatal("missing source job uniqueness")
+	}
+	if err := db.Model(&job).Update("phase", "completed").Error; err != nil {
+		t.Fatal(err)
 	}
 }
 

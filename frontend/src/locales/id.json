@@ -69,7 +69,8 @@
     "integer": "Harus bilangan bulat",
     "min1": "Minimal harus 1",
     "url": "Harus berupa URL yang valid",
-    "tooLong": "Teks terlalu panjang"
+    "tooLong": "Teks terlalu panjang",
+    "list": "Masukkan daftar yang valid"
   },
   "runStatus": {
     "pending": "Tertunda",
@@ -78,7 +79,8 @@
     "succeeded": "Berhasil",
     "failed": "Gagal",
     "interrupted": "Terganggu",
-    "cancelled": "Dibatalkan"
+    "cancelled": "Dibatalkan",
+    "waiting_source": "Menunggu perayapan"
   },
   "credentialStatus": {
     "active": "Aktif",
@@ -728,7 +730,8 @@
       "delete": "Hapus",
       "unchanged": "Tidak berubah",
       "skip": "Lewati",
-      "fail": "Gagal"
+      "fail": "Gagal",
+      "release": "Hapus referensi tugas ini"
     }
   },
   "providerCopy": {
@@ -801,7 +804,36 @@
     "siYuanNotebookHelp": "Kosongkan untuk menyinkronkan semua notebook yang terbuka.",
     "hindsightApiKeyHelp": "Dikirim sebagai token Bearer. Kosongkan jika instans tidak memerlukan autentikasi.",
     "syncCollectionHelp": "Gunakan sync-collection (RFC 6578) jika didukung server.",
-    "fileSystem": "Sistem berkas"
+    "fileSystem": "Sistem berkas",
+    "cloudflareAccountId": "ID akun",
+    "cloudflareWebsiteUrl": "URL situs web",
+    "cloudflareDiscovery": "Penemuan URL",
+    "cloudflareRender": "Rendering JavaScript",
+    "cloudflareLimit": "Maksimum halaman",
+    "cloudflareDepth": "Kedalaman tautan maksimum",
+    "cloudflareMaxAge": "Durasi cache (detik)",
+    "cloudflareExternal": "Sertakan situs eksternal",
+    "cloudflareSubdomains": "Sertakan subdomain",
+    "cloudflareInclude": "Pola URL yang disertakan",
+    "cloudflareExclude": "Pola URL yang dikecualikan",
+    "cloudflareSize": "Ukuran maksimum per halaman (MiB)",
+    "cloudflareWaitUntil": "Kondisi tunggu navigasi",
+    "cloudflareNavigationTimeout": "Batas waktu navigasi (ms)",
+    "cloudflareSelector": "Selektor CSS konten",
+    "cloudflareSelectorTimeout": "Batas waktu selektor (ms)",
+    "cloudflareVisible": "Tunggu konten terlihat",
+    "cloudflareExtraWait": "Waktu tunggu tambahan (ms)",
+    "cloudflareResources": "Jenis sumber daya yang diblokir",
+    "cloudflarePageUrl": "URL halaman",
+    "cloudflareAll": "Peta situs dan tautan",
+    "cloudflareSitemaps": "Hanya peta situs",
+    "cloudflareLinks": "Hanya tautan",
+    "cloudflareCredentialHelp": "Akun Cloudflare dan token API dengan izin edit Browser Run",
+    "cloudflareRenderHelp": "Aktifkan untuk situs yang memuat konten melalui browser. Waktu penggunaan browser dapat dikenakan biaya.",
+    "cloudflareLimitHelp": "Akun gratis dapat merayapi hingga 100 halaman per proses. Jika batas tercapai, penghapusan tidak disimpulkan.",
+    "cloudflareCacheHelp": "Rekonsiliasi penuh selalu mengambil konten terbaru.",
+    "cloudflareIncludeHelp": "Satu pola per baris. * cocok dalam satu segmen jalur; ** dapat melintasi beberapa segmen.",
+    "cloudflareExcludeHelp": "Pengecualian lebih diutamakan daripada penyertaan."
   },
   "proxy": {
     "title": "Proksi",
@@ -818,5 +850,23 @@
     "username": "Nama pengguna (opsional)",
     "password": "Kata sandi (opsional)",
     "invalidAddress": "Masukkan alamat proksi dalam format host:port dengan port antara 1 dan 65535."
+  },
+  "cloudflare": {
+    "crawlProgress": "Perayapan situs web",
+    "jobId": "ID job",
+    "phase": "Tahap",
+    "pages": "Halaman selesai / total",
+    "browserSeconds": "Penggunaan browser (detik)",
+    "previewNotice": "Pratinjau menjalankan perayapan Cloudflare yang nyata dan memakai kuota akun. Tidak menulis ke Hindsight.",
+    "phases": {
+      "submitting": "Mengirim perayapan",
+      "running": "Menunggu perayapan",
+      "completed": "Mengimpor hasil",
+      "consumed": "Selesai",
+      "failed": "Gagal",
+      "cancelled": "Dibatalkan",
+      "superseded": "Dilanjutkan pada proses lain",
+      "cancel_failed": "Gagal"
+    }
   }
 }

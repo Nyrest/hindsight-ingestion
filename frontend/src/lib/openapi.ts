@@ -463,6 +463,7 @@ export interface components {
             error: string;
             failedCount: number;
             items: components["schemas"]["DryRunItem"][];
+            releasedCount: number;
             skippedCount: number;
             truncated: boolean;
             unchangedCount: number;
@@ -477,10 +478,11 @@ export interface components {
             label: string;
             options?: components["schemas"]["Option"][];
             placeholder?: string;
+            renderOnly?: boolean;
             required: boolean;
             secret: boolean;
             /** @enum {string} */
-            type: "string" | "password" | "number" | "boolean" | "select" | "url" | "textarea";
+            type: "string" | "password" | "number" | "boolean" | "select" | "url" | "textarea" | "string_list" | "multi_select";
         };
         FilePolicy: {
             audios: boolean;
@@ -649,8 +651,7 @@ export interface components {
             id: string;
             remoteOperationId: string;
             retryCount: number;
-            /** @enum {string} */
-            status: "pending" | "running" | "waiting_operations" | "succeeded" | "failed" | "interrupted" | "cancelled";
+            status: string;
             type: string;
             updatedAt: string;
         };
@@ -666,7 +667,7 @@ export interface components {
             skippedCount: number;
             startedAt: string | null;
             /** @enum {string} */
-            status: "pending" | "running" | "waiting_operations" | "succeeded" | "failed" | "interrupted" | "cancelled";
+            status: "pending" | "running" | "waiting_source" | "waiting_operations" | "succeeded" | "failed" | "interrupted" | "cancelled";
             syncMode: string;
             taskId: string;
             taskName: string;
@@ -688,9 +689,10 @@ export interface components {
             operations: components["schemas"]["operationDTO"][];
             scheduledFor: string | null;
             skippedCount: number;
+            sourceJob?: components["schemas"]["sourceJobDTO"] | null;
             startedAt: string | null;
             /** @enum {string} */
-            status: "pending" | "running" | "waiting_operations" | "succeeded" | "failed" | "interrupted" | "cancelled";
+            status: "pending" | "running" | "waiting_source" | "waiting_operations" | "succeeded" | "failed" | "interrupted" | "cancelled";
             syncMode: string;
             taskId: string;
             taskName: string;
@@ -709,7 +711,7 @@ export interface components {
             runId: string;
             startedAt: string | null;
             /** @enum {string} */
-            status: "pending" | "running" | "waiting_operations" | "succeeded" | "failed" | "interrupted" | "cancelled";
+            status: "pending" | "running" | "waiting_source" | "waiting_operations" | "succeeded" | "failed" | "interrupted" | "cancelled";
             taskId: string;
             taskName: string;
         };
@@ -723,6 +725,16 @@ export interface components {
             observationScope: components["schemas"]["Scope"];
             proxy: components["schemas"]["Config"];
             timezone: string;
+        };
+        sourceJobDTO: {
+            browserSecondsUsed: number;
+            error: string;
+            finished: number;
+            id: string;
+            phase: string;
+            startedAt: string;
+            status: string;
+            total: number;
         };
         strategiesDTO: {
             defaultStrategy: string;

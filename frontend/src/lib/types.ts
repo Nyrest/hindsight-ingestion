@@ -62,6 +62,7 @@ export type BrowseKind = BrowseItem["kind"];
 export interface Paginated<T> { items: T[]; total: number }
 
 export const RUN_STATUSES: RunStatus[] = [
+  "waiting_source",
   "pending",
   "running",
   "waiting_operations",
@@ -73,7 +74,7 @@ export const RUN_STATUSES: RunStatus[] = [
 
 export const MASK = "********";
 
-export const ACTIVE_RUN_STATUSES: RunStatus[] = ["pending", "running", "waiting_operations"];
+export const ACTIVE_RUN_STATUSES: RunStatus[] = ["pending", "running", "waiting_source", "waiting_operations"];
 
 export function isActiveRun(status: RunStatus | undefined | null): boolean {
   return !!status && ACTIVE_RUN_STATUSES.includes(status);

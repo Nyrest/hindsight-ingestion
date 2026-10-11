@@ -88,7 +88,7 @@ export default function RunDetailPage() {
           </h1>
           <p className="font-mono text-xs text-muted-foreground">{r.id}</p>
         </div>
-        {active && (
+        {(active || r.sourceJob?.phase === "cancel_failed") && (
           <Button variant="outline" onClick={() => cancel.mutate(r.taskId)} disabled={cancel.isPending}>
             {cancel.isPending ? <Loader2 className="animate-spin" /> : <Square />}
             {t("tasks.actions.cancel")}
@@ -124,6 +124,21 @@ export default function RunDetailPage() {
       </Card>
 
       <RunCountersGrid run={r} />
+
+      {r.sourceJob && (
+        <Card>
+          <CardHeader><CardTitle>{t("cloudflare.crawlProgress")}</CardTitle></CardHeader>
+          <CardContent>
+            <dl className="grid gap-4 sm:grid-cols-2">
+              <Summary label={t("cloudflare.jobId")}>{r.sourceJob.id || "—"}</Summary>
+              <Summary label={t("cloudflare.phase")}>{t(`cloudflare.phases.${r.sourceJob.phase}`, { defaultValue: r.sourceJob.phase })}</Summary>
+              <Summary label={t("cloudflare.pages")}>{r.sourceJob.finished} / {r.sourceJob.total}</Summary>
+              <Summary label={t("cloudflare.browserSeconds")}>{r.sourceJob.browserSecondsUsed.toFixed(1)}</Summary>
+            </dl>
+            {r.sourceJob.error && <p role="alert" className="mt-4 break-words text-sm text-destructive">{r.sourceJob.error}</p>}
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid gap-4 lg:grid-cols-2">
         <CursorBlock label={t("runDetail.cursorBefore")} value={r.cursorBefore} />

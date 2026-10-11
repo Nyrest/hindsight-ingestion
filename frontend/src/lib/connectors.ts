@@ -15,6 +15,7 @@ import { qk } from "./query";
 import type { Connectors, CredentialTypeSpec, SourceSpec } from "./types";
 
 const TYPE_ICONS: Record<string, LucideIcon> = {
+  cloudflare_crawl: Cloud,
   notion: FileText,
   siyuan: NotebookPen,
   s3: Database,
@@ -30,6 +31,7 @@ export function typeIcon(type: string | undefined | null): LucideIcon {
 }
 
 const FALLBACK_NAMES: Record<string, string> = {
+  cloudflare_crawl: "Cloudflare Browser Run",
   notion: "Notion",
   siyuan: "SiYuan",
   s3: "S3",

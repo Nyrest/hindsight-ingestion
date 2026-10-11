@@ -69,7 +69,8 @@
     "integer": "Deve essere un numero intero",
     "min1": "Deve essere almeno 1",
     "url": "Deve essere un URL valido",
-    "tooLong": "Troppo lungo"
+    "tooLong": "Troppo lungo",
+    "list": "Inserisci un elenco valido"
   },
   "runStatus": {
     "pending": "In sospeso",
@@ -78,7 +79,8 @@
     "succeeded": "Riuscito",
     "failed": "Fallito",
     "interrupted": "Interrotto",
-    "cancelled": "Annullato"
+    "cancelled": "Annullato",
+    "waiting_source": "In attesa del crawl"
   },
   "credentialStatus": {
     "active": "Attivo",
@@ -729,7 +731,8 @@
       "delete": "Elimina",
       "unchanged": "Invariato",
       "skip": "Salta",
-      "fail": "Fallito"
+      "fail": "Fallito",
+      "release": "Rimuovi riferimento di questa attività"
     }
   },
   "providerCopy": {
@@ -802,7 +805,36 @@
     "siYuanNotebookHelp": "Lascia vuoto per sincronizzare tutti i taccuini aperti.",
     "hindsightApiKeyHelp": "Inviata come token Bearer. Lascia vuoto se l’istanza non richiede autenticazione.",
     "syncCollectionHelp": "Usa sync-collection (RFC 6578) se supportato dal server.",
-    "fileSystem": "Sistema di file"
+    "fileSystem": "Sistema di file",
+    "cloudflareAccountId": "ID account",
+    "cloudflareWebsiteUrl": "URL del sito",
+    "cloudflareDiscovery": "Individuazione degli URL",
+    "cloudflareRender": "Rendering JavaScript",
+    "cloudflareLimit": "Numero massimo di pagine",
+    "cloudflareDepth": "Profondità massima dei link",
+    "cloudflareMaxAge": "Durata della cache (secondi)",
+    "cloudflareExternal": "Includi siti esterni",
+    "cloudflareSubdomains": "Includi sottodomini",
+    "cloudflareInclude": "Pattern URL da includere",
+    "cloudflareExclude": "Pattern URL da escludere",
+    "cloudflareSize": "Dimensione massima per pagina (MiB)",
+    "cloudflareWaitUntil": "Condizione di attesa della navigazione",
+    "cloudflareNavigationTimeout": "Timeout di navigazione (ms)",
+    "cloudflareSelector": "Selettore CSS del contenuto",
+    "cloudflareSelectorTimeout": "Timeout del selettore (ms)",
+    "cloudflareVisible": "Attendi contenuto visibile",
+    "cloudflareExtraWait": "Attesa aggiuntiva (ms)",
+    "cloudflareResources": "Tipi di risorse bloccati",
+    "cloudflarePageUrl": "URL della pagina",
+    "cloudflareAll": "Sitemap e link",
+    "cloudflareSitemaps": "Solo sitemap",
+    "cloudflareLinks": "Solo link",
+    "cloudflareCredentialHelp": "Account Cloudflare e token API con permesso di modifica di Browser Run",
+    "cloudflareRenderHelp": "Attiva per i siti che caricano i contenuti nel browser. Il tempo del browser può essere addebitato.",
+    "cloudflareLimitHelp": "Gli account gratuiti consentono fino a 100 pagine per crawl. Al raggiungimento del limite non vengono dedotte eliminazioni.",
+    "cloudflareCacheHelp": "La riconciliazione completa recupera sempre contenuti aggiornati.",
+    "cloudflareIncludeHelp": "Un pattern per riga. * corrisponde all’interno di un segmento del percorso; ** può attraversare più segmenti.",
+    "cloudflareExcludeHelp": "Le esclusioni hanno la precedenza."
   },
   "proxy": {
     "title": "Proxy",
@@ -819,5 +851,23 @@
     "username": "Nome utente (facoltativo)",
     "password": "Password (facoltativa)",
     "invalidAddress": "Inserisci un indirizzo proxy nel formato host:porta, con una porta compresa tra 1 e 65535."
+  },
+  "cloudflare": {
+    "crawlProgress": "Crawl del sito",
+    "jobId": "ID del job",
+    "phase": "Fase",
+    "pages": "Pagine completate / totali",
+    "browserSeconds": "Utilizzo del browser (secondi)",
+    "previewNotice": "L’anteprima esegue un vero crawl Cloudflare e consuma la quota dell’account. Non scrive in Hindsight.",
+    "phases": {
+      "submitting": "Invio del crawl",
+      "running": "In attesa del crawl",
+      "completed": "Importazione dei risultati",
+      "consumed": "Completato",
+      "failed": "Fallito",
+      "cancelled": "Annullato",
+      "superseded": "Ripreso in un’altra esecuzione",
+      "cancel_failed": "Fallito"
+    }
   }
 }

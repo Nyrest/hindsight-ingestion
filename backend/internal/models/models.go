@@ -99,8 +99,9 @@ type TaskState struct {
 
 // TaskItem is one row of the synchronization ledger.
 type TaskItem struct {
-	TaskID       string `gorm:"primaryKey;size:36"`
-	SourceItemID string `gorm:"primaryKey;size:512"`
+	SharedTargetKey string `gorm:"size:64;index:idx_shared_reference,priority:1"`
+	TaskID          string `gorm:"primaryKey;size:36"`
+	SourceItemID    string `gorm:"primaryKey;size:512;index:idx_shared_reference,priority:2"`
 
 	SourceRevision string `gorm:"size:512"`
 	SourceName     string `gorm:"type:text"`
@@ -131,6 +132,7 @@ const (
 	RunPending           = "pending"
 	RunRunning           = "running"
 	RunWaitingOperations = "waiting_operations"
+	RunWaitingSource     = "waiting_source"
 	RunSucceeded         = "succeeded"
 	RunFailed            = "failed"
 	RunInterrupted       = "interrupted"
@@ -196,10 +198,29 @@ type Setting struct {
 	EncryptedSecret string `gorm:"type:text"`
 }
 
+type SourceJob struct {
+	RunID          string `gorm:"primaryKey;size:36"`
+	TaskID         string `gorm:"size:36;not null;index"`
+	ConfigRevision int64  `gorm:"not null"`
+	RequestJSON    string `gorm:"type:text"`
+	JobJSON        string `gorm:"type:text"`
+	Phase          string `gorm:"size:32;not null;index"`
+	ErrorMessage   string `gorm:"type:text"`
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+}
+
+type SharedDocument struct {
+	TargetKey         string `gorm:"primaryKey;size:64"`
+	DocumentID        string `gorm:"primaryKey;size:96"`
+	SyncedFingerprint string `gorm:"size:128"`
+	UpdatedAt         time.Time
+}
+
 // All returns every model for migration.
 func All() []any {
 	return []any{
 		&Credential{}, &Task{}, &TaskState{}, &TaskItem{},
-		&TaskRun{}, &HindsightOperation{}, &Setting{},
+		&TaskRun{}, &HindsightOperation{}, &Setting{}, &SourceJob{}, &SharedDocument{},
 	}
 }

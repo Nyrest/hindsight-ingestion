@@ -101,7 +101,7 @@ export function SourceConfigFields({
 
       {source.fields.length > 0 && (
         <div className="grid gap-4">
-          {source.fields.map((f) => (
+          {source.fields.filter((f) => !f.renderOnly || config.render === true).map((f) => (
             <SchemaField
               key={f.key}
               field={f}

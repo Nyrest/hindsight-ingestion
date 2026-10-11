@@ -40,13 +40,15 @@ type Capabilities struct {
 
 // Field types for schema-driven forms.
 const (
-	FieldString   = "string"
-	FieldPassword = "password"
-	FieldNumber   = "number"
-	FieldBoolean  = "boolean"
-	FieldSelect   = "select"
-	FieldURL      = "url"
-	FieldTextarea = "textarea"
+	FieldString      = "string"
+	FieldPassword    = "password"
+	FieldNumber      = "number"
+	FieldBoolean     = "boolean"
+	FieldSelect      = "select"
+	FieldURL         = "url"
+	FieldTextarea    = "textarea"
+	FieldStringList  = "string_list"
+	FieldMultiSelect = "multi_select"
 )
 
 // Field changes either reset the source cursor or reconcile the existing scope.
@@ -67,13 +69,14 @@ type Option struct {
 type FieldSpec struct {
 	Key         string   `json:"key"`
 	Label       string   `json:"label"`
-	Type        string   `json:"type" enum:"string,password,number,boolean,select,url,textarea"`
+	Type        string   `json:"type" enum:"string,password,number,boolean,select,url,textarea,string_list,multi_select"`
 	Required    bool     `json:"required"`
 	Secret      bool     `json:"secret"`
 	Placeholder string   `json:"placeholder,omitempty"`
 	Help        string   `json:"help,omitempty"`
 	Default     any      `json:"default,omitempty"`
 	Options     []Option `json:"options,omitempty"`
+	RenderOnly  bool     `json:"renderOnly,omitempty"`
 	Browse      bool     `json:"browse,omitempty"`
 	// BrowseKind restricts the browse picker to items of this kind.
 	BrowseKind string `json:"browseKind,omitempty"`
@@ -237,14 +240,15 @@ const (
 
 // SourceItem is the normalized description of a source object.
 type SourceItem struct {
-	ID         string
-	Name       string
-	Path       string
-	Kind       string // page | document | file
-	Revision   string
-	ModifiedAt time.Time
-	MIMEType   string
-	Size       int64
+	ContentError string
+	ID           string
+	Name         string
+	Path         string
+	Kind         string // page | document | file
+	Revision     string
+	ModifiedAt   time.Time
+	MIMEType     string
+	Size         int64
 	// Metadata is added to the Hindsight document (provider-specific keys).
 	Metadata map[string]string
 	// Tags are provider-specific tags added to the Hindsight document.
@@ -274,6 +278,8 @@ type ScanRequest struct {
 
 // ScanResult is returned after a scan finished without error.
 type ScanResult struct {
+	// Error delays a source failure until already-submitted destination writes settle.
+	Error error
 	// Cursor to commit once all destination writes succeeded.
 	Cursor json.RawMessage
 	// Complete is true when every in-scope item was emitted (full inventory),
@@ -349,6 +355,28 @@ type SourceConnector interface {
 	OpenContent(ctx context.Context, req ContentRequest) (SourceContent, error)
 }
 
+const SourceCloudflareCrawl = "cloudflare_crawl"
+
+type SourceJob struct {
+	ID                 string    `json:"id"`
+	AccountID          string    `json:"accountId"`
+	StartedAt          time.Time `json:"startedAt"`
+	Full               bool      `json:"full"`
+	MaxAge             int64     `json:"maxAge"`
+	Status             string    `json:"status"`
+	Total              int       `json:"total"`
+	Finished           int       `json:"finished"`
+	BrowserSecondsUsed float64   `json:"browserSecondsUsed"`
+}
+
+// AsyncSourceConnector lets the runner release its execution slot while a remote job runs.
+type AsyncSourceConnector interface {
+	StartJob(context.Context, ScanRequest) (SourceJob, error)
+	PollJob(context.Context, Credential, SourceJob) (SourceJob, error)
+	CancelJob(context.Context, Credential, SourceJob) error
+	ReadJob(context.Context, ScanRequest, SourceJob) (ScanResult, error)
+}
+
 // ErrSkip marks an item that cannot be ingested for a permanent reason
 // (unsupported, too large, empty). Such items are skipped, not failed.
 var ErrSkip = errors.New("skipped")
@@ -408,7 +436,7 @@ func CredentialTypes() []CredentialType {
 }
 
 func order(t string) int {
-	for i, v := range []string{"notion", "siyuan", "s3", "webdav", "google_drive", "onedrive", "filesystem"} {
+	for i, v := range []string{"notion", "siyuan", "cloudflare_crawl", "s3", "webdav", "google_drive", "onedrive", "filesystem"} {
 		if v == t {
 			return i
 		}

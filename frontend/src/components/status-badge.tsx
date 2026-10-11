@@ -54,6 +54,7 @@ export function ToneBadge({
 }
 
 const RUN_TONES: Record<RunStatus, Tone> = {
+  waiting_source: "blue",
   succeeded: "green",
   running: "blue",
   waiting_operations: "blue",
@@ -67,7 +68,7 @@ export function RunStatusBadge({ status, className }: { status: RunStatus; class
   const { t } = useTranslation();
   const tone = RUN_TONES[status] ?? "gray";
   return (
-    <ToneBadge tone={tone} pulse={status === "running" || status === "waiting_operations"} className={className}>
+    <ToneBadge tone={tone} pulse={status === "running" || status === "waiting_source" || status === "waiting_operations"} className={className}>
       {t(`runStatus.${status}`, { defaultValue: status })}
     </ToneBadge>
   );

@@ -66,7 +66,8 @@
     "integer": "必须是整数",
     "min1": "必须至少为 1",
     "url": "必须是有效的 URL",
-    "tooLong": "内容过长"
+    "tooLong": "内容过长",
+    "list": "请输入有效列表"
   },
   "runStatus": {
     "pending": "等待中",
@@ -75,7 +76,8 @@
     "succeeded": "成功",
     "failed": "失败",
     "interrupted": "已中断",
-    "cancelled": "已取消"
+    "cancelled": "已取消",
+    "waiting_source": "等待网站抓取"
   },
   "credentialStatus": {
     "active": "可用",
@@ -725,7 +727,8 @@
       "delete": "删除",
       "unchanged": "未更改",
       "skip": "跳过",
-      "fail": "失败"
+      "fail": "失败",
+      "release": "解除本任务引用"
     }
   },
   "language": {
@@ -801,7 +804,36 @@
     "siYuanNotebookHelp": "留空以同步所有已打开的笔记本。",
     "hindsightApiKeyHelp": "此密钥会作为 Bearer 令牌发送。如果实例未启用身份验证，请留空。",
     "syncCollectionHelp": "服务器支持时使用 sync-collection（RFC 6578）。",
-    "fileSystem": "文件系统"
+    "fileSystem": "文件系统",
+    "cloudflareAccountId": "账户 ID",
+    "cloudflareWebsiteUrl": "网站 URL",
+    "cloudflareDiscovery": "URL 发现方式",
+    "cloudflareRender": "JavaScript 渲染",
+    "cloudflareLimit": "最大页数",
+    "cloudflareDepth": "最大链接深度",
+    "cloudflareMaxAge": "缓存时间（秒）",
+    "cloudflareExternal": "包含外部网站",
+    "cloudflareSubdomains": "包含子域名",
+    "cloudflareInclude": "包含 URL 规则",
+    "cloudflareExclude": "排除 URL 规则",
+    "cloudflareSize": "单页大小上限（MiB）",
+    "cloudflareWaitUntil": "导航等待条件",
+    "cloudflareNavigationTimeout": "导航超时（毫秒）",
+    "cloudflareSelector": "内容 CSS 选择器",
+    "cloudflareSelectorTimeout": "选择器超时（毫秒）",
+    "cloudflareVisible": "等待内容可见",
+    "cloudflareExtraWait": "额外等待（毫秒）",
+    "cloudflareResources": "屏蔽资源类型",
+    "cloudflarePageUrl": "网页 URL",
+    "cloudflareAll": "站点地图和链接",
+    "cloudflareSitemaps": "仅站点地图",
+    "cloudflareLinks": "仅链接",
+    "cloudflareCredentialHelp": "Cloudflare 账户及具有 Browser Run 编辑权限的 API Token",
+    "cloudflareRenderHelp": "适用于通过浏览器加载内容的网站。浏览器使用时间可能产生费用。",
+    "cloudflareLimitHelp": "免费账户每次最多抓取 100 页。达到页数上限时不会执行删除对账。",
+    "cloudflareCacheHelp": "完整对账始终抓取最新内容。",
+    "cloudflareIncludeHelp": "每行一个规则。* 匹配单个路径段，** 可跨路径段匹配。",
+    "cloudflareExcludeHelp": "排除规则优先于包含规则。"
   },
   "proxy": {
     "title": "代理",
@@ -818,5 +850,23 @@
     "username": "用户名（可选）",
     "password": "密码（可选）",
     "invalidAddress": "请输入 host:port 格式的代理地址，端口范围为 1–65535。"
+  },
+  "cloudflare": {
+    "crawlProgress": "网站抓取",
+    "jobId": "Job ID",
+    "phase": "阶段",
+    "pages": "完成页数 / 总页数",
+    "browserSeconds": "浏览器使用量（秒）",
+    "previewNotice": "预演会执行真实的 Cloudflare 抓取并消耗账户额度，不会写入 Hindsight。",
+    "phases": {
+      "submitting": "提交抓取",
+      "running": "等待网站抓取",
+      "completed": "导入抓取结果",
+      "consumed": "已完成",
+      "failed": "失败",
+      "cancelled": "已取消",
+      "superseded": "已由恢复运行接续",
+      "cancel_failed": "失败"
+    }
   }
 }

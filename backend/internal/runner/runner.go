@@ -13,6 +13,7 @@ import (
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 
+	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
 	"github.com/Nyrest/hindsight-ingestion/internal/sync"
 )
@@ -24,9 +25,10 @@ var ErrAlreadyRunning = errors.New("task is already running")
 var ErrShutdown = errors.New("interrupted by application shutdown")
 
 // ActiveStatuses are TaskRun statuses representing an unfinished run.
-var ActiveStatuses = []string{models.RunPending, models.RunRunning, models.RunWaitingOperations}
+var ActiveStatuses = []string{models.RunPending, models.RunRunning, models.RunWaitingSource, models.RunWaitingOperations}
 
 type active struct {
+	asyncSource bool
 	maintenance bool
 	runID       string
 	cancel      context.CancelCauseFunc
@@ -66,8 +68,21 @@ func NewManager(db *gorm.DB, engine *sync.Engine, maxConcurrent int, log *slog.L
 // interrupted. Their committed cursor was never advanced, so the next run
 // resumes safely from the last committed state.
 func (m *Manager) RecoverInterrupted(ctx context.Context) (int64, error) {
+	var resumable []models.TaskRun
+	if err := m.db.WithContext(ctx).Where("status = ? AND id IN (?)", models.RunWaitingSource,
+		m.db.Model(&models.SourceJob{}).Select("run_id").Where("phase IN ?", []string{"running", "completed"})).Find(&resumable).Error; err != nil {
+		return 0, err
+	}
+	var resumableIDs []string
+	for _, run := range resumable {
+		resumableIDs = append(resumableIDs, run.ID)
+	}
 	now := time.Now().UTC()
-	res := m.db.WithContext(ctx).Model(&models.TaskRun{}).Where("status IN ?", ActiveStatuses).
+	query := m.db.WithContext(ctx).Model(&models.TaskRun{}).Where("status IN ?", ActiveStatuses)
+	if len(resumableIDs) > 0 {
+		query = query.Where("id NOT IN ?", resumableIDs)
+	}
+	res := query.
 		Updates(map[string]any{
 			"status":        models.RunInterrupted,
 			"finished_at":   now,
@@ -76,9 +91,27 @@ func (m *Manager) RecoverInterrupted(ctx context.Context) (int64, error) {
 	if res.Error != nil {
 		return 0, res.Error
 	}
-	m.db.WithContext(ctx).Model(&models.HindsightOperation{}).
+	if err := m.db.WithContext(ctx).Model(&models.HindsightOperation{}).
 		Where("status IN ?", []string{"pending", "processing", "retrying"}).
-		Update("status", "abandoned")
+		Where("run_id NOT IN (?)", m.db.Model(&models.SourceJob{}).Select("run_id")).
+		Update("status", "abandoned").Error; err != nil {
+		return 0, err
+	}
+	for _, run := range resumable {
+		if err := m.resumeSource(run); err != nil {
+			return 0, err
+		}
+	}
+	var recoverable []models.TaskRun
+	if err := m.db.WithContext(ctx).Where("status = ? AND id IN (?)", models.RunInterrupted,
+		m.db.Model(&models.SourceJob{}).Select("run_id").Where("phase IN ?", []string{"running", "completed"})).Find(&recoverable).Error; err != nil {
+		return 0, err
+	}
+	for _, run := range recoverable {
+		if _, err := m.Start(run.TaskID, run.TriggerType, run.SyncMode, nil, false); err != nil && !errors.Is(err, ErrAlreadyRunning) {
+			return 0, err
+		}
+	}
 	return res.RowsAffected, nil
 }
 
@@ -94,6 +127,10 @@ func (m *Manager) Start(taskID, trigger, mode string, scheduledFor *time.Time, w
 		m.mu.Unlock()
 		return "", ErrAlreadyRunning
 	}
+	if err := m.checkSourceCancellation(taskID); err != nil {
+		m.mu.Unlock()
+		return "", err
+	}
 	// DB guard. Within this (single) instance every live run is in
 	// m.active, so active rows not tracked here are stale leftovers from a
 	// failed status write; close them instead of blocking the task forever.
@@ -108,6 +145,11 @@ func (m *Manager) Start(taskID, trigger, mode string, scheduledFor *time.Time, w
 		m.engine.MarkTerminal(id, models.RunInterrupted, "Interrupted: run state was not recorded")
 	}
 
+	var task models.Task
+	if err := m.db.First(&task, "id = ?", taskID).Error; err != nil {
+		m.mu.Unlock()
+		return "", err
+	}
 	now := time.Now().UTC()
 	run := models.TaskRun{
 		ID: uuid.NewString(), TaskID: taskID, TriggerType: trigger, Status: models.RunPending,
@@ -118,7 +160,9 @@ func (m *Manager) Start(taskID, trigger, mode string, scheduledFor *time.Time, w
 		return "", err
 	}
 	ctx, cancel := context.WithCancelCause(m.base)
-	a := &active{runID: run.ID, cancel: cancel, done: make(chan struct{}), start: now}
+	connector, _ := connectors.Source(task.SourceType)
+	_, async := connector.(connectors.AsyncSourceConnector)
+	a := &active{runID: run.ID, cancel: cancel, done: make(chan struct{}), start: now, asyncSource: async}
 	m.active[taskID] = a
 	m.wg.Add(1)
 	m.mu.Unlock()
@@ -140,6 +184,17 @@ func (m *Manager) execute(ctx context.Context, taskID string, a *active, mode st
 		a.cancel(nil)
 	}()
 	defer func() {
+		if !a.asyncSource || ctx.Err() == nil || errors.Is(context.Cause(ctx), ErrShutdown) {
+			return
+		}
+		cleanup, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+		if err := m.engine.CancelSourceJob(cleanup, taskID); err != nil {
+			m.log.Warn("source cancellation failed", "task", taskID, "error", err)
+			m.engine.MarkTerminal(a.runID, models.RunFailed, "Cloudflare cancellation is unconfirmed; retry Cancel: "+err.Error())
+		}
+	}()
+	defer func() {
 		if p := recover(); p != nil {
 			m.log.Error("run panicked", "task", taskID, "run", a.runID, "panic", p)
 			m.engine.MarkTerminal(a.runID, models.RunFailed, "internal error (panic)")
@@ -158,11 +213,16 @@ func (m *Manager) execute(ctx context.Context, taskID string, a *active, mode st
 		m.engine.MarkTerminal(a.runID, status, msg)
 		return
 	}
-	defer func() { <-m.sem }()
+	held := true
+	defer func() {
+		if held {
+			<-m.sem
+		}
+	}()
 
 	started := time.Now().UTC()
 	m.db.Model(&models.TaskRun{}).Where("id = ?", a.runID).Updates(map[string]any{"status": models.RunRunning, "started_at": started})
-	if err := m.engine.Execute(ctx, a.runID, sync.RunOptions{Mode: mode}); err != nil {
+	if err := m.engine.Execute(ctx, a.runID, sync.RunOptions{Mode: mode, WaitSource: m.waitWithoutSlot(ctx, &held)}); err != nil {
 		m.log.Warn("run finished with error", "task", taskID, "run", a.runID, "error", err)
 	}
 	// Safety net: never leave the row active once execution returned.
@@ -219,6 +279,10 @@ func (m *Manager) DryRun(ctx context.Context, taskID string) (sync.DryRunResult,
 		m.mu.Unlock()
 		return sync.DryRunResult{}, ErrAlreadyRunning
 	}
+	if err := m.checkSourceCancellation(taskID); err != nil {
+		m.mu.Unlock()
+		return sync.DryRunResult{}, err
+	}
 	ctx, cancel := context.WithCancelCause(ctx)
 	stop := context.AfterFunc(m.base, func() { cancel(ErrShutdown) })
 	a := &active{maintenance: true, cancel: cancel, done: make(chan struct{}), start: time.Now()}
@@ -236,11 +300,16 @@ func (m *Manager) DryRun(ctx context.Context, taskID string) (sync.DryRunResult,
 	}()
 	select {
 	case m.sem <- struct{}{}:
-		defer func() { <-m.sem }()
+		held := true
+		defer func() {
+			if held {
+				<-m.sem
+			}
+		}()
+		return m.engine.DryRunWithOptions(ctx, taskID, sync.RunOptions{WaitSource: m.waitWithoutSlot(ctx, &held)})
 	case <-ctx.Done():
 		return sync.DryRunResult{}, ctx.Err()
 	}
-	return m.engine.DryRun(ctx, taskID)
 }
 
 // Shutdown interrupts every active run and waits for them to record state.
@@ -267,8 +336,11 @@ func orDefault(s, def string) string {
 func (m *Manager) BeginEdit(taskID string) (func(), error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if m.editing[taskID] || (m.active[taskID] != nil && m.active[taskID].maintenance) {
+	if m.editing[taskID] || (m.active[taskID] != nil && (m.active[taskID].maintenance || m.active[taskID].asyncSource)) {
 		return nil, ErrAlreadyRunning
+	}
+	if err := m.checkSourceCancellation(taskID); err != nil {
+		return nil, err
 	}
 	m.editing[taskID] = true
 	return func() { m.mu.Lock(); delete(m.editing, taskID); m.mu.Unlock() }, nil
@@ -282,6 +354,9 @@ func (m *Manager) BeginMaintenance(ctx context.Context, taskID string) (context.
 	}
 	if m.active[taskID] != nil || m.editing[taskID] {
 		return ctx, nil, ErrAlreadyRunning
+	}
+	if err := m.checkSourceCancellation(taskID); err != nil {
+		return ctx, nil, err
 	}
 	ctx, cancel := context.WithCancelCause(ctx)
 	stop := context.AfterFunc(m.base, func() { cancel(ErrShutdown) })

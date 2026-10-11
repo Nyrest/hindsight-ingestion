@@ -69,7 +69,8 @@
     "integer": "Deve ser um número inteiro",
     "min1": "Deve ser pelo menos 1",
     "url": "Deve ser um URL válido",
-    "tooLong": "Muito longo"
+    "tooLong": "Muito longo",
+    "list": "Insira uma lista válida"
   },
   "runStatus": {
     "pending": "Pendente",
@@ -78,7 +79,8 @@
     "succeeded": "Sucesso",
     "failed": "Falha",
     "interrupted": "Interrompido",
-    "cancelled": "Cancelado"
+    "cancelled": "Cancelado",
+    "waiting_source": "Aguardando rastreamento"
   },
   "credentialStatus": {
     "active": "Ativo",
@@ -729,7 +731,8 @@
       "delete": "Excluir",
       "unchanged": "Inalterado",
       "skip": "Ignorar",
-      "fail": "Falha"
+      "fail": "Falha",
+      "release": "Remover referência desta tarefa"
     }
   },
   "providerCopy": {
@@ -802,7 +805,36 @@
     "siYuanNotebookHelp": "Deixe vazio para sincronizar todos os cadernos abertos.",
     "hindsightApiKeyHelp": "É enviado como token Bearer. Deixe vazio se a instância não exigir autenticação.",
     "syncCollectionHelp": "Usa sync-collection (RFC 6578) quando o servidor oferece suporte.",
-    "fileSystem": "Sistema de arquivos"
+    "fileSystem": "Sistema de arquivos",
+    "cloudflareAccountId": "ID da conta",
+    "cloudflareWebsiteUrl": "URL do site",
+    "cloudflareDiscovery": "Descoberta de URLs",
+    "cloudflareRender": "Renderização JavaScript",
+    "cloudflareLimit": "Máximo de páginas",
+    "cloudflareDepth": "Profundidade máxima dos links",
+    "cloudflareMaxAge": "Duração do cache (segundos)",
+    "cloudflareExternal": "Incluir sites externos",
+    "cloudflareSubdomains": "Incluir subdomínios",
+    "cloudflareInclude": "Padrões de URL incluídos",
+    "cloudflareExclude": "Padrões de URL excluídos",
+    "cloudflareSize": "Tamanho máximo por página (MiB)",
+    "cloudflareWaitUntil": "Condição de espera da navegação",
+    "cloudflareNavigationTimeout": "Tempo limite de navegação (ms)",
+    "cloudflareSelector": "Seletor CSS do conteúdo",
+    "cloudflareSelectorTimeout": "Tempo limite do seletor (ms)",
+    "cloudflareVisible": "Aguardar conteúdo visível",
+    "cloudflareExtraWait": "Espera adicional (ms)",
+    "cloudflareResources": "Tipos de recursos bloqueados",
+    "cloudflarePageUrl": "URL da página",
+    "cloudflareAll": "Sitemaps e links",
+    "cloudflareSitemaps": "Somente sitemaps",
+    "cloudflareLinks": "Somente links",
+    "cloudflareCredentialHelp": "Conta Cloudflare e token de API com permissão de edição do Browser Run",
+    "cloudflareRenderHelp": "Ative para sites que carregam conteúdo no navegador. O tempo de uso do navegador pode ser cobrado.",
+    "cloudflareLimitHelp": "Contas gratuitas permitem até 100 páginas por rastreamento. Ao atingir o limite, não são inferidas exclusões.",
+    "cloudflareCacheHelp": "A reconciliação completa sempre busca conteúdo atualizado.",
+    "cloudflareIncludeHelp": "Um padrão por linha. * corresponde dentro de um segmento do caminho; ** pode abranger vários segmentos.",
+    "cloudflareExcludeHelp": "As exclusões têm prioridade sobre as inclusões."
   },
   "proxy": {
     "title": "Proxy",
@@ -819,5 +851,23 @@
     "username": "Nome de usuário (opcional)",
     "password": "Senha (opcional)",
     "invalidAddress": "Informe um endereço de proxy no formato host:porta, com uma porta entre 1 e 65535."
+  },
+  "cloudflare": {
+    "crawlProgress": "Rastreamento do site",
+    "jobId": "ID do job",
+    "phase": "Etapa",
+    "pages": "Páginas concluídas / total",
+    "browserSeconds": "Uso do navegador (segundos)",
+    "previewNotice": "A prévia realiza um rastreamento real no Cloudflare e consome a cota da conta. Não grava no Hindsight.",
+    "phases": {
+      "submitting": "Enviando rastreamento",
+      "running": "Aguardando rastreamento",
+      "completed": "Importando resultados",
+      "consumed": "Concluído",
+      "failed": "Falha",
+      "cancelled": "Cancelado",
+      "superseded": "Retomado em outra execução",
+      "cancel_failed": "Falha"
+    }
   }
 }

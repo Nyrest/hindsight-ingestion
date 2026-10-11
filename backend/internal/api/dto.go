@@ -49,11 +49,23 @@ type logDTO struct {
 	Message string `json:"message"`
 }
 type runDetailDTO struct {
+	SourceJob *sourceJobDTO `json:"sourceJob,omitempty"`
 	runDTO
 	CursorBefore string         `json:"cursorBefore"`
 	CursorAfter  string         `json:"cursorAfter"`
 	Operations   []operationDTO `json:"operations"`
 	Log          []logDTO       `json:"log"`
+}
+
+type sourceJobDTO struct {
+	ID                 string  `json:"id"`
+	StartedAt          string  `json:"startedAt"`
+	Status             string  `json:"status"`
+	Total              int     `json:"total"`
+	Finished           int     `json:"finished"`
+	BrowserSecondsUsed float64 `json:"browserSecondsUsed"`
+	Phase              string  `json:"phase"`
+	Error              string  `json:"error"`
 }
 type nextRun struct {
 	TaskID    string `json:"taskId"`
@@ -65,7 +77,7 @@ type running struct {
 	TaskName  string  `json:"taskName"`
 	RunID     string  `json:"runId"`
 	StartedAt *string `json:"startedAt"`
-	Status    string  `json:"status" enum:"pending,running,waiting_operations,succeeded,failed,interrupted,cancelled"`
+	Status    string  `json:"status" enum:"pending,running,waiting_source,waiting_operations,succeeded,failed,interrupted,cancelled"`
 }
 type credRef struct {
 	ID     string `json:"id"`

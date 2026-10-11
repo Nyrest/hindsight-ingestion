@@ -22,7 +22,7 @@ type runDTO struct {
 	TaskID          string  `json:"taskId"`
 	TaskName        string  `json:"taskName"`
 	TriggerType     string  `json:"triggerType"`
-	Status          string  `json:"status" enum:"pending,running,waiting_operations,succeeded,failed,interrupted,cancelled"`
+	Status          string  `json:"status" enum:"pending,running,waiting_source,waiting_operations,succeeded,failed,interrupted,cancelled"`
 	SyncMode        string  `json:"syncMode"`
 	ScheduledFor    *string `json:"scheduledFor"`
 	StartedAt       *string `json:"startedAt"`
@@ -98,7 +98,7 @@ type operationDTO struct {
 	ID                string `json:"id"`
 	RemoteOperationID string `json:"remoteOperationId"`
 	Type              string `json:"type"`
-	Status            string `json:"status" enum:"pending,running,waiting_operations,succeeded,failed,interrupted,cancelled"`
+	Status            string `json:"status"`
 	RetryCount        int    `json:"retryCount"`
 	CreatedAt         string `json:"createdAt"`
 	UpdatedAt         string `json:"updatedAt"`
@@ -123,7 +123,24 @@ func (s *Server) getRun(w http.ResponseWriter, r *http.Request) {
 	}
 	logs := []logDTO{}
 	_ = json.Unmarshal([]byte(run.LogJSON), &logs)
-	writeJSON(w, http.StatusOK, runDetailDTO{runView(&run, task.Name), run.CursorBefore, run.CursorAfter, opDTOs, logs})
+	var sourceJob *sourceJobDTO
+	var persisted models.SourceJob
+	if err := s.DB.WithContext(r.Context()).First(&persisted, "run_id = ?", run.ID).Error; err == nil {
+		sourceJob = &sourceJobDTO{Phase: persisted.Phase, Error: persisted.ErrorMessage}
+		if persisted.JobJSON != "" {
+			var job connectors.SourceJob
+			if err := json.Unmarshal([]byte(persisted.JobJSON), &job); err != nil {
+				writeError(w, http.StatusInternalServerError, "source_job_corrupt", "Invalid persisted source job")
+				return
+			}
+			sourceJob.ID, sourceJob.StartedAt, sourceJob.Status = job.ID, job.StartedAt.Format(time.RFC3339), job.Status
+			sourceJob.Total, sourceJob.Finished, sourceJob.BrowserSecondsUsed = job.Total, job.Finished, job.BrowserSecondsUsed
+		}
+	} else if !errors.Is(err, gorm.ErrRecordNotFound) {
+		s.fail(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, runDetailDTO{SourceJob: sourceJob, runDTO: runView(&run, task.Name), CursorBefore: run.CursorBefore, CursorAfter: run.CursorAfter, Operations: opDTOs, Log: logs})
 }
 
 type settingsDTO struct {

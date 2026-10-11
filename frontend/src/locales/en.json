@@ -17,7 +17,36 @@
     "label": "Language"
   },
   "providerCopy": {
-    "fileSystem": "File System"
+    "fileSystem": "File System",
+    "cloudflareAccountId": "Account ID",
+    "cloudflareWebsiteUrl": "Website URL",
+    "cloudflareDiscovery": "URL discovery",
+    "cloudflareRender": "JavaScript rendering",
+    "cloudflareLimit": "Maximum pages",
+    "cloudflareDepth": "Maximum link depth",
+    "cloudflareMaxAge": "Cache age (seconds)",
+    "cloudflareExternal": "Include external websites",
+    "cloudflareSubdomains": "Include subdomains",
+    "cloudflareInclude": "Include URL patterns",
+    "cloudflareExclude": "Exclude URL patterns",
+    "cloudflareSize": "Maximum page size (MiB)",
+    "cloudflareWaitUntil": "Navigation wait condition",
+    "cloudflareNavigationTimeout": "Navigation timeout (ms)",
+    "cloudflareSelector": "Content CSS selector",
+    "cloudflareSelectorTimeout": "Selector timeout (ms)",
+    "cloudflareVisible": "Wait for visible content",
+    "cloudflareExtraWait": "Additional wait (ms)",
+    "cloudflareResources": "Blocked resource types",
+    "cloudflarePageUrl": "Page URL",
+    "cloudflareAll": "Sitemaps and links",
+    "cloudflareSitemaps": "Sitemaps only",
+    "cloudflareLinks": "Links only",
+    "cloudflareCredentialHelp": "Cloudflare account and API token with Browser Run Edit permission",
+    "cloudflareRenderHelp": "Enable for websites whose content loads in the browser. Browser time may be billed.",
+    "cloudflareLimitHelp": "Free accounts allow up to 100 pages per crawl. Reaching the page limit prevents deletion reconciliation.",
+    "cloudflareCacheHelp": "Full reconciliation always fetches fresh content.",
+    "cloudflareIncludeHelp": "One pattern per line. * matches within a path segment; ** matches across segments.",
+    "cloudflareExcludeHelp": "Exclusion takes precedence over inclusion."
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -72,7 +101,8 @@
     "integer": "Must be a whole number",
     "min1": "Must be at least 1",
     "url": "Must be a valid URL",
-    "tooLong": "Too long"
+    "tooLong": "Too long",
+    "list": "Enter a valid list"
   },
   "runStatus": {
     "pending": "Pending",
@@ -81,7 +111,8 @@
     "succeeded": "Succeeded",
     "failed": "Failed",
     "interrupted": "Interrupted",
-    "cancelled": "Cancelled"
+    "cancelled": "Cancelled",
+    "waiting_source": "Waiting for crawl"
   },
   "credentialStatus": {
     "active": "Active",
@@ -694,7 +725,8 @@
       "delete": "Delete",
       "unchanged": "Unchanged",
       "skip": "Skip",
-      "fail": "Failed"
+      "fail": "Failed",
+      "release": "Release task reference"
     }
   },
   "proxy": {
@@ -750,5 +782,23 @@
     "exponentialWarning": "Scopes can grow exponentially: n tags produce 2ⁿ − 1 scopes per document, increasing processing time and cost.",
     "fileLimitation": "Observation scopes apply to text and inline content. File uploads use Combined.",
     "tagsUnavailable": "Could not load bank tags. You can still enter a tag."
+  },
+  "cloudflare": {
+    "crawlProgress": "Website crawl",
+    "jobId": "Job ID",
+    "phase": "Stage",
+    "pages": "Completed / total pages",
+    "browserSeconds": "Browser usage (seconds)",
+    "previewNotice": "Preview performs a real Cloudflare crawl and consumes account quota. It does not write to Hindsight.",
+    "phases": {
+      "submitting": "Submitting crawl",
+      "running": "Waiting for crawl",
+      "completed": "Importing results",
+      "consumed": "Finished",
+      "failed": "Failed",
+      "cancelled": "Cancelled",
+      "superseded": "Resumed in another run",
+      "cancel_failed": "Failed"
+    }
   }
 }

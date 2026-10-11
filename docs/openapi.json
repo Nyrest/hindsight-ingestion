@@ -222,6 +222,9 @@
             },
             "type": "array"
           },
+          "releasedCount": {
+            "type": "integer"
+          },
           "skippedCount": {
             "type": "integer"
           },
@@ -236,6 +239,7 @@
           }
         },
         "required": [
+          "releasedCount",
           "complete",
           "error",
           "discoveredCount",
@@ -277,6 +281,9 @@
           "placeholder": {
             "type": "string"
           },
+          "renderOnly": {
+            "type": "boolean"
+          },
           "required": {
             "type": "boolean"
           },
@@ -291,7 +298,9 @@
               "boolean",
               "select",
               "url",
-              "textarea"
+              "textarea",
+              "string_list",
+              "multi_select"
             ],
             "type": "string"
           }
@@ -1039,15 +1048,6 @@
             "type": "integer"
           },
           "status": {
-            "enum": [
-              "pending",
-              "running",
-              "waiting_operations",
-              "succeeded",
-              "failed",
-              "interrupted",
-              "cancelled"
-            ],
             "type": "string"
           },
           "type": {
@@ -1125,6 +1125,7 @@
             "enum": [
               "pending",
               "running",
+              "waiting_source",
               "waiting_operations",
               "succeeded",
               "failed",
@@ -1234,6 +1235,16 @@
           "skippedCount": {
             "type": "integer"
           },
+          "sourceJob": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/sourceJobDTO"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "startedAt": {
             "anyOf": [
               {
@@ -1248,6 +1259,7 @@
             "enum": [
               "pending",
               "running",
+              "waiting_source",
               "waiting_operations",
               "succeeded",
               "failed",
@@ -1348,6 +1360,7 @@
             "enum": [
               "pending",
               "running",
+              "waiting_source",
               "waiting_operations",
               "succeeded",
               "failed",
@@ -1412,6 +1425,45 @@
           "maxFileSizeMB",
           "filePolicy",
           "oauthRedirectUri"
+        ],
+        "type": "object"
+      },
+      "sourceJobDTO": {
+        "properties": {
+          "browserSecondsUsed": {
+            "type": "number"
+          },
+          "error": {
+            "type": "string"
+          },
+          "finished": {
+            "type": "integer"
+          },
+          "id": {
+            "type": "string"
+          },
+          "phase": {
+            "type": "string"
+          },
+          "startedAt": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "total": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "startedAt",
+          "status",
+          "total",
+          "finished",
+          "browserSecondsUsed",
+          "phase",
+          "error"
         ],
         "type": "object"
       },

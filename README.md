@@ -75,6 +75,7 @@ Open [http://localhost:8080](http://localhost:8080) and sign in with `admin` and
 | **Google Drive** | ✅ | ✅ | ✅ | ✅ |
 | **OneDrive** | ✅ | ✅ | ✅ | ✅ |
 | **File System** | ✅ | ✅ | ✅ | ✅ |
+| **Cloudflare Browser Run** | ✅ | ✅ | — | ✅ |
 
 ### Local files in Docker
 
