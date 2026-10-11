@@ -72,6 +72,56 @@ func TestInlineImagesRefreshAndPolicy(t *testing.T) {
 	}
 }
 
+func TestBrowseSearch(t *testing.T) {
+	for _, query := range []string{"", " \t ", "  项目 '计划'  "} {
+		t.Run(query, func(t *testing.T) {
+			requests := 0
+			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				var body map[string]any
+				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+					t.Error(err)
+				}
+				if r.URL.Path != "/search" || r.Method != http.MethodPost {
+					t.Errorf("unexpected request: %s %s", r.Method, r.URL.Path)
+				}
+				if wanted := strings.TrimSpace(query); wanted == "" {
+					if _, exists := body["query"]; exists {
+						t.Errorf("empty search must omit query: %v", body["query"])
+					}
+				} else if body["query"] != wanted {
+					t.Errorf("search query: %v, want %q", body["query"], wanted)
+				}
+				if filter, ok := body["filter"].(map[string]any); !ok || filter["value"] != "data_source" {
+					t.Errorf("search filter: %v", body["filter"])
+				}
+				requests++
+				if requests == 1 {
+					if body["start_cursor"] != nil {
+						t.Error("first request has a cursor")
+					}
+					io.WriteString(w, `{"results":[{"id":"z","title":[{"plain_text":"Zulu"}]}],"has_more":true,"next_cursor":"next"}`)
+				} else {
+					if body["start_cursor"] != "next" {
+						t.Errorf("pagination cursor: %v", body["start_cursor"])
+					}
+					io.WriteString(w, `{"results":[{"id":"a","title":[{"plain_text":"Alpha"}]}],"has_more":false}`)
+				}
+			}))
+			defer srv.Close()
+			old := apiBase
+			apiBase = srv.URL
+			defer func() { apiBase = old }()
+			listing, err := (&Connector{}).Browse(t.Context(), connectors.Credential{}, connectors.BrowseRequest{Query: query})
+			if err != nil || !listing.SupportsSearch || requests != 2 || len(listing.Items) != 2 {
+				t.Fatalf("browse: %+v, requests=%d, err=%v", listing, requests, err)
+			}
+			if listing.Items[0].Name != "Alpha" || !listing.Items[0].Selectable || listing.Items[0].Kind != connectors.KindDataSource {
+				t.Fatalf("selection and sort: %+v", listing.Items)
+			}
+		})
+	}
+}
+
 func TestPropertiesText(t *testing.T) {
 	raw := json.RawMessage(`{
 		"Name": {"type":"title","title":[{"plain_text":"Hello"}]},

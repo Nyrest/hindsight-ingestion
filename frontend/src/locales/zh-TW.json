@@ -125,6 +125,12 @@
     }
   },
   "browse": {
+    "searchSources": "搜尋資料來源…",
+    "searchList": "搜尋目前清單…",
+    "searchSourcesHelp": "依標題搜尋已分享給此連線的資料來源。",
+    "searchListHelp": "依名稱、路徑或 ID 篩選目前清單。",
+    "clearSearch": "清除搜尋",
+    "noResults": "沒有符合的項目",
     "button": "瀏覽…",
     "title": "瀏覽",
     "titleFor": "選擇{{label}}",

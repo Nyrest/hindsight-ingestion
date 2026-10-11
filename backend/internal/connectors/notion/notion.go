@@ -115,12 +115,15 @@ func (c *Connector) ValidateConfig(cfg map[string]any, f connectors.Filter) erro
 // Browse lists data sources shared with the integration.
 func (c *Connector) Browse(ctx context.Context, cred connectors.Credential, req connectors.BrowseRequest) (connectors.BrowseResult, error) {
 	cl := client(cred)
-	res := connectors.BrowseResult{Breadcrumbs: []connectors.Breadcrumb{{ID: "", Name: "Data sources"}}}
+	res := connectors.BrowseResult{SupportsSearch: true, Breadcrumbs: []connectors.Breadcrumb{{ID: "", Name: "Data sources"}}}
 	cursor := ""
 	for range 20 {
 		body := map[string]any{
 			"filter":    map[string]any{"property": "object", "value": "data_source"},
 			"page_size": pageSize,
+		}
+		if query := strings.TrimSpace(req.Query); query != "" {
+			body["query"] = query
 		}
 		if cursor != "" {
 			body["start_cursor"] = cursor

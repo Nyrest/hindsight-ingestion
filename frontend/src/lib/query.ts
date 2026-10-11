@@ -1,6 +1,6 @@
 import { QueryClient } from "@tanstack/react-query";
 import { ApiError } from "./api";
-import type { RunsQuery } from "./types";
+import type { BrowseRequest, RunsQuery } from "./types";
 
 export const POLL_ACTIVE_MS = 3_000;
 export const POLL_IDLE_MS = 30_000;
@@ -25,7 +25,7 @@ export const qk = {
   connectors: ["connectors"] as const,
   credentials: ["credentials"] as const,
   credential: (id: string) => ["credentials", id] as const,
-  browse: (id: string, parentId: string, kind: string) => ["credentials", id, "browse", parentId, kind] as const,
+  browse: (id: string, request: BrowseRequest) => ["credentials", id, "browse", request] as const,
   strategies: (id: string, bankId: string) => ["credentials", id, "strategies", bankId] as const,
   tasks: ["tasks"] as const,
   task: (id: string) => ["tasks", id] as const,

@@ -125,6 +125,12 @@
     }
   },
   "browse": {
+    "searchSources": "Cerca fonti di dati…",
+    "searchList": "Cerca in questo elenco…",
+    "searchSourcesHelp": "Cerca per titolo le fonti di dati condivise con questa connessione.",
+    "searchListHelp": "Filtra l’elenco attuale per nome, percorso o ID.",
+    "clearSearch": "Cancella ricerca",
+    "noResults": "Nessun elemento corrispondente",
     "button": "Sfoglia...",
     "title": "Sfoglia",
     "titleFor": "Selezionare {{label}}",

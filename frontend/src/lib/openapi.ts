@@ -424,6 +424,7 @@ export interface components {
             breadcrumbs: components["schemas"]["Breadcrumb"][];
             items: components["schemas"]["BrowseItem"][];
             parentId: string;
+            supportsSearch: boolean;
         };
         Capabilities: {
             deletionMode: string;
@@ -1079,6 +1080,7 @@ export interface operations {
                     };
                     kind?: string;
                     parentId?: string;
+                    query?: string;
                 };
             };
         };

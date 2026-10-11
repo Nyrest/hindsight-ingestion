@@ -125,6 +125,12 @@
     }
   },
   "browse": {
+    "searchSources": "Buscar fontes de dados…",
+    "searchList": "Buscar nesta lista…",
+    "searchSourcesHelp": "Busque pelo título das fontes de dados compartilhadas com esta conexão.",
+    "searchListHelp": "Filtre a lista atual por nome, caminho ou ID.",
+    "clearSearch": "Limpar busca",
+    "noResults": "Nenhum item correspondente",
     "button": "Procurar…",
     "title": "Procurar",
     "titleFor": "Selecione {{label}}",

@@ -57,7 +57,7 @@ export function BankPicker({
           {t("browse.selected")}: <span className="font-medium text-foreground">{label}</span>
         </p>
       )}
-      {credentialId && (
+      {open && credentialId && (
         <BrowseDialog
           open={open}
           onOpenChange={setOpen}

@@ -122,6 +122,12 @@
     }
   },
   "browse": {
+    "searchSources": "搜索数据源…",
+    "searchList": "搜索当前列表…",
+    "searchSourcesHelp": "按标题搜索已共享给此连接的数据源。",
+    "searchListHelp": "按名称、路径或 ID 筛选当前列表。",
+    "clearSearch": "清空搜索",
+    "noResults": "没有匹配的项目",
     "button": "浏览...",
     "title": "浏览",
     "titleFor": "选择 {{label}}",

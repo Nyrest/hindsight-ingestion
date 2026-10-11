@@ -125,6 +125,12 @@
     }
   },
   "browse": {
+    "searchSources": "Veri kaynaklarında ara…",
+    "searchList": "Bu listede ara…",
+    "searchSourcesHelp": "Bu bağlantıyla paylaşılan veri kaynaklarını başlığa göre arayın.",
+    "searchListHelp": "Geçerli listeyi ada, yola veya kimliğe göre filtreleyin.",
+    "clearSearch": "Aramayı temizle",
+    "noResults": "Eşleşen öğe yok",
     "button": "Göz at…",
     "title": "Göz at",
     "titleFor": "Seçim: {{label}}",

@@ -125,6 +125,12 @@
     }
   },
   "browse": {
+    "searchSources": "Cari sumber data…",
+    "searchList": "Cari di daftar ini…",
+    "searchSourcesHelp": "Cari judul sumber data yang dibagikan dengan koneksi ini.",
+    "searchListHelp": "Filter daftar saat ini berdasarkan nama, jalur, atau ID.",
+    "clearSearch": "Hapus pencarian",
+    "noResults": "Tidak ada item yang cocok",
     "button": "Jelajahi…",
     "title": "Jelajahi",
     "titleFor": "Pilih {{label}}",

@@ -11,6 +11,8 @@ import {
   Loader2,
   NotebookPen,
   RefreshCw,
+  Search,
+  X,
   type LucideIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -26,8 +28,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { errorMessage } from "@/lib/api";
+import { useDebounced } from "@/lib/hooks";
 import type { Breadcrumb, BrowseItem } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useBrowse } from "./api";
@@ -80,32 +84,53 @@ export function BrowseDialog({
   const [parentId, setParentId] = useState("");
   const [trail, setTrail] = useState<Breadcrumb[]>([]);
   const [selected, setSelected] = useState<BrowseItem | null>(null);
+  const [search, setSearch] = useState("");
+  const query = search.trim();
+  const debouncedQuery = useDebounced(query);
 
   useEffect(() => {
     if (open) {
       setParentId("");
       setTrail([]);
       setSelected(null);
+      setSearch("");
     }
   }, [open, credentialId]);
 
-  const q = useBrowse(credentialId, parentId, kind, open, config);
-  const crumbs: Breadcrumb[] =
-    q.data?.breadcrumbs && q.data.breadcrumbs.length > 0
-      ? q.data.breadcrumbs
-      : [{ id: "", name: t("browse.root") }, ...trail];
+  const listing = useBrowse(credentialId, { parentId, kind, config }, open);
+  const supportsSearch = listing.data?.supportsSearch ?? false;
+  const searchResults = useBrowse(
+    credentialId,
+    { parentId, kind, config, query: debouncedQuery },
+    open && supportsSearch && !!query && !!debouncedQuery,
+  );
+  const q = supportsSearch && query ? searchResults : listing;
+  const searchPending = supportsSearch && query !== debouncedQuery;
+  const loading = q.isLoading || searchPending;
+  const serverCrumbs = listing.data?.breadcrumbs;
+  const rootCrumb = serverCrumbs?.[0] ?? { id: "", name: t("browse.root") };
+  const crumbs: Breadcrumb[] = trail.length ? [rootCrumb, ...trail] : serverCrumbs?.length ? serverCrumbs : [rootCrumb];
+  const searchTerm = query.toLowerCase();
+  const matchingItems = q.data?.items.filter((entry) => supportsSearch || !searchTerm ||
+    [entry.name, entry.path, entry.id].some((label) => label.toLowerCase().includes(searchTerm))) ?? [];
+
+  function changeSearch(text: string) {
+    setSearch(text);
+    setSelected(null);
+  }
 
   function enter(item: BrowseItem) {
-    setTrail((tr) => [...tr, { id: item.id, name: item.name }]);
+    setTrail([...crumbs.slice(1), { id: item.id, name: item.name }]);
     setParentId(item.id);
     setSelected(null);
+    setSearch("");
   }
 
   function goTo(crumb: Breadcrumb, index: number) {
     setParentId(crumb.id);
-    // keep local trail in sync when server breadcrumbs are not provided
-    setTrail((tr) => (crumb.id === "" ? [] : tr.slice(0, Math.max(0, index))));
+    setTrail(crumbs.slice(1, index + 1));
     setSelected(null);
+    setSearch("");
   }
 
   function confirm() {
@@ -116,7 +141,7 @@ export function BrowseDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[85svh] flex-col gap-3 sm:max-w-xl">
+      <DialogContent className="flex max-h-[85svh] flex-col gap-3 overflow-hidden sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>{title ?? t("browse.title")}</DialogTitle>
           <DialogDescription>{t("browse.description")}</DialogDescription>
@@ -148,16 +173,47 @@ export function BrowseDialog({
             type="button"
             variant="ghost"
             size="icon-sm"
-            onClick={() => q.refetch()}
+            onClick={() => {
+              setSelected(null);
+              void q.refetch();
+            }}
             aria-label={t("common.refresh")}
-            disabled={q.isFetching}
+            disabled={q.isFetching || searchPending}
           >
             <RefreshCw className={cn(q.isFetching && "animate-spin")} />
           </Button>
         </div>
 
-        <div className="min-h-[16rem] flex-1 overflow-y-auto rounded-md border">
-          {q.isLoading ? (
+        <div className="space-y-1.5">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              type="text"
+              value={search}
+              onChange={(event) => changeSearch(event.target.value)}
+              placeholder={t(supportsSearch ? "browse.searchSources" : "browse.searchList")}
+              aria-label={t(supportsSearch ? "browse.searchSources" : "browse.searchList")}
+              spellCheck={false}
+              className="px-9"
+            />
+            {search && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                className="absolute right-1 top-1/2 -translate-y-1/2"
+                onClick={() => changeSearch("")}
+                aria-label={t("browse.clearSearch")}
+              >
+                <X />
+              </Button>
+            )}
+          </div>
+          <p className="text-xs text-muted-foreground">{t(supportsSearch ? "browse.searchSourcesHelp" : "browse.searchListHelp")}</p>
+        </div>
+
+        <div className="h-80 min-h-0 overflow-y-auto rounded-md border" aria-busy={loading || q.isFetching}>
+          {loading ? (
             <div className="space-y-1 p-2">
               {Array.from({ length: 6 }).map((_, i) => (
                 <Skeleton key={i} className="h-9 w-full" />
@@ -169,11 +225,11 @@ export function BrowseDialog({
                 <AlertDescription>{errorMessage(q.error)}</AlertDescription>
               </Alert>
             </div>
-          ) : !q.data?.items.length ? (
-            <EmptyState icon={Folder} title={t("browse.empty")} className="m-3 border-none" compact />
+          ) : !matchingItems.length ? (
+            <EmptyState icon={query ? Search : Folder} title={t(query ? "browse.noResults" : "browse.empty")} className="m-3 border-none" compact />
           ) : (
             <ul className="divide-y">
-              {q.data.items.map((item) => {
+              {matchingItems.map((item) => {
                 const Icon = KIND_ICONS[item.kind] ?? FileText;
                 const isSel = selected?.id === item.id;
                 return (
@@ -193,6 +249,7 @@ export function BrowseDialog({
                         )}
                         onClick={() => item.selectable && setSelected(item)}
                         onDoubleClick={() => item.hasChildren && enter(item)}
+                        aria-pressed={item.selectable ? isSel : undefined}
                         disabled={!item.selectable && !item.hasChildren}
                       >
                         <span
@@ -248,7 +305,7 @@ export function BrowseDialog({
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               {t("common.cancel")}
             </Button>
-            <Button type="button" onClick={confirm} disabled={!selected}>
+            <Button type="button" onClick={confirm} disabled={!selected || loading}>
               {q.isFetching && !q.isLoading ? <Loader2 className="animate-spin" /> : null}
               {t("browse.select")}
             </Button>

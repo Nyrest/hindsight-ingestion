@@ -125,6 +125,12 @@
     }
   },
   "browse": {
+    "searchSources": "Szukaj źródeł danych…",
+    "searchList": "Szukaj na tej liście…",
+    "searchSourcesHelp": "Szukaj po tytule źródeł danych udostępnionych temu połączeniu.",
+    "searchListHelp": "Filtruj bieżącą listę według nazwy, ścieżki lub identyfikatora.",
+    "clearSearch": "Wyczyść wyszukiwanie",
+    "noResults": "Brak pasujących elementów",
     "button": "Przeglądaj…",
     "title": "Przeglądaj",
     "titleFor": "Wybierz {{label}}",

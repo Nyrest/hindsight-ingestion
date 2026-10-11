@@ -63,12 +63,16 @@
           },
           "parentId": {
             "type": "string"
+          },
+          "supportsSearch": {
+            "type": "boolean"
           }
         },
         "required": [
           "items",
           "parentId",
-          "breadcrumbs"
+          "breadcrumbs",
+          "supportsSearch"
         ],
         "type": "object"
       },
@@ -2067,6 +2071,9 @@
                     "type": "string"
                   },
                   "parentId": {
+                    "type": "string"
+                  },
+                  "query": {
                     "type": "string"
                   }
                 },

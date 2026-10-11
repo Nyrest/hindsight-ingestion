@@ -157,6 +157,12 @@
     }
   },
   "browse": {
+    "searchSources": "Search data sources…",
+    "searchList": "Search this list…",
+    "searchSourcesHelp": "Search titles of data sources shared with this connection.",
+    "searchListHelp": "Filter the current list by name, path or ID.",
+    "clearSearch": "Clear search",
+    "noResults": "No matching items",
     "button": "Browse…",
     "title": "Browse",
     "titleFor": "Select {{label}}",

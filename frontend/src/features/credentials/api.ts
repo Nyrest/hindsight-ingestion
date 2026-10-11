@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { qk } from "@/lib/query";
-import type { CredentialCreate, CredentialPatch } from "@/lib/types";
+import type { BrowseRequest, CredentialCreate, CredentialPatch } from "@/lib/types";
 
 export function useCredentials() {
   return useQuery({ queryKey: qk.credentials, queryFn: api.listCredentials });
@@ -77,14 +77,12 @@ export function useStrategies(credentialId: string, bankId: string) {
 
 export function useBrowse(
   credentialId: string,
-  parentId: string,
-  kind: string,
+  request: BrowseRequest,
   enabled = true,
-  config?: Record<string, unknown>,
 ) {
   return useQuery({
-    queryKey: [...qk.browse(credentialId, parentId, kind), config ?? null],
-    queryFn: () => api.browse(credentialId, { parentId, kind, config }),
+    queryKey: qk.browse(credentialId, request),
+    queryFn: () => api.browse(credentialId, request),
     enabled: enabled && !!credentialId,
     staleTime: 30_000,
     retry: false,

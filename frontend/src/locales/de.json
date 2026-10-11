@@ -125,6 +125,12 @@
     }
   },
   "browse": {
+    "searchSources": "Datenquellen suchen…",
+    "searchList": "Diese Liste durchsuchen…",
+    "searchSourcesHelp": "Titel der Datenquellen suchen, die mit dieser Verbindung geteilt wurden.",
+    "searchListHelp": "Aktuelle Liste nach Name, Pfad oder ID filtern.",
+    "clearSearch": "Suche löschen",
+    "noResults": "Keine passenden Einträge",
     "button": "Durchsuchen…",
     "title": "Durchsuchen",
     "titleFor": "Wählen Sie {{label}}",
