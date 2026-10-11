@@ -27,16 +27,16 @@ Sync **Notion, SiYuan, S3, WebDAV, Google Drive, OneDrive and local files** into
 
 ## 🔌 Supported Sources
 
-| Source | Supported | Text | Multimodal | Incremental Sync |
-| :--- | :---: | :---: | :---: | :---: |
-| **Notion** | ✅ | ✅ | ✅ Images | ✅ |
-| **SiYuan** | ✅ | ✅ | ✅ Images | ✅ |
-| **S3 / S3-compatible storage** | ✅ | ✅ | ✅ | ✅ |
-| **WebDAV** | ✅ | ✅ | ✅ | ✅ |
-| **Google Drive** | ✅ | ✅ | ✅ | ✅ |
-| **OneDrive** | ✅ | ✅ | ✅ | ✅ |
-| **File System** | ✅ | ✅ | ✅ | ✅ |
-| **Cloudflare Browser Run** | ✅ | ✅ | — | ✅ |
+| Source | Text | Multimodal | Incremental Sync | Use Cases |
+| :--- | :---: | :---: | :---: | :--- |
+| **Notion** | ✅ | ✅ | ✅ | Personal & team knowledge bases, PRDs, engineering wikis, meeting notes |
+| **SiYuan** | ✅ | ✅ | ✅ | Personal notes, academic research, linked Zettelkasten, offline docs |
+| **S3 / S3-compatible storage** | ✅ | ✅ | ✅ | Enterprise document archives, data lakes, multimodal buckets, pipeline artifacts |
+| **WebDAV** | ✅ | ✅ | ✅ | NAS storage (Synology/QNAP/Nextcloud), Obsidian & Zotero vaults |
+| **Google Drive** | ✅ | ✅ | ✅ | Google Workspace collaboration (Docs, Sheets, Slides), shared team drives |
+| **OneDrive** | ✅ | ✅ | ✅ | Microsoft 365 workspaces, Office files (Word, Excel, PPT), SharePoint folders |
+| **File System** | ✅ | ✅ | ✅ | Local source code repos, developer specs, local Obsidian/Logseq vaults |
+| **Cloudflare Browser Run** | ✅ | — | ✅ | Online documentation, API references, blogs, public help centers & FAQs |
 
 ### Local files in Docker
 
