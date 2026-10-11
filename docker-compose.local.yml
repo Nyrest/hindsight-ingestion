@@ -1,0 +1,32 @@
+# Local source build; configure .env as described in .env.example first.
+#   docker compose -f docker-compose.local.yml up -d
+# Re-run the command after source changes to rebuild and restart.
+name: hindsight-ingestion-local
+
+services:
+  hindsight-ingestion:
+    image: hindsight-ingestion:local
+    pull_policy: build
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: "no"
+    environment:
+      DB_TYPE: sqlite
+      DB_DSN: /data/hindsight-ingestion.db
+      BASIC_AUTH_USERNAME: ${BASIC_AUTH_USERNAME:-admin}
+      BASIC_AUTH_PASSWORD: ${BASIC_AUTH_PASSWORD:-}
+      DISABLE_AUTH: ${DISABLE_AUTH:-false}
+      CREDENTIAL_ENCRYPTION_KEY: ${CREDENTIAL_ENCRYPTION_KEY:?set CREDENTIAL_ENCRYPTION_KEY in .env}
+      PUBLIC_URL: ${PUBLIC_URL:-}
+      MAX_CONCURRENT_TASKS: ${MAX_CONCURRENT_TASKS:-4}
+      LOG_LEVEL: ${LOG_LEVEL:-debug}
+      TZ: ${TZ:-UTC}
+    volumes:
+      - hindsight-ingestion-data:/data
+    deploy:
+      replicas: 1
+    stop_grace_period: 40s
+
+volumes:
+  hindsight-ingestion-data:
