@@ -6,7 +6,7 @@
 Sync **Notion, SiYuan, S3, WebDAV, Google Drive, OneDrive and local files** into [Hindsight](https://github.com/vectorize-io/hindsight) memory banks. Self-host with Docker and manage everything from the WebUI.
 
 <p align="center">
-  <a href="#-features">Features</a> · <a href="#-quick-start">Quick start</a> · <a href="#-supported-sources">Sources</a> · <a href="#-usage">Usage</a> · <a href="#-configuration">Configuration</a> · <a href="#-development">Development</a>
+  <a href="#-features">Features</a> · <a href="#-supported-sources">Sources</a> · <a href="#-quick-start">Quick start</a> · <a href="#-usage">Usage</a> · <a href="#-configuration">Configuration</a> · <a href="#-development">Development</a>
 </p>
 
 <p align="center">
@@ -24,6 +24,29 @@ Sync **Notion, SiYuan, S3, WebDAV, Google Drive, OneDrive and local files** into
 - 🛡️ **Built to recover** — Persisted checkpoints and operation retries recover from failures and restarts. Overlap protection keeps each task from running twice at once.
 - 🧪 **Preview and trace every change** — Dry-run shows planned changes before ingestion. Follow real runs through sync counters, Hindsight operations and detailed logs.
 - 🔐 **Self-hosted, secrets encrypted** — Deploy with Docker, encrypt credentials with AES-256-GCM, and choose SQLite, PostgreSQL or MySQL for persistent storage.
+
+## 🔌 Supported Sources
+
+| Source | Supported | Text | Multimodal | Incremental Sync |
+| :--- | :---: | :---: | :---: | :---: |
+| **Notion** | ✅ | ✅ | ✅ Images | ✅ |
+| **SiYuan** | ✅ | ✅ | ✅ Images | ✅ |
+| **S3 / S3-compatible storage** | ✅ | ✅ | ✅ | ✅ |
+| **WebDAV** | ✅ | ✅ | ✅ | ✅ |
+| **Google Drive** | ✅ | ✅ | ✅ | ✅ |
+| **OneDrive** | ✅ | ✅ | ✅ | ✅ |
+| **File System** | ✅ | ✅ | ✅ | ✅ |
+| **Cloudflare Browser Run** | ✅ | ✅ | — | ✅ |
+
+### Local files in Docker
+
+Add a read-only directory mount to the service in [docker-compose.yml](docker-compose.yml):
+
+```yaml
+volumes:
+  - hindsight-ingestion-data:/data
+  - /path/on/host:/sources/documents:ro
+```
 
 ## 🚀 Quick start
 
@@ -63,29 +86,6 @@ Open [http://localhost:8080](http://localhost:8080) and sign in with `admin` and
 2. In **Tasks**, choose the source, content to sync and destination bank. Leave the retain strategy empty to use the bank's default.
 3. Choose a schedule and timezone; the default is **Every hour**. Save the task disabled if you want to preview first.
 4. Use **Dry-run** to preview, then **Run now** to sync. Check **Runs** for results and enable the task for scheduled syncs.
-
-## 🔌 Supported Sources
-
-| Source | Supported | Text | Multimodal | Incremental Sync |
-| :--- | :---: | :---: | :---: | :---: |
-| **Notion** | ✅ | ✅ | ✅ Images | ✅ |
-| **SiYuan** | ✅ | ✅ | ✅ Images | ✅ |
-| **S3 / S3-compatible storage** | ✅ | ✅ | ✅ | ✅ |
-| **WebDAV** | ✅ | ✅ | ✅ | ✅ |
-| **Google Drive** | ✅ | ✅ | ✅ | ✅ |
-| **OneDrive** | ✅ | ✅ | ✅ | ✅ |
-| **File System** | ✅ | ✅ | ✅ | ✅ |
-| **Cloudflare Browser Run** | ✅ | ✅ | — | ✅ |
-
-### Local files in Docker
-
-Add a read-only directory mount to the service in [docker-compose.yml](docker-compose.yml):
-
-```yaml
-volumes:
-  - hindsight-ingestion-data:/data
-  - /path/on/host:/sources/documents:ro
-```
 
 ## 📖 Usage
 
