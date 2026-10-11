@@ -133,13 +133,8 @@ func (s *Server) pauseForCleanup(ctx context.Context, task *models.Task) error {
 }
 
 func (s *Server) recordDocumentDeleted(ctx context.Context, taskID, documentID string) error {
-	return s.DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		if err := tx.Model(&models.TaskItem{}).Where("task_id = ? AND destination_document_id = ?", taskID, documentID).
-			Updates(map[string]any{"destination_present": false, "synced_fingerprint": "", "last_error": ""}).Error; err != nil {
-			return err
-		}
-		return tx.Model(&models.TaskItem{}).Where("task_id = ? AND previous_document_id = ?", taskID, documentID).Update("previous_document_id", "").Error
-	})
+	return s.DB.WithContext(ctx).Model(&models.TaskItem{}).Where("task_id = ? AND destination_document_id = ?", taskID, documentID).
+		Updates(map[string]any{"destination_present": false, "synced_fingerprint": "", "last_error": ""}).Error
 }
 
 func (s *Server) documentCleanupError(w http.ResponseWriter, deleted int, err error) {

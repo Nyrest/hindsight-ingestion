@@ -5,77 +5,22 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/google/uuid"
-
-	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 )
 
 // operationNamespace roots retain idempotency keys.
 var operationNamespace = uuid.MustParse("6f1c9a52-4b7e-4f0e-9a43-1b2d7c3e5f80")
 
-// CanonicalIdentity returns the source-level identity used as Hindsight's
-// document_id. It deliberately excludes the ingestion task ID.
-func CanonicalIdentity(sourceType string, cred connectors.Credential, config map[string]any, item connectors.SourceItem) string {
-	switch sourceType {
-	case connectors.SourceCloudflareCrawl:
-		return "cloudflare_crawl:" + item.ID
-	case "notion":
-		return "notion_page:" + item.ID
-	case "siyuan":
-		instanceID := cred.String("instanceId")
-		if instanceID == "" {
-			instanceID = cred.String("baseUrl")
-		}
-		return "siyuan:" + identityURL(instanceID) + ":" + item.ID
-	case "s3":
-		endpoint := identityURL(cred.String("endpoint"))
-		if endpoint == "" {
-			endpoint = "s3.amazonaws.com"
-		}
-		return "s3:" + endpoint + ":" + connectors.AsString(config["bucket"]) + ":" + item.Path
-	case "webdav":
-		return "webdav:" + identityURL(cred.String("baseUrl")) + ":" + item.Path
-	case "google_drive":
-		driveID := item.Metadata["google_drive_id"]
-		if driveID == "" {
-			driveID = connectors.AsString(config["driveId"])
-		}
-		return "google_drive:" + driveID + ":" + item.ID
-	case "onedrive":
-		driveID := item.Metadata["onedrive_drive_id"]
-		itemID := item.Metadata["onedrive_item_id"]
-		if driveID == "" || itemID == "" {
-			parts := strings.SplitN(item.ID, "!", 2)
-			if len(parts) == 2 {
-				driveID, itemID = parts[0], parts[1]
-			}
-		}
-		return "onedrive:" + driveID + ":" + itemID
-	case "filesystem":
-		fullPath := filepath.Join(cred.String("rootPath"), filepath.FromSlash(item.ID))
-		if abs, err := filepath.Abs(fullPath); err == nil {
-			fullPath = abs
-		}
-		return "filesystem:" + filepath.Clean(fullPath)
-	default:
-		// Preserve a deterministic identity for third-party connectors.
-		return item.ID
-	}
-}
-
-func identityURL(value string) string {
-	value = strings.TrimSpace(value)
-	for _, scheme := range []string{"https://", "http://"} {
-		if strings.HasPrefix(strings.ToLower(value), scheme) {
-			value = value[len(scheme):]
-			break
-		}
-	}
-	return strings.TrimRight(value, "/")
+// DocumentID isolates source items by task while remaining stable across runs.
+func DocumentID(sourceType, taskID, itemID string) string {
+	// The byte length separates the IDs without escaping or normalizing them.
+	identity := strconv.Itoa(len(taskID)) + ":" + taskID + itemID
+	sum := sha256.Sum256([]byte(identity))
+	return sourceType + ":" + hex.EncodeToString(sum[:])
 }
 
 // OperationID derives an idempotency key for a retain submission.

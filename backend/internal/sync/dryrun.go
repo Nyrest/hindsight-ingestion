@@ -164,16 +164,17 @@ func (r *runner) previewItem(item connectors.SourceItem) DryRunItem {
 		return preview
 	}
 	tags, md := r.documentTagsAndMetadata(item)
+	documentID := DocumentID(r.task.SourceType, r.task.ID, item.ID)
 	if r.sharedDocs != nil {
-		fingerprint, err := r.sharedDocs.Fingerprint(r.ctx, CanonicalIdentity(r.task.SourceType, r.cred, r.srcCfg, item))
+		fingerprint, err := r.sharedDocs.Fingerprint(r.ctx, documentID)
 		if err != nil {
 			preview.Action, preview.Reason = "fail", err.Error()
 			return preview
 		}
 		row.SyncedFingerprint = fingerprint
 	}
-	if row.DestinationPresent && row.PreviousDocumentID == "" &&
-		row.DestinationDocumentID == CanonicalIdentity(r.task.SourceType, r.cred, r.srcCfg, item) &&
+	if row.DestinationPresent &&
+		row.DestinationDocumentID == documentID &&
 		row.SyncedFingerprint == r.itemFingerprint(item, tags, md) && !(r.includesImages() && row.NeedsImageRetry) {
 		preview.Action = "unchanged"
 		return preview

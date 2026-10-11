@@ -369,6 +369,10 @@ func expectStatus(t *testing.T, r models.TaskRun, status string) {
 	}
 }
 
+func (h *harness) documentID(itemID string) string {
+	return sync.DocumentID(h.task.SourceType, h.task.ID, itemID)
+}
+
 // --- tests ----------------------------------------------------------------
 
 func TestIncrementalLifecycle(t *testing.T) {
@@ -380,7 +384,7 @@ func TestIncrementalLifecycle(t *testing.T) {
 	if r.SyncMode != models.SyncFull || r.CreatedCount != 2 {
 		t.Fatalf("baseline: mode=%s created=%d", r.SyncMode, r.CreatedCount)
 	}
-	docA := "a"
+	docA := h.documentID("a")
 	got := h.dest.docs[docA]
 	if got.Content != "alpha" {
 		t.Fatalf("doc a = %+v", got)
@@ -490,7 +494,7 @@ func TestCursorNotCommittedOnFailure(t *testing.T) {
 	h.dest.failOps = false
 	r := h.run("")
 	expectStatus(t, r, models.RunSucceeded)
-	if h.dest.docs["a"].Content != "a2" {
+	if h.dest.docs[h.documentID("a")].Content != "a2" {
 		t.Fatal("retry did not ingest the change")
 	}
 }
@@ -508,7 +512,7 @@ func TestPolicyChangeReRetains(t *testing.T) {
 	if r.UpdatedCount != 2 {
 		t.Fatalf("policy change updated %d, want 2", r.UpdatedCount)
 	}
-	if !contains(h.dest.docs["a"].Tags, "team:b") {
+	if !contains(h.dest.docs[h.documentID("a")].Tags, "team:b") {
 		t.Fatal("new tag not applied")
 	}
 	var task models.Task
@@ -529,7 +533,7 @@ func TestFilterExitDeletes(t *testing.T) {
 	})
 	r := h.run("")
 	expectStatus(t, r, models.RunSucceeded)
-	if r.DeletedCount != 1 || !contains(h.dest.deleted, "drop-1") {
+	if r.DeletedCount != 1 || !contains(h.dest.deleted, h.documentID("drop-1")) {
 		t.Fatalf("filter exit: deleted=%d %v", r.DeletedCount, h.dest.deleted)
 	}
 }
@@ -546,7 +550,7 @@ func TestFilePolicyAndStreaming(t *testing.T) {
 	if r.CreatedCount != 1 || r.SkippedCount != 2 {
 		t.Fatalf("created=%d skipped=%d", r.CreatedCount, r.SkippedCount)
 	}
-	if h.dest.files["f1"] != "hello pdf" {
+	if h.dest.files[h.documentID("f1")] != "hello pdf" {
 		t.Fatal("file content not streamed")
 	}
 
@@ -651,7 +655,7 @@ func TestDuplicateDeletionAfterUpsert(t *testing.T) {
 			h.src.deleteAfterScan = "doc-00"
 			r := h.run("")
 			expectStatus(t, r, models.RunSucceeded)
-			id := "doc-00"
+			id := h.documentID("doc-00")
 			if _, present := h.dest.docs[id]; present || r.DeletedCount != 1 {
 				t.Fatalf("duplicate deletion left document present=%v, deleted=%d", present, r.DeletedCount)
 			}

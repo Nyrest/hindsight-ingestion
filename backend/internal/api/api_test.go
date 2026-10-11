@@ -271,7 +271,7 @@ func TestEndToEnd(t *testing.T) {
 	if run["status"] != "succeeded" || run["createdCount"].(float64) != 1 {
 		t.Fatalf("run: %v", run)
 	}
-	docID := "filesystem:" + filepath.Join(root, "doc1.txt")
+	docID := sync.DocumentID("filesystem", taskID, "doc1.txt")
 	e.hs.mu.Lock()
 	doc := e.hs.docs[docID]
 	e.hs.mu.Unlock()

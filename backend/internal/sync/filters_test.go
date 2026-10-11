@@ -40,7 +40,7 @@ func TestNestedFilterPreviewAndReconciliation(t *testing.T) {
 	}
 	run := h.run("")
 	expectStatus(t, run, models.RunSucceeded)
-	if run.DeletedCount != 1 || len(h.dest.docs) != 2 || h.dest.docs["c"].Content != "" {
+	if run.DeletedCount != 1 || len(h.dest.docs) != 2 || h.dest.docs[h.documentID("c")].Content != "" {
 		t.Fatalf("reconcile: %+v docs=%v", run, h.dest.docs)
 	}
 	filter.Expression.Combinator = "or"

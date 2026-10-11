@@ -14,6 +14,7 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/credentials"
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
 	"github.com/Nyrest/hindsight-ingestion/internal/shared"
+	ingestion "github.com/Nyrest/hindsight-ingestion/internal/sync"
 )
 
 func cloudAPITasks(t *testing.T, e *env) (string, string) {
@@ -56,30 +57,30 @@ func seedCloudReferences(t *testing.T, e *env, a, b string) string {
 	if err != nil {
 		t.Fatal(err)
 	}
-	id := "cloudflare_crawl:" + strings.Repeat("f", 64)
+	itemID := strings.Repeat("f", 64)
 	for _, taskID := range []string{a, b} {
-		if err := e.db.Create(&models.TaskItem{TaskID: taskID, SourceItemID: strings.Repeat("f", 64), SharedTargetKey: key, DestinationDocumentID: id, DestinationPresent: true, SyncedFingerprint: "confirmed"}).Error; err != nil {
+		id := ingestion.DocumentID(connectors.SourceCloudflareCrawl, taskID, itemID)
+		if err := e.db.Create(&models.TaskItem{TaskID: taskID, SourceItemID: itemID, SharedTargetKey: key, DestinationDocumentID: id, DestinationPresent: true, SyncedFingerprint: "confirmed"}).Error; err != nil {
 			t.Fatal(err)
 		}
+		if err := e.db.Create(&models.SharedDocument{TargetKey: key, DocumentID: id, SyncedFingerprint: "confirmed"}).Error; err != nil {
+			t.Fatal(err)
+		}
+		e.hs.docs[id] = map[string]any{"document_id": id, "tags": []string{"ingestion_task:" + taskID}}
 	}
-	if err := e.db.Create(&models.SharedDocument{TargetKey: key, DocumentID: id, SyncedFingerprint: "confirmed"}).Error; err != nil {
-		t.Fatal(err)
-	}
-	// The remote tags only name the last writer; cleanup must use local references.
-	e.hs.docs[id] = map[string]any{"document_id": id, "tags": []string{"ingestion-task:" + b}}
-	return id
+	return ingestion.DocumentID(connectors.SourceCloudflareCrawl, a, itemID)
 }
 
-func TestCloudflareCleanupAndTaskDeletionUseReferences(t *testing.T) {
+func TestCloudflareCleanupAndTaskDeletionAreIsolated(t *testing.T) {
 	e := newEnv(t)
 	a, b := cloudAPITasks(t, e)
 	id := seedCloudReferences(t, e, a, b)
 	var response map[string]any
-	if code := e.do("DELETE", "/api/tasks/"+a+"/documents", nil, &response); code != 200 || response["deletedCount"] != float64(0) {
+	if code := e.do("DELETE", "/api/tasks/"+a+"/documents", nil, &response); code != 200 || response["deletedCount"] != float64(1) {
 		t.Fatal(code, response)
 	}
-	if len(e.hs.docs) != 1 {
-		t.Fatal("shared document deleted while referenced")
+	if len(e.hs.docs) != 1 || e.hs.docs[id] != nil {
+		t.Fatal("cleanup did not delete only the current task's document")
 	}
 	var row models.TaskItem
 	e.db.Where("task_id = ?", a).First(&row)
@@ -125,7 +126,7 @@ func TestCloudflareCleanupProtectsAnotherTasksPendingOperation(t *testing.T) {
 	}
 	var row models.TaskItem
 	e.db.Where("task_id = ?", a).First(&row)
-	if !row.DestinationPresent || len(e.hs.docs) != 1 {
+	if !row.DestinationPresent || len(e.hs.docs) != 2 {
 		t.Fatal("pending write lost references/documents")
 	}
 }

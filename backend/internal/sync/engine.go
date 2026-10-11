@@ -200,13 +200,6 @@ func (r *runner) execute(opts RunOptions) error {
 	if err := r.loadLedger(); err != nil {
 		return err
 	}
-	identityMigration := false
-	for _, row := range r.ledger {
-		if strings.HasPrefix(row.DestinationDocumentID, "hi_") || row.PreviousDocumentID != "" {
-			identityMigration = true
-			break
-		}
-	}
 
 	interval := time.Duration(cfg.FullReconcileIntervalHours) * time.Hour
 	hasCursor := r.state.CommittedCursorJSON != ""
@@ -220,9 +213,6 @@ func (r *runner) execute(opts RunOptions) error {
 	case r.task.ReconcileRequired:
 		r.full = true
 		r.logf("info", "Configuration changed; performing full reconciliation")
-	case identityMigration:
-		r.full = true
-		r.logf("info", "Document identity migration requires full reconciliation")
 	case !hasCursor:
 		r.full = true
 		r.logf("info", "No committed cursor; performing baseline full scan")
@@ -388,13 +378,7 @@ func (r *runner) observe(item connectors.SourceItem) error {
 		row.LastSeenGeneration = r.gen
 		return r.fail(row, item, errors.New(item.ContentError))
 	}
-	previousDocumentID := row.DestinationDocumentID
-	canonicalDocumentID := CanonicalIdentity(r.task.SourceType, r.cred, r.srcCfg, item)
-	if !item.Deleted && (previousDocumentID != canonicalDocumentID || row.PreviousDocumentID != "") {
-		// A legacy task-scoped ID (or changed canonical identity) must be
-		// rewritten even when source content and policy are unchanged.
-		row.SyncedFingerprint = ""
-	}
+	row.DestinationDocumentID = DocumentID(r.task.SourceType, r.task.ID, item.ID)
 
 	if item.Deleted {
 		if !ok {
@@ -436,7 +420,7 @@ func (r *runner) observe(item connectors.SourceItem) error {
 	row.TargetFingerprint = target
 	row.SourceRevision = item.Revision
 	if r.sharedDocs != nil {
-		actual, err := r.sharedDocs.Fingerprint(r.ctx, canonicalDocumentID)
+		actual, err := r.sharedDocs.Fingerprint(r.ctx, row.DestinationDocumentID)
 		if err != nil {
 			return err
 		}
@@ -471,10 +455,6 @@ func (r *runner) observe(item connectors.SourceItem) error {
 	}
 	row.NeedsImageRetry = r.includesImages() && len(content.Warnings) > 0
 	if content.Body != nil {
-		if err := r.prepareDocumentID(&row, canonicalDocumentID); err != nil {
-			_ = content.Body.Close()
-			return err
-		}
 		return r.retainFile(item, row, content, tags, md)
 	}
 	if strings.TrimSpace(content.Text) == "" && len(content.Blocks) == 0 {
@@ -486,9 +466,6 @@ func (r *runner) observe(item connectors.SourceItem) error {
 			return nil
 		}
 		return r.queueSeen(row)
-	}
-	if err := r.prepareDocumentID(&row, canonicalDocumentID); err != nil {
-		return err
 	}
 	if len(content.Blocks) > 0 {
 		if err := r.flushText(); err != nil {
@@ -502,26 +479,6 @@ func (r *runner) observe(item connectors.SourceItem) error {
 	if len(r.textBuf) >= RetainBatchSize || r.textSz >= RetainBatchMaxBytes {
 		return r.flushText()
 	}
-	return nil
-}
-
-// Persist both identities before submitting a replacement so interruptions and
-// failed writes leave enough information to retry or delete both documents.
-func (r *runner) prepareDocumentID(row *models.TaskItem, documentID string) error {
-	if row.DestinationDocumentID == documentID {
-		return nil
-	}
-	if row.DestinationPresent && row.DestinationDocumentID != "" {
-		if row.PreviousDocumentID != "" && row.PreviousDocumentID != row.DestinationDocumentID {
-			if err := r.dest.DeleteDocument(r.ctx, r.task.DestinationBankID, row.PreviousDocumentID); err != nil {
-				return err
-			}
-		}
-		row.PreviousDocumentID = row.DestinationDocumentID
-		row.DestinationDocumentID = documentID
-		return r.saveRow(*row)
-	}
-	row.DestinationDocumentID = documentID
 	return nil
 }
 
@@ -793,12 +750,6 @@ func (r *runner) awaitPending() error {
 			row.DestinationPresent = true
 			r.logf("error", "Hindsight failed to ingest %s: %s", orEmpty(row.SourcePath, row.SourceName), failure)
 		} else {
-			if row.PreviousDocumentID != "" && row.PreviousDocumentID != row.DestinationDocumentID {
-				if err := r.dest.DeleteDocument(r.ctx, r.task.DestinationBankID, row.PreviousDocumentID); err != nil {
-					return fmt.Errorf("delete previous document %s from Hindsight: %w", row.PreviousDocumentID, err)
-				}
-			}
-			row.PreviousDocumentID = ""
 			if row.DestinationPresent {
 				r.run.UpdatedCount++
 			} else {
@@ -866,12 +817,6 @@ func (r *runner) reconcileDeletions(complete bool) error {
 				}
 			}
 		}
-		if row.PreviousDocumentID != "" && row.PreviousDocumentID != row.DestinationDocumentID {
-			if err := r.dest.DeleteDocument(r.ctx, r.task.DestinationBankID, row.PreviousDocumentID); err != nil {
-				return fmt.Errorf("delete previous document %s from Hindsight: %w", row.PreviousDocumentID, err)
-			}
-		}
-		row.PreviousDocumentID = ""
 		if sharedReference {
 			r.logf("info", "Released shared reference: %s", row.SourcePath)
 		} else {

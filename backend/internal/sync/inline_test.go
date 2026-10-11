@@ -29,8 +29,9 @@ func TestInlineDocumentsAreSubmittedSeparately(t *testing.T) {
 		}
 	}
 	for _, id := range []string{"b", "c"} {
-		item := h.dest.docs[id]
-		if item.UpdateMode != "replace" || item.DocumentID != id || item.Metadata["_ingestion_task_id"] != h.task.ID || !contains(item.Tags, "team:a") {
+		documentID := h.documentID(id)
+		item := h.dest.docs[documentID]
+		if item.UpdateMode != "replace" || item.DocumentID != documentID || item.Metadata["_ingestion_task_id"] != h.task.ID || !contains(item.Tags, "team:a") {
 			t.Fatal("multimodal metadata changed")
 		}
 	}
@@ -72,10 +73,10 @@ func TestInlineIndependentPolicies(t *testing.T) {
 						}
 						h.setDocs(map[string]fakeDoc{"note": {rev: "1", content: "markdown", image: true}, "file.pdf": {rev: "1", content: "file", file: true}})
 						expectStatus(t, h.run(""), models.RunSucceeded)
-						if got := len(h.dest.docs["note"].Blocks) > 0; got != (enabled && images) {
+						if got := len(h.dest.docs[h.documentID("note")].Blocks) > 0; got != (enabled && images) {
 							t.Fatalf("images=%t want=%t", got, enabled && images)
 						}
-						if h.dest.docs["note"].Content != "markdown" || len(h.dest.files) != 1 {
+						if h.dest.docs[h.documentID("note")].Content != "markdown" || len(h.dest.files) != 1 {
 							t.Fatal("plainText flag or inline switch gated note/files")
 						}
 					})
@@ -127,7 +128,7 @@ func TestInlineRetryAndRemoval(t *testing.T) {
 			h.db.Model(&models.TaskState{}).Where("task_id = ?", h.task.ID).Update("last_full_reconcile_at", nil)
 			expectStatus(t, h.run(""), models.RunSucceeded)
 			h.db.First(&row, "task_id = ? AND source_item_id = ?", h.task.ID, "note")
-			if row.NeedsImageRetry || len(h.dest.docs["note"].Blocks) == 0 {
+			if row.NeedsImageRetry || len(h.dest.docs[h.documentID("note")].Blocks) == 0 {
 				t.Fatal("full scan failed to fill missing image")
 			}
 			if disable == "inline" {
@@ -138,7 +139,7 @@ func TestInlineRetryAndRemoval(t *testing.T) {
 			h.engine.Settings.Put(t.Context(), v)
 			expectStatus(t, h.run(models.SyncFull), models.RunSucceeded)
 			h.db.First(&row, "task_id = ? AND source_item_id = ?", h.task.ID, "note")
-			if row.NeedsImageRetry || len(h.dest.docs["note"].Blocks) != 0 || h.dest.docs["note"].Content != "![caption](available)" {
+			if row.NeedsImageRetry || len(h.dest.docs[h.documentID("note")].Blocks) != 0 || h.dest.docs[h.documentID("note")].Content != "![caption](available)" {
 				t.Fatal("disabling images did not replace multimodal document")
 			}
 			h.setDocs(map[string]fakeDoc{})

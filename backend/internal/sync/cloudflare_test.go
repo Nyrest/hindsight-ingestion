@@ -119,7 +119,7 @@ func duplicateCloudTask(t *testing.T, h *harness) models.Task {
 	return task
 }
 
-func TestCloudflareSharedLifecycleAndActualFingerprint(t *testing.T) {
+func TestCloudflareTaskIsolatedLifecycle(t *testing.T) {
 	h, f := cloudHarness(t)
 	a := h.task
 	first := h.run(models.SyncFull)
@@ -144,39 +144,50 @@ func TestCloudflareSharedLifecycleAndActualFingerprint(t *testing.T) {
 	b := duplicateCloudTask(t, h)
 	h.task = b
 	expectStatus(t, h.run(models.SyncFull), models.RunSucceeded)
-	if len(h.dest.docs) != 1 || h.dest.retains != 3 {
-		t.Fatal("shared URL did not use stable document identity")
+	if len(h.dest.docs) != 2 || h.dest.retains != 3 {
+		t.Fatal("tasks sharing a URL did not retain separate documents")
 	}
-	for id, doc := range h.dest.docs {
-		if !strings.HasPrefix(id, "cloudflare_crawl:") || len(id) != len("cloudflare_crawl:")+64 || !strings.Contains(strings.Join(doc.Tags, ","), "team:b") {
-			t.Fatalf("shared identity/policy: %#v", doc)
+	var rowA, rowB models.TaskItem
+	if err := h.db.Where("task_id = ?", a.ID).First(&rowA).Error; err != nil {
+		t.Fatal(err)
+	}
+	if err := h.db.Where("task_id = ?", b.ID).First(&rowB).Error; err != nil {
+		t.Fatal(err)
+	}
+	if rowA.SourceItemID != rowB.SourceItemID || rowA.DestinationDocumentID == rowB.DestinationDocumentID {
+		t.Fatal("same source item was not isolated by task")
+	}
+	for _, row := range []models.TaskItem{rowA, rowB} {
+		id := row.DestinationDocumentID
+		doc := h.dest.docs[id]
+		tag := "team:a"
+		if row.TaskID == b.ID {
+			tag = "team:b"
+		}
+		if id != ingestion.DocumentID(connectors.SourceCloudflareCrawl, row.TaskID, row.SourceItemID) || !contains(doc.Tags, tag) {
+			t.Fatalf("task identity/policy: %#v", doc)
 		}
 	}
 	h.task = a
 	expectStatus(t, h.run(models.SyncFull), models.RunSucceeded)
-	if h.dest.retains != 4 {
-		t.Fatal("task used its stale fingerprint after another task wrote")
-	}
-	for _, doc := range h.dest.docs {
-		if !strings.Contains(strings.Join(doc.Tags, ","), "team:a") {
-			t.Fatal("last confirmed writer policy did not win")
-		}
+	if h.dest.retains != 3 {
+		t.Fatal("another task's write invalidated this task's fingerprint")
 	}
 	f.mu.Lock()
 	f.records, f.total = nil, 0
 	f.mu.Unlock()
 	preview, err := h.engine.DryRun(t.Context(), a.ID)
-	if err != nil || !preview.Complete || preview.ReleasedCount != 1 || preview.DeletedCount != 0 {
-		t.Fatalf("shared preview: %#v %v", preview, err)
+	if err != nil || !preview.Complete || preview.ReleasedCount != 0 || preview.DeletedCount != 1 {
+		t.Fatalf("deletion preview: %#v %v", preview, err)
 	}
 	expectStatus(t, h.run(models.SyncFull), models.RunSucceeded)
-	if len(h.dest.docs) != 1 || len(h.dest.deleted) != 0 {
-		t.Fatal("removing one reference deleted shared document")
+	if len(h.dest.docs) != 1 || len(h.dest.deleted) != 1 || h.dest.deleted[0] != rowA.DestinationDocumentID {
+		t.Fatal("removing one task affected another task document")
 	}
 	h.task = b
 	expectStatus(t, h.run(models.SyncFull), models.RunSucceeded)
-	if len(h.dest.docs) != 0 || len(h.dest.deleted) != 1 {
-		t.Fatal("last reference did not delete document")
+	if len(h.dest.docs) != 0 || len(h.dest.deleted) != 2 {
+		t.Fatal("second task did not delete its own document")
 	}
 	var sharedCount int64
 	h.db.Model(&models.SharedDocument{}).Count(&sharedCount)
@@ -185,7 +196,7 @@ func TestCloudflareSharedLifecycleAndActualFingerprint(t *testing.T) {
 	}
 }
 
-func TestCloudflareFilterExitReleasesOnlyCurrentTaskReference(t *testing.T) {
+func TestCloudflareFilterExitDeletesOnlyCurrentTaskDocument(t *testing.T) {
 	h, _ := cloudHarness(t)
 	a := h.task
 	expectStatus(t, h.run(models.SyncFull), models.RunSucceeded)
@@ -199,12 +210,12 @@ func TestCloudflareFilterExitReleasesOnlyCurrentTaskReference(t *testing.T) {
 	}
 	h.task = a
 	preview, err := h.engine.DryRun(t.Context(), a.ID)
-	if err != nil || preview.ReleasedCount != 1 {
+	if err != nil || preview.DeletedCount != 1 || preview.ReleasedCount != 0 {
 		t.Fatal(preview, err)
 	}
 	expectStatus(t, h.run(models.SyncFull), models.RunSucceeded)
-	if len(h.dest.docs) != 1 || len(h.dest.deleted) != 0 {
-		t.Fatal("filter exit removed a shared document")
+	if len(h.dest.docs) != 1 || len(h.dest.deleted) != 1 {
+		t.Fatal("filter exit did not isolate task documents")
 	}
 }
 
