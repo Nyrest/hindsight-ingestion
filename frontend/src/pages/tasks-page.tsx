@@ -125,6 +125,7 @@ export default function TasksPage() {
   }
 
   function scheduleCell(task: Task) {
+    if (!task.cronExpression.trim()) return <span className="text-xs text-muted-foreground">{t("schedule.manualOnly")}</span>;
     const desc = describeCron(task.cronExpression);
     return (
       <div className="min-w-0">

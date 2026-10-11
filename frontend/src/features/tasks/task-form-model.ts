@@ -34,7 +34,7 @@ export const taskFormSchema = z
     inlineMultimodalMode: z.enum(["global", "override"]),
     inlineMultimodalEnabled: z.boolean(),
     filePolicy: filePolicySchema,
-    cronExpression: z.string().trim().min(1, "validation.required"),
+    cronExpression: z.string().trim(),
   })
   .superRefine((v, ctx) => {
     metadataRowErrors(v.metadataRows).forEach((msg, i) => {
@@ -83,7 +83,7 @@ export function emptyTaskForm(): TaskFormValues {
     inlineMultimodalMode: "global",
     inlineMultimodalEnabled: false,
     filePolicy: { ...DEFAULT_POLICY },
-    cronExpression: "0 * * * *",
+    cronExpression: "",
   };
 }
 

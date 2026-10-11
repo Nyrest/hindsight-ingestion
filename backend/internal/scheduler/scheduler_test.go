@@ -12,7 +12,13 @@ func TestValidateCron(t *testing.T) {
 			t.Errorf("%s: %v %v", expr, next, err)
 		}
 	}
-	for _, expr := range []string{"", "* * * *", "0 0 * * * *", "61 * * * *", "TZ=UTC * * * * *"} {
+	for _, expr := range []string{"", " \t "} {
+		next, err := ValidateCron(expr, "UTC", 3)
+		if err != nil || len(next) != 0 {
+			t.Errorf("%q: manual-only cron returned %v, %v", expr, next, err)
+		}
+	}
+	for _, expr := range []string{"* * * *", "0 0 * * * *", "61 * * * *", "TZ=UTC * * * * *"} {
 		if _, err := ValidateCron(expr, "UTC", 1); err == nil {
 			t.Errorf("%q: expected error", expr)
 		}

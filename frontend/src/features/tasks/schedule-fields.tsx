@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { useValidateCron } from "./api";
 
 const CRON_PRESETS = [
+  { key: "manualOnly", expr: "" },
   { key: "every15m", expr: "*/15 * * * *" },
   { key: "everyHour", expr: "0 * * * *" },
   { key: "every6h", expr: "0 */6 * * *" },
@@ -33,7 +34,7 @@ export function ScheduleFields({
   const validation = useValidateCron(debouncedCron, timezone);
   const description = describeCron(cron);
   const pending = cron.trim() !== debouncedCron || validation.isFetching;
-  const serverError = validation.data && !validation.data.valid ? validation.data.error : null;
+  const serverError = cron.trim() && validation.data && !validation.data.valid ? validation.data.error : null;
   const requestError = validation.isError ? t("schedule.previewUnavailable") : null;
 
   return (
@@ -56,9 +57,8 @@ export function ScheduleFields({
       <FieldRow
         label={t("schedule.cron")}
         htmlFor="task-cron"
-        required
         error={cronError ?? (serverError ? t("schedule.invalid") : undefined)}
-        help={description ?? t("schedule.cronHelp")}
+        help={<>{description ?? t("schedule.cronHelp")}<br />{t("schedule.manualHelp")}</>}
       >
         <Input
           id="task-cron"
@@ -78,7 +78,7 @@ export function ScheduleFields({
           {pending && debouncedCron && <Loader2 className="size-3 animate-spin" />}
         </div>
         {!cron.trim() ? (
-          <p className="text-sm text-muted-foreground">{t("schedule.enterCron")}</p>
+          <p className="text-sm text-muted-foreground">{t("schedule.manualOnly")}</p>
         ) : serverError || requestError ? (
           <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
             <AlertCircle className="size-3.5" />

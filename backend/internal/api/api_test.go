@@ -31,7 +31,6 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/sync"
 
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/filesystem"
-	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/github"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/googledrive"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/notion"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/onedrive"
@@ -113,6 +112,7 @@ type env struct {
 	hs    *fakeHindsight
 	hsrv  *httptest.Server
 	runs  *runner.Manager
+	sched *scheduler.Scheduler
 }
 
 func newEnv(t *testing.T) *env {
@@ -143,7 +143,7 @@ func newEnv(t *testing.T) *env {
 	mux := http.NewServeMux()
 	s.Routes(mux)
 	hs := &fakeHindsight{docs: map[string]map[string]any{}}
-	e := &env{db: db, creds: creds, t: t, srv: httptest.NewServer(mux), hs: hs, hsrv: httptest.NewServer(hs.handler()), runs: runs}
+	e := &env{db: db, creds: creds, t: t, srv: httptest.NewServer(mux), hs: hs, hsrv: httptest.NewServer(hs.handler()), runs: runs, sched: sched}
 	t.Cleanup(e.srv.Close)
 	t.Cleanup(e.hsrv.Close)
 	return e
@@ -426,7 +426,7 @@ func TestFilesystemDryRunAndHourlyDefault(t *testing.T) {
 	if status := e.do("POST", "/api/tasks", map[string]any{"name": "Local task", "enabled": false, "sourceType": "filesystem", "sourceCredentialId": sourceID, "sourceConfig": map[string]any{"folder": "."}, "destinationCredentialId": dest["id"], "destinationBankId": "dest"}, &task); status != 201 {
 		t.Fatalf("task: %d %+v", status, task)
 	}
-	if task["cronExpression"] != "0 * * * *" || task["enabled"] != false || task["nextRunAt"] != nil {
+	if task["cronExpression"] != "" || task["enabled"] != false || task["nextRunAt"] != nil {
 		t.Fatalf("schedule: %+v", task)
 	}
 	id := task["id"].(string)

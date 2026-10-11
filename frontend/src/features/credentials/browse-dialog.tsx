@@ -7,7 +7,6 @@ import {
   FileText,
   Folder,
   Globe,
-  GitFork,
   HardDrive,
   Loader2,
   NotebookPen,
@@ -42,7 +41,6 @@ const KIND_ICONS: Record<string, LucideIcon> = {
   bank: Brain,
   drive: HardDrive,
   site: Globe,
-  repository: GitFork,
 };
 
 const ROOT_BREADCRUMB_KEYS: Record<string, string> = {
@@ -52,7 +50,6 @@ const ROOT_BREADCRUMB_KEYS: Record<string, string> = {
   Buckets: "browse.buckets",
   "Data sources": "browse.dataSources",
   Notebooks: "browse.notebooks",
-  Repositories: "providerCopy.githubRepositoryPlural",
 };
 
 export interface BrowseSelection {

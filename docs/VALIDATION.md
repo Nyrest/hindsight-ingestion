@@ -1,38 +1,5 @@
 # Validation status
 
-## 2026-10-10 GitHub source
-
-- Windows: `go test ./...`, `go vet ./...`, and `go build ./...` passed in
-  `backend`. The suite includes the generated OpenAPI contract consistency check.
-- Frontend: `bun test` passed (6 tests, 24 assertions), and `bun run build` passed.
-  The root TypeScript config now exposes the application alias to Bun's test runner.
-- Connector tests exercise anonymous/PAT access, invalid credentials, `/api/v3`
-  prefixes, pagination, rate-limit hints/cancellation, external redirects and
-  secret headers, pinned blobs, tree truncation, renames/deletions (including a
-  deleted selected folder), old-tree fallback, LFS pointers, and size limits.
-- Root/nested ignore rules, negation, directory exclusion, escaped characters,
-  spaces, and glob patterns were compared with `git check-ignore --no-index`
-  on Windows. This test is also part of the backend suite used by Linux CI;
-  Linux execution was not performed in this session.
-- Discussion fixtures cover PR separation, merged state, ordinary/review/inline
-  comments, pagination, comment edits, stable content hashes, overlap windows,
-  and full reconciliation after removals. Existing sync-engine tests cover
-  destination failures without cursor advancement.
-- API integration verifies encrypted/masked PATs, task defaults, a baseline and
-  unchanged scan, full reconciliation, failure recovery, ref rebaselining, and
-  Dry-run without destination, ledger, cursor, or run-history changes.
-- Real read-only GitHub.com validation against `Nyrest/hindsight-ingestion`
-  enumerated 209 files and one PR, and read README by its fixed blob SHA.
-  To repeat, set `GITHUB_LIVE_TEST_REPOSITORY` and run
-  `go test ./internal/connectors/github -run TestPublicRepositoryReadOnly -count=1 -v`.
-- Browser checks on an isolated temporary SQLite server exercised anonymous
-  credential creation, repository folder browsing, task content switches,
-  structured filters, saving/reloading, and a real public-repository Dry-run
-  (three files to create, one image skipped by policy; no browser errors).
-- Private-repository PAT access and custom Enterprise instances were covered by
-  simulated responses only. No real private/Enterprise access, Linux runtime,
-  Docker build, or deployment was verified for this change.
-
 ## 2026-10-08 identity and source update
 
 - Full backend test suite on Windows with SQLite, including canonical identity

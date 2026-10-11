@@ -19,56 +19,8 @@ can be cancelled using the task cancel endpoint. OAuth refresh may update tokens
 
 The `filesystem` source uses a credential `rootPath` (absolute server/container
 directory), and task config `{ "folder": ".", "recursive": true }`.
-New tasks default to hourly scheduling (`0 * * * *`) if cron is omitted.
-
-The `github` credential accepts `{ "baseUrl": "https://api.github.com", "token": "" }`.
-The token is optional for public repositories and is stored as a write-only encrypted
-secret. Custom API base URLs preserve path prefixes such as `/api/v3`; the connector
-uses REST API version `2022-11-28`. Connection testing checks API/token access;
-repository and content permissions are checked by browsing and scanning.
-
-GitHub task configuration:
-
-```json
-{
-  "repository": "owner/repo",
-  "ref": "",
-  "folder": ".",
-  "includeFiles": true,
-  "includeIssues": true,
-  "includePullRequests": true,
-  "respectGitignore": true
-}
-```
-
-At least one content switch must be enabled. `ref` accepts a branch, tag, or commit;
-an empty value follows the default branch. `ref` and `folder` affect files only.
-`respectGitignore` applies root/nested rules to committed files, including tracked
-files. Rule changes can delete previously ingested files that now fall outside scope.
-The filesystem connector's ignore behavior is unchanged.
-
-GitHub browsing supports `kind: "repository"` and `kind: "folder"`. PAT users can
-browse accessible repositories. Anonymous users enter `repository` in `config` to
-browse that repository. Folder browsing uses the configured repository/ref and
-returns repository-relative folder IDs. GitHub supports structured filters for
-`contentType` (`file`, `issue`, `pull_request`), `name`, `path`, `extension`, `size`,
-`state` (`open`, `closed`, `merged`), `author`, `labels`, and `modifiedAt`.
-Discussion fields are absent on files; files have no per-path modification timestamp.
-Native advanced queries are not supported.
-
-GitHub documents use `github:<escaped-api-identity>:<repository-id>:file:<escaped-ref>:<escaped-path>`,
-`github:<escaped-api-identity>:<repository-id>:issue:<number>`, or
-`github:<escaped-api-identity>:<repository-id>:pull_request:<number>` as their identity.
-The API identity excludes its URL scheme and trailing slash. Ref/path/API segments
-use URL query escaping; repository IDs survive renames. Identities exclude task IDs
-and moving commit SHAs, so overlapping tasks for the same content share a document.
-
-Incremental scans compare fixed file trees and use a five-minute overlap for updated
-Issues and ordinary/review comments. Full scans catch removals and changes without
-an incremental signal, including comment deletion. Cursors advance only after
-successful destination operations. A partial or failed inventory does not infer
-missing-item deletion. GitHub App/OAuth, Wiki, Discussions, Releases, LFS objects,
-submodule traversal, and inline image downloads are not supported.
+New tasks run manually only if cron is omitted or blank. Clearing an existing
+task's `cronExpression` removes its schedule and sets `nextRunAt` to `null`.
 
 All endpoints live under `/api`, return JSON, and are protected by HTTP Basic Auth
 unless `DISABLE_AUTH=true` (except `GET /api/health`, which is always public and
@@ -103,7 +55,7 @@ clears it.
 
 ## Health
 
-`GET /api/health` → `{ "status": "ok", "version": "0.1.0", "authEnabled": true, "dbType": "sqlite" }`
+`GET /api/health` → `{ "status": "ok", "version": "0.2.0", "authEnabled": true, "dbType": "sqlite" }`
 
 ## Settings
 
@@ -360,6 +312,7 @@ Task {
 - `GET /api/tasks/:id/runs?limit=50&offset=0` → `{ "items": Run[], "total": 10 }`
 - `POST /api/tasks/validate-cron` body `{ "cronExpression": "…" }` →
   `{ "valid": true, "error": "", "nextRuns": ["…", "…", "…"] }`
+  A blank expression is valid and returns an empty `nextRuns` array.
 
 ## Runs
 

@@ -1,5 +1,5 @@
 // Package scheduler owns the single application gocron scheduler: one cron
-// job per enabled task and one-time OAuth refresh jobs.
+// job per enabled task with a cron expression and one-time OAuth refresh jobs.
 package scheduler
 
 import (
@@ -65,7 +65,7 @@ func New(db *gorm.DB, runs *runner.Manager, store *settings.Store, log *slog.Log
 // SetRefreshFunc wires the OAuth refresh implementation.
 func (s *Scheduler) SetRefreshFunc(f RefreshFunc) { s.refresh = f }
 
-// LoadTasks registers every enabled task (startup reconstruction).
+// LoadTasks reconstructs scheduled task jobs at startup.
 func (s *Scheduler) LoadTasks(ctx context.Context) error {
 	var tasks []models.Task
 	if err := s.db.WithContext(ctx).Where("enabled = ?", true).Find(&tasks).Error; err != nil {
@@ -95,11 +95,11 @@ func CronSpec(expr, tz string) string {
 }
 
 // ValidateCron validates a 5-field cron expression and timezone and returns
-// the next n run times.
+// the next n run times. An empty expression means manual-only execution.
 func ValidateCron(expr, tz string, n int) ([]time.Time, error) {
 	expr = strings.TrimSpace(expr)
 	if expr == "" {
-		return nil, errors.New("cron expression is required")
+		return []time.Time{}, nil
 	}
 	if strings.HasPrefix(expr, "TZ=") || strings.HasPrefix(expr, "CRON_TZ=") {
 		return nil, errors.New("timezone prefixes are not supported; use the global timezone setting")
@@ -134,7 +134,7 @@ func (s *Scheduler) SyncTask(t models.Task) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	id, exists := s.taskJobs[t.ID]
-	if !t.Enabled {
+	if !t.Enabled || strings.TrimSpace(t.CronExpression) == "" {
 		if exists {
 			delete(s.taskJobs, t.ID)
 			return s.s.RemoveJob(id)

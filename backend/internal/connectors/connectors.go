@@ -233,7 +233,6 @@ const (
 	KindBank       = "bank"
 	KindDrive      = "drive"
 	KindSite       = "site"
-	KindRepository = "repository"
 )
 
 // SourceItem is the normalized description of a source object.
@@ -409,7 +408,7 @@ func CredentialTypes() []CredentialType {
 }
 
 func order(t string) int {
-	for i, v := range []string{"notion", "siyuan", "github", "s3", "webdav", "google_drive", "onedrive", "filesystem"} {
+	for i, v := range []string{"notion", "siyuan", "s3", "webdav", "google_drive", "onedrive", "filesystem"} {
 		if v == t {
 			return i
 		}

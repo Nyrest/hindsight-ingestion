@@ -5,7 +5,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	"net/url"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -22,15 +21,6 @@ var operationNamespace = uuid.MustParse("6f1c9a52-4b7e-4f0e-9a43-1b2d7c3e5f80")
 // document_id. It deliberately excludes the ingestion task ID.
 func CanonicalIdentity(sourceType string, cred connectors.Credential, config map[string]any, item connectors.SourceItem) string {
 	switch sourceType {
-	case "github":
-		base := item.Metadata["github_api_base"]
-		if base == "" {
-			base = cred.String("baseUrl")
-		}
-		if base == "" {
-			base = "https://api.github.com"
-		}
-		return "github:" + url.QueryEscape(identityURL(base)) + ":" + item.ID
 	case "notion":
 		return "notion_page:" + item.ID
 	case "siyuan":

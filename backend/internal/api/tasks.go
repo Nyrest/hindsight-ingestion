@@ -429,7 +429,7 @@ func (s *Server) createTask(w http.ResponseWriter, r *http.Request) {
 	if !decode(w, r, &b) {
 		return
 	}
-	t := models.Task{ID: uuid.NewString(), Enabled: true, ConfigRevision: 1, PolicyRevision: 1, CronExpression: "0 * * * *"}
+	t := models.Task{ID: uuid.NewString(), Enabled: true, ConfigRevision: 1, PolicyRevision: 1}
 	if _, errs := s.applyTask(r.Context(), &t, b, true); len(errs) > 0 {
 		writeValidation(w, "Please fix the highlighted fields", errs)
 		return
