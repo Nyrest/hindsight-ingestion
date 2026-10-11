@@ -333,24 +333,43 @@
           "advancedQuery": {
             "type": "string"
           },
+          "expression": {
+            "$ref": "#/components/schemas/FilterGroup"
+          },
           "mode": {
             "enum": [
               "simple",
               "advanced"
             ],
             "type": "string"
-          },
-          "rules": {
-            "items": {
-              "$ref": "#/components/schemas/FilterRule"
-            },
-            "type": "array"
           }
         },
         "required": [
           "mode",
-          "rules",
+          "expression",
           "advancedQuery"
+        ],
+        "type": "object"
+      },
+      "FilterCapabilities": {
+        "properties": {
+          "combinators": {
+            "items": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "maxDepth": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "combinators",
+          "maxDepth"
         ],
         "type": "object"
       },
@@ -368,10 +387,20 @@
                 "equals",
                 "notEquals",
                 "contains",
+                "notContains",
+                "startsWith",
+                "endsWith",
+                "regex",
+                "exists",
+                "notExists",
+                "containsAny",
+                "containsAll",
                 "in",
                 "notIn",
                 "greaterThan",
-                "lessThan"
+                "lessThan",
+                "geq",
+                "leq"
               ],
               "type": "string"
             },
@@ -402,6 +431,33 @@
         ],
         "type": "object"
       },
+      "FilterGroup": {
+        "properties": {
+          "combinator": {
+            "enum": [
+              "and",
+              "or"
+            ],
+            "type": "string"
+          },
+          "groups": {
+            "items": {
+              "$ref": "#/components/schemas/FilterGroup"
+            },
+            "type": "array"
+          },
+          "rules": {
+            "items": {
+              "$ref": "#/components/schemas/FilterRule"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "rules"
+        ],
+        "type": "object"
+      },
       "FilterRule": {
         "properties": {
           "field": {
@@ -412,10 +468,20 @@
               "equals",
               "notEquals",
               "contains",
+              "notContains",
+              "startsWith",
+              "endsWith",
+              "regex",
+              "exists",
+              "notExists",
+              "containsAny",
+              "containsAll",
               "in",
               "notIn",
               "greaterThan",
-              "lessThan"
+              "lessThan",
+              "geq",
+              "leq"
             ],
             "type": "string"
           },
@@ -423,8 +489,7 @@
         },
         "required": [
           "field",
-          "operator",
-          "value"
+          "operator"
         ],
         "type": "object"
       },
@@ -491,6 +556,9 @@
             },
             "type": "array"
           },
+          "filterCapabilities": {
+            "$ref": "#/components/schemas/FilterCapabilities"
+          },
           "filterFields": {
             "items": {
               "$ref": "#/components/schemas/FilterFieldSpec"
@@ -511,7 +579,8 @@
           "capabilities",
           "browseKinds",
           "fields",
-          "filterFields"
+          "filterFields",
+          "filterCapabilities"
         ],
         "type": "object"
       },

@@ -310,7 +310,7 @@ func newHarness(t *testing.T) *harness {
 	sync.OperationPollInitial = time.Millisecond
 	task := models.Task{
 		ID: uuid.NewString(), Name: "t", Enabled: true, SourceType: "fake", SourceCredentialID: srcCred,
-		SourceConfigJSON: "{}", SourceFilterJSON: `{"mode":"simple","rules":[]}`,
+		SourceConfigJSON: "{}", SourceFilterJSON: `{"mode":"simple","expression":{"rules":[]}}`,
 		DestinationCredentialID: dstCred, DestinationBankID: "bank", CustomTagsJSON: `["team:a"]`,
 		CustomMetadataJSON: `{"project":"x","_ingestion_task_id":"spoof"}`, FilePolicyMode: "global",
 		FilePolicyJSON: "{}", CronExpression: "*/15 * * * *", ConfigRevision: 1, PolicyRevision: 1,
@@ -515,7 +515,7 @@ func TestFilterExitDeletes(t *testing.T) {
 	expectStatus(t, h.run(""), models.RunSucceeded)
 
 	h.db.Model(&models.Task{}).Where("id = ?", h.task.ID).Updates(map[string]any{
-		"source_filter_json": `{"mode":"simple","rules":[{"field":"name","operator":"contains","value":"keep"}]}`,
+		"source_filter_json": `{"mode":"simple","expression":{"rules":[{"field":"name","operator":"contains","value":"keep"}]}}`,
 		"reconcile_required": true,
 	})
 	r := h.run("")

@@ -34,7 +34,7 @@ func TestMatchFilter(t *testing.T) {
 		{FilterRule{"missing", OpLessThan, 1}, false},
 	}
 	for _, c := range cases {
-		if got := MatchFilter(Filter{Rules: []FilterRule{c.rule}}, attrs); got != c.want {
+		if got := matchFilter(t, Filter{Expression: FilterGroup{Rules: []FilterRule{c.rule}}}, attrs); got != c.want {
 			t.Errorf("%+v: got %v want %v", c.rule, got, c.want)
 		}
 	}
@@ -42,14 +42,14 @@ func TestMatchFilter(t *testing.T) {
 
 func TestValidateFilter(t *testing.T) {
 	specs := []FilterFieldSpec{{Key: "name", Type: FilterString, Operators: StringOps}, {Key: "at", Type: FilterDatetime, Operators: DatetimeOps}}
-	if err := ValidateFilter(Filter{Rules: []FilterRule{{"name", OpContains, "x"}}}, specs, false); err != nil {
+	if err := ValidateFilter(Filter{Expression: FilterGroup{Rules: []FilterRule{{"name", OpContains, "x"}}}}, specs, false); err != nil {
 		t.Fatal(err)
 	}
 	bad := []Filter{
-		{Rules: []FilterRule{{"nope", OpEquals, "x"}}},
-		{Rules: []FilterRule{{"name", OpGreaterThan, "x"}}},
-		{Rules: []FilterRule{{"name", OpIn, nil}}},
-		{Rules: []FilterRule{{"at", OpGreaterThan, "not a date"}}},
+		{Expression: FilterGroup{Rules: []FilterRule{{"nope", OpEquals, "x"}}}},
+		{Expression: FilterGroup{Rules: []FilterRule{{"name", OpGreaterThan, "x"}}}},
+		{Expression: FilterGroup{Rules: []FilterRule{{"name", OpIn, nil}}}},
+		{Expression: FilterGroup{Rules: []FilterRule{{"at", OpGreaterThan, "not a date"}}}},
 		{Mode: "advanced"},
 	}
 	for _, f := range bad {

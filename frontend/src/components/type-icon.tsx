@@ -1,4 +1,5 @@
 import GoogleDrive from "@thesvg/react/google-drive";
+import Github from "@thesvg/react/github";
 import MicrosoftOneDrive from "@thesvg/react/microsoft-onedrive";
 import Notion from "@thesvg/react/notion";
 import Siyuan from "@thesvg/react/siyuan";
@@ -7,6 +8,8 @@ import { cn } from "@/lib/utils";
 
 function brandIcon(type: string) {
   switch (type) {
+    case "github":
+      return <Github variant="mono" aria-hidden="true" className="size-4 shrink-0" />;
     case "notion":
       return <Notion aria-hidden="true" className="size-4 shrink-0" />;
     case "siyuan":

@@ -103,9 +103,6 @@ func (c *Connector) ValidateCredential(ctx context.Context, cred connectors.Cred
 
 // ValidateConfig checks configuration.
 func (c *Connector) ValidateConfig(cfg map[string]any, f connectors.Filter) error {
-	if f.Mode == "advanced" && strings.TrimSpace(f.AdvancedQuery) == "" {
-		return errors.New("filter: advanced query must not be empty")
-	}
 	return connectors.ValidateFilter(f, c.Info().FilterFields, true)
 }
 

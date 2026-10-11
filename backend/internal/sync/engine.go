@@ -91,6 +91,7 @@ type runner struct {
 	src              connectors.SourceConnector
 	srcCfg           map[string]any
 	filter           connectors.Filter
+	matchFilter      func(map[string]any) bool
 	policy           connectors.FilePolicy
 	cred             connectors.Credential
 	maxSz            int64
@@ -494,7 +495,7 @@ func (r *runner) fail(row models.TaskItem, item connectors.SourceItem, err error
 }
 
 func (r *runner) inScope(item connectors.SourceItem) (bool, string) {
-	if r.filter.Mode != "advanced" && !connectors.MatchFilter(r.filter, attributes(item)) {
+	if !r.matchFilter(attributes(item)) {
 		return false, "filtered"
 	}
 	if item.Kind == connectors.KindFile {
@@ -1085,7 +1086,13 @@ func (r *runner) prepareSource() (settings.Settings, error) {
 	if err := json.Unmarshal([]byte(orEmpty(r.task.SourceConfigJSON, "{}")), &r.srcCfg); err != nil {
 		return cfg, fmt.Errorf("invalid source config: %w", err)
 	}
-	_ = json.Unmarshal([]byte(orEmpty(r.task.SourceFilterJSON, "{}")), &r.filter)
+	if err := json.Unmarshal([]byte(orEmpty(r.task.SourceFilterJSON, "{}")), &r.filter); err != nil {
+		return cfg, fmt.Errorf("invalid source filter: %w", err)
+	}
+	r.matchFilter, err = connectors.CompileFilter(r.filter)
+	if err != nil {
+		return cfg, err
+	}
 	r.policy = cfg.FilePolicy
 	if r.task.FilePolicyMode == models.FilePolicyOverride {
 		_ = json.Unmarshal([]byte(orEmpty(r.task.FilePolicyJSON, "{}")), &r.policy)

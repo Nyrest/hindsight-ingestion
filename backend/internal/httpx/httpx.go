@@ -52,6 +52,9 @@ type Client struct {
 	AuthHeaders   map[string]string
 	// MaxRetries for retryable failures (429, 5xx, network errors).
 	MaxRetries int
+	// RetryResponse overrides response retry decisions for provider-specific limits.
+	// Its delay is honored without truncating upstream retry/reset hints.
+	RetryResponse func(*http.Response, []byte, int) (bool, time.Duration)
 	// Pace, when non-nil, is awaited before every attempt (rate pacing).
 	Pace func(ctx context.Context) error
 	// Token, when non-nil, supplies a fresh bearer token for every attempt
@@ -174,10 +177,14 @@ func (c *Client) Do(ctx context.Context, r Request) (*http.Response, error) {
 		b, _ := io.ReadAll(io.LimitReader(resp.Body, 64<<10))
 		resp.Body.Close()
 		lastErr = &HTTPError{Method: r.Method, URL: r.URL, Status: resp.StatusCode, Body: c.proxy.Redact(string(b))}
-		if !retryable(resp.StatusCode) || attempt >= c.MaxRetries {
+		retry, delay := retryable(resp.StatusCode), backoff(attempt, retryAfter(resp))
+		if c.RetryResponse != nil {
+			retry, delay = c.RetryResponse(resp, b, attempt)
+		}
+		if !retry || attempt >= c.MaxRetries {
 			return nil, lastErr
 		}
-		if err := sleep(ctx, backoff(attempt, retryAfter(resp))); err != nil {
+		if err := sleep(ctx, delay); err != nil {
 			return nil, err
 		}
 	}

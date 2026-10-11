@@ -99,6 +99,16 @@ const (
 	OpNotIn       = "notIn"
 	OpGreaterThan = "greaterThan"
 	OpLessThan    = "lessThan"
+	OpGEQ         = "geq"
+	OpLEQ         = "leq"
+	OpNotContains = "notContains"
+	OpStartsWith  = "startsWith"
+	OpEndsWith    = "endsWith"
+	OpRegex       = "regex"
+	OpExists      = "exists"
+	OpNotExists   = "notExists"
+	OpContainsAny = "containsAny"
+	OpContainsAll = "containsAll"
 )
 
 // FilterFieldSpec describes a filterable attribute of source items.
@@ -106,31 +116,47 @@ type FilterFieldSpec struct {
 	Key       string   `json:"key"`
 	Label     string   `json:"label"`
 	Type      string   `json:"type" enum:"string,boolean,number,datetime,enum"`
-	Operators []string `json:"operators" enum:"equals,notEquals,contains,in,notIn,greaterThan,lessThan"`
+	Operators []string `json:"operators" enum:"equals,notEquals,contains,notContains,startsWith,endsWith,regex,exists,notExists,containsAny,containsAll,in,notIn,greaterThan,lessThan,geq,leq"`
 	Options   []Option `json:"options,omitempty"`
 }
 
 // Default operator sets per filter type.
 var (
-	StringOps   = []string{OpEquals, OpNotEquals, OpContains, OpIn, OpNotIn}
-	BooleanOps  = []string{OpEquals, OpNotEquals}
-	NumberOps   = []string{OpEquals, OpNotEquals, OpGreaterThan, OpLessThan, OpIn, OpNotIn}
-	DatetimeOps = []string{OpGreaterThan, OpLessThan}
-	EnumOps     = []string{OpEquals, OpNotEquals, OpIn, OpNotIn}
+	StringOps   = []string{OpEquals, OpNotEquals, OpContains, OpNotContains, OpStartsWith, OpEndsWith, OpRegex, OpIn, OpNotIn, OpContainsAny, OpContainsAll, OpExists, OpNotExists}
+	BooleanOps  = []string{OpEquals, OpNotEquals, OpExists, OpNotExists}
+	NumberOps   = []string{OpEquals, OpNotEquals, OpGreaterThan, OpLessThan, OpGEQ, OpLEQ, OpIn, OpNotIn, OpExists, OpNotExists}
+	DatetimeOps = []string{OpGreaterThan, OpLessThan, OpGEQ, OpLEQ, OpExists, OpNotExists}
+	EnumOps     = []string{OpEquals, OpNotEquals, OpIn, OpNotIn, OpExists, OpNotExists}
 )
 
 // FilterRule is one structured filter condition.
 type FilterRule struct {
 	Field    string `json:"field"`
-	Operator string `json:"operator" enum:"equals,notEquals,contains,in,notIn,greaterThan,lessThan"`
-	Value    any    `json:"value"`
+	Operator string `json:"operator" enum:"equals,notEquals,contains,notContains,startsWith,endsWith,regex,exists,notExists,containsAny,containsAll,in,notIn,greaterThan,lessThan,geq,leq"`
+	Value    any    `json:"value,omitempty"`
+}
+
+const MaxFilterDepth = 8
+
+// FilterGroup combines its rules and child groups using the same connective.
+// An omitted combinator is AND.
+type FilterGroup struct {
+	Combinator string        `json:"combinator,omitempty" enum:"and,or"`
+	Rules      []FilterRule  `json:"rules"`
+	Groups     []FilterGroup `json:"groups,omitempty"`
+}
+
+// FilterCapabilities describe the structured evaluator, independently of native queries.
+type FilterCapabilities struct {
+	Combinators []string `json:"combinators" enum:"and,or"`
+	MaxDepth    int      `json:"maxDepth"`
 }
 
 // Filter is a Task's source filter.
 type Filter struct {
-	Mode          string       `json:"mode" enum:"simple,advanced"` // simple | advanced
-	Rules         []FilterRule `json:"rules"`
-	AdvancedQuery string       `json:"advancedQuery"`
+	Mode          string      `json:"mode" enum:"simple,advanced"` // simple | advanced
+	Expression    FilterGroup `json:"expression"`
+	AdvancedQuery string      `json:"advancedQuery"`
 }
 
 // CredentialType describes a credential kind.
@@ -144,13 +170,14 @@ type CredentialType struct {
 
 // SourceInfo describes a source connector for the UI and engine.
 type SourceInfo struct {
-	Type           string            `json:"type"`
-	Name           string            `json:"name"`
-	CredentialType string            `json:"credentialType"`
-	Capabilities   Capabilities      `json:"capabilities"`
-	BrowseKinds    []string          `json:"browseKinds"`
-	Fields         []FieldSpec       `json:"fields"`
-	FilterFields   []FilterFieldSpec `json:"filterFields"`
+	Type               string             `json:"type"`
+	Name               string             `json:"name"`
+	CredentialType     string             `json:"credentialType"`
+	Capabilities       Capabilities       `json:"capabilities"`
+	BrowseKinds        []string           `json:"browseKinds"`
+	Fields             []FieldSpec        `json:"fields"`
+	FilterFields       []FilterFieldSpec  `json:"filterFields"`
+	FilterCapabilities FilterCapabilities `json:"filterCapabilities"`
 }
 
 // OAuthToken is a stored OAuth token.
@@ -206,6 +233,7 @@ const (
 	KindBank       = "bank"
 	KindDrive      = "drive"
 	KindSite       = "site"
+	KindRepository = "repository"
 )
 
 // SourceItem is the normalized description of a source object.
@@ -362,7 +390,9 @@ func CredentialTypeOf(t string) (CredentialType, bool) {
 func Sources() []SourceInfo {
 	out := make([]SourceInfo, 0, len(sources))
 	for _, s := range sources {
-		out = append(out, s.Info())
+		info := s.Info()
+		info.FilterCapabilities = FilterCapabilities{Combinators: []string{"and", "or"}, MaxDepth: MaxFilterDepth}
+		out = append(out, info)
 	}
 	sort.Slice(out, func(i, j int) bool { return order(out[i].Type) < order(out[j].Type) })
 	return out
@@ -379,7 +409,7 @@ func CredentialTypes() []CredentialType {
 }
 
 func order(t string) int {
-	for i, v := range []string{"notion", "siyuan", "s3", "webdav", "google_drive", "onedrive", "filesystem"} {
+	for i, v := range []string{"notion", "siyuan", "github", "s3", "webdav", "google_drive", "onedrive", "filesystem"} {
 		if v == t {
 			return i
 		}

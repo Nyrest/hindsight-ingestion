@@ -54,7 +54,8 @@ import { useCancelTask, useCreateTask, useTaskRuns, useTriggerTask, useUpdateTas
 import { CredentialPicker } from "./credential-picker";
 import { BankPicker, RetainStrategyField } from "./destination-fields";
 import { EditorSection, Hint } from "./editor-section";
-import { FilterBuilder, validateRules } from "./filter-builder";
+import { FilterBuilder } from "./filter-builder";
+import { validateFilterGroup } from "./filter-model";
 import { ScheduleFields } from "./schedule-fields";
 import { SourceConfigFields, SourceTypePicker } from "./source-section";
 import {
@@ -137,13 +138,13 @@ export function TaskEditor({ task }: { task?: Task }) {
   const errors = formState.errors;
 
   const [configErrors, setConfigErrors] = useState<Record<string, string>>({});
-  const [ruleErrors, setRuleErrors] = useState<Record<number, string>>({});
+  const [ruleErrors, setRuleErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState<string | null>(null);
 
   const sourceType = watch("sourceType");
   const sourceConfig = watch("sourceConfig");
   const filterMode = watch("filterMode");
-  const filterRules = watch("filterRules");
+  const filterGroup = watch("filterGroup");
   const destinationCredentialId = watch("destinationCredentialId");
   const destinationBankId = watch("destinationBankId");
   const filePolicyMode = watch("filePolicyMode");
@@ -183,7 +184,7 @@ export function TaskEditor({ task }: { task?: Task }) {
     setValue("sourceType", type, { shouldDirty: true, shouldValidate: formState.isSubmitted });
     setValue("sourceCredentialId", "", { shouldDirty: true });
     setValue("sourceConfig", spec ? defaultConfig(spec.fields) : {}, { shouldDirty: true });
-    setValue("filterRules", [], { shouldDirty: true });
+    setValue("filterGroup", { combinator: "and", rules: [], groups: [] }, { shouldDirty: true });
     setValue("filterMode", "simple", { shouldDirty: true });
     setValue("advancedQuery", "", { shouldDirty: true });
     setConfigErrors({});
@@ -200,7 +201,7 @@ export function TaskEditor({ task }: { task?: Task }) {
     setServerError(null);
     const spec = findSource(connectors.data, values.sourceType);
     const cfgErrs = spec ? validateConfig(spec.fields, values.sourceConfig, tr) : {};
-    const rErrs = values.filterMode === "simple" && spec ? validateRules(values.filterRules, spec.filterFields) : {};
+    const rErrs = spec ? validateFilterGroup(values.filterGroup, spec.filterFields, spec.filterCapabilities.maxDepth) : {};
     setConfigErrors(cfgErrs);
     setRuleErrors(rErrs);
     if (Object.keys(cfgErrs).length || Object.keys(rErrs).length) {
@@ -233,7 +234,6 @@ export function TaskEditor({ task }: { task?: Task }) {
           if (k.startsWith("sourceConfig.")) cfg[k.slice("sourceConfig.".length)] = msg;
           else if (k.startsWith("sourceFilter")) setRuleErrorsFromServer(k, msg);
           else if (k.startsWith("customMetadata")) form.setError("metadataRows", { message: msg });
-          else if (k === "sourceFilter.advancedQuery") form.setError("advancedQuery", { message: msg });
           else if (k in values) form.setError(k as keyof TaskFormValues, { message: k === "cronExpression" ? "schedule.invalid" : msg });
           else unknown.push(`${k}: ${msg}`);
         }
@@ -251,8 +251,7 @@ export function TaskEditor({ task }: { task?: Task }) {
   }
 
   function setRuleErrorsFromServer(key: string, msg: string) {
-    const m = /rules\.(\d+)/.exec(key) ?? /rules\[(\d+)\]/.exec(key);
-    if (m) setRuleErrors((r) => ({ ...r, [Number(m[1])]: msg }));
+    if (key.startsWith("sourceFilter.expression")) setRuleErrors((r) => ({ ...r, [key.slice("sourceFilter.".length).replace(/\.combinator$/, "")]: msg }));
     else if (key.includes("advancedQuery")) form.setError("advancedQuery", { message: msg });
     else setServerError(msg);
   }
@@ -262,7 +261,7 @@ export function TaskEditor({ task }: { task?: Task }) {
       Object.keys(errs).map((k) =>
         k === "metadataRows"
           ? "customMetadata"
-          : k === "filterRules" || k === "advancedQuery"
+          : k === "filterGroup" || k === "advancedQuery"
             ? "sourceFilter"
             : k,
       ),
@@ -488,34 +487,34 @@ export function TaskEditor({ task }: { task?: Task }) {
             {editing && <Hint tone="warning">{t("taskEditor.hints.filtersReconcile")}</Hint>}
             {!source ? (
               <p className="text-sm text-muted-foreground">{t("source.pickTypeFirst")}</p>
-            ) : filterMode === "advanced" && source.capabilities.supportsAdvancedFilter ? (
-              <FieldRow
-                label={t("filters.advancedQuery")}
-                htmlFor="task-adv-query"
-                required
-                error={errText(errors.advancedQuery?.message)}
-                help={sourceType === "google_drive" ? t("filters.driveHint") : t("filters.advancedHint")}
-              >
-                <Textarea
-                  id="task-adv-query"
-                  rows={4}
-                  spellCheck={false}
-                  className="font-mono text-xs"
-                  placeholder={sourceType === "google_drive" ? "mimeType = 'application/pdf' and name contains 'report'" : ""}
-                  aria-invalid={!!errors.advancedQuery}
-                  {...register("advancedQuery")}
-                />
-              </FieldRow>
             ) : (
-              <FilterBuilder
-                fields={source.filterFields ?? []}
-                rules={filterRules}
-                errors={ruleErrors}
-                onChange={(rules) => {
-                  setValue("filterRules", rules, { shouldDirty: true });
-                  if (Object.keys(ruleErrors).length) setRuleErrors({});
-                }}
-              />
+              <div className="space-y-4">
+                {filterMode === "advanced" && source.capabilities.supportsAdvancedFilter && (
+                  <FieldRow
+                    label={t("filters.advancedQuery")}
+                    htmlFor="task-adv-query"
+                    required
+                    error={errText(errors.advancedQuery?.message)}
+                    help={sourceType === "google_drive" ? t("filters.driveHint") : t("filters.advancedHint")}
+                  >
+                    <Textarea
+                      id="task-adv-query"
+                      rows={4}
+                      spellCheck={false}
+                      className="font-mono text-xs"
+                      placeholder={sourceType === "google_drive" ? "mimeType = 'application/pdf' and name contains 'report'" : ""}
+                      aria-invalid={!!errors.advancedQuery}
+                      {...register("advancedQuery")}
+                    />
+                  </FieldRow>
+                )}
+                {filterMode === "advanced" && <Hint>{t("filters.combineHint")}</Hint>}
+                <FilterBuilder fields={source.filterFields ?? []} group={filterGroup} capabilities={source.filterCapabilities} errors={ruleErrors}
+                  onChange={(group) => {
+                    setValue("filterGroup", group, { shouldDirty: true });
+                    if (Object.keys(ruleErrors).length) setRuleErrors({});
+                  }} />
+              </div>
             )}
           </EditorSection>
 

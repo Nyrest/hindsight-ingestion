@@ -3,7 +3,7 @@
   <p>Keep your notes and files in sync with Hindsight, automatically.</p>
 </div>
 
-Sync **Notion, SiYuan, S3, WebDAV, Google Drive, OneDrive and local files** into [Hindsight](https://github.com/vectorize-io/hindsight) memory banks. Self-host with Docker and manage everything from the WebUI.
+Sync **Notion, SiYuan, GitHub, S3, WebDAV, Google Drive, OneDrive and local files** into [Hindsight](https://github.com/vectorize-io/hindsight) memory banks. Self-host with Docker and manage everything from the WebUI.
 
 <p align="center">
   <a href="#-features">Features</a> · <a href="#-quick-start">Quick start</a> · <a href="#-supported-sources">Sources</a> · <a href="#-usage">Usage</a> · <a href="#-configuration">Configuration</a> · <a href="#-development">Development</a>
@@ -16,7 +16,7 @@ Sync **Notion, SiYuan, S3, WebDAV, Google Drive, OneDrive and local files** into
 ## ✨ Features
 
 - ⚡ **Smart incremental sync** — Native change feeds, sync tokens and revision tracking detect what changed. Upload new or updated content and skip the rest.
-- 🌐 **Multiple sources, one memory hub** — Bring Notion, SiYuan, S3, WebDAV, Google Drive, OneDrive and local files into Hindsight. Route each task to the bank you choose.
+- 🌐 **Multiple sources, one memory hub** — Bring Notion, SiYuan, GitHub, S3, WebDAV, Google Drive, OneDrive and local files into Hindsight. Route each task to the bank you choose.
 - 🖼️ **Multimodal ingestion** — Sync text, documents and multimodal files from S3, WebDAV, Google Drive, OneDrive and local storage into Hindsight.
 - 🔄 **Stay in sync, deletions included** — Clean up documents when source items disappear or leave your sync scope. Incomplete scans never treat missing items as deletions.
 - 🚀 **Streaming file ingestion** — Stream files directly into Hindsight without loading entire uploads into memory. Export Google Docs, Sheets and Slides as Markdown, CSV and PDF.
@@ -89,11 +89,42 @@ docker compose logs -f --tail=100
 | :--- | :---: | :---: | :---: | :---: |
 | **Notion** | ✅ | ✅ | ✅ Images | ✅ |
 | **SiYuan** | ✅ | ✅ | ✅ Images | ✅ |
+| **GitHub** | ✅ | ✅ | ✅ Files | ✅ |
 | **S3 / S3-compatible storage** | ✅ | ✅ | ✅ | ✅ |
 | **WebDAV** | ✅ | ✅ | ✅ | ✅ |
 | **Google Drive** | ✅ | ✅ | ✅ | ✅ |
 | **OneDrive** | ✅ | ✅ | ✅ | ✅ |
 | **File System** | ✅ | ✅ | ✅ | ✅ |
+
+### GitHub repositories
+
+Add a **GitHub** credential. Leave the token empty for anonymous public access, or
+use a personal access token with **Contents**, **Issues**, and **Pull requests** read
+permissions for the content you select. The default API URL is `https://api.github.com`;
+custom REST API URLs are supported, including an Enterprise Server `/api/v3` prefix.
+Specific Enterprise versions and deployments require their own validation.
+
+Each task selects one `owner/repo`. Files, Issues, and pull requests are enabled by
+default and can be toggled separately. A branch, tag, or commit and a repository-relative
+folder limit files only; an empty ref follows the default branch. Files use the existing
+file type and size policies. Each Issue/PR becomes one document containing its description
+and ordinary comments; PRs also include reviews and inline comments, without code diffs.
+
+**Apply .gitignore** is enabled by default. Root and nested rules exclude matching
+**committed** files from ingestion, including files Git already tracks. This deliberately
+uses ignore rules as ingestion exclusions, rather than Git's tracked-file behavior.
+Changing rules reconciles documents that leave the scope. Unreadable ignore
+files are not silently treated as empty rules.
+
+Files are read by fixed blob SHA. Discussion updates use overlapping time windows;
+full reconciliation (every 24 hours by default) also catches deleted comments and
+review changes without an incremental signal. Unchanged content is not uploaded again.
+Anonymous access has a smaller request budget; a PAT is useful for large repositories.
+Dry-run inventories and reads content without writes to GitHub or Hindsight.
+
+Symlinks, submodules, and Git LFS pointers are skipped. Wiki, Discussions, Releases,
+GitHub App/OAuth, inline image downloads, and LFS object downloads are not supported;
+images and attachments in discussion Markdown keep their original links.
 
 ### Local files in Docker
 
@@ -156,6 +187,14 @@ Notion signed image URLs are refreshed once when expired. SiYuan attachments use
 Unreadable, unsupported or oversized images retain their original Markdown and produce warnings in run logs and Dry-run. Successfully submitted notes with missing images advance the cursor and are retried during periodic full reconciliation, **Full reconcile** or **Full re-ingest**. Turning off either image condition replaces the document with text and clears the image retry marker. Configuration changes trigger reconciliation even for unedited notes. Replacing an image without changing the note revision requires **Full re-ingest**.
 
 The destination must support the [Hindsight ordered content blocks interface](https://hindsight.vectorize.io/blog/2026/09/16/screenshot-agent-memory) and have a vision model configured. A rejected multimodal request fails the run; it is not silently converted to text. Dry-run may download images for verification but never writes Hindsight documents, run history, ledger rows or cursors.
+
+### Task filters
+
+Start with **Add filter**. Choose **Match all (AND)** or **Match any (OR)**, then use **Add group** to nest conditions when needed. For example: size ≥ 1 KB AND (extension is any of `md`, `txt` OR name matches `(?i)^report.*\.pdf$`).
+
+Available operators follow the source's fields: text matching, prefixes/suffixes, regular expressions, any/all substrings, numeric and time comparisons (including ≥ / ≤), membership, and existence checks. SiYuan tags can be matched by element. Existence checks require no value; regex uses Go/RE2 syntax, with `(?i)` to ignore case.
+
+Google Drive's **Advanced** mode combines a native query with optional visual conditions. Use **Dry-run** to check the resulting scope before running. Changing filters triggers reconciliation and can remove previously synced documents that no longer match.
 
 ## ⚙️ Configuration
 

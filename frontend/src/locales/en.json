@@ -17,7 +17,33 @@
     "label": "Language"
   },
   "providerCopy": {
-    "fileSystem": "File System"
+    "fileSystem": "File System",
+    "githubApiBase": "API base URL",
+    "githubPat": "Personal access token",
+    "githubRepository": "Repository",
+    "githubRef": "Branch, tag or commit",
+    "githubFiles": "Repository files",
+    "githubIssues": "Issues and comments",
+    "githubPulls": "Pull requests and reviews",
+    "githubIgnore": "Apply .gitignore",
+    "githubContentType": "Content type",
+    "githubFile": "File",
+    "githubIssue": "Issue",
+    "githubPull": "Pull request",
+    "githubName": "Name",
+    "githubState": "State",
+    "githubOpen": "Open",
+    "githubClosed": "Closed",
+    "githubMerged": "Merged",
+    "githubAuthor": "Author",
+    "githubLabels": "Labels",
+    "githubRepositoryPlural": "Repositories",
+    "githubDescription": "GitHub repositories via a read-only PAT, or anonymous public access.",
+    "githubApiHelp": "GitHub REST API base URL. For Enterprise Server, include /api/v3.",
+    "githubPatHelp": "Optional for public repositories. Select Contents, Issues and Pull requests read permissions for the content you sync.",
+    "githubRefHelp": "Leave empty to follow the default branch. Applies to repository files only.",
+    "githubFolderHelp": "Repository-relative folder. Applies to files only; includes sub-folders.",
+    "githubIgnoreHelp": "Exclude matching committed files using root and nested .gitignore rules. Does not affect Issues or pull requests."
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -256,21 +282,42 @@
       "description": "Everything in the source scope will be synced."
     },
     "operators": {
-      "equals": "equals",
-      "notEquals": "does not equal",
+      "equals": "=",
+      "notEquals": "≠",
       "contains": "contains",
       "in": "is any of",
       "notIn": "is none of",
-      "greaterThan": "greater than",
-      "lessThan": "less than"
+      "greaterThan": ">",
+      "lessThan": "<",
+      "notContains": "does not contain",
+      "startsWith": "starts with",
+      "endsWith": "ends with",
+      "regex": "matches regex",
+      "exists": "exists",
+      "notExists": "does not exist",
+      "containsAny": "contains any of",
+      "containsAll": "contains all of",
+      "geq": "≥",
+      "leq": "≤"
     },
     "errors": {
       "field": "Select a valid field",
       "operator": "Operator not supported for this field",
       "value": "Enter a value",
       "valueList": "Add at least one value",
-      "number": "Must be a number"
-    }
+      "number": "Must be a number",
+      "emptyGroup": "Add a condition or remove this group",
+      "depth": "Maximum nesting depth exceeded",
+      "date": "Enter a valid date and time"
+    },
+    "or": "Or",
+    "match": "Match conditions",
+    "matchAll": "Match all (AND)",
+    "matchAny": "Match any (OR)",
+    "addGroup": "Add group",
+    "removeGroup": "Remove group",
+    "combineHint": "These conditions further filter the results of the query above.",
+    "regexHint": "Go/RE2 syntax. Use (?i) for case-insensitive matching."
   },
   "filePolicy": {
     "plainText": "Plain text",

@@ -18,6 +18,8 @@ func TestCanonicalIdentity(t *testing.T) {
 		want         string
 	}{
 		{"notion", "notion", connectors.Credential{}, nil, connectors.SourceItem{ID: "page-id"}, "notion_page:page-id"},
+		{"github file", "github", connectors.Credential{}, nil, connectors.SourceItem{ID: "42:file:feature%2Fx:a%3Ab.go", Metadata: map[string]string{"github_api_base": "https://api.github.com/"}}, "github:api.github.com:42:file:feature%2Fx:a%3Ab.go"},
+		{"github enterprise PR", "github", connectors.Credential{}, nil, connectors.SourceItem{ID: "42:pull_request:5", Metadata: map[string]string{"github_api_base": "https://git.example/api/v3"}}, "github:git.example%2Fapi%2Fv3:42:pull_request:5"},
 		{"siyuan instance", "siyuan", connectors.Credential{Config: map[string]any{"instanceId": "notes", "baseUrl": "https://siyuan.example"}}, nil, connectors.SourceItem{ID: "doc"}, "siyuan:notes:doc"},
 		{"siyuan URL", "siyuan", connectors.Credential{Config: map[string]any{"baseUrl": "https://siyuan.example:6806/"}}, nil, connectors.SourceItem{ID: "doc"}, "siyuan:siyuan.example:6806:doc"},
 		{"s3", "s3", connectors.Credential{Config: map[string]any{"endpoint": "http://storage.example:9000/"}}, map[string]any{"bucket": "notes"}, connectors.SourceItem{ID: "notes/a:b.txt", Path: "a:b.txt"}, "s3:storage.example:9000:notes:a:b.txt"},

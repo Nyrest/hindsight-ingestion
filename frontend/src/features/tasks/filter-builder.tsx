@@ -9,181 +9,115 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useTimezone } from "@/features/settings/api";
+import { coerceValue, defaultRuleValue, isMultiOperator, isUnaryOperator } from "./filter-model";
 import { isoToLocalInput, localInputToIso } from "@/lib/format";
 import { providerCopy } from "@/lib/provider-copy";
-import type { FilterFieldSpec, FilterOperator, FilterRule, FilterValue } from "@/lib/types";
+import type { FilterFieldSpec, FilterGroup, FilterOperator, FilterRule, FilterValue, SourceSpec } from "@/lib/types";
 
-export const isMultiOperator = (op: FilterOperator) => op === "in" || op === "notIn";
-
-/** Default value for a rule given its field type + operator. */
-export function defaultRuleValue(spec: FilterFieldSpec | undefined, op: FilterOperator): FilterValue {
-  if (isMultiOperator(op)) return [];
-  switch (spec?.type) {
-    case "boolean":
-      return true;
-    case "number":
-      return 0;
-    case "enum":
-      return spec.options?.[0]?.value ?? "";
-    default:
-      return "";
-  }
-}
-
-/** Coerce an existing value when operator/field changes, keeping what we can. */
-function coerceValue(spec: FilterFieldSpec | undefined, op: FilterOperator, prev: FilterValue): FilterValue {
-  const multi = isMultiOperator(op);
-  if (multi) {
-    if (Array.isArray(prev)) return prev;
-    if (prev === "" || prev === undefined || prev === null || typeof prev === "boolean") return [];
-    return [prev as string | number];
-  }
-  if (Array.isArray(prev)) return prev.length ? (spec?.type === "number" ? Number(prev[0]) : String(prev[0])) : defaultRuleValue(spec, op);
-  if (spec?.type === "boolean") return typeof prev === "boolean" ? prev : true;
-  if (spec?.type === "number") return typeof prev === "number" ? prev : Number(prev) || 0;
-  if (typeof prev === "boolean" || typeof prev === "number") return defaultRuleValue(spec, op);
-  return prev;
-}
-
-/** Validate rules → index → message key. */
-export function validateRules(rules: FilterRule[], specs: FilterFieldSpec[]): Record<number, string> {
-  const errs: Record<number, string> = {};
-  rules.forEach((r, i) => {
-    const spec = specs.find((s) => s.key === r.field);
-    if (!spec) {
-      errs[i] = "filters.errors.field";
-      return;
-    }
-    if (!spec.operators.includes(r.operator)) {
-      errs[i] = "filters.errors.operator";
-      return;
-    }
-    if (Array.isArray(r.value)) {
-      if (!r.value.length) errs[i] = "filters.errors.valueList";
-    } else if (spec.type !== "boolean" && (r.value === "" || r.value === null || r.value === undefined)) {
-      errs[i] = "filters.errors.value";
-    } else if (spec.type === "number" && Number.isNaN(Number(r.value))) {
-      errs[i] = "filters.errors.number";
-    }
-  });
-  return errs;
-}
-
-export function FilterBuilder({
-  fields,
-  rules,
-  onChange,
-  errors,
-}: {
+interface FilterBuilderProps {
   fields: FilterFieldSpec[];
-  rules: FilterRule[];
-  onChange: (rules: FilterRule[]) => void;
-  errors?: Record<number, string>;
+  group: FilterGroup;
+  capabilities: SourceSpec["filterCapabilities"];
+  onChange: (group: FilterGroup) => void;
+  errors?: Record<string, string>;
+}
+
+export function FilterBuilder(props: FilterBuilderProps) {
+  const { t } = useTranslation();
+  if (!props.fields.length) return <p className="text-sm text-muted-foreground">{t("filters.noFields")}</p>;
+  return <GroupEditor {...props} path="expression" depth={1} />;
+}
+
+function GroupEditor({ fields, group, capabilities, onChange, errors, path, depth, onRemove }: FilterBuilderProps & {
+  path: string;
+  depth: number;
+  onRemove?: () => void;
 }) {
   const { t } = useTranslation();
-
-  function addRule() {
+  const groups = group.groups ?? [];
+  const combinator = group.combinator ?? "and";
+  const empty = !group.rules.length && !groups.length;
+  function newRule(): FilterRule {
     const spec = fields[0];
-    if (!spec) return;
-    const op = spec.operators[0] ?? "equals";
-    onChange([...rules, { field: spec.key, operator: op, value: defaultRuleValue(spec, op) }]);
+    const operator = spec.operators[0] ?? "equals";
+    return { field: spec.key, operator, value: defaultRuleValue(spec, operator) };
   }
-
-  function update(i: number, patch: Partial<FilterRule>) {
-    onChange(rules.map((r, j) => (j === i ? { ...r, ...patch } : r)));
+  function updateRule(i: number, rule: FilterRule) {
+    onChange({ ...group, rules: group.rules.map((r, j) => j === i ? rule : r) });
   }
-
-  function changeField(i: number, key: string) {
-    const spec = fields.find((f) => f.key === key);
-    const prev = rules[i];
-    const op = spec?.operators.includes(prev.operator) ? prev.operator : (spec?.operators[0] ?? "equals");
-    const sameType = fields.find((f) => f.key === prev.field)?.type === spec?.type;
-    update(i, { field: key, operator: op, value: sameType ? coerceValue(spec, op, prev.value) : defaultRuleValue(spec, op) });
+  const addRule = () => onChange({ ...group, rules: [...group.rules, newRule()] });
+  if (empty && depth === 1) {
+    return <EmptyState icon={Filter} compact title={t("filters.empty.title")} description={t("filters.empty.description")}
+      action={<Button type="button" variant="outline" size="sm" onClick={addRule}><Plus /> {t("filters.add")}</Button>} />;
   }
-
-  function changeOp(i: number, op: FilterOperator) {
-    const spec = fields.find((f) => f.key === rules[i].field);
-    update(i, { operator: op, value: coerceValue(spec, op, rules[i].value) });
-  }
-
-  if (!fields.length) {
-    return <p className="text-sm text-muted-foreground">{t("filters.noFields")}</p>;
-  }
-
   return (
-    <div className="space-y-3">
-      {rules.length === 0 ? (
-        <EmptyState
-          icon={Filter}
-          compact
-          title={t("filters.empty.title")}
-          description={t("filters.empty.description")}
-          action={
-            <Button type="button" variant="outline" size="sm" onClick={addRule}>
-              <Plus /> {t("filters.add")}
-            </Button>
-          }
-        />
-      ) : (
-        <>
-          <div className="space-y-2">
-            {rules.map((rule, i) => {
-              const spec = fields.find((f) => f.key === rule.field);
-              const err = errors?.[i];
-              return (
-                <div key={i} className="space-y-1">
-                  <div className="flex flex-col gap-2 rounded-md border bg-muted/20 p-2 sm:flex-row sm:items-start">
-                    <span className="hidden w-10 shrink-0 pt-2 text-xs font-medium text-muted-foreground uppercase sm:block">
-                      {i === 0 ? t("filters.where") : t("filters.and")}
-                    </span>
-                    <Select value={rule.field} onValueChange={(v) => changeField(i, v)}>
-                      <SelectTrigger className="w-full bg-background sm:w-44" aria-label={t("filters.field")}>
-                        <SelectValue placeholder={t("filters.field")} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {fields.map((f) => (
-                          <SelectItem key={f.key} value={f.key}>
-                            {providerCopy(f.label, t)}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Select value={rule.operator} onValueChange={(v) => changeOp(i, v as FilterOperator)}>
-                      <SelectTrigger className="w-full bg-background sm:w-40" aria-label={t("filters.operator")}>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {(spec?.operators ?? []).map((op) => (
-                          <SelectItem key={op} value={op}>
-                            {t(`filters.operators.${op}`, { defaultValue: op })}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <div className="min-w-0 flex-1">
-                      <ValueControl spec={spec} rule={rule} onChange={(value) => update(i, { value })} invalid={!!err} />
-                    </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="self-end text-muted-foreground hover:text-destructive sm:self-start"
-                      onClick={() => onChange(rules.filter((_, j) => j !== i))}
-                      aria-label={t("filters.remove")}
-                    >
-                      <Trash2 />
-                    </Button>
-                  </div>
-                  {err && <p className="pl-1 text-xs text-destructive">{t(err)}</p>}
-                </div>
-              );
-            })}
-          </div>
-          <Button type="button" variant="outline" size="sm" onClick={addRule}>
-            <Plus /> {t("filters.add")}
-          </Button>
-        </>
-      )}
+    <div className="min-w-0 space-y-3">
+      <div className="flex items-center justify-between gap-2">
+        <Select value={combinator} onValueChange={(v) => {
+          if (v === "and" || v === "or") onChange({ ...group, combinator: v });
+        }}>
+          <SelectTrigger className="w-auto max-w-full" aria-label={t("filters.match")}><SelectValue /></SelectTrigger>
+          <SelectContent>{capabilities.combinators.map((op) => <SelectItem key={op} value={op}>{t(`filters.match${op === "and" ? "All" : "Any"}`)}</SelectItem>)}</SelectContent>
+        </Select>
+        {onRemove && <Button type="button" variant="ghost" size="icon" onClick={onRemove} aria-label={t("filters.removeGroup")}><Trash2 /></Button>}
+      </div>
+      {errors?.[path] && <p role="alert" className="text-xs text-destructive">{t(errors[path])}</p>}
+      {group.rules.map((rule, i) => <RuleEditor key={i} fields={fields} rule={rule}
+        connective={i === 0 ? "where" : combinator} error={errors?.[`${path}.rules.${i}`]}
+        onChange={(r) => updateRule(i, r)} onRemove={() => onChange({ ...group, rules: group.rules.filter((_, j) => j !== i) })} />)}
+      {groups.map((child, i) => (
+        <div key={i} className="space-y-2 border-l-2 pl-2 sm:pl-3">
+          {(group.rules.length > 0 || i > 0) && <p className="text-xs font-medium text-muted-foreground">{t(`filters.${combinator}`)}</p>}
+          <GroupEditor fields={fields} group={child} capabilities={capabilities} errors={errors} depth={depth + 1} path={`${path}.groups.${i}`}
+            onChange={(g) => onChange({ ...group, groups: groups.map((old, j) => j === i ? g : old) })}
+            onRemove={() => onChange({ ...group, groups: groups.filter((_, j) => j !== i) })} />
+        </div>
+      ))}
+      <div className="flex flex-wrap gap-2">
+        <Button type="button" variant="outline" size="sm" onClick={addRule}><Plus /> {t("filters.add")}</Button>
+        {depth < capabilities.maxDepth && <Button type="button" variant="ghost" size="sm"
+          onClick={() => onChange({ ...group, groups: [...groups, { combinator: "and", rules: [newRule()], groups: [] }] })}><Plus /> {t("filters.addGroup")}</Button>}
+      </div>
+    </div>
+  );
+}
+
+function RuleEditor({ fields, rule, connective, error, onChange, onRemove }: {
+  fields: FilterFieldSpec[];
+  rule: FilterRule;
+  connective: string;
+  error?: string;
+  onChange: (rule: FilterRule) => void;
+  onRemove: () => void;
+}) {
+  const { t } = useTranslation();
+  const spec = fields.find((f) => f.key === rule.field);
+  function changeField(key: string) {
+    if (!key) return;
+    const next = fields.find((f) => f.key === key);
+    const operator = next?.operators.includes(rule.operator) ? rule.operator : (next?.operators[0] ?? "equals");
+    const value = spec?.type === next?.type ? coerceValue(next, operator, rule.value) : defaultRuleValue(next, operator);
+    onChange({ field: key, operator, value });
+  }
+  return (
+    <div className="space-y-1">
+      <div className="flex flex-col flex-wrap gap-2 rounded-md border bg-muted/20 p-2 sm:flex-row sm:items-start">
+        <span className="hidden shrink-0 pt-2 text-xs font-medium text-muted-foreground uppercase sm:block">{t(`filters.${connective}`)}</span>
+        <Select value={rule.field} onValueChange={changeField}>
+          <SelectTrigger className="w-full bg-background sm:w-40" aria-label={t("filters.field")}><SelectValue placeholder={t("filters.field")} /></SelectTrigger>
+          <SelectContent>{fields.map((f) => <SelectItem key={f.key} value={f.key}>{providerCopy(f.label, t)}</SelectItem>)}</SelectContent>
+        </Select>
+        <Select value={rule.operator} onValueChange={(v) => {
+          if (spec?.operators.includes(v as FilterOperator)) onChange({ ...rule, operator: v as FilterOperator, value: coerceValue(spec, v as FilterOperator, rule.value) });
+        }}>
+          <SelectTrigger className="w-full bg-background sm:w-auto sm:max-w-72" aria-label={t("filters.operator")}><SelectValue /></SelectTrigger>
+          <SelectContent>{(spec?.operators ?? []).map((op) => <SelectItem key={op} value={op}>{t(`filters.operators.${op}`)}</SelectItem>)}</SelectContent>
+        </Select>
+        {!isUnaryOperator(rule.operator) && <div className="min-w-0 flex-1 sm:basis-40"><ValueControl spec={spec} rule={rule} onChange={(value) => onChange({ ...rule, value })} invalid={!!error} /></div>}
+        <Button type="button" variant="ghost" size="icon" className="self-end text-muted-foreground hover:text-destructive sm:self-start" onClick={onRemove} aria-label={t("filters.remove")}><Trash2 /></Button>
+      </div>
+      {rule.operator === "regex" && <p className="text-xs text-muted-foreground">{t("filters.regexHint")}</p>}
+      {error && <p role="alert" className="pl-1 text-xs text-destructive">{t(error, { defaultValue: error })}</p>}
     </div>
   );
 }
@@ -277,7 +211,7 @@ function ValueControl({
         value={values}
         aria-invalid={invalid}
         placeholder={t("filters.valuesPlaceholder")}
-        validate={(chip) => (type === "number" && Number.isNaN(Number(chip)) ? t("filters.errors.number") : null)}
+        validate={(chip) => (type === "number" && !Number.isFinite(Number(chip)) ? t("filters.errors.number") : null)}
         onChange={(v) => onChange(type === "number" ? v.map(Number) : v)}
       />
     );
@@ -314,7 +248,8 @@ function ValueControl({
       aria-invalid={invalid}
       value={typeof rule.value === "string" ? rule.value : String(rule.value ?? "")}
       onChange={(e) => onChange(e.target.value)}
-      placeholder={t("filters.valuePlaceholder")}
+      placeholder={rule.operator === "regex" ? "(?i)report.*\\.pdf$" : t("filters.valuePlaceholder")}
+      title={rule.operator === "regex" ? t("filters.regexHint") : undefined}
     />
   );
 }

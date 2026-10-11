@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { defaultObservationScope, observationScopeSchema } from "@/features/settings/config-model";
 import type { KeyValueRow } from "@/components/key-value-editor";
-import type { FilePolicy, FilterRule, SourceFilter, Task, TaskInput } from "@/lib/types";
+import type { FilePolicy, FilterGroup, Task, TaskInput } from "@/lib/types";
 
 export const RESERVED_METADATA_PREFIX = "_ingestion_";
 
@@ -21,7 +21,7 @@ export const taskFormSchema = z
     sourceCredentialId: z.string().min(1, "validation.required"),
     sourceConfig: z.record(z.string(), z.unknown()),
     filterMode: z.enum(["simple", "advanced"]),
-    filterRules: z.custom<FilterRule[]>((v) => Array.isArray(v)),
+    filterGroup: z.custom<FilterGroup>(),
     advancedQuery: z.string(),
     destinationCredentialId: z.string().min(1, "validation.required"),
     destinationBankId: z.string().trim().min(1, "validation.required"),
@@ -70,7 +70,7 @@ export function emptyTaskForm(): TaskFormValues {
     sourceCredentialId: "",
     sourceConfig: {},
     filterMode: "simple",
-    filterRules: [],
+    filterGroup: { combinator: "and", rules: [], groups: [] },
     advancedQuery: "",
     destinationCredentialId: "",
     destinationBankId: "",
@@ -88,16 +88,16 @@ export function emptyTaskForm(): TaskFormValues {
 }
 
 export function taskToForm(t: Task): TaskFormValues {
-  const filter: SourceFilter = t.sourceFilter ?? { mode: "simple", rules: [], advancedQuery: "" };
+  const filter = t.sourceFilter;
   return {
     name: t.name,
     enabled: t.enabled,
     sourceType: t.sourceType,
     sourceCredentialId: t.sourceCredentialId,
     sourceConfig: { ...(t.sourceConfig ?? {}) },
-    filterMode: filter.mode === "advanced" ? "advanced" : "simple",
-    filterRules: [...(filter.rules ?? [])],
-    advancedQuery: filter.advancedQuery ?? "",
+    filterMode: filter.mode,
+    filterGroup: structuredClone(filter.expression),
+    advancedQuery: filter.advancedQuery,
     destinationCredentialId: t.destinationCredentialId,
     destinationBankId: t.destinationBankId,
     retainStrategy: t.retainStrategy ?? "",
@@ -127,7 +127,7 @@ export function formToInput(v: TaskFormValues, normalizedConfig: Record<string, 
     sourceConfig: normalizedConfig,
     sourceFilter: {
       mode: v.filterMode,
-      rules: v.filterRules,
+      expression: v.filterGroup,
       advancedQuery: v.filterMode === "advanced" ? v.advancedQuery : "",
     },
     destinationCredentialId: v.destinationCredentialId,

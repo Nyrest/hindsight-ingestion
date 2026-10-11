@@ -64,6 +64,15 @@ type taskDTO struct {
 	UpdatedAt               string                `json:"updatedAt"`
 }
 
+func normalizeFilterGroup(group *connectors.FilterGroup) {
+	if group.Rules == nil {
+		group.Rules = []connectors.FilterRule{}
+	}
+	for i := range group.Groups {
+		normalizeFilterGroup(&group.Groups[i])
+	}
+}
+
 func (s *Server) taskView(ctx context.Context, t *models.Task) taskDTO {
 	d := taskDTO{
 		ID: t.ID, Name: t.Name, Enabled: t.Enabled, SourceType: t.SourceType,
@@ -75,7 +84,7 @@ func (s *Server) taskView(ctx context.Context, t *models.Task) taskDTO {
 		ReconcileRequired: t.ReconcileRequired, DestinationLocked: t.DestinationLocked,
 		CreatedAt: timeStr(t.CreatedAt), UpdatedAt: timeStr(t.UpdatedAt),
 		SourceConfig: map[string]any{}, CustomTags: []string{}, CustomMetadata: map[string]string{},
-		SourceFilter: connectors.Filter{Mode: "simple", Rules: []connectors.FilterRule{}},
+		SourceFilter: connectors.Filter{Mode: "simple"},
 	}
 	d.ObservationScopeMode = t.ObservationScopeMode
 	if d.ObservationScopeMode == "" {
@@ -88,9 +97,7 @@ func (s *Server) taskView(ctx context.Context, t *models.Task) taskDTO {
 	if d.SourceFilter.Mode == "" {
 		d.SourceFilter.Mode = "simple"
 	}
-	if d.SourceFilter.Rules == nil {
-		d.SourceFilter.Rules = []connectors.FilterRule{}
-	}
+	normalizeFilterGroup(&d.SourceFilter.Expression)
 	_ = json.Unmarshal([]byte(t.CustomTagsJSON), &d.CustomTags)
 	_ = json.Unmarshal([]byte(t.CustomMetadataJSON), &d.CustomMetadata)
 	if err := json.Unmarshal([]byte(t.FilePolicyJSON), &d.FilePolicy); err != nil {
@@ -235,9 +242,7 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 			filter.AdvancedQuery = ""
 		}
 	}
-	if filter.Rules == nil {
-		filter.Rules = []connectors.FilterRule{}
-	}
+	normalizeFilterGroup(&filter.Expression)
 	for _, f := range info.Fields {
 		if f.Required && connectors.AsString(cfg[f.Key]) == "" {
 			errs.add("sourceConfig."+f.Key, f.Label+" is required")
@@ -247,7 +252,11 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 		var fe *connectors.FieldError
 		switch {
 		case errors.As(err, &fe):
-			errs.add("sourceConfig."+fe.Field, fe.Message)
+			if strings.HasPrefix(fe.Field, "sourceFilter") {
+				errs.add(fe.Field, fe.Message)
+			} else {
+				errs.add("sourceConfig."+fe.Field, fe.Message)
+			}
 		case strings.Contains(err.Error(), "filter"):
 			errs.add("sourceFilter", err.Error())
 		default:

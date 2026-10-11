@@ -23,6 +23,7 @@ export type BrowseRequest = paths["/api/credentials/{id}/browse"]["post"]["reque
 export type BrowseResult = components["schemas"]["BrowseResult"];
 export type StrategiesResult = components["schemas"]["strategiesDTO"];
 export type FilterRule = components["schemas"]["FilterRule"];
+export type FilterGroup = components["schemas"]["FilterGroup"];
 export type SourceFilter = components["schemas"]["Filter"];
 export type TaskState = components["schemas"]["taskStateDTO"];
 export type Task = components["schemas"]["taskDTO"];

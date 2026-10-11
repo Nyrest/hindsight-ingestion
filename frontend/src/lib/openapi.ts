@@ -490,23 +490,33 @@ export interface components {
         };
         Filter: {
             advancedQuery: string;
+            expression: components["schemas"]["FilterGroup"];
             /** @enum {string} */
             mode: "simple" | "advanced";
-            rules: components["schemas"]["FilterRule"][];
+        };
+        FilterCapabilities: {
+            combinators: ("and" | "or")[];
+            maxDepth: number;
         };
         FilterFieldSpec: {
             key: string;
             label: string;
-            operators: ("equals" | "notEquals" | "contains" | "in" | "notIn" | "greaterThan" | "lessThan")[];
+            operators: ("equals" | "notEquals" | "contains" | "notContains" | "startsWith" | "endsWith" | "regex" | "exists" | "notExists" | "containsAny" | "containsAll" | "in" | "notIn" | "greaterThan" | "lessThan" | "geq" | "leq")[];
             options?: components["schemas"]["Option"][];
             /** @enum {string} */
             type: "string" | "boolean" | "number" | "datetime" | "enum";
         };
+        FilterGroup: {
+            /** @enum {string} */
+            combinator?: "and" | "or";
+            groups?: components["schemas"]["FilterGroup"][];
+            rules: components["schemas"]["FilterRule"][];
+        };
         FilterRule: {
             field: string;
             /** @enum {string} */
-            operator: "equals" | "notEquals" | "contains" | "in" | "notIn" | "greaterThan" | "lessThan";
-            value: unknown;
+            operator: "equals" | "notEquals" | "contains" | "notContains" | "startsWith" | "endsWith" | "regex" | "exists" | "notExists" | "containsAny" | "containsAll" | "in" | "notIn" | "greaterThan" | "lessThan" | "geq" | "leq";
+            value?: unknown;
         };
         Option: {
             label: string;
@@ -522,6 +532,7 @@ export interface components {
             capabilities: components["schemas"]["Capabilities"];
             credentialType: string;
             fields: components["schemas"]["FieldSpec"][];
+            filterCapabilities: components["schemas"]["FilterCapabilities"];
             filterFields: components["schemas"]["FilterFieldSpec"][];
             name: string;
             type: string;

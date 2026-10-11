@@ -55,7 +55,7 @@ func (c *Connector) Info() connectors.SourceInfo {
 		FilterFields: []connectors.FilterFieldSpec{
 			{Key: "name", Label: "Title", Type: connectors.FilterString, Operators: connectors.StringOps},
 			{Key: "path", Label: "Path", Type: connectors.FilterString, Operators: connectors.StringOps},
-			{Key: "tags", Label: "Tags", Type: connectors.FilterString, Operators: []string{connectors.OpContains, connectors.OpEquals, connectors.OpNotEquals, connectors.OpIn, connectors.OpNotIn}},
+			{Key: "tags", Label: "Tags", Type: connectors.FilterString, Operators: connectors.StringOps},
 			{Key: "modifiedAt", Label: "Updated", Type: connectors.FilterDatetime, Operators: connectors.DatetimeOps},
 		},
 	}

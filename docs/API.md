@@ -21,6 +21,55 @@ The `filesystem` source uses a credential `rootPath` (absolute server/container
 directory), and task config `{ "folder": ".", "recursive": true }`.
 New tasks default to hourly scheduling (`0 * * * *`) if cron is omitted.
 
+The `github` credential accepts `{ "baseUrl": "https://api.github.com", "token": "" }`.
+The token is optional for public repositories and is stored as a write-only encrypted
+secret. Custom API base URLs preserve path prefixes such as `/api/v3`; the connector
+uses REST API version `2022-11-28`. Connection testing checks API/token access;
+repository and content permissions are checked by browsing and scanning.
+
+GitHub task configuration:
+
+```json
+{
+  "repository": "owner/repo",
+  "ref": "",
+  "folder": ".",
+  "includeFiles": true,
+  "includeIssues": true,
+  "includePullRequests": true,
+  "respectGitignore": true
+}
+```
+
+At least one content switch must be enabled. `ref` accepts a branch, tag, or commit;
+an empty value follows the default branch. `ref` and `folder` affect files only.
+`respectGitignore` applies root/nested rules to committed files, including tracked
+files. Rule changes can delete previously ingested files that now fall outside scope.
+The filesystem connector's ignore behavior is unchanged.
+
+GitHub browsing supports `kind: "repository"` and `kind: "folder"`. PAT users can
+browse accessible repositories. Anonymous users enter `repository` in `config` to
+browse that repository. Folder browsing uses the configured repository/ref and
+returns repository-relative folder IDs. GitHub supports structured filters for
+`contentType` (`file`, `issue`, `pull_request`), `name`, `path`, `extension`, `size`,
+`state` (`open`, `closed`, `merged`), `author`, `labels`, and `modifiedAt`.
+Discussion fields are absent on files; files have no per-path modification timestamp.
+Native advanced queries are not supported.
+
+GitHub documents use `github:<escaped-api-identity>:<repository-id>:file:<escaped-ref>:<escaped-path>`,
+`github:<escaped-api-identity>:<repository-id>:issue:<number>`, or
+`github:<escaped-api-identity>:<repository-id>:pull_request:<number>` as their identity.
+The API identity excludes its URL scheme and trailing slash. Ref/path/API segments
+use URL query escaping; repository IDs survive renames. Identities exclude task IDs
+and moving commit SHAs, so overlapping tasks for the same content share a document.
+
+Incremental scans compare fixed file trees and use a five-minute overlap for updated
+Issues and ordinary/review comments. Full scans catch removals and changes without
+an incremental signal, including comment deletion. Cursors advance only after
+successful destination operations. A partial or failed inventory does not infer
+missing-item deletion. GitHub App/OAuth, Wiki, Discussions, Releases, LFS objects,
+submodule traversal, and inline image downloads are not supported.
+
 All endpoints live under `/api`, return JSON, and are protected by HTTP Basic Auth
 unless `DISABLE_AUTH=true` (except `GET /api/health`, which is always public and
 returns no sensitive data, and the OAuth callback, protected by its state token).
@@ -120,7 +169,8 @@ Dynamic values `task`, `source` and `source_group` resolve to the current task, 
       },
       "browseKinds": ["data_source"],          // what the source "root" picker selects
       "fields": [FieldSpec, ...],               // Task.sourceConfig fields
-      "filterFields": [FilterFieldSpec, ...]    // Task.sourceFilter.rules fields
+      "filterFields": [FilterFieldSpec, ...],   // fields and operators available to structured conditions
+      "filterCapabilities": { "combinators": ["and", "or"], "maxDepth": 8 }
     }
   ]
 }
@@ -155,8 +205,51 @@ Dynamic values `task`, `source` and `source_group` resolve to the current task, 
 }
 ```
 
-Operators: `equals`, `notEquals`, `contains`, `in`, `notIn`, `greaterThan`, `lessThan`.
-For `in`/`notIn` the rule value is an array.
+Use each field's `operators` list from `/api/connectors`; unsupported fields and operators are rejected with `422` and the exact condition path.
+
+| Field type | Operators |
+| --- | --- |
+| String (including string-array attributes such as SiYuan tags) | `equals`, `notEquals`, `contains`, `notContains`, `startsWith`, `endsWith`, `regex`, `in`, `notIn`, `containsAny`, `containsAll`, `exists`, `notExists` |
+| Number | `equals`, `notEquals`, `greaterThan`, `lessThan`, `geq`, `leq`, `in`, `notIn`, `exists`, `notExists` |
+| Boolean | `equals`, `notEquals`, `exists`, `notExists` |
+| Datetime | `greaterThan`, `lessThan`, `geq`, `leq`, `exists`, `notExists` |
+| Enum | `equals`, `notEquals`, `in`, `notIn`, `exists`, `notExists` |
+
+`geq` and `leq` are inclusive comparisons (≥ and ≤). Datetime values accept RFC3339 timestamps (with timezone), local ISO datetime strings, or `YYYY-MM-DD`; timestamps without an offset are interpreted as UTC. The WebUI converts input from the configured timezone to an ISO timestamp.
+
+`in`/`notIn` test exact membership. `containsAny`/`containsAll` test whether any/all of the supplied substrings occur; each takes a non-empty array of values. String matching is case-insensitive except `regex`. On string-array attributes, equality and positive text operators match any element; `containsAll` may match its different values in different elements. Negative operators require an existing attribute and invert the corresponding positive match.
+
+`regex` uses Go/RE2 syntax and is compiled once per scan. It is case-sensitive by default; use `(?i)` for case-insensitive matching. Unsupported patterns (such as lookaround or backreferences) are rejected when saving.
+
+`exists`/`notExists` need no `value`. Missing or null attributes do not exist; `false`, `0`, `""`, and an empty array still exist. Other operators do not match missing/null attributes. Object arrays and nested attribute paths are not supported.
+
+Structured filters use `sourceFilter.expression`:
+
+```json
+{
+  "mode": "simple",
+  "rules": [],
+  "expression": {
+    "combinator": "and",
+    "rules": [
+      { "field": "size", "operator": "geq", "value": 1024 },
+      { "field": "size", "operator": "leq", "value": 10485760 }
+    ],
+    "groups": [{
+      "combinator": "or",
+      "rules": [
+        { "field": "extension", "operator": "in", "value": ["md", "txt"] },
+        { "field": "name", "operator": "regex", "value": "(?i)^report.*\\.pdf$" }
+      ]
+    }]
+  },
+  "advancedQuery": ""
+}
+```
+
+A group's `combinator` applies to both its rules and its child groups, and defaults to `and`. The maximum depth is advertised by `filterCapabilities.maxDepth` (currently 8, including the root). An empty root imposes no restriction; empty nested groups are rejected. `rules` and `groups` are rendered as a visual condition builder.
+
+Legacy flat `sourceFilter.rules` continue to mean AND. Supply either legacy rules or an expression, not both. Legacy advanced filters continue to ignore dormant flat rules. With an explicit expression and `mode: "advanced"`, the native provider query selects candidates and the expression further filters those candidates locally. Google Drive currently supports native queries; all sources support the structured evaluator using their advertised fields. Sync and Dry-run share the same compiled matcher. Changing the filter triggers full reconciliation, including deletion of previously synced documents that leave the scope.
 
 ## Credentials
 

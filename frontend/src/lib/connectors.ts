@@ -4,6 +4,7 @@ import {
   Cloud,
   Database,
   FileText,
+  GitFork,
   HardDrive,
   NotebookPen,
   Plug,
@@ -23,6 +24,7 @@ const TYPE_ICONS: Record<string, LucideIcon> = {
   onedrive: Cloud,
   hindsight: Brain,
   filesystem: HardDrive,
+  github: GitFork,
 };
 
 export function typeIcon(type: string | undefined | null): LucideIcon {
@@ -38,6 +40,7 @@ const FALLBACK_NAMES: Record<string, string> = {
   onedrive: "OneDrive",
   hindsight: "Hindsight",
   filesystem: "File System",
+  github: "GitHub",
 };
 
 export function useConnectors() {
