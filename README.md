@@ -101,39 +101,6 @@ Task actions are available from the **Tasks** menu:
 | **Delete documents** | Pause the task and delete its tagged Hindsight documents and associated memories. Source content stays intact; retry if cleanup fails. |
 | **Disable** | Pause scheduled syncs while keeping the task's configuration and progress. |
 
-### Sync behavior
-
-- **Deletions sync too.** Items removed from the source or excluded by filters, file types or size limits are removed from Hindsight. Incomplete scans do not delete missing items.
-- **Notion and SiYuan deletions use full scans.** The default reconcile interval is **24 hours**. Change it in Settings or use **Full reconcile** to check sooner.
-- **Task changes apply on the next run.** Tags, metadata or retain strategy changes re-ingest matching items. Source or root changes restart the baseline scan.
-- **Destinations lock after the first successful run.** Create another task to change banks or Hindsight connections.
-- **Overlapping tasks share documents.** Tasks syncing the same source item into the same bank can overwrite or delete each other's documents.
-- **Each task runs once at a time.** Progress survives restarts and advances only after success; failed runs retry from the last committed progress.
-
-### Observation scopes
-
-Choose an **Observation scope** globally or per task: **Combined**, **Shared**, **Per tag**, **All combinations**, or **Custom**. Custom groups support existing bank tags, new tags, and dynamic **Current task**, **Current source** and **Current source group** references. Each group becomes one scope; literal tags do not change document tags. All combinations can grow exponentially (2ⁿ − 1 scopes for n tags). Changing scopes re-retains text on the next full scan. Observation scopes apply to Notion and SiYuan text and inline content; file uploads use Combined, following the [Hindsight request model](https://github.com/vectorize-io/hindsight/blob/main/hindsight-api-slim/hindsight_api/api/http.py). See [retain documentation](https://hindsight.vectorize.io/developer/api/retain) for rule behavior.
-
-### Inline images in Notion and SiYuan
-
-Enable **Inline multimodal content** in Settings (off by default), or override it for an individual task. Independently enable **Images** in the effective file policy. Both conditions must be enabled to send body images together with their surrounding text; otherwise the original Markdown is synced. The note body does not depend on the Plain text file policy, and standalone files remain controlled solely by file policy.
-
-Markdown images (including references) and HTML `<img>` elements retain their position and captions. Code examples are excluded. Supported formats are PNG, JPEG, GIF and WebP; no conversion is performed. Each image is limited to the smaller of the configured maximum file size and 20 MiB. Each note is limited to 50 image blocks and the smaller of the configured maximum file size and 100 MiB of image data. Repeated images count toward these document limits.
-
-Notion signed image URLs are refreshed once when expired. SiYuan attachments use authenticated `/assets/...` requests with the notebook location; third-party images and redirects to other origins never receive source credentials. Covers, icons, file properties and other inline media are outside the current scope.
-
-Unreadable, unsupported or oversized images retain their original Markdown and produce warnings in run logs and Dry-run. Successfully submitted notes with missing images advance the cursor and are retried during periodic full reconciliation, **Full reconcile** or **Full re-ingest**. Turning off either image condition replaces the document with text and clears the image retry marker. Configuration changes trigger reconciliation even for unedited notes. Replacing an image without changing the note revision requires **Full re-ingest**.
-
-The destination must support the [Hindsight ordered content blocks interface](https://hindsight.vectorize.io/blog/2026/09/16/screenshot-agent-memory) and have a vision model configured. A rejected multimodal request fails the run; it is not silently converted to text. Dry-run may download images for verification but never writes Hindsight documents, run history, ledger rows or cursors.
-
-### Task filters
-
-Start with **Add filter**. Choose **Match all (AND)** or **Match any (OR)**, then use **Add group** to nest conditions when needed. For example: size ≥ 1 KB AND (extension is any of `md`, `txt` OR name matches `(?i)^report.*\.pdf$`).
-
-Available operators follow the source's fields: text matching, prefixes/suffixes, regular expressions, any/all substrings, numeric and time comparisons (including ≥ / ≤), membership, and existence checks. SiYuan tags can be matched by element. Existence checks require no value; regex uses Go/RE2 syntax, with `(?i)` to ignore case.
-
-Google Drive's **Advanced** mode combines a native query with optional visual conditions. Use **Dry-run** to check the resulting scope before running. Changing filters triggers reconciliation and can remove previously synced documents that no longer match.
-
 ## ⚙️ Configuration
 
 Use `.env` for the bundled Compose deployment. Configure source credentials, tasks and global sync settings in the WebUI.
@@ -157,12 +124,6 @@ For these additional variables, edit the Compose service's `environment` section
 | `DB_DSN` | `/data/hindsight-ingestion.db` for SQLite | SQLite file path or database connection string. Required for PostgreSQL and MySQL. |
 | `LISTEN_ADDR` | `:8080` | HTTP listen address. |
 | `NOTION_API_BASE` | `https://api.notion.com/v1` | Alternative Notion API URL for a proxy or local testing. |
-
-### Docker releases
-
-Published images are available on [GHCR](https://github.com/Nyrest/hindsight-ingestion/pkgs/container/hindsight-ingestion) for `linux/amd64` and `linux/arm64`. Docker automatically selects the matching architecture.
-
-The bundled Compose deployment uses `latest`, which tracks the latest stable GitHub Release. Pre-releases do not update `latest`.
 
 ## 🛠️ Development
 
@@ -199,8 +160,6 @@ bun run generate:api
 Backend tests detect a stale OpenAPI contract.
 
 </details>
-
-[API reference](docs/API.md) · [OpenAPI contract](docs/openapi.json) · [Validation status](docs/VALIDATION.md)
 
 ## 📜 License
 
