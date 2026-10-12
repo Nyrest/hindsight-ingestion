@@ -14,6 +14,7 @@ import (
 	"gorm.io/gorm/clause"
 
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
+	"github.com/Nyrest/hindsight-ingestion/internal/connectors/email"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors/sqlsource"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors/webcal"
 	"github.com/Nyrest/hindsight-ingestion/internal/credentials"
@@ -167,6 +168,9 @@ func (s *Server) patchCredential(w http.ResponseWriter, r *http.Request) {
 		var newConfig map[string]any
 		_ = json.Unmarshal([]byte(m.ConfigJSON), &newConfig)
 		changedSource := ""
+		if m.Type == email.CredentialType && email.AccountKey(connectors.Credential{Config: oldConfig}) != email.AccountKey(connectors.Credential{Config: newConfig}) {
+			changedSource = email.SourceType
+		}
 		if sqlsource.IsCredential(m.Type) && oldTarget != sqlsource.ConnectionTarget(m.Type, newConfig) {
 			changedSource = sqlsource.SourceType
 		}

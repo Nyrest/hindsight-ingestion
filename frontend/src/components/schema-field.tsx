@@ -87,7 +87,7 @@ export function normalizeConfig(fields: FieldSpec[], config: Record<string, unkn
   const out: Record<string, unknown> = { ...config };
   for (const f of fields) {
     const v = out[f.key];
-    if (f.type === "string_list") out[f.key] = typeof v === "string" ? v.split(/\r?\n/).map((entry) => entry.trim()).filter(Boolean) : v ?? [];
+    if (f.type === "string_list") out[f.key] = typeof v === "string" ? v.split(/\r?\n/).map((entry) => f.browse ? entry : entry.trim()).filter((entry) => entry.trim()) : v ?? [];
     if (f.type === "multi_select") out[f.key] = v ?? [];
     if (f.type === "number") {
       if (isEmptyValue(v)) delete out[f.key];
@@ -139,8 +139,13 @@ export function SchemaField({
   switch (f.type) {
     case "string_list":
       control = (
+        <div className="space-y-2">
         <Textarea id={id} value={Array.isArray(value) ? value.join("\n") : str}
           onChange={(event) => onChange(event.target.value)} aria-invalid={!!error} rows={4} placeholder={f.placeholder} />
+        {onBrowse && <Button type="button" variant="outline" size="sm" onClick={onBrowse} disabled={!!browseDisabledReason} title={browseDisabledReason}>
+          <FolderSearch />{t("browse.title")}
+        </Button>}
+        </div>
       );
       break;
     case "multi_select": {

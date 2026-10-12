@@ -3,6 +3,7 @@ package sync
 import (
 	"context"
 	"errors"
+	"github.com/google/uuid"
 	"io"
 	"sort"
 	"strings"
@@ -74,6 +75,7 @@ func (e *Engine) DryRunWithOptions(ctx context.Context, taskID string, opts RunO
 	}
 	observed := map[string]DryRunItem{}
 	res, err := r.scanPreview(connectors.ScanRequest{
+		TaskID: taskID, RunID: uuid.NewString(), Preview: true,
 		Timezone:   cfg.Timezone,
 		Credential: r.cred, Config: r.srcCfg, Filter: r.filter, Full: true,
 		Log: func(string, string) {},
@@ -87,7 +89,7 @@ func (e *Engine) DryRunWithOptions(ctx context.Context, taskID string, opts RunO
 		return result, ctx.Err()
 	}
 	err = errors.Join(err, res.Error)
-	if r.task.SourceType == "webcal" {
+	if r.task.SourceType == "webcal" || r.task.SourceType == "email" {
 		err = errors.Join(err, r.checkTaskRevision(e.DB.WithContext(ctx)))
 		for _, preview := range observed {
 			if preview.Action == "fail" {
@@ -100,7 +102,7 @@ func (e *Engine) DryRunWithOptions(ctx context.Context, taskID string, opts RunO
 		result.Error = err.Error()
 	}
 	result.DiscoveredCount = len(observed)
-	if !result.Complete && (r.sharedDocs != nil || r.task.SourceType == "webcal") {
+	if !result.Complete && (r.sharedDocs != nil || r.task.SourceType == "webcal" || r.task.SourceType == "email") {
 		for id, preview := range observed {
 			if preview.Action == "delete" {
 				preview.Action, preview.Reason = "skip", "incomplete source inventory; document unchanged"
@@ -185,7 +187,7 @@ func (r *runner) previewItem(item connectors.SourceItem) DryRunItem {
 	}
 	if row.DestinationPresent &&
 		row.DestinationDocumentID == documentID &&
-		!(r.task.SourceType == "webcal" && row.LastError != "") &&
+		!((r.task.SourceType == "webcal" || r.task.SourceType == "email") && row.LastError != "") &&
 		row.SyncedFingerprint == r.itemFingerprint(item, tags, md) && !(r.includesImages() && row.NeedsImageRetry) {
 		preview.Action = "unchanged"
 		return preview

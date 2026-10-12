@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FieldRow } from "@/components/field-row";
 import { SchemaField } from "@/components/schema-field";
 import { TypeIcon } from "@/components/type-icon";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BrowseDialog } from "@/features/credentials/browse-dialog";
+import { useBrowse } from "@/features/credentials/api";
 import type { Credential, FieldSpec, SourceSpec } from "@/lib/types";
 import { providerCopy } from "@/lib/provider-copy";
 import { cn } from "@/lib/utils";
@@ -85,6 +86,20 @@ export function SourceConfigFields({
   const [browseField, setBrowseField] = useState<FieldSpec | null>(null);
   const [labels, setLabels] = useState<Record<string, string>>({});
   const credTypeName = source.name;
+  const defaultsFor = useRef("");
+  const mailFolders = useBrowse(
+    credentialId,
+    { parentId: "", kind: "folder" },
+    source.type === "email" && !!credentialId && !editing,
+  );
+  useEffect(() => {
+    if (editing || source.type !== "email" || !mailFolders.data || defaultsFor.current === credentialId) return;
+    defaultsFor.current = credentialId;
+    const folders = config.folders;
+    if (!folders || (Array.isArray(folders) && folders.length === 0)) {
+      onConfigChange("folders", mailFolders.data.defaultSelection ?? []);
+    }
+  }, [editing, source.type, credentialId, mailFolders.data, config.folders, onConfigChange]);
 
   return (
     <>
@@ -95,7 +110,14 @@ export function SourceConfigFields({
           types={source.credentialTypes}
           typeLabel={credTypeName}
           value={credentialId}
-          onChange={onCredentialChange}
+          onChange={(id) => {
+            if (source.type === "email" && id !== credentialId) {
+              defaultsFor.current = "";
+              onConfigChange("folders", []);
+              onConfigChange("excludeFolders", []);
+            }
+            onCredentialChange(id);
+          }}
           invalid={!!credentialError}
         />
       </FieldRow>
@@ -136,7 +158,10 @@ export function SourceConfigFields({
           credentialId={credentialId}
           kind={browseField.browseKind ?? source.browseKinds?.[0] ?? ""}
           config={config}
-          title={t("browse.titleFor", { label: browseField.label })}
+          title={t("browse.titleFor", { label: providerCopy(browseField.label, t) })}
+          multiple={browseField.type === "string_list"}
+          selectedIds={Array.isArray(config[browseField.key]) ? config[browseField.key] as string[] : String(config[browseField.key] ?? "").split(/\r?\n/).filter(Boolean)}
+          onSelectMany={(items) => onConfigChange(browseField.key, items.map((item) => item.id))}
           onSelect={(item) => {
             onConfigChange(browseField.key, item.id);
             setLabels((l) => ({ ...l, [browseField.key]: item.path || item.name }));

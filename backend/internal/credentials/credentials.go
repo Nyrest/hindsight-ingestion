@@ -249,6 +249,18 @@ func (s *Service) Apply(m *models.Credential, in Input, creating bool) error {
 		}
 	}
 
+	if ct.Validate != nil {
+		if err := ct.Validate(connectors.Credential{Type: m.Type, Config: cfg, Secrets: blob.Secrets}); err != nil {
+			var fieldErr *connectors.FieldError
+			if errors.As(err, &fieldErr) {
+				return invalid(fieldErr.Field, fieldErr.Message)
+			}
+			return err
+		}
+	}
+	if m.Type == "imap" && len(in.CustomHeaders) > 0 {
+		return invalid("customHeaders", "IMAP does not use HTTP headers")
+	}
 	if in.HeadersSet {
 		headers, names, err := mergeHeaders(blob.Headers, in.CustomHeaders)
 		if err != nil {

@@ -148,6 +148,7 @@ func (s *Server) getTask(w http.ResponseWriter, r *http.Request) {
 
 // taskBody is a create/patch request. Pointer fields are optional on patch.
 type taskBody struct {
+	ExpectedConfigRevision  *int64                 `json:"expectedConfigRevision"`
 	ObservationScopeMode    *string                `json:"observationScopeMode" enum:"global,override"`
 	ObservationScope        *observations.Scope    `json:"observationScope"`
 	Name                    *string                `json:"name"`
@@ -362,7 +363,7 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 
 	if b.CronExpression != nil {
 		t.CronExpression = strings.TrimSpace(*b.CronExpression)
-	} else if creating && t.SourceType == "webcal" {
+	} else if creating && (t.SourceType == "webcal" || t.SourceType == "email") {
 		t.CronExpression = "0 * * * *"
 	}
 	if _, err := scheduler.ValidateCron(t.CronExpression, "UTC", 1); err != nil {
@@ -483,6 +484,10 @@ func (s *Server) patchTask(w http.ResponseWriter, r *http.Request) {
 	}
 	origDestCred, origBank := t.DestinationCredentialID, t.DestinationBankID
 	originalRevision := t.ConfigRevision
+	if t.SourceType == "email" && b.ExpectedConfigRevision != nil && *b.ExpectedConfigRevision != originalRevision {
+		writeError(w, http.StatusConflict, "conflict", "Email task configuration changed; reload the task")
+		return
+	}
 	resetCursor, errs := s.applyTask(r.Context(), &t, b, false)
 	if len(errs) > 0 {
 		writeValidation(w, "Please fix the highlighted fields", errs)
@@ -496,16 +501,19 @@ func (s *Server) patchTask(w http.ResponseWriter, r *http.Request) {
 		// locked the destination since the task was loaded.
 		var cur models.Task
 		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).
-			Select("destination_locked", "config_revision").First(&cur, "id = ?", t.ID).Error; err != nil {
+			Select("destination_locked", "config_revision", "reconcile_required").First(&cur, "id = ?", t.ID).Error; err != nil {
 			return err
 		}
-		if (t.SourceType == "sql" || t.SourceType == "webcal") && cur.ConfigRevision != originalRevision {
+		if (t.SourceType == "sql" || t.SourceType == "webcal" || t.SourceType == "email") && cur.ConfigRevision != originalRevision {
 			return errChanged
 		}
 		if cur.DestinationLocked && destChanged {
 			return errLocked
 		}
 		t.DestinationLocked = cur.DestinationLocked
+		if t.SourceType == "email" && cur.ReconcileRequired {
+			t.ReconcileRequired = true
+		}
 		if err := tx.Save(&t).Error; err != nil {
 			return err
 		}
@@ -587,7 +595,7 @@ func (s *Server) deleteTask(w http.ResponseWriter, r *http.Request) {
 				return err
 			}
 		}
-		for _, m := range []any{&models.SourceJob{}, &models.TaskRun{}, &models.TaskItem{}, &models.TaskState{}} {
+		for _, m := range []any{&models.EmailScanOccurrence{}, &models.EmailScanIdentity{}, &models.EmailOccurrence{}, &models.EmailIdentity{}, &models.SourceJob{}, &models.TaskRun{}, &models.TaskItem{}, &models.TaskState{}} {
 			if err := tx.Where("task_id = ?", id).Delete(m).Error; err != nil {
 				return err
 			}

@@ -190,6 +190,11 @@ func (r *runner) execute(opts RunOptions) error {
 	if r.dest, err = r.e.NewDestination(destCred); err != nil {
 		return err
 	}
+	if r.task.SourceType == "email" {
+		if err := r.fenceEmailOperations(); err != nil {
+			return err
+		}
+	}
 	if r.task.SourceType == connectors.SourceCloudflareCrawl {
 		key, err := shared.TargetKey(destCred, r.task.DestinationBankID)
 		if err != nil {
@@ -207,6 +212,9 @@ func (r *runner) execute(opts RunOptions) error {
 	switch {
 	case r.reing:
 		r.full = true
+	case r.task.SourceType == "email" && r.state.PendingScanRunID != "":
+		r.full = true
+		r.logf("info", "Recovering an uncommitted email scan with full reconciliation")
 	case opts.Mode == models.SyncFull:
 		r.full = true
 		r.logf("info", "Full reconciliation requested")
@@ -248,6 +256,18 @@ func (r *runner) execute(opts RunOptions) error {
 		return err
 	}
 	r.logf("info", "Starting %s sync (generation %d)", mode, r.gen)
+	if committer, ok := r.src.(connectors.ScanCommitter); ok {
+		if err := db.Model(&models.TaskState{}).Where("task_id = ?", r.task.ID).Update("pending_scan_run_id", r.run.ID).Error; err != nil {
+			return err
+		}
+		defer func() {
+			cleanup, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+			defer cancel()
+			if err := committer.AbortScan(cleanup, r.run.ID); err != nil {
+				r.e.Log.Error("clear connector scan staging", "run", r.run.ID, "error", err)
+			}
+		}()
+	}
 
 	var cursor json.RawMessage
 	if hasCursor && (!r.full || r.src.Info().Capabilities.IncrementalMode == connectors.IncrementalConditionalInventory) {
@@ -256,6 +276,7 @@ func (r *runner) execute(opts RunOptions) error {
 
 	// 1. Scan source; changes are submitted as they are discovered.
 	res, err := r.scanSource(connectors.ScanRequest{
+		TaskID: r.task.ID, RunID: r.run.ID, Generation: r.gen,
 		Timezone:   cfg.Timezone,
 		Credential: r.cred,
 		Config:     r.srcCfg,
@@ -266,7 +287,7 @@ func (r *runner) execute(opts RunOptions) error {
 		Log:        func(level, msg string) { r.logf(level, "%s", msg) },
 	}, opts)
 	if err != nil {
-		if r.task.SourceType == "webcal" {
+		if r.task.SourceType == "webcal" || r.task.SourceType == "email" {
 			return errors.Join(fmt.Errorf("scan source: %w", err), r.flushSeen(), r.awaitPending())
 		}
 		return fmt.Errorf("scan source: %w", err)
@@ -284,14 +305,24 @@ func (r *runner) execute(opts RunOptions) error {
 	if r.task.SourceType == "sql" && !res.Complete {
 		return errors.New("SQL inventory was incomplete; deletion and state commit skipped")
 	}
+	if r.task.SourceType == "email" && r.full && !res.Complete {
+		return errors.New("Email full inventory was incomplete; deletion and state commit skipped")
+	}
 
-	if (r.sharedDocs != nil || r.task.SourceType == "sql" || r.task.SourceType == "webcal") && len(r.failed) > 0 {
+	if (r.sharedDocs != nil || r.task.SourceType == "sql" || r.task.SourceType == "webcal" || r.task.SourceType == "email") && len(r.failed) > 0 {
 		return fmt.Errorf("%d item(s) failed; deletion and cursor commit skipped", len(r.failed))
 	}
 
 	// 3. Reconcile deletions. Scope exits are always safe; disappearance is
 	// only inferred from a complete inventory.
 	complete := res.Complete
+	if r.task.SourceType == "email" && complete && !r.full {
+		r.full = true
+		r.run.SyncMode = models.SyncFull
+		if err := db.Model(r.run).Update("sync_mode", models.SyncFull).Error; err != nil {
+			return err
+		}
+	}
 	if err := r.reconcileDeletions(complete); err != nil {
 		return err
 	}
@@ -306,12 +337,20 @@ func (r *runner) execute(opts RunOptions) error {
 		"committed_cursor_json": string(res.Cursor),
 		"last_success_at":       finished,
 	}
+	if _, ok := r.src.(connectors.ScanCommitter); ok {
+		updates["pending_scan_run_id"] = ""
+	}
 	if complete {
 		updates["last_full_reconcile_at"] = finished
 	}
 	err = r.e.DB.WithContext(r.ctx).Transaction(func(tx *gorm.DB) error {
 		if err := r.checkTaskRevision(tx.Clauses(clause.Locking{Strength: "UPDATE"})); err != nil {
 			return err
+		}
+		if committer, ok := r.src.(connectors.ScanCommitter); ok {
+			if err := committer.CommitScan(r.ctx, r.run.ID, tx); err != nil {
+				return err
+			}
 		}
 		if err := tx.Model(&models.TaskState{}).Where("task_id = ?", r.task.ID).Updates(updates).Error; err != nil {
 			return err
@@ -442,7 +481,7 @@ func (r *runner) observe(item connectors.SourceItem) error {
 		row.SyncedFingerprint = actual
 	}
 
-	if !r.reing && row.DestinationPresent && row.SyncedFingerprint == target && !(r.task.SourceType == "webcal" && row.LastError != "") && !(r.full && r.includesImages() && row.NeedsImageRetry) {
+	if !r.reing && row.DestinationPresent && row.SyncedFingerprint == target && !((r.task.SourceType == "webcal" || r.task.SourceType == "email") && row.LastError != "") && !(r.full && r.includesImages() && row.NeedsImageRetry) {
 		r.run.UnchangedCount++
 		return r.queueSeen(row)
 	}
@@ -590,11 +629,18 @@ func (r *runner) flushText() error {
 		keys = append(keys, j.row.DestinationDocumentID+"\x00"+j.row.TargetFingerprint)
 	}
 	operationID := OperationID(r.run.ID, keys)
-	if err := r.recordCalendarRetainIntent(batch); err != nil {
+	if err := r.recordRetainIntent(batch); err != nil {
 		return err
 	}
 	if r.sharedDocs != nil {
 		if err := r.reserveShared(batch, operationID); err != nil {
+			return err
+		}
+	}
+	var emailIntent string
+	if r.task.SourceType == "email" {
+		emailIntent = uuid.NewString()
+		if err := r.e.DB.WithContext(r.ctx).Create(&models.HindsightOperation{ID: emailIntent, RunID: r.run.ID, RemoteOperationID: operationID, Type: "retain_intent", Status: "submitted"}).Error; err != nil {
 			return err
 		}
 	}
@@ -608,6 +654,16 @@ func (r *runner) flushText() error {
 	}
 	if r.sharedDocs != nil {
 		err = r.recordSharedOperations(ops, operationID)
+	} else if emailIntent != "" {
+		err = r.e.DB.WithContext(r.ctx).Transaction(func(tx *gorm.DB) error {
+			rows := r.operationRows(ops, "retain")
+			if len(rows) > 0 {
+				if err := tx.Create(&rows).Error; err != nil {
+					return err
+				}
+			}
+			return tx.Model(&models.HindsightOperation{}).Where("id = ?", emailIntent).Update("status", "completed").Error
+		})
 	} else {
 		err = r.recordOps(ops, "retain")
 	}
@@ -794,7 +850,7 @@ func (r *runner) awaitPending() error {
 }
 
 func (r *runner) checkTaskRevision(db *gorm.DB) error {
-	if r.task.SourceType != "sql" && r.task.SourceType != "webcal" {
+	if r.task.SourceType != "sql" && r.task.SourceType != "webcal" && r.task.SourceType != "email" {
 		return nil
 	}
 	var current models.Task
@@ -812,6 +868,9 @@ func (r *runner) reconcileDeletions(complete bool) error {
 		return err
 	}
 	if complete {
+		if r.task.SourceType == "email" {
+			return r.reconcileEmailDeletions()
+		}
 		var gone []models.TaskItem
 		if err := r.e.DB.WithContext(r.ctx).
 			Where("task_id = ? AND last_seen_generation < ? AND destination_present = ?", r.task.ID, r.gen, true).
@@ -1005,15 +1064,19 @@ func (e *Engine) MarkTerminal(runID, status, msg string) {
 	e.writeTerminal(runID, map[string]any{"status": status, "finished_at": time.Now().UTC(), "error_message": truncate(msg, 4000)})
 }
 
-func (r *runner) recordCalendarRetainIntent(batch []textJob) error {
-	if r.task.SourceType != "webcal" {
+func (r *runner) recordRetainIntent(batch []textJob) error {
+	if r.task.SourceType != "webcal" && r.task.SourceType != "email" {
 		return nil
 	}
 	rows := make([]models.TaskItem, 0, len(batch))
 	for index := range batch {
-		// Persist before sending so an interrupted re-ingest cannot be hidden by HTTP 304.
+		// Unconfirmed writes must remain retryable after an interrupted run.
 		batch[index].row.LastError = "Hindsight retain has not been confirmed"
-		rows = append(rows, batch[index].row)
+		row := batch[index].row
+		if r.task.SourceType == "email" {
+			row.DestinationPresent = true
+		}
+		rows = append(rows, row)
 	}
 	return r.upsertRows(rows)
 }

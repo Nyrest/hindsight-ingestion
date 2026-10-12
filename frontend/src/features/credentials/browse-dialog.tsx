@@ -71,6 +71,9 @@ export function BrowseDialog({
   config,
   title,
   onSelect,
+  multiple = false,
+  selectedIds,
+  onSelectMany,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -79,11 +82,15 @@ export function BrowseDialog({
   config?: Record<string, unknown>;
   title?: string;
   onSelect: (item: BrowseSelection) => void;
+  multiple?: boolean;
+  selectedIds?: string[];
+  onSelectMany?: (items: BrowseSelection[]) => void;
 }) {
   const { t } = useTranslation();
   const [parentId, setParentId] = useState("");
   const [trail, setTrail] = useState<Breadcrumb[]>([]);
   const [selected, setSelected] = useState<BrowseItem | null>(null);
+  const [selections, setSelections] = useState<BrowseSelection[]>([]);
   const [search, setSearch] = useState("");
   const query = search.trim();
   const debouncedQuery = useDebounced(query);
@@ -93,6 +100,7 @@ export function BrowseDialog({
       setParentId("");
       setTrail([]);
       setSelected(null);
+      setSelections((selectedIds ?? []).map((id) => ({ id, name: id, kind: kind || "folder" })));
       setSearch("");
     }
   }, [open, credentialId]);
@@ -134,6 +142,11 @@ export function BrowseDialog({
   }
 
   function confirm() {
+    if (multiple) {
+      onSelectMany?.(selections);
+      onOpenChange(false);
+      return;
+    }
     if (!selected) return;
     onSelect({ id: selected.id, name: selected.name, path: selected.path, kind: selected.kind });
     onOpenChange(false);
@@ -231,7 +244,7 @@ export function BrowseDialog({
             <ul className="divide-y">
               {matchingItems.map((item) => {
                 const Icon = KIND_ICONS[item.kind] ?? FileText;
-                const isSel = selected?.id === item.id;
+                const isSel = multiple ? selections.some((entry) => entry.id === item.id) : selected?.id === item.id;
                 return (
                   <li key={item.id}>
                     <div
@@ -247,14 +260,22 @@ export function BrowseDialog({
                           "flex min-w-0 flex-1 items-center gap-2.5 rounded px-1.5 py-1 text-left",
                           item.selectable ? "hover:bg-accent" : "cursor-default",
                         )}
-                        onClick={() => item.selectable && setSelected(item)}
+                        onClick={() => {
+                          if (!item.selectable) return;
+                          if (multiple) {
+                            setSelections((current) => isSel ? current.filter((entry) => entry.id !== item.id) : [...current, item]);
+                          } else {
+                            setSelected(item);
+                          }
+                        }}
                         onDoubleClick={() => item.hasChildren && enter(item)}
                         aria-pressed={item.selectable ? isSel : undefined}
                         disabled={!item.selectable && !item.hasChildren}
                       >
                         <span
                           className={cn(
-                            "flex size-4 shrink-0 items-center justify-center rounded-full border",
+                            "flex size-4 shrink-0 items-center justify-center border",
+                            multiple ? "rounded" : "rounded-full",
                             isSel ? "border-primary bg-primary text-primary-foreground" : "border-input",
                             !item.selectable && "invisible",
                           )}
@@ -291,9 +312,19 @@ export function BrowseDialog({
           )}
         </div>
 
+        {multiple && (
+          <div className="flex max-h-24 flex-wrap gap-1 overflow-y-auto" aria-label={t("browse.selected")}>
+            {selections.map((item) => (
+              <Button key={item.id} type="button" variant="outline" size="sm" onClick={() => setSelections((current) => current.filter((entry) => entry.id !== item.id))}>
+                <span className="max-w-60 truncate">{item.path || item.name}</span>
+                <X className="size-3" />
+              </Button>
+            ))}
+          </div>
+        )}
         <DialogFooter className="items-center gap-2 sm:justify-between">
           <p className="min-w-0 truncate text-xs text-muted-foreground">
-            {selected ? (
+            {multiple ? `${t("browse.selected")}: ${selections.length}` : selected ? (
               <>
                 {t("browse.selected")}: <span className="font-medium text-foreground">{selected.path || selected.name}</span>
               </>
@@ -305,7 +336,7 @@ export function BrowseDialog({
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               {t("common.cancel")}
             </Button>
-            <Button type="button" onClick={confirm} disabled={!selected || loading}>
+            <Button type="button" onClick={confirm} disabled={(!multiple && !selected) || loading || q.isError}>
               {q.isFetching && !q.isLoading ? <Loader2 className="animate-spin" /> : null}
               {t("browse.select")}
             </Button>

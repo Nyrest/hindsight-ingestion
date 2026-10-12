@@ -35,6 +35,12 @@
           },
           "selectable": {
             "type": "boolean"
+          },
+          "specialUse": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
           }
         },
         "required": [
@@ -52,6 +58,12 @@
           "breadcrumbs": {
             "items": {
               "$ref": "#/components/schemas/Breadcrumb"
+            },
+            "type": "array"
+          },
+          "defaultSelection": {
+            "items": {
+              "type": "string"
             },
             "type": "array"
           },
@@ -2915,6 +2927,9 @@
                   "enabled": {
                     "type": "boolean"
                   },
+                  "expectedConfigRevision": {
+                    "type": "integer"
+                  },
                   "filePolicy": {
                     "$ref": "#/components/schemas/FilePolicy"
                   },
@@ -3199,6 +3214,9 @@
                   },
                   "enabled": {
                     "type": "boolean"
+                  },
+                  "expectedConfigRevision": {
+                    "type": "integer"
                   },
                   "filePolicy": {
                     "$ref": "#/components/schemas/FilePolicy"

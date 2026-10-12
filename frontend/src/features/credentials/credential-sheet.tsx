@@ -79,6 +79,7 @@ export function CredentialSheet({
   });
   const type = form.watch("type");
   const isSQL = ["sql_mysql", "sql_postgres", "sql_sqlite"].includes(type);
+  const supportsHeaders = !isSQL && type!=="imap";
   const typeSpec = findCredentialType(connectors.data, type);
 
   const [proxyMode, setProxyMode] = useState<"global" | "override">("global");
@@ -120,7 +121,7 @@ export function CredentialSheet({
     if (!typeSpec) return;
     const errs = validateConfig(typeSpec.fields, config, tr);
     setConfigErrors(errs);
-    if (Object.keys(errs).length || (!isSQL && headers.error)) return;
+    if (Object.keys(errs).length || (supportsHeaders && headers.error)) return;
     if (!isSQL && proxyMode === "override") {
       const validation = proxySchema.safeParse(proxy);
       if (!validation.success) { setProxyError(t(validation.error.issues[0].message)); return; }
@@ -130,7 +131,7 @@ export function CredentialSheet({
       proxy: !isSQL && proxyMode === "override" ? proxy : undefined,
       name: values.name.trim(),
       config: normalizeConfig(typeSpec.fields, config),
-      customHeaders: isSQL ? {} : headers.headers,
+      customHeaders: supportsHeaders ? headers.headers : {},
     };
     try {
       const saved = editing
@@ -279,12 +280,12 @@ export function CredentialSheet({
               <Separator />
 
               <ProxyEditor value={proxy} mode={proxyMode} onModeChange={(mode) => { setProxyMode(mode); setProxyError(undefined); }} onChange={(next) => { setProxy(next); setProxyError(undefined); }} error={proxyError} />
-              <Separator />
+              {supportsHeaders && <><Separator />
               <CustomHeadersEditor
                 key={headersKey}
                 initial={credential?.customHeaders ?? {}}
                 onChange={setHeaders}
-              />
+              /></>}
               </>}
             </>
           )}
@@ -300,7 +301,7 @@ export function CredentialSheet({
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={pending}>
             {t("common.cancel")}
           </Button>
-          <Button type="submit" form="credential-form" disabled={pending || !typeSpec || (!isSQL && !!headers.error)}>
+          <Button type="submit" form="credential-form" disabled={pending || !typeSpec || (supportsHeaders && !!headers.error)}>
             {pending && <Loader2 className="animate-spin" />}
             {editing ? t("common.save") : t("common.create")}
           </Button>

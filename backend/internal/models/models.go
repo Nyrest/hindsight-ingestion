@@ -87,7 +87,8 @@ type Task struct {
 
 // TaskState is the durable incremental-sync state of a Task.
 type TaskState struct {
-	TaskID string `gorm:"primaryKey;size:36"`
+	PendingScanRunID string `gorm:"size:36"`
+	TaskID           string `gorm:"primaryKey;size:36"`
 
 	CommittedCursorJSON string `gorm:"type:text"`
 	ScanGeneration      int64  `gorm:"not null;default:0"`
@@ -220,5 +221,6 @@ func All() []any {
 	return []any{
 		&Credential{}, &Task{}, &TaskState{}, &TaskItem{},
 		&TaskRun{}, &HindsightOperation{}, &Setting{}, &SourceJob{}, &SharedDocument{},
+		&EmailIdentity{}, &EmailOccurrence{}, &EmailScanIdentity{}, &EmailScanOccurrence{},
 	}
 }

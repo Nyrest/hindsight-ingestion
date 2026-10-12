@@ -120,6 +120,7 @@ export function TaskEditor({ task }: { task?: Task }) {
   const now = useNow();
   const editing = !!task;
   const [dryRunOpen, setDryRunOpen] = useState(false);
+  const [expectedRevision,setExpectedRevision] = useState(task?.configRevision);
   const connectors = useConnectors();
   const credentials = useCredentials();
   const settings = useQuery({ queryKey: qk.settings, queryFn: api.getSettings, staleTime: 60_000 });
@@ -182,7 +183,7 @@ export function TaskEditor({ task }: { task?: Task }) {
   function changeSourceType(type: string) {
     const spec = findSource(connectors.data, type);
     const schedule = form.getFieldState("cronExpression");
-    if (!editing && type === "webcal" && !schedule.isDirty && !schedule.isTouched && !form.getValues("cronExpression")) {
+    if (!editing && (type === "webcal" || type === "email") && !schedule.isDirty && !schedule.isTouched && !form.getValues("cronExpression")) {
       setValue("cronExpression", "0 * * * *", { shouldDirty: true });
     }
     setValue("sourceType", type, { shouldDirty: true, shouldValidate: formState.isSubmitted });
@@ -222,7 +223,8 @@ export function TaskEditor({ task }: { task?: Task }) {
           delete body.destinationCredentialId;
           delete body.destinationBankId;
         }
-        const saved = await update.mutateAsync({ id: task!.id, body });
+        const saved = await update.mutateAsync({ id: task!.id, body: {...body,...(sourceType==="email" ? {expectedConfigRevision:expectedRevision} : {})} });
+        setExpectedRevision(saved.configRevision);
         form.reset(taskToForm(saved));
         toast.success(t("taskEditor.toast.updated"), { description: saved.name });
       } else {

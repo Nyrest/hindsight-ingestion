@@ -435,9 +435,11 @@ export interface components {
             name: string;
             path: string;
             selectable: boolean;
+            specialUse?: string[];
         };
         BrowseResult: {
             breadcrumbs: components["schemas"]["Breadcrumb"][];
+            defaultSelection?: string[];
             items: components["schemas"]["BrowseItem"][];
             parentId: string;
             supportsSearch: boolean;
@@ -1721,6 +1723,7 @@ export interface operations {
                     destinationBankId: string;
                     destinationCredentialId: string;
                     enabled?: boolean;
+                    expectedConfigRevision?: number;
                     filePolicy?: components["schemas"]["FilePolicy"];
                     /** @enum {string} */
                     filePolicyMode?: "global" | "override";
@@ -1915,6 +1918,7 @@ export interface operations {
                     destinationBankId?: string;
                     destinationCredentialId?: string;
                     enabled?: boolean;
+                    expectedConfigRevision?: number;
                     filePolicy?: components["schemas"]["FilePolicy"];
                     /** @enum {string} */
                     filePolicyMode?: "global" | "override";

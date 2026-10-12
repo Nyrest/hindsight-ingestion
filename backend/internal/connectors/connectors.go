@@ -11,6 +11,8 @@ import (
 	"sort"
 	"time"
 
+	"gorm.io/gorm"
+
 	"github.com/Nyrest/hindsight-ingestion/internal/proxy"
 )
 
@@ -166,11 +168,12 @@ type Filter struct {
 
 // CredentialType describes a credential kind.
 type CredentialType struct {
-	Type        string      `json:"type"`
-	Name        string      `json:"name"`
-	Description string      `json:"description"`
-	OAuth       bool        `json:"oauth"`
-	Fields      []FieldSpec `json:"fields"`
+	Validate    func(Credential) error `json:"-"`
+	Type        string                 `json:"type"`
+	Name        string                 `json:"name"`
+	Description string                 `json:"description"`
+	OAuth       bool                   `json:"oauth"`
+	Fields      []FieldSpec            `json:"fields"`
 }
 
 // SourceInfo describes a source connector for the UI and engine.
@@ -267,6 +270,10 @@ type SourceItem struct {
 
 // ScanRequest asks a connector to enumerate items.
 type ScanRequest struct {
+	TaskID     string
+	RunID      string
+	Generation int64
+	Preview    bool
 	// Timezone interprets floating calendar times and all-day dates.
 	Timezone   string
 	Credential Credential
@@ -331,12 +338,13 @@ type BrowseRequest struct {
 
 // BrowseItem is one entry in a browse listing.
 type BrowseItem struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Kind        string `json:"kind"`
-	Path        string `json:"path"`
-	HasChildren bool   `json:"hasChildren"`
-	Selectable  bool   `json:"selectable"`
+	SpecialUse  []string `json:"specialUse,omitempty"`
+	ID          string   `json:"id"`
+	Name        string   `json:"name"`
+	Kind        string   `json:"kind"`
+	Path        string   `json:"path"`
+	HasChildren bool     `json:"hasChildren"`
+	Selectable  bool     `json:"selectable"`
 }
 
 // Breadcrumb is a navigation crumb.
@@ -347,6 +355,7 @@ type Breadcrumb struct {
 
 // BrowseResult is a browse listing.
 type BrowseResult struct {
+	DefaultSelection []string `json:"defaultSelection,omitempty"`
 	Items          []BrowseItem `json:"items"`
 	ParentID       string       `json:"parentId"`
 	Breadcrumbs    []Breadcrumb `json:"breadcrumbs"`
@@ -366,6 +375,12 @@ type SourceConnector interface {
 }
 
 const SourceCloudflareCrawl = "cloudflare_crawl"
+
+// ScanCommitter publishes connector state in the cursor's database transaction.
+type ScanCommitter interface {
+	CommitScan(context.Context, string, *gorm.DB) error
+	AbortScan(context.Context, string) error
+}
 
 type SourceJob struct {
 	ID                 string    `json:"id"`
@@ -446,7 +461,7 @@ func CredentialTypes() []CredentialType {
 }
 
 func order(t string) int {
-	for i, v := range []string{"notion", "siyuan", "cloudflare_crawl", "webcal", "s3", "webdav", "google_drive", "onedrive", "filesystem", "sql", "sql_mysql", "sql_postgres", "sql_sqlite"} {
+	for i, v := range []string{"notion", "siyuan", "cloudflare_crawl", "webcal", "email", "imap", "s3", "webdav", "google_drive", "onedrive", "filesystem", "sql", "sql_mysql", "sql_postgres", "sql_sqlite"} {
 		if v == t {
 			return i
 		}
