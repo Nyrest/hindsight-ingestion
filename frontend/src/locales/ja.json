@@ -839,7 +839,16 @@
     "cloudflareLimitHelp": "無料アカウントは 1 回につき最大 100 ページです。上限に達すると削除の照合を行いません。",
     "cloudflareCacheHelp": "全件照合では常に最新のコンテンツを取得します。",
     "cloudflareIncludeHelp": "1 行に 1 パターン。* はパスの 1 区間内、** は区間をまたいで一致します。",
-    "cloudflareExcludeHelp": "除外パターンが優先されます。"
+    "cloudflareExcludeHelp": "除外パターンが優先されます。",
+    "sqlHost": "ホスト",
+    "sqlPort": "ポート",
+    "sqlDatabase": "データベース",
+    "sqlPassword": "パスワード",
+    "sqlTLSMode": "TLS モード",
+    "sqlCA": "CA 証明書（PEM）",
+    "sqlPath": "サーバー上のファイルパス",
+    "sqlTLSDisable": "無効",
+    "sqlTLSVerify": "証明書とホスト名を検証"
   },
   "proxy": {
     "title": "プロキシ",
@@ -874,5 +883,20 @@
       "superseded": "別の実行で再開",
       "cancel_failed": "失敗"
     }
+  },
+  "sql": {
+    "mode": "ドキュメントモード",
+    "rows": "1 行につき 1 ドキュメント",
+    "query": "クエリ全体で 1 ドキュメント",
+    "rowsHint": "必須：一意かつ空でない __id と、空でないテキスト __content。テキスト __context は任意です。他の列は無視されます。",
+    "queryHint": "全結果を columns と rows を持つ 1 つの JSON ドキュメントにします。列と行の順序を保持し、空の結果も保存します。",
+    "queryLabel": "SQL クエリ",
+    "limits": "SELECT または WITH の 1 文のみ。同期上限：10 万行、合計 16 MiB、1 ドキュメント 4 MiB、300 秒。",
+    "preview": "サンプルをプレビュー",
+    "previewHint": "30 秒以内に最大 100 行 / 4 MiB を読み取ります。書き込みや削除の判定は行いません。サンプルの成功は全 ID の一意性を保証しません。保存済みタスクの Dry-run はクエリ全体を実行します。",
+    "columns": "列",
+    "truncated": "プレビュー上限に達したため、サンプルを切り詰めました。",
+    "empty": "サンプルに行がありません。",
+    "context": "コンテキスト"
   }
 }

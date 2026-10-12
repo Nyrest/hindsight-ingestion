@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
+	"github.com/Nyrest/hindsight-ingestion/internal/connectors/sqlsource"
 	"github.com/Nyrest/hindsight-ingestion/internal/hindsight"
 	"github.com/Nyrest/hindsight-ingestion/internal/settings"
 	"github.com/Nyrest/hindsight-ingestion/internal/sync"
@@ -31,6 +32,7 @@ func (s *Server) endpoints() []endpoint {
 		{"GET", "/api/credentials/{id}", s.getCredential, nil, credentialDTO{}, 200},
 		{"PATCH", "/api/credentials/{id}", s.patchCredential, credentialBody{}, credentialDTO{}, 200},
 		{"DELETE", "/api/credentials/{id}", s.deleteCredential, nil, nil, 204},
+		{"POST", "/api/credentials/{id}/sql/preview", s.previewSQL, sqlsource.PreviewRequest{}, sqlsource.PreviewResult{}, 200},
 		{"POST", "/api/credentials/{id}/test", s.testCredential, nil, testDTO{}, 200},
 		{"POST", "/api/credentials/{id}/oauth/start", s.oauthStart, nil, oauthStartDTO{}, 200},
 		{"POST", "/api/credentials/{id}/refresh", s.refreshCredential, nil, credentialDTO{}, 200},

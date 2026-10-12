@@ -1,4 +1,13 @@
 const COPY_KEYS: Record<string, string> = {
+  Host: "sqlHost",
+  Port: "sqlPort",
+  Database: "sqlDatabase",
+  Password: "sqlPassword",
+  "TLS mode": "sqlTLSMode",
+  "CA certificate (PEM)": "sqlCA",
+  "Server file path": "sqlPath",
+  Disabled: "sqlTLSDisable",
+  "Verify certificate and hostname": "sqlTLSVerify",
   "Account ID": "cloudflareAccountId",
   "Website URL": "cloudflareWebsiteUrl",
   "URL discovery": "cloudflareDiscovery",

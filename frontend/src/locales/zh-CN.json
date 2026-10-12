@@ -839,7 +839,16 @@
     "cloudflareLimitHelp": "免费账户每次最多抓取 100 页。达到页数上限时不会执行删除对账。",
     "cloudflareCacheHelp": "完整对账始终抓取最新内容。",
     "cloudflareIncludeHelp": "每行一个规则。* 匹配单个路径段，** 可跨路径段匹配。",
-    "cloudflareExcludeHelp": "排除规则优先于包含规则。"
+    "cloudflareExcludeHelp": "排除规则优先于包含规则。",
+    "sqlHost": "主机",
+    "sqlPort": "端口",
+    "sqlDatabase": "数据库",
+    "sqlPassword": "密码",
+    "sqlTLSMode": "TLS 模式",
+    "sqlCA": "CA 证书（PEM）",
+    "sqlPath": "服务端文件路径",
+    "sqlTLSDisable": "禁用",
+    "sqlTLSVerify": "验证证书和主机名"
   },
   "proxy": {
     "title": "代理",
@@ -874,5 +883,20 @@
       "superseded": "已由恢复运行接续",
       "cancel_failed": "失败"
     }
+  },
+  "sql": {
+    "mode": "文档模式",
+    "rows": "一行一文档",
+    "query": "整个查询一文档",
+    "rowsHint": "必需：唯一且非空的 __id，以及非空文本 __content。可选文本 __context。其他列忽略。",
+    "queryHint": "全部结果生成一个包含 columns 和 rows 的 JSON 文档，保留列序、行序及空结果。",
+    "queryLabel": "SQL 查询",
+    "limits": "仅允许单条 SELECT 或 WITH。同步上限：10 万行、累计 16 MiB、单文档 4 MiB、300 秒。",
+    "preview": "抽样预览",
+    "previewHint": "最多读取 100 行 / 4 MiB，限时 30 秒；不写入、不检查删除。抽样通过不代表全部 ID 唯一。已保存任务的 Dry-run 执行完整查询。",
+    "columns": "返回列",
+    "truncated": "样本达到预览上限，已截断。",
+    "empty": "样本中没有记录。",
+    "context": "Context"
   }
 }

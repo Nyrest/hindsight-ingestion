@@ -214,7 +214,7 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 	}
 	if cred, err := s.Creds.Get(ctx, t.SourceCredentialID); err != nil {
 		errs.add("sourceCredentialId", "Select a source credential")
-	} else if cred.Type != info.CredentialType {
+	} else if !info.AcceptsCredential(cred.Type) {
 		errs.add("sourceCredentialId", "Credential type does not match the source")
 	}
 
@@ -479,6 +479,7 @@ func (s *Server) patchTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	origDestCred, origBank := t.DestinationCredentialID, t.DestinationBankID
+	originalRevision := t.ConfigRevision
 	resetCursor, errs := s.applyTask(r.Context(), &t, b, false)
 	if len(errs) > 0 {
 		writeValidation(w, "Please fix the highlighted fields", errs)
@@ -486,13 +487,17 @@ func (s *Server) patchTask(w http.ResponseWriter, r *http.Request) {
 	}
 	destChanged := t.DestinationCredentialID != origDestCred || t.DestinationBankID != origBank
 	errLocked := errors.New("destination locked")
+	errChanged := errors.New("SQL task configuration changed; reload the task")
 	err = s.DB.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
 		// Re-read engine-owned fields under a row lock: a run may have
 		// locked the destination since the task was loaded.
 		var cur models.Task
 		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).
-			Select("destination_locked").First(&cur, "id = ?", t.ID).Error; err != nil {
+			Select("destination_locked", "config_revision").First(&cur, "id = ?", t.ID).Error; err != nil {
 			return err
+		}
+		if t.SourceType == "sql" && cur.ConfigRevision != originalRevision {
+			return errChanged
 		}
 		if cur.DestinationLocked && destChanged {
 			return errLocked
@@ -509,6 +514,10 @@ func (s *Server) patchTask(w http.ResponseWriter, r *http.Request) {
 		}
 		return nil
 	})
+	if errors.Is(err, errChanged) {
+		writeError(w, http.StatusConflict, "conflict", errChanged.Error())
+		return
+	}
 	if errors.Is(err, errLocked) {
 		writeValidation(w, "Please fix the highlighted fields", map[string]string{
 			"destinationBankId": "Destination is locked after the first successful run; clone the task to change it"})

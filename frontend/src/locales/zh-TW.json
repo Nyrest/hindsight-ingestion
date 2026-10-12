@@ -839,7 +839,16 @@
     "cloudflareLimitHelp": "免費帳戶每次最多抓取 100 頁。達到頁數上限時不會執行刪除對帳。",
     "cloudflareCacheHelp": "完整對帳一律抓取最新內容。",
     "cloudflareIncludeHelp": "每行一個規則。* 比對單一路徑區段，** 可跨路徑區段比對。",
-    "cloudflareExcludeHelp": "排除規則優先於包含規則。"
+    "cloudflareExcludeHelp": "排除規則優先於包含規則。",
+    "sqlHost": "主機",
+    "sqlPort": "連接埠",
+    "sqlDatabase": "資料庫",
+    "sqlPassword": "密碼",
+    "sqlTLSMode": "TLS 模式",
+    "sqlCA": "CA 憑證（PEM）",
+    "sqlPath": "伺服器檔案路徑",
+    "sqlTLSDisable": "停用",
+    "sqlTLSVerify": "驗證憑證及主機名稱"
   },
   "proxy": {
     "title": "代理伺服器",
@@ -874,5 +883,20 @@
       "superseded": "已由復原執行接續",
       "cancel_failed": "失敗"
     }
+  },
+  "sql": {
+    "mode": "文件模式",
+    "rows": "一列一文件",
+    "query": "整個查詢一文件",
+    "rowsHint": "必要：唯一且非空的 __id，以及非空文字 __content。可選文字 __context。其他欄位忽略。",
+    "queryHint": "所有結果產生一個包含 columns 和 rows 的 JSON 文件，保留欄位順序、資料列順序及空結果。",
+    "queryLabel": "SQL 查詢",
+    "limits": "僅允許單一 SELECT 或 WITH。同步上限：10 萬列、累計 16 MiB、單文件 4 MiB、300 秒。",
+    "preview": "抽樣預覽",
+    "previewHint": "最多讀取 100 列 / 4 MiB，限時 30 秒；不寫入、不檢查刪除。抽樣通過不代表所有 ID 唯一。已儲存任務的 Dry-run 執行完整查詢。",
+    "columns": "回傳欄位",
+    "truncated": "樣本達到預覽上限，已截斷。",
+    "empty": "樣本中沒有資料。",
+    "context": "Context"
   }
 }

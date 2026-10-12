@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"slices"
 	"sort"
 	"time"
 
@@ -175,13 +176,15 @@ type CredentialType struct {
 type SourceInfo struct {
 	Type               string             `json:"type"`
 	Name               string             `json:"name"`
-	CredentialType     string             `json:"credentialType"`
+	CredentialTypes    []string           `json:"credentialTypes"`
 	Capabilities       Capabilities       `json:"capabilities"`
 	BrowseKinds        []string           `json:"browseKinds"`
 	Fields             []FieldSpec        `json:"fields"`
 	FilterFields       []FilterFieldSpec  `json:"filterFields"`
 	FilterCapabilities FilterCapabilities `json:"filterCapabilities"`
 }
+
+func (s SourceInfo) AcceptsCredential(t string) bool { return slices.Contains(s.CredentialTypes, t) }
 
 // OAuthToken is a stored OAuth token.
 type OAuthToken struct {
@@ -438,7 +441,7 @@ func CredentialTypes() []CredentialType {
 }
 
 func order(t string) int {
-	for i, v := range []string{"notion", "siyuan", "cloudflare_crawl", "s3", "webdav", "google_drive", "onedrive", "filesystem"} {
+	for i, v := range []string{"notion", "siyuan", "cloudflare_crawl", "s3", "webdav", "google_drive", "onedrive", "filesystem", "sql", "sql_mysql", "sql_postgres", "sql_sqlite"} {
 		if v == t {
 			return i
 		}

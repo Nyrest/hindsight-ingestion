@@ -100,6 +100,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/credentials/{id}/sql/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["post_api_credentials_id_sql_preview"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/credentials/{id}/strategies": {
         parameters: {
             query?: never;
@@ -448,6 +464,11 @@ export interface components {
             oauth: boolean;
             type: string;
         };
+        Document: {
+            content: string;
+            context?: string;
+            id: string;
+        };
         DryRunItem: {
             action: string;
             name: string;
@@ -525,6 +546,11 @@ export interface components {
             label: string;
             value: string;
         };
+        PreviewResult: {
+            columns: string[];
+            documents: components["schemas"]["Document"][];
+            truncated: boolean;
+        };
         Scope: {
             /** @enum {string} */
             rule: "combined" | "shared" | "per_tag" | "all_combinations" | "custom";
@@ -533,7 +559,7 @@ export interface components {
         SourceInfo: {
             browseKinds: string[];
             capabilities: components["schemas"]["Capabilities"];
-            credentialType: string;
+            credentialTypes: string[];
             fields: components["schemas"]["FieldSpec"][];
             filterCapabilities: components["schemas"]["FilterCapabilities"];
             filterFields: components["schemas"]["FilterFieldSpec"][];
@@ -1172,6 +1198,54 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["credentialDTO"];
+                };
+            };
+            /** @description Basic Auth required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description API error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["apiError"];
+                };
+            };
+        };
+    };
+    post_api_credentials_id_sql_preview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    documentMode?: "rows" | "query";
+                    query?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PreviewResult"];
                 };
             };
             /** @description Basic Auth required */

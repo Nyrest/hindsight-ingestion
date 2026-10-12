@@ -16,6 +16,7 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/auth"
 	"github.com/Nyrest/hindsight-ingestion/internal/config"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
+	"github.com/Nyrest/hindsight-ingestion/internal/connectors/sqlsource"
 	"github.com/Nyrest/hindsight-ingestion/internal/credentials"
 	"github.com/Nyrest/hindsight-ingestion/internal/crypto"
 	"github.com/Nyrest/hindsight-ingestion/internal/database"
@@ -68,6 +69,12 @@ func run() error {
 	if err != nil {
 		return err
 	}
+
+	sqlConnector := &sqlsource.Connector{}
+	if cfg.DBType == "sqlite" {
+		sqlConnector.ApplicationSQLitePath = cfg.DBDSN
+	}
+	connectors.RegisterSource(sqlConnector)
 
 	creds := credentials.NewService(db, cipher)
 	store := settings.NewStore(db, cipher)

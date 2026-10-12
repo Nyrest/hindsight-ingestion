@@ -18,6 +18,31 @@ jobs:
     timeout-minutes: 20
     env:
       CGO_ENABLED: "1"
+      SQLSOURCE_TEST_MYSQL_DSN: "root:sql-test-password@tcp(127.0.0.1:3306)/sql_source_test?parseTime=true"
+      SQLSOURCE_TEST_POSTGRES_DSN: "postgres://postgres:sql-test-password@127.0.0.1:5432/sql_source_test?sslmode=disable"
+      SQLSOURCE_TEST_CA: "${{ runner.temp }}/sql-source-tls/cert.pem"
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: sql-test-password
+          MYSQL_ROOT_HOST: "%"
+          MYSQL_DATABASE: sql_source_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -psql-test-password"
+          --health-interval=5s --health-timeout=5s --health-retries=30
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: sql-test-password
+          POSTGRES_DB: sql_source_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres -d sql_source_test"
+          --health-interval=5s --health-timeout=5s --health-retries=30
     steps:
       - name: Check out source
         uses: actions/checkout@v7.0.1
@@ -35,6 +60,28 @@ jobs:
           go-version-file: backend/go.mod
           cache-dependency-path: backend/go.sum
 
+      - name: Configure database TLS for integration tests
+        env:
+          MYSQL_CONTAINER: ${{ job.services.mysql.id }}
+          POSTGRES_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/sql-source-tls"
+          openssl req -x509 -newkey rsa:2048 -nodes -days 1 \
+            -subj /CN=localhost -addext subjectAltName=DNS:localhost,IP:127.0.0.1 \
+            -keyout "$RUNNER_TEMP/sql-source-tls/key.pem" -out "$SQLSOURCE_TEST_CA"
+          docker cp "$SQLSOURCE_TEST_CA" "$MYSQL_CONTAINER:/var/lib/mysql/ca.pem"
+          docker cp "$SQLSOURCE_TEST_CA" "$MYSQL_CONTAINER:/var/lib/mysql/server-cert.pem"
+          docker cp "$RUNNER_TEMP/sql-source-tls/key.pem" "$MYSQL_CONTAINER:/var/lib/mysql/server-key.pem"
+          docker exec "$MYSQL_CONTAINER" chown mysql:mysql /var/lib/mysql/ca.pem /var/lib/mysql/server-cert.pem /var/lib/mysql/server-key.pem
+          docker exec "$MYSQL_CONTAINER" chmod 600 /var/lib/mysql/server-key.pem
+          docker exec "$MYSQL_CONTAINER" mysql -uroot -psql-test-password -e 'ALTER INSTANCE RELOAD TLS;'
+          docker cp "$SQLSOURCE_TEST_CA" "$POSTGRES_CONTAINER:/var/lib/postgresql/data/server.crt"
+          docker cp "$RUNNER_TEMP/sql-source-tls/key.pem" "$POSTGRES_CONTAINER:/var/lib/postgresql/data/server.key"
+          docker exec "$POSTGRES_CONTAINER" chown postgres:postgres /var/lib/postgresql/data/server.crt /var/lib/postgresql/data/server.key
+          docker exec "$POSTGRES_CONTAINER" chmod 600 /var/lib/postgresql/data/server.key
+          docker exec -u postgres "$POSTGRES_CONTAINER" psql -d sql_source_test -c "ALTER SYSTEM SET ssl = 'on';"
+          docker exec -u postgres "$POSTGRES_CONTAINER" psql -d sql_source_test -c 'SELECT pg_reload_conf();'
+
       - name: Install frontend dependencies
         working-directory: frontend
         run: bun install --frozen-lockfile
@@ -42,6 +89,10 @@ jobs:
       - name: Build frontend
         working-directory: frontend
         run: bun run build
+
+      - name: Typecheck frontend
+        working-directory: frontend
+        run: bun run typecheck
 
       - name: Build backend
         working-directory: backend

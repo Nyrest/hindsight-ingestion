@@ -839,7 +839,16 @@
     "cloudflareLimitHelp": "무료 계정은 크롤링당 최대 100페이지입니다. 페이지 한도에 도달하면 삭제 대조를 수행하지 않습니다.",
     "cloudflareCacheHelp": "전체 대조는 항상 최신 콘텐츠를 가져옵니다.",
     "cloudflareIncludeHelp": "한 줄에 패턴 하나를 입력하세요. *는 경로 구간 내부, **는 여러 구간에 걸쳐 일치합니다.",
-    "cloudflareExcludeHelp": "제외 패턴이 포함 패턴보다 우선합니다."
+    "cloudflareExcludeHelp": "제외 패턴이 포함 패턴보다 우선합니다.",
+    "sqlHost": "호스트",
+    "sqlPort": "포트",
+    "sqlDatabase": "데이터베이스",
+    "sqlPassword": "비밀번호",
+    "sqlTLSMode": "TLS 모드",
+    "sqlCA": "CA 인증서 (PEM)",
+    "sqlPath": "서버 파일 경로",
+    "sqlTLSDisable": "사용 안 함",
+    "sqlTLSVerify": "인증서 및 호스트 이름 확인"
   },
   "proxy": {
     "title": "프록시",
@@ -874,5 +883,20 @@
       "superseded": "다른 실행에서 재개됨",
       "cancel_failed": "실패"
     }
+  },
+  "sql": {
+    "mode": "문서 모드",
+    "rows": "행마다 문서 하나",
+    "query": "쿼리 전체를 문서 하나로",
+    "rowsHint": "필수: 고유하고 비어 있지 않은 __id와 비어 있지 않은 텍스트 __content. 텍스트 __context는 선택 사항입니다. 다른 열은 무시합니다.",
+    "queryHint": "전체 결과를 columns와 rows가 있는 JSON 문서 하나로 만듭니다. 열과 행의 순서를 유지하며 빈 결과도 저장합니다.",
+    "queryLabel": "SQL 쿼리",
+    "limits": "SELECT 또는 WITH 문 하나만 허용합니다. 동기화 한도: 10만 행, 총 16 MiB, 문서당 4 MiB, 300초.",
+    "preview": "샘플 미리보기",
+    "previewHint": "30초 내에 최대 100행 / 4 MiB를 읽습니다. 쓰기나 삭제 확인은 수행하지 않습니다. 샘플이 유효해도 모든 ID가 고유하다고 보장할 수 없습니다. 저장된 작업의 Dry-run은 전체 쿼리를 실행합니다.",
+    "columns": "열",
+    "truncated": "미리보기 한도에 도달하여 샘플이 잘렸습니다.",
+    "empty": "샘플에 행이 없습니다.",
+    "context": "컨텍스트"
   }
 }

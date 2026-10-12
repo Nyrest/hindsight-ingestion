@@ -841,7 +841,16 @@
     "cloudflareLimitHelp": "Las cuentas gratuitas permiten hasta 100 páginas por rastreo. Si se alcanza el límite, no se deducen eliminaciones.",
     "cloudflareCacheHelp": "La reconciliación completa siempre obtiene contenido actualizado.",
     "cloudflareIncludeHelp": "Un patrón por línea. * coincide dentro de un segmento de ruta; ** puede abarcar varios segmentos.",
-    "cloudflareExcludeHelp": "Las exclusiones tienen prioridad sobre las inclusiones."
+    "cloudflareExcludeHelp": "Las exclusiones tienen prioridad sobre las inclusiones.",
+    "sqlHost": "Servidor",
+    "sqlPort": "Puerto",
+    "sqlDatabase": "Base de datos",
+    "sqlPassword": "Contraseña",
+    "sqlTLSMode": "Modo TLS",
+    "sqlCA": "Certificado de CA (PEM)",
+    "sqlPath": "Ruta del archivo en el servidor",
+    "sqlTLSDisable": "Desactivado",
+    "sqlTLSVerify": "Verificar certificado y nombre del servidor"
   },
   "proxy": {
     "title": "Proxy",
@@ -876,5 +885,20 @@
       "superseded": "Reanudado en otra ejecución",
       "cancel_failed": "Fallido"
     }
+  },
+  "sql": {
+    "mode": "Modo de documentos",
+    "rows": "Un documento por fila",
+    "query": "Toda la consulta en un documento",
+    "rowsHint": "Obligatorios: __id único y no vacío, y texto __content no vacío. Texto __context opcional. Se ignoran las demás columnas.",
+    "queryHint": "Todos los resultados forman un documento JSON con columns y rows. Se conserva el orden de columnas y filas, incluso si el resultado está vacío.",
+    "queryLabel": "Consulta SQL",
+    "limits": "Una consulta SELECT o WITH. Sincronización: 100.000 filas, 16 MiB en total, 4 MiB por documento, 300 segundos.",
+    "preview": "Vista previa de muestra",
+    "previewHint": "Lee hasta 100 filas / 4 MiB en 30 segundos. Sin escrituras ni comprobaciones de eliminación. Una muestra válida no demuestra que todos los ID sean únicos. El Dry-run de una tarea guardada ejecuta toda la consulta.",
+    "columns": "Columnas",
+    "truncated": "Muestra truncada al alcanzar el límite de vista previa.",
+    "empty": "No hay filas en esta muestra.",
+    "context": "Contexto"
   }
 }

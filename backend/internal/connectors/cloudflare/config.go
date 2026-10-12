@@ -57,7 +57,7 @@ func (c *Connector) Info() connectors.SourceInfo {
 		fields[index].Effect = connectors.EffectRebaseline
 	}
 	return connectors.SourceInfo{
-		Type: connectors.SourceCloudflareCrawl, Name: "Cloudflare Browser Run", CredentialType: connectors.SourceCloudflareCrawl,
+		Type: connectors.SourceCloudflareCrawl, Name: "Cloudflare Browser Run", CredentialTypes: []string{connectors.SourceCloudflareCrawl},
 		Capabilities: connectors.Capabilities{IncrementalMode: connectors.IncrementalHighWater, DeletionMode: connectors.DeletionFullReconcile},
 		Fields:       fields, BrowseKinds: []string{}, FilterFields: []connectors.FilterFieldSpec{
 			{Key: "url", Label: "Page URL", Type: connectors.FilterString, Operators: connectors.StringOps},

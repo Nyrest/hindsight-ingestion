@@ -39,9 +39,9 @@ type Connector struct{}
 // Info describes the connector.
 func (c *Connector) Info() connectors.SourceInfo {
 	return connectors.SourceInfo{
-		Type:           "google_drive",
-		Name:           "Google Drive",
-		CredentialType: "google_drive",
+		Type:            "google_drive",
+		Name:            "Google Drive",
+		CredentialTypes: []string{"google_drive"},
 		Capabilities: connectors.Capabilities{
 			IncrementalMode:        connectors.IncrementalDeltaToken,
 			DeletionMode:           connectors.DeletionDelta,

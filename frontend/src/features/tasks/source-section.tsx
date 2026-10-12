@@ -8,6 +8,7 @@ import { BrowseDialog } from "@/features/credentials/browse-dialog";
 import type { Credential, FieldSpec, SourceSpec } from "@/lib/types";
 import { providerCopy } from "@/lib/provider-copy";
 import { cn } from "@/lib/utils";
+import { SQLSourceFields } from "./sql-source-fields";
 import { CredentialPicker } from "./credential-picker";
 
 export function SourceTypePicker({
@@ -91,7 +92,7 @@ export function SourceConfigFields({
         <CredentialPicker
           id="task-source-cred"
           credentials={credentials}
-          type={source.credentialType}
+          types={source.credentialTypes}
           typeLabel={credTypeName}
           value={credentialId}
           onChange={onCredentialChange}
@@ -99,7 +100,9 @@ export function SourceConfigFields({
         />
       </FieldRow>
 
-      {source.fields.length > 0 && (
+      {source.type === "sql" ? (
+        <SQLSourceFields key={credentialId} credentialId={credentialId} config={config} onChange={onConfigChange} errors={configErrors} />
+      ) : source.fields.length > 0 && (
         <div className="grid gap-4">
           {source.fields.filter((f) => !f.renderOnly || config.render === true).map((f) => (
             <SchemaField

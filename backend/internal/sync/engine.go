@@ -216,6 +216,8 @@ func (r *runner) execute(opts RunOptions) error {
 	case !hasCursor:
 		r.full = true
 		r.logf("info", "No committed cursor; performing baseline full scan")
+	case r.src.Info().Capabilities.IncrementalMode == connectors.IncrementalInventory:
+		r.full = true
 	case !cfg.IncrementalSyncEnabled:
 		r.full = true
 	case r.state.LastFullReconcileAt == nil || time.Since(*r.state.LastFullReconcileAt) > interval:
@@ -262,19 +264,22 @@ func (r *runner) execute(opts RunOptions) error {
 	if err != nil {
 		return fmt.Errorf("scan source: %w", err)
 	}
-	if err := r.flushText(); err != nil {
+	flushErr := r.flushText()
+	seenErr := r.flushSeen()
+	// Settle submitted writes even when the scan or final submission failed.
+	pendingErr := r.awaitPending()
+	if res.Error != nil {
+		res.Error = fmt.Errorf("scan source: %w", res.Error)
+	}
+	if err := errors.Join(res.Error, flushErr, seenErr, pendingErr); err != nil {
 		return err
 	}
-	if err := r.flushSeen(); err != nil {
-		return err
+	if r.task.SourceType == "sql" && !res.Complete {
+		return errors.New("SQL inventory was incomplete; deletion and state commit skipped")
 	}
 
-	// 2. Wait for Hindsight success, then record synced state.
-	if err := r.awaitPending(); err != nil {
-		return err
-	}
-	if r.sharedDocs != nil && (res.Error != nil || len(r.failed) > 0) {
-		return errors.Join(res.Error, fmt.Errorf("%d page(s) failed; cursor and references unchanged", len(r.failed)))
+	if (r.sharedDocs != nil || r.task.SourceType == "sql") && len(r.failed) > 0 {
+		return fmt.Errorf("%d item(s) failed; deletion and cursor commit skipped", len(r.failed))
 	}
 
 	// 3. Reconcile deletions. Scope exits are always safe; disappearance is
@@ -298,6 +303,9 @@ func (r *runner) execute(opts RunOptions) error {
 		updates["last_full_reconcile_at"] = finished
 	}
 	err = r.e.DB.WithContext(r.ctx).Transaction(func(tx *gorm.DB) error {
+		if err := r.checkTaskRevision(tx.Clauses(clause.Locking{Strength: "UPDATE"})); err != nil {
+			return err
+		}
 		if err := tx.Model(&models.TaskState{}).Where("task_id = ?", r.task.ID).Updates(updates).Error; err != nil {
 			return err
 		}
@@ -771,7 +779,24 @@ func (r *runner) awaitPending() error {
 	return r.upsertRows(rows)
 }
 
+func (r *runner) checkTaskRevision(db *gorm.DB) error {
+	if r.task.SourceType != "sql" {
+		return nil
+	}
+	var current models.Task
+	if err := db.Select("id", "config_revision").First(&current, "id = ?", r.task.ID).Error; err != nil {
+		return err
+	}
+	if current.ConfigRevision != r.task.ConfigRevision {
+		return errors.New("SQL task configuration changed during this run; deletion and state commit skipped")
+	}
+	return nil
+}
+
 func (r *runner) reconcileDeletions(complete bool) error {
+	if err := r.checkTaskRevision(r.e.DB.WithContext(r.ctx)); err != nil {
+		return err
+	}
 	if complete {
 		var gone []models.TaskItem
 		if err := r.e.DB.WithContext(r.ctx).
@@ -792,6 +817,9 @@ func (r *runner) reconcileDeletions(complete bool) error {
 	}
 	seen := map[string]bool{}
 	for _, row := range r.deletes {
+		if err := r.checkTaskRevision(r.e.DB.WithContext(r.ctx)); err != nil {
+			return err
+		}
 		if seen[row.SourceItemID] {
 			continue
 		}
@@ -966,14 +994,24 @@ func (e *Engine) MarkTerminal(runID, status, msg string) {
 // loadLedger reads the task's ledger in pages to avoid per-item queries.
 func (r *runner) loadLedger() error {
 	r.ledger = map[string]models.TaskItem{}
-	var batch []models.TaskItem
-	return r.e.DB.WithContext(r.ctx).Where("task_id = ?", r.task.ID).
-		FindInBatches(&batch, 1000, func(_ *gorm.DB, _ int) error {
-			for _, row := range batch {
-				r.ledger[row.SourceItemID] = row
-			}
+	lastID := ""
+	for {
+		var batch []models.TaskItem
+		q := r.e.DB.WithContext(r.ctx).Where("task_id = ?", r.task.ID)
+		if lastID != "" {
+			q = q.Where("source_item_id > ?", lastID)
+		}
+		if err := q.Order("source_item_id").Limit(1000).Find(&batch).Error; err != nil {
+			return err
+		}
+		for _, row := range batch {
+			r.ledger[row.SourceItemID] = row
+		}
+		if len(batch) < 1000 {
 			return nil
-		}).Error
+		}
+		lastID = batch[len(batch)-1].SourceItemID
+	}
 }
 
 // snapshot persists live counters (throttled) so the UI can show progress.

@@ -56,9 +56,9 @@ type Connector struct{}
 // Info describes the connector.
 func (c *Connector) Info() connectors.SourceInfo {
 	return connectors.SourceInfo{
-		Type:           "notion",
-		Name:           "Notion",
-		CredentialType: "notion",
+		Type:            "notion",
+		Name:            "Notion",
+		CredentialTypes: []string{"notion"},
 		Capabilities: connectors.Capabilities{
 			SupportsInlineMultimodal: true,
 			IncrementalMode:          connectors.IncrementalHighWater,

@@ -171,8 +171,8 @@ export function TaskEditor({ task }: { task?: Task }) {
   }, [source, setValue, form, editing]);
 
   const sectionIds = useMemo(
-    () => SECTIONS.filter((s) => (s.id !== "files" || supportsFiles || supportsInline) && (s.id !== "inline" || supportsInline)).map((s) => s.id),
-    [supportsFiles, supportsInline],
+    () => SECTIONS.filter((s) => (s.id !== "files" || supportsFiles || supportsInline) && (s.id !== "inline" || supportsInline) && (s.id !== "filters" || sourceType !== "sql")).map((s) => s.id),
+    [supportsFiles, supportsInline, sourceType],
   );
   const activeSection = useActiveSection(sectionIds);
 
@@ -466,7 +466,7 @@ export function TaskEditor({ task }: { task?: Task }) {
           </EditorSection>
 
           {/* Filters */}
-          <EditorSection
+          {sourceType !== "sql" && <EditorSection
             id="filters"
             icon={Filter}
             title={t("taskEditor.sections.filters.title")}
@@ -516,7 +516,7 @@ export function TaskEditor({ task }: { task?: Task }) {
                   }} />
               </div>
             )}
-          </EditorSection>
+          </EditorSection>}
 
           {/* Destination */}
           <EditorSection id="destination" icon={Brain} title={t("taskEditor.sections.destination.title")}>
@@ -545,7 +545,7 @@ export function TaskEditor({ task }: { task?: Task }) {
                       <CredentialPicker
                         id="task-dest-cred"
                         credentials={credList}
-                        type="hindsight"
+                        types={["hindsight"]}
                         typeLabel={providerCopy(typeName(connectors.data, "hindsight"), t)}
                         value={field.value}
                         onChange={field.onChange}

@@ -840,7 +840,16 @@
     "cloudflareLimitHelp": "Les comptes gratuits sont limités à 100 pages par crawl. Si la limite est atteinte, aucune suppression n’est déduite.",
     "cloudflareCacheHelp": "La réconciliation complète récupère toujours le contenu à jour.",
     "cloudflareIncludeHelp": "Un motif par ligne. * correspond à un segment de chemin ; ** peut traverser plusieurs segments.",
-    "cloudflareExcludeHelp": "Les exclusions sont prioritaires."
+    "cloudflareExcludeHelp": "Les exclusions sont prioritaires.",
+    "sqlHost": "Hôte",
+    "sqlPort": "Port",
+    "sqlDatabase": "Base de données",
+    "sqlPassword": "Mot de passe",
+    "sqlTLSMode": "Mode TLS",
+    "sqlCA": "Certificat CA (PEM)",
+    "sqlPath": "Chemin du fichier sur le serveur",
+    "sqlTLSDisable": "Désactivé",
+    "sqlTLSVerify": "Vérifier le certificat et le nom d’hôte"
   },
   "proxy": {
     "title": "Proxy",
@@ -875,5 +884,20 @@
       "superseded": "Repris dans une autre exécution",
       "cancel_failed": "Échec"
     }
+  },
+  "sql": {
+    "mode": "Mode des documents",
+    "rows": "Un document par ligne",
+    "query": "Toute la requête en un document",
+    "rowsHint": "Obligatoires : __id unique et non vide, et texte __content non vide. Texte __context facultatif. Les autres colonnes sont ignorées.",
+    "queryHint": "Tous les résultats forment un document JSON avec columns et rows. L’ordre des colonnes et des lignes est conservé, même pour un résultat vide.",
+    "queryLabel": "Requête SQL",
+    "limits": "Une seule requête SELECT ou WITH. Synchronisation : 100 000 lignes, 16 MiB au total, 4 MiB par document, 300 secondes.",
+    "preview": "Aperçu de l’échantillon",
+    "previewHint": "Lit jusqu’à 100 lignes / 4 MiB en 30 secondes. Aucune écriture ni vérification des suppressions. Un échantillon valide ne garantit pas l’unicité de tous les ID. Le Dry-run d’une tâche enregistrée exécute toute la requête.",
+    "columns": "Colonnes",
+    "truncated": "Échantillon tronqué à la limite de l’aperçu.",
+    "empty": "Aucune ligne dans cet échantillon.",
+    "context": "Contexte"
   }
 }

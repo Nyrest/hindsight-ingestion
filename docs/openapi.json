@@ -167,6 +167,24 @@
         ],
         "type": "object"
       },
+      "Document": {
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "content"
+        ],
+        "type": "object"
+      },
       "DryRunItem": {
         "properties": {
           "action": {
@@ -521,6 +539,31 @@
         ],
         "type": "object"
       },
+      "PreviewResult": {
+        "properties": {
+          "columns": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/Document"
+            },
+            "type": "array"
+          },
+          "truncated": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "columns",
+          "documents",
+          "truncated"
+        ],
+        "type": "object"
+      },
       "Scope": {
         "properties": {
           "rule": {
@@ -560,8 +603,11 @@
           "capabilities": {
             "$ref": "#/components/schemas/Capabilities"
           },
-          "credentialType": {
-            "type": "string"
+          "credentialTypes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
           },
           "fields": {
             "items": {
@@ -588,7 +634,7 @@
         "required": [
           "type",
           "name",
-          "credentialType",
+          "credentialTypes",
           "capabilities",
           "browseKinds",
           "fields",
@@ -2183,6 +2229,75 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/credentialDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/credentials/{id}/sql/preview": {
+      "post": {
+        "operationId": "post_api_credentials_id_sql_preview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "documentMode": {
+                    "enum": [
+                      "rows",
+                      "query"
+                    ],
+                    "type": "string"
+                  },
+                  "query": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreviewResult"
                 }
               }
             },

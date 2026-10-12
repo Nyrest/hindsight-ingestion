@@ -839,7 +839,16 @@
     "cloudflareLimitHelp": "Ücretsiz hesaplarda tarama başına en fazla 100 sayfa işlenir. Sınıra ulaşıldığında silme karşılaştırması yapılmaz.",
     "cloudflareCacheHelp": "Tam karşılaştırma her zaman güncel içeriği alır.",
     "cloudflareIncludeHelp": "Her satıra bir kalıp girin. * tek yol bölümü içinde, ** birden fazla bölüm arasında eşleşir.",
-    "cloudflareExcludeHelp": "Hariç tutma kuralları önceliklidir."
+    "cloudflareExcludeHelp": "Hariç tutma kuralları önceliklidir.",
+    "sqlHost": "Sunucu",
+    "sqlPort": "Bağlantı noktası",
+    "sqlDatabase": "Veritabanı",
+    "sqlPassword": "Parola",
+    "sqlTLSMode": "TLS modu",
+    "sqlCA": "CA sertifikası (PEM)",
+    "sqlPath": "Sunucudaki dosya yolu",
+    "sqlTLSDisable": "Devre dışı",
+    "sqlTLSVerify": "Sertifikayı ve sunucu adını doğrula"
   },
   "proxy": {
     "title": "Proxy",
@@ -874,5 +883,20 @@
       "superseded": "Başka bir çalıştırmada sürdürüldü",
       "cancel_failed": "Başarısız"
     }
+  },
+  "sql": {
+    "mode": "Belge modu",
+    "rows": "Her satır için bir belge",
+    "query": "Tüm sorgu tek belge",
+    "rowsHint": "Gerekli: benzersiz, boş olmayan __id ve boş olmayan __content metni. __context metni isteğe bağlıdır. Diğer sütunlar yok sayılır.",
+    "queryHint": "Tüm sonuçlar columns ve rows içeren tek bir JSON belgesine dönüşür. Sütun ve satır sırası korunur; boş sonuçlar da kaydedilir.",
+    "queryLabel": "SQL sorgusu",
+    "limits": "Tek bir SELECT veya WITH sorgusu. Eşitleme sınırları: 100.000 satır, toplam 16 MiB, belge başına 4 MiB, 300 saniye.",
+    "preview": "Örnek önizlemesi",
+    "previewHint": "30 saniyede en fazla 100 satır / 4 MiB okur. Yazma veya silme kontrolü yapmaz. Geçerli bir örnek, tüm kimliklerin benzersiz olduğunu kanıtlamaz. Kaydedilmiş görevin Dry-run işlemi tüm sorguyu çalıştırır.",
+    "columns": "Sütunlar",
+    "truncated": "Örnek, önizleme sınırında kesildi.",
+    "empty": "Örnekte satır yok.",
+    "context": "Bağlam"
   }
 }

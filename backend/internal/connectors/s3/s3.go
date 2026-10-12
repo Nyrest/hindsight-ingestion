@@ -41,9 +41,9 @@ type Connector struct{}
 // Info describes the connector.
 func (c *Connector) Info() connectors.SourceInfo {
 	return connectors.SourceInfo{
-		Type:           "s3",
-		Name:           "S3",
-		CredentialType: "s3",
+		Type:            "s3",
+		Name:            "S3",
+		CredentialTypes: []string{"s3"},
 		Capabilities: connectors.Capabilities{
 			IncrementalMode: connectors.IncrementalInventory,
 			DeletionMode:    connectors.DeletionScanGeneration,

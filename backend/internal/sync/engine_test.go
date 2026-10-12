@@ -55,7 +55,7 @@ type fakeSource struct {
 
 func (f *fakeSource) Info() connectors.SourceInfo {
 	return connectors.SourceInfo{
-		Type: "fake", Name: "Fake", CredentialType: "fakecred",
+		Type: "fake", Name: "Fake", CredentialTypes: []string{"fakecred"},
 		Capabilities: connectors.Capabilities{IncrementalMode: connectors.IncrementalHighWater, SupportsFiles: true, SupportsInlineMultimodal: true},
 		FilterFields: []connectors.FilterFieldSpec{{Key: "name", Type: connectors.FilterString, Operators: connectors.StringOps}},
 	}

@@ -840,7 +840,16 @@
     "cloudflareLimitHelp": "Contas gratuitas permitem até 100 páginas por rastreamento. Ao atingir o limite, não são inferidas exclusões.",
     "cloudflareCacheHelp": "A reconciliação completa sempre busca conteúdo atualizado.",
     "cloudflareIncludeHelp": "Um padrão por linha. * corresponde dentro de um segmento do caminho; ** pode abranger vários segmentos.",
-    "cloudflareExcludeHelp": "As exclusões têm prioridade sobre as inclusões."
+    "cloudflareExcludeHelp": "As exclusões têm prioridade sobre as inclusões.",
+    "sqlHost": "Host",
+    "sqlPort": "Porta",
+    "sqlDatabase": "Banco de dados",
+    "sqlPassword": "Senha",
+    "sqlTLSMode": "Modo TLS",
+    "sqlCA": "Certificado CA (PEM)",
+    "sqlPath": "Caminho do arquivo no servidor",
+    "sqlTLSDisable": "Desativado",
+    "sqlTLSVerify": "Verificar certificado e nome do host"
   },
   "proxy": {
     "title": "Proxy",
@@ -875,5 +884,20 @@
       "superseded": "Retomado em outra execução",
       "cancel_failed": "Falha"
     }
+  },
+  "sql": {
+    "mode": "Modo dos documentos",
+    "rows": "Um documento por linha",
+    "query": "Consulta inteira em um documento",
+    "rowsHint": "Obrigatórios: __id único e não vazio e texto __content não vazio. Texto __context opcional. As outras colunas são ignoradas.",
+    "queryHint": "Todos os resultados formam um documento JSON com columns e rows. A ordem das colunas e linhas é preservada, inclusive para resultados vazios.",
+    "queryLabel": "Consulta SQL",
+    "limits": "Uma consulta SELECT ou WITH. Sincronização: 100.000 linhas, 16 MiB no total, 4 MiB por documento, 300 segundos.",
+    "preview": "Prévia da amostra",
+    "previewHint": "Lê até 100 linhas / 4 MiB em 30 segundos. Sem gravações ou verificações de exclusão. Uma amostra válida não garante que todos os IDs sejam únicos. O Dry-run de uma tarefa salva executa a consulta completa.",
+    "columns": "Colunas",
+    "truncated": "Amostra truncada no limite da prévia.",
+    "empty": "Nenhuma linha nesta amostra.",
+    "context": "Contexto"
   }
 }

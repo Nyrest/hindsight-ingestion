@@ -11,7 +11,7 @@ import type { Credential } from "@/lib/types";
 export function CredentialPicker({
   id,
   credentials,
-  type,
+  types,
   typeLabel,
   value,
   onChange,
@@ -20,7 +20,7 @@ export function CredentialPicker({
 }: {
   id?: string;
   credentials: Credential[];
-  type: string;
+  types: string[];
   typeLabel: string;
   value: string;
   onChange: (id: string) => void;
@@ -29,13 +29,16 @@ export function CredentialPicker({
 }) {
   const { t } = useTranslation();
   const [sheetOpen, setSheetOpen] = useState(false);
-  const options = credentials.filter((c) => c.type === type);
-  const current = credentials.find((c) => c.id === value);
+  const options = credentials.filter((c) => types.includes(c.type));
+  const current = options.find((c) => c.id === value);
 
   return (
     <div className="space-y-1.5">
       <div className="flex gap-2">
-        <Select value={value || undefined} onValueChange={onChange} disabled={disabled}>
+        <Select value={value || undefined} onValueChange={(selectedID) => {
+          // Radix's hidden native select can emit an empty value before newly created options register.
+          if (selectedID) onChange(selectedID);
+        }} disabled={disabled}>
           <SelectTrigger id={id} className="w-full" aria-invalid={invalid}>
             <SelectValue placeholder={options.length ? t("credentials.pick") : t("credentials.noneOfType", { type: typeLabel })} />
           </SelectTrigger>
@@ -48,9 +51,6 @@ export function CredentialPicker({
                 </span>
               </SelectItem>
             ))}
-            {current && !options.includes(current) && (
-              <SelectItem value={current.id}>{current.name}</SelectItem>
-            )}
           </SelectContent>
         </Select>
         {!disabled && (
@@ -68,7 +68,8 @@ export function CredentialPicker({
       <CredentialSheet
         open={sheetOpen}
         onOpenChange={setSheetOpen}
-        defaultType={type}
+        defaultType={types[0]}
+        allowedTypes={types}
         onSaved={(c) => onChange(c.id)}
       />
     </div>

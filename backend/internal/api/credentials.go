@@ -14,6 +14,7 @@ import (
 	"gorm.io/gorm/clause"
 
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
+	"github.com/Nyrest/hindsight-ingestion/internal/connectors/sqlsource"
 	"github.com/Nyrest/hindsight-ingestion/internal/credentials"
 	"github.com/Nyrest/hindsight-ingestion/internal/hindsight"
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
@@ -145,14 +146,28 @@ func (s *Server) patchCredential(w http.ResponseWriter, r *http.Request) {
 		if body.Type != "" && body.Type != m.Type {
 			return &credentials.ValidationError{Message: "credential type cannot be changed", Fields: map[string]string{"type": "cannot be changed"}}
 		}
-		// Secret rotation never touches task state.
+		var oldConfig map[string]any
+		_ = json.Unmarshal([]byte(m.ConfigJSON), &oldConfig)
+		oldTarget := sqlsource.ConnectionTarget(m.Type, oldConfig)
 		if err := s.Creds.Apply(&m, body.input(), false); err != nil {
 			return err
 		}
 		if m.Status == models.CredentialError {
 			m.Status, m.StatusMessage = models.CredentialActive, ""
 		}
-		return tx.Save(&m).Error
+		if err := tx.Save(&m).Error; err != nil {
+			return err
+		}
+		var newConfig map[string]any
+		_ = json.Unmarshal([]byte(m.ConfigJSON), &newConfig)
+		if sqlsource.IsCredential(m.Type) && oldTarget != sqlsource.ConnectionTarget(m.Type, newConfig) {
+			tasks := tx.Model(&models.Task{}).Select("id").Where("source_type = ? AND source_credential_id = ?", sqlsource.SourceType, m.ID)
+			if err := tx.Model(&models.Task{}).Where("source_type = ? AND source_credential_id = ?", sqlsource.SourceType, m.ID).Updates(map[string]any{"config_revision": gorm.Expr("config_revision + 1"), "reconcile_required": true}).Error; err != nil {
+				return err
+			}
+			return tx.Model(&models.TaskState{}).Where("task_id IN (?)", tasks).Updates(map[string]any{"committed_cursor_json": "", "last_full_reconcile_at": nil}).Error
+		}
+		return nil
 	})
 	if err != nil {
 		s.fail(w, err)
@@ -230,7 +245,7 @@ func validateCredential(ctx context.Context, cred connectors.Credential) (string
 		return msg + " (" + itoa(len(banks)) + " banks visible)", nil
 	}
 	for _, src := range connectors.Sources() {
-		if src.CredentialType == cred.Type {
+		if src.AcceptsCredential(cred.Type) {
 			conn, _ := connectors.Source(src.Type)
 			return conn.ValidateCredential(ctx, cred)
 		}
@@ -335,7 +350,7 @@ func (s *Server) browseCredential(w http.ResponseWriter, r *http.Request) {
 	} else {
 		var conn connectors.SourceConnector
 		for _, src := range connectors.Sources() {
-			if src.CredentialType == cred.Type {
+			if src.AcceptsCredential(cred.Type) {
 				conn, _ = connectors.Source(src.Type)
 			}
 		}

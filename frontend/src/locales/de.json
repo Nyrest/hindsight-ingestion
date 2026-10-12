@@ -840,7 +840,16 @@
     "cloudflareLimitHelp": "Kostenlose Konten erlauben bis zu 100 Seiten pro Crawl. Bei Erreichen des Limits werden keine Löschungen abgeglichen.",
     "cloudflareCacheHelp": "Ein vollständiger Abgleich lädt immer aktuelle Inhalte.",
     "cloudflareIncludeHelp": "Ein Muster pro Zeile. * gilt innerhalb eines Pfadsegments, ** auch über Segmentgrenzen hinweg.",
-    "cloudflareExcludeHelp": "Ausschluss hat Vorrang vor Einschluss."
+    "cloudflareExcludeHelp": "Ausschluss hat Vorrang vor Einschluss.",
+    "sqlHost": "Host",
+    "sqlPort": "Port",
+    "sqlDatabase": "Datenbank",
+    "sqlPassword": "Passwort",
+    "sqlTLSMode": "TLS-Modus",
+    "sqlCA": "CA-Zertifikat (PEM)",
+    "sqlPath": "Dateipfad auf dem Server",
+    "sqlTLSDisable": "Deaktiviert",
+    "sqlTLSVerify": "Zertifikat und Hostnamen prüfen"
   },
   "proxy": {
     "title": "Proxy",
@@ -875,5 +884,20 @@
       "superseded": "In anderem Lauf fortgesetzt",
       "cancel_failed": "Fehlgeschlagen"
     }
+  },
+  "sql": {
+    "mode": "Dokumentmodus",
+    "rows": "Ein Dokument pro Zeile",
+    "query": "Gesamte Abfrage als Dokument",
+    "rowsHint": "Erforderlich: eindeutige, nicht leere __id und nicht leerer Text __content. Optional: Text __context. Andere Spalten werden ignoriert.",
+    "queryHint": "Alle Ergebnisse werden zu einem JSON-Dokument mit columns und rows. Spalten- und Zeilenreihenfolge sowie leere Ergebnisse bleiben erhalten.",
+    "queryLabel": "SQL-Abfrage",
+    "limits": "Eine SELECT- oder WITH-Abfrage. Synchronisierung: 100.000 Zeilen, insgesamt 16 MiB, 4 MiB pro Dokument, 300 Sekunden.",
+    "preview": "Stichprobe anzeigen",
+    "previewHint": "Liest bis zu 100 Zeilen / 4 MiB in 30 Sekunden. Keine Schreibvorgänge oder Löschprüfung. Eine erfolgreiche Stichprobe garantiert keine eindeutigen IDs im gesamten Ergebnis. Der Dry-run einer gespeicherten Aufgabe prüft die vollständige Abfrage.",
+    "columns": "Spalten",
+    "truncated": "Stichprobe an der Vorschaugrenze abgeschnitten.",
+    "empty": "Keine Zeilen in dieser Stichprobe.",
+    "context": "Kontext"
   }
 }

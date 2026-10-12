@@ -855,7 +855,16 @@
     "cloudflareLimitHelp": "Darmowe konta pozwalają skanować do 100 stron naraz. Po osiągnięciu limitu usunięcia nie są wnioskowane.",
     "cloudflareCacheHelp": "Pełne uzgodnienie zawsze pobiera aktualną treść.",
     "cloudflareIncludeHelp": "Jeden wzorzec na wiersz. * pasuje w jednym segmencie ścieżki, ** również między segmentami.",
-    "cloudflareExcludeHelp": "Wykluczenia mają pierwszeństwo."
+    "cloudflareExcludeHelp": "Wykluczenia mają pierwszeństwo.",
+    "sqlHost": "Host",
+    "sqlPort": "Port",
+    "sqlDatabase": "Baza danych",
+    "sqlPassword": "Hasło",
+    "sqlTLSMode": "Tryb TLS",
+    "sqlCA": "Certyfikat CA (PEM)",
+    "sqlPath": "Ścieżka pliku na serwerze",
+    "sqlTLSDisable": "Wyłączony",
+    "sqlTLSVerify": "Sprawdzaj certyfikat i nazwę hosta"
   },
   "proxy": {
     "title": "Proxy",
@@ -890,5 +899,20 @@
       "superseded": "Wznowiono w innym uruchomieniu",
       "cancel_failed": "Błąd"
     }
+  },
+  "sql": {
+    "mode": "Tryb dokumentów",
+    "rows": "Dokument dla każdego wiersza",
+    "query": "Całe zapytanie w jednym dokumencie",
+    "rowsHint": "Wymagane: unikatowe, niepuste __id oraz niepusty tekst __content. Tekst __context jest opcjonalny. Pozostałe kolumny są pomijane.",
+    "queryHint": "Wszystkie wyniki tworzą jeden dokument JSON z columns i rows. Kolejność kolumn i wierszy jest zachowana, również dla pustych wyników.",
+    "queryLabel": "Zapytanie SQL",
+    "limits": "Jedno zapytanie SELECT lub WITH. Limity synchronizacji: 100 000 wierszy, łącznie 16 MiB, 4 MiB na dokument, 300 sekund.",
+    "preview": "Podgląd próbki",
+    "previewHint": "Odczytuje do 100 wierszy / 4 MiB w 30 sekund. Bez zapisu i sprawdzania usunięć. Poprawna próbka nie gwarantuje unikatowości wszystkich ID. Dry-run zapisanego zadania wykonuje całe zapytanie.",
+    "columns": "Kolumny",
+    "truncated": "Próbka została przycięta do limitu podglądu.",
+    "empty": "Brak wierszy w próbce.",
+    "context": "Kontekst"
   }
 }

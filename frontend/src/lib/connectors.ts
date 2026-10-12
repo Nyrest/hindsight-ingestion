@@ -24,6 +24,10 @@ const TYPE_ICONS: Record<string, LucideIcon> = {
   onedrive: Cloud,
   hindsight: Brain,
   filesystem: HardDrive,
+  sql: Database,
+  sql_mysql: Database,
+  sql_postgres: Database,
+  sql_sqlite: Database,
 };
 
 export function typeIcon(type: string | undefined | null): LucideIcon {
@@ -40,6 +44,10 @@ const FALLBACK_NAMES: Record<string, string> = {
   onedrive: "OneDrive",
   hindsight: "Hindsight",
   filesystem: "File System",
+  sql: "SQL",
+  sql_mysql: "MySQL",
+  sql_postgres: "PostgreSQL",
+  sql_sqlite: "SQLite",
 };
 
 export function useConnectors() {

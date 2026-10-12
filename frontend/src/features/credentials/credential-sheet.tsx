@@ -56,6 +56,7 @@ export function CredentialSheet({
   onOpenChange,
   credential,
   defaultType,
+  allowedTypes,
   onSaved,
 }: {
   open: boolean;
@@ -63,6 +64,7 @@ export function CredentialSheet({
   /** When set, the sheet edits this credential. */
   credential?: Credential | null;
   defaultType?: string;
+  allowedTypes?: string[];
   onSaved?: (c: Credential) => void;
 }) {
   const { t } = useTranslation();
@@ -76,6 +78,7 @@ export function CredentialSheet({
     defaultValues: { name: "", type: "" },
   });
   const type = form.watch("type");
+  const isSQL = ["sql_mysql", "sql_postgres", "sql_sqlite"].includes(type);
   const typeSpec = findCredentialType(connectors.data, type);
 
   const [proxyMode, setProxyMode] = useState<"global" | "override">("global");
@@ -117,17 +120,17 @@ export function CredentialSheet({
     if (!typeSpec) return;
     const errs = validateConfig(typeSpec.fields, config, tr);
     setConfigErrors(errs);
-    if (Object.keys(errs).length || headers.error) return;
-    if (proxyMode === "override") {
+    if (Object.keys(errs).length || (!isSQL && headers.error)) return;
+    if (!isSQL && proxyMode === "override") {
       const validation = proxySchema.safeParse(proxy);
       if (!validation.success) { setProxyError(t(validation.error.issues[0].message)); return; }
     }
     const body = {
-      proxyMode,
-      proxy: proxyMode === "override" ? proxy : undefined,
+      proxyMode: isSQL ? "global" as const : proxyMode,
+      proxy: !isSQL && proxyMode === "override" ? proxy : undefined,
       name: values.name.trim(),
       config: normalizeConfig(typeSpec.fields, config),
-      customHeaders: headers.headers,
+      customHeaders: isSQL ? {} : headers.headers,
     };
     try {
       const saved = editing
@@ -154,7 +157,7 @@ export function CredentialSheet({
   }
 
   const types = connectors.data?.credentialTypes ?? [];
-  const sortedTypes = useMemo(() => [...types].sort((a, b) => a.name.localeCompare(b.name)), [types]);
+  const sortedTypes = useMemo(() => [...types].filter((ct) => !allowedTypes || allowedTypes.includes(ct.type)).sort((a, b) => a.name.localeCompare(b.name)), [types, allowedTypes]);
 
   return (
     <Sheet open={open} onOpenChange={(o) => !pending && onOpenChange(o)}>
@@ -272,6 +275,7 @@ export function CredentialSheet({
                 </Alert>
               )}
 
+              {!isSQL && <>
               <Separator />
 
               <ProxyEditor value={proxy} mode={proxyMode} onModeChange={(mode) => { setProxyMode(mode); setProxyError(undefined); }} onChange={(next) => { setProxy(next); setProxyError(undefined); }} error={proxyError} />
@@ -281,6 +285,7 @@ export function CredentialSheet({
                 initial={credential?.customHeaders ?? {}}
                 onChange={setHeaders}
               />
+              </>}
             </>
           )}
 
@@ -295,7 +300,7 @@ export function CredentialSheet({
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={pending}>
             {t("common.cancel")}
           </Button>
-          <Button type="submit" form="credential-form" disabled={pending || !typeSpec || !!headers.error}>
+          <Button type="submit" form="credential-form" disabled={pending || !typeSpec || (!isSQL && !!headers.error)}>
             {pending && <Loader2 className="animate-spin" />}
             {editing ? t("common.save") : t("common.create")}
           </Button>

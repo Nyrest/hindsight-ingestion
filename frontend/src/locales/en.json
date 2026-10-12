@@ -46,7 +46,16 @@
     "cloudflareLimitHelp": "Free accounts allow up to 100 pages per crawl. Reaching the page limit prevents deletion reconciliation.",
     "cloudflareCacheHelp": "Full reconciliation always fetches fresh content.",
     "cloudflareIncludeHelp": "One pattern per line. * matches within a path segment; ** matches across segments.",
-    "cloudflareExcludeHelp": "Exclusion takes precedence over inclusion."
+    "cloudflareExcludeHelp": "Exclusion takes precedence over inclusion.",
+    "sqlHost": "Host",
+    "sqlPort": "Port",
+    "sqlDatabase": "Database",
+    "sqlPassword": "Password",
+    "sqlTLSMode": "TLS mode",
+    "sqlCA": "CA certificate (PEM)",
+    "sqlPath": "Server file path",
+    "sqlTLSDisable": "Disabled",
+    "sqlTLSVerify": "Verify certificate and hostname"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -806,5 +815,20 @@
       "superseded": "Resumed in another run",
       "cancel_failed": "Failed"
     }
+  },
+  "sql": {
+    "mode": "Document mode",
+    "rows": "One document per row",
+    "query": "Entire query as one document",
+    "rowsHint": "Required: unique, nonempty __id and nonempty text __content. Optional text __context. Other columns are ignored.",
+    "queryHint": "All results become one JSON document with columns and rows. Column and row order are preserved, including empty results.",
+    "queryLabel": "SQL query",
+    "limits": "One SELECT or WITH query. Sync: 100,000 rows, 16 MiB total, 4 MiB per document, 300 seconds.",
+    "preview": "Preview sample",
+    "previewHint": "Reads up to 100 rows / 4 MiB in 30 seconds. No writes or deletion checks. Sample success does not prove all IDs are unique. Saved-task Dry-run scans the full query.",
+    "columns": "Columns",
+    "truncated": "Sample truncated at the preview limit.",
+    "empty": "No rows in this sample.",
+    "context": "Context"
   }
 }

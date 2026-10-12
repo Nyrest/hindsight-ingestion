@@ -1,6 +1,6 @@
 import createClient from "openapi-fetch";
 import type { paths } from "./openapi";
-import type { BrowseRequest, CredentialCreate, CredentialPatch, ErrorEnvelope, RunsQuery, SettingsPatch, TaskInput, TaskPatch } from "./types";
+import type { SQLPreviewRequest, BrowseRequest, CredentialCreate, CredentialPatch, ErrorEnvelope, RunsQuery, SettingsPatch, TaskInput, TaskPatch } from "./types";
 
 export class ApiError extends Error {
   readonly status: number;
@@ -62,6 +62,7 @@ export const api = {
   oauthStart: (id: string) => unwrap(client.POST("/api/credentials/{id}/oauth/start", { params: pathParams(id) })),
   refreshCredential: (id: string) => unwrap(client.POST("/api/credentials/{id}/refresh", { params: pathParams(id) })),
   browse: (id: string, body: BrowseRequest) => unwrap(client.POST("/api/credentials/{id}/browse", { params: pathParams(id), body })),
+  previewSQL: (id: string, body: SQLPreviewRequest, signal?: AbortSignal) => unwrap(client.POST("/api/credentials/{id}/sql/preview", { params: pathParams(id), body, signal })),
   strategies: (id: string, bankId: string) => unwrap(client.GET("/api/credentials/{id}/strategies", { params: { ...pathParams(id), query: { bankId } } })),
   tags: (id: string, bankId: string, q = "") => unwrap(client.GET("/api/credentials/{id}/tags", { params: { ...pathParams(id), query: { bankId, q, limit: 100, offset: 0 } } })),
   deleteTaskDocuments: (id: string) => unwrap(client.DELETE("/api/tasks/{id}/documents", { params: pathParams(id) })),

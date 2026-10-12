@@ -840,7 +840,16 @@
     "cloudflareLimitHelp": "Gli account gratuiti consentono fino a 100 pagine per crawl. Al raggiungimento del limite non vengono dedotte eliminazioni.",
     "cloudflareCacheHelp": "La riconciliazione completa recupera sempre contenuti aggiornati.",
     "cloudflareIncludeHelp": "Un pattern per riga. * corrisponde all’interno di un segmento del percorso; ** può attraversare più segmenti.",
-    "cloudflareExcludeHelp": "Le esclusioni hanno la precedenza."
+    "cloudflareExcludeHelp": "Le esclusioni hanno la precedenza.",
+    "sqlHost": "Host",
+    "sqlPort": "Porta",
+    "sqlDatabase": "Database",
+    "sqlPassword": "Password",
+    "sqlTLSMode": "Modalità TLS",
+    "sqlCA": "Certificato CA (PEM)",
+    "sqlPath": "Percorso del file sul server",
+    "sqlTLSDisable": "Disabilitato",
+    "sqlTLSVerify": "Verifica certificato e nome host"
   },
   "proxy": {
     "title": "Proxy",
@@ -875,5 +884,20 @@
       "superseded": "Ripreso in un’altra esecuzione",
       "cancel_failed": "Fallito"
     }
+  },
+  "sql": {
+    "mode": "Modalità documenti",
+    "rows": "Un documento per riga",
+    "query": "Intera query in un documento",
+    "rowsHint": "Obbligatori: __id univoco e non vuoto e testo __content non vuoto. Testo __context facoltativo. Le altre colonne vengono ignorate.",
+    "queryHint": "Tutti i risultati formano un documento JSON con columns e rows. L’ordine di colonne e righe viene mantenuto, anche per i risultati vuoti.",
+    "queryLabel": "Query SQL",
+    "limits": "Una query SELECT o WITH. Sincronizzazione: 100.000 righe, 16 MiB totali, 4 MiB per documento, 300 secondi.",
+    "preview": "Anteprima del campione",
+    "previewHint": "Legge fino a 100 righe / 4 MiB in 30 secondi. Nessuna scrittura o verifica delle eliminazioni. Un campione valido non garantisce che tutti gli ID siano univoci. Il Dry-run di un’attività salvata esegue l’intera query.",
+    "columns": "Colonne",
+    "truncated": "Campione troncato al limite dell’anteprima.",
+    "empty": "Nessuna riga nel campione.",
+    "context": "Contesto"
   }
 }

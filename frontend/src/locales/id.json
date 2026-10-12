@@ -839,7 +839,16 @@
     "cloudflareLimitHelp": "Akun gratis dapat merayapi hingga 100 halaman per proses. Jika batas tercapai, penghapusan tidak disimpulkan.",
     "cloudflareCacheHelp": "Rekonsiliasi penuh selalu mengambil konten terbaru.",
     "cloudflareIncludeHelp": "Satu pola per baris. * cocok dalam satu segmen jalur; ** dapat melintasi beberapa segmen.",
-    "cloudflareExcludeHelp": "Pengecualian lebih diutamakan daripada penyertaan."
+    "cloudflareExcludeHelp": "Pengecualian lebih diutamakan daripada penyertaan.",
+    "sqlHost": "Host",
+    "sqlPort": "Port",
+    "sqlDatabase": "Basis data",
+    "sqlPassword": "Kata sandi",
+    "sqlTLSMode": "Mode TLS",
+    "sqlCA": "Sertifikat CA (PEM)",
+    "sqlPath": "Jalur berkas di server",
+    "sqlTLSDisable": "Nonaktif",
+    "sqlTLSVerify": "Verifikasi sertifikat dan nama host"
   },
   "proxy": {
     "title": "Proksi",
@@ -874,5 +883,20 @@
       "superseded": "Dilanjutkan pada proses lain",
       "cancel_failed": "Gagal"
     }
+  },
+  "sql": {
+    "mode": "Mode dokumen",
+    "rows": "Satu dokumen per baris",
+    "query": "Seluruh kueri dalam satu dokumen",
+    "rowsHint": "Wajib: __id unik dan tidak kosong serta teks __content yang tidak kosong. Teks __context opsional. Kolom lainnya diabaikan.",
+    "queryHint": "Semua hasil menjadi satu dokumen JSON dengan columns dan rows. Urutan kolom dan baris dipertahankan, termasuk hasil kosong.",
+    "queryLabel": "Kueri SQL",
+    "limits": "Satu kueri SELECT atau WITH. Batas sinkronisasi: 100.000 baris, total 16 MiB, 4 MiB per dokumen, 300 detik.",
+    "preview": "Pratinjau sampel",
+    "previewHint": "Membaca hingga 100 baris / 4 MiB dalam 30 detik. Tanpa penulisan atau pemeriksaan penghapusan. Sampel yang valid tidak menjamin semua ID unik. Dry-run tugas tersimpan menjalankan seluruh kueri.",
+    "columns": "Kolom",
+    "truncated": "Sampel dipotong pada batas pratinjau.",
+    "empty": "Tidak ada baris dalam sampel.",
+    "context": "Konteks"
   }
 }

@@ -28,7 +28,7 @@ type Source struct{}
 
 func (*Source) Info() connectors.SourceInfo {
 	return connectors.SourceInfo{
-		Type: "filesystem", Name: "File System", CredentialType: "filesystem",
+		Type: "filesystem", Name: "File System", CredentialTypes: []string{"filesystem"},
 		Capabilities: connectors.Capabilities{IncrementalMode: connectors.IncrementalInventory, DeletionMode: connectors.DeletionScanGeneration, SupportsFiles: true},
 		BrowseKinds:  []string{connectors.KindFolder},
 		Fields: []connectors.FieldSpec{

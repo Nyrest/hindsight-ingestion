@@ -43,9 +43,9 @@ type Connector struct{}
 // Info describes the connector.
 func (c *Connector) Info() connectors.SourceInfo {
 	return connectors.SourceInfo{
-		Type:           "onedrive",
-		Name:           "OneDrive",
-		CredentialType: "onedrive",
+		Type:            "onedrive",
+		Name:            "OneDrive",
+		CredentialTypes: []string{"onedrive"},
 		Capabilities: connectors.Capabilities{
 			IncrementalMode: connectors.IncrementalDeltaToken,
 			DeletionMode:    connectors.DeletionDelta,
