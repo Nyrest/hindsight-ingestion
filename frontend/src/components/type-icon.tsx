@@ -2,11 +2,23 @@ import GoogleDrive from "@thesvg/react/google-drive";
 import MicrosoftOneDrive from "@thesvg/react/microsoft-onedrive";
 import Notion from "@thesvg/react/notion";
 import Siyuan from "@thesvg/react/siyuan";
+import Cloudflare from "@thesvg/react/cloudflare";
+import MySQL from "@thesvg/react/mysql";
+import PostgreSQL from "@thesvg/react/postgresql";
+import SQLite from "@thesvg/react/sqlite";
 import { typeIcon } from "@/lib/connectors";
 import { cn } from "@/lib/utils";
 
 function brandIcon(type: string) {
   switch (type) {
+    case "cloudflare_crawl":
+      return <Cloudflare aria-hidden="true" className="size-4 shrink-0" />;
+    case "sql_mysql":
+      return <MySQL aria-hidden="true" className="size-4 shrink-0" />;
+    case "sql_postgres":
+      return <PostgreSQL aria-hidden="true" className="size-4 shrink-0" />;
+    case "sql_sqlite":
+      return <SQLite aria-hidden="true" className="size-4 shrink-0" />;
     case "notion":
       return <Notion aria-hidden="true" className="size-4 shrink-0" />;
     case "siyuan":
