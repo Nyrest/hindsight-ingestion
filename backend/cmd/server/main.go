@@ -37,6 +37,7 @@ import (
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/onedrive"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/s3"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/siyuan"
+	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/webcal"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/webdav"
 )
 

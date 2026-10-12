@@ -15,6 +15,7 @@ import (
 
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors/sqlsource"
+	"github.com/Nyrest/hindsight-ingestion/internal/connectors/webcal"
 	"github.com/Nyrest/hindsight-ingestion/internal/credentials"
 	"github.com/Nyrest/hindsight-ingestion/internal/hindsight"
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
@@ -149,6 +150,11 @@ func (s *Server) patchCredential(w http.ResponseWriter, r *http.Request) {
 		var oldConfig map[string]any
 		_ = json.Unmarshal([]byte(m.ConfigJSON), &oldConfig)
 		oldTarget := sqlsource.ConnectionTarget(m.Type, oldConfig)
+		oldCalendarTarget := ""
+		if m.Type == "webcal" {
+			oldCredential, _ := s.Creds.Decrypt(&m)
+			oldCalendarTarget = webcal.CredentialTarget(oldCredential)
+		}
 		if err := s.Creds.Apply(&m, body.input(), false); err != nil {
 			return err
 		}
@@ -160,9 +166,22 @@ func (s *Server) patchCredential(w http.ResponseWriter, r *http.Request) {
 		}
 		var newConfig map[string]any
 		_ = json.Unmarshal([]byte(m.ConfigJSON), &newConfig)
+		changedSource := ""
 		if sqlsource.IsCredential(m.Type) && oldTarget != sqlsource.ConnectionTarget(m.Type, newConfig) {
-			tasks := tx.Model(&models.Task{}).Select("id").Where("source_type = ? AND source_credential_id = ?", sqlsource.SourceType, m.ID)
-			if err := tx.Model(&models.Task{}).Where("source_type = ? AND source_credential_id = ?", sqlsource.SourceType, m.ID).Updates(map[string]any{"config_revision": gorm.Expr("config_revision + 1"), "reconcile_required": true}).Error; err != nil {
+			changedSource = sqlsource.SourceType
+		}
+		if m.Type == "webcal" {
+			newCredential, err := s.Creds.Decrypt(&m)
+			if err != nil {
+				return err
+			}
+			if oldCalendarTarget != webcal.CredentialTarget(newCredential) {
+				changedSource = "webcal"
+			}
+		}
+		if changedSource != "" {
+			tasks := tx.Model(&models.Task{}).Select("id").Where("source_type = ? AND source_credential_id = ?", changedSource, m.ID)
+			if err := tx.Model(&models.Task{}).Where("source_type = ? AND source_credential_id = ?", changedSource, m.ID).Updates(map[string]any{"config_revision": gorm.Expr("config_revision + 1"), "reconcile_required": true}).Error; err != nil {
 				return err
 			}
 			return tx.Model(&models.TaskState{}).Where("task_id IN (?)", tasks).Updates(map[string]any{"committed_cursor_json": "", "last_full_reconcile_at": nil}).Error

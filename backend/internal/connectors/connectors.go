@@ -16,10 +16,11 @@ import (
 
 // Incremental modes.
 const (
-	IncrementalHighWater  = "high_water_mark"
-	IncrementalDeltaToken = "delta_token"
-	IncrementalSyncToken  = "sync_token"
-	IncrementalInventory  = "inventory"
+	IncrementalHighWater            = "high_water_mark"
+	IncrementalDeltaToken           = "delta_token"
+	IncrementalSyncToken            = "sync_token"
+	IncrementalInventory            = "inventory"
+	IncrementalConditionalInventory = "conditional_inventory"
 )
 
 // Deletion modes.
@@ -266,6 +267,8 @@ type SourceItem struct {
 
 // ScanRequest asks a connector to enumerate items.
 type ScanRequest struct {
+	// Timezone interprets floating calendar times and all-day dates.
+	Timezone   string
 	Credential Credential
 	Config     map[string]any
 	Filter     Filter
@@ -302,8 +305,10 @@ type ContentRequest struct {
 
 // SourceContent is either text (Markdown) or a streamed file.
 type SourceContent struct {
-	Blocks   []ContentBlock
-	Warnings []string
+	// TimestampUnset prevents fallback to modification or ingestion time.
+	TimestampUnset bool
+	Blocks         []ContentBlock
+	Warnings       []string
 	// Text content, used when Body is nil.
 	Text string
 	// Body streams file content; the engine closes it.
@@ -441,7 +446,7 @@ func CredentialTypes() []CredentialType {
 }
 
 func order(t string) int {
-	for i, v := range []string{"notion", "siyuan", "cloudflare_crawl", "s3", "webdav", "google_drive", "onedrive", "filesystem", "sql", "sql_mysql", "sql_postgres", "sql_sqlite"} {
+	for i, v := range []string{"notion", "siyuan", "cloudflare_crawl", "webcal", "s3", "webdav", "google_drive", "onedrive", "filesystem", "sql", "sql_mysql", "sql_postgres", "sql_sqlite"} {
 		if v == t {
 			return i
 		}

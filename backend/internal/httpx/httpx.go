@@ -12,6 +12,7 @@ import (
 	"math/rand/v2"
 	"net"
 	"net/http"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -119,14 +120,16 @@ func (c *Client) ApplyHeaders(req *http.Request) {
 
 // Request describes a request whose body can be replayed on retry.
 type Request struct {
-	Method string
-	URL    string
-	Header http.Header
+	// AcceptStatuses opts a request into additional successful HTTP statuses.
+	AcceptStatuses []int
+	Method         string
+	URL            string
+	Header         http.Header
 	// Body is replayable. For streaming uploads use DoStream instead.
 	Body []byte
 }
 
-// Do performs a request with retries and returns the (2xx) response. The
+// Do performs a request with retries and returns a successful or explicitly accepted response. The
 // caller must close the body.
 func (c *Client) Do(ctx context.Context, r Request) (*http.Response, error) {
 	var lastErr error
@@ -168,7 +171,7 @@ func (c *Client) Do(ctx context.Context, r Request) (*http.Response, error) {
 			}
 			continue
 		}
-		if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+		if (resp.StatusCode >= 200 && resp.StatusCode < 300) || slices.Contains(r.AcceptStatuses, resp.StatusCode) {
 			return resp, nil
 		}
 		b, _ := io.ReadAll(io.LimitReader(resp.Body, 64<<10))

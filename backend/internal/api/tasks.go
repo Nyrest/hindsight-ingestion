@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"reflect"
 	"slices"
@@ -361,6 +362,8 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 
 	if b.CronExpression != nil {
 		t.CronExpression = strings.TrimSpace(*b.CronExpression)
+	} else if creating && t.SourceType == "webcal" {
+		t.CronExpression = "0 * * * *"
 	}
 	if _, err := scheduler.ValidateCron(t.CronExpression, "UTC", 1); err != nil {
 		errs.add("cronExpression", err.Error())
@@ -487,7 +490,7 @@ func (s *Server) patchTask(w http.ResponseWriter, r *http.Request) {
 	}
 	destChanged := t.DestinationCredentialID != origDestCred || t.DestinationBankID != origBank
 	errLocked := errors.New("destination locked")
-	errChanged := errors.New("SQL task configuration changed; reload the task")
+	errChanged := fmt.Errorf("%s task configuration changed; reload the task", strings.ToUpper(t.SourceType))
 	err = s.DB.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
 		// Re-read engine-owned fields under a row lock: a run may have
 		// locked the destination since the task was loaded.
@@ -496,7 +499,7 @@ func (s *Server) patchTask(w http.ResponseWriter, r *http.Request) {
 			Select("destination_locked", "config_revision").First(&cur, "id = ?", t.ID).Error; err != nil {
 			return err
 		}
-		if t.SourceType == "sql" && cur.ConfigRevision != originalRevision {
+		if (t.SourceType == "sql" || t.SourceType == "webcal") && cur.ConfigRevision != originalRevision {
 			return errChanged
 		}
 		if cur.DestinationLocked && destChanged {

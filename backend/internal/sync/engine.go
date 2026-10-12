@@ -213,6 +213,9 @@ func (r *runner) execute(opts RunOptions) error {
 	case r.task.ReconcileRequired:
 		r.full = true
 		r.logf("info", "Configuration changed; performing full reconciliation")
+	case r.src.Info().Capabilities.IncrementalMode == connectors.IncrementalConditionalInventory && r.hasFailedItems():
+		r.full = true
+		r.logf("info", "Retrying failed inventory writes with a full scan")
 	case !hasCursor:
 		r.full = true
 		r.logf("info", "No committed cursor; performing baseline full scan")
@@ -247,12 +250,13 @@ func (r *runner) execute(opts RunOptions) error {
 	r.logf("info", "Starting %s sync (generation %d)", mode, r.gen)
 
 	var cursor json.RawMessage
-	if !r.full && hasCursor {
+	if hasCursor && (!r.full || r.src.Info().Capabilities.IncrementalMode == connectors.IncrementalConditionalInventory) {
 		cursor = json.RawMessage(r.state.CommittedCursorJSON)
 	}
 
 	// 1. Scan source; changes are submitted as they are discovered.
 	res, err := r.scanSource(connectors.ScanRequest{
+		Timezone:   cfg.Timezone,
 		Credential: r.cred,
 		Config:     r.srcCfg,
 		Filter:     r.filter,
@@ -262,6 +266,9 @@ func (r *runner) execute(opts RunOptions) error {
 		Log:        func(level, msg string) { r.logf(level, "%s", msg) },
 	}, opts)
 	if err != nil {
+		if r.task.SourceType == "webcal" {
+			return errors.Join(fmt.Errorf("scan source: %w", err), r.flushSeen(), r.awaitPending())
+		}
 		return fmt.Errorf("scan source: %w", err)
 	}
 	flushErr := r.flushText()
@@ -278,7 +285,7 @@ func (r *runner) execute(opts RunOptions) error {
 		return errors.New("SQL inventory was incomplete; deletion and state commit skipped")
 	}
 
-	if (r.sharedDocs != nil || r.task.SourceType == "sql") && len(r.failed) > 0 {
+	if (r.sharedDocs != nil || r.task.SourceType == "sql" || r.task.SourceType == "webcal") && len(r.failed) > 0 {
 		return fmt.Errorf("%d item(s) failed; deletion and cursor commit skipped", len(r.failed))
 	}
 
@@ -435,7 +442,7 @@ func (r *runner) observe(item connectors.SourceItem) error {
 		row.SyncedFingerprint = actual
 	}
 
-	if !r.reing && row.DestinationPresent && row.SyncedFingerprint == target && !(r.full && r.includesImages() && row.NeedsImageRetry) {
+	if !r.reing && row.DestinationPresent && row.SyncedFingerprint == target && !(r.task.SourceType == "webcal" && row.LastError != "") && !(r.full && r.includesImages() && row.NeedsImageRetry) {
 		r.run.UnchangedCount++
 		return r.queueSeen(row)
 	}
@@ -574,13 +581,18 @@ func (r *runner) flushText() error {
 			Strategy:          r.task.RetainStrategy,
 			UpdateMode:        "replace",
 		}
-		if ts := pickTime(j.content.Timestamp, j.item.ModifiedAt); !ts.IsZero() {
+		if j.content.TimestampUnset {
+			mi.Timestamp = "unset"
+		} else if ts := pickTime(j.content.Timestamp, j.item.ModifiedAt); !ts.IsZero() {
 			mi.Timestamp = ts.UTC().Format(time.RFC3339Nano)
 		}
 		items = append(items, mi)
 		keys = append(keys, j.row.DestinationDocumentID+"\x00"+j.row.TargetFingerprint)
 	}
 	operationID := OperationID(r.run.ID, keys)
+	if err := r.recordCalendarRetainIntent(batch); err != nil {
+		return err
+	}
 	if r.sharedDocs != nil {
 		if err := r.reserveShared(batch, operationID); err != nil {
 			return err
@@ -629,7 +641,9 @@ func (r *runner) retainFile(item connectors.SourceItem, row models.TaskItem, con
 		Tags:       tags,
 		Strategy:   r.task.RetainStrategy,
 	}
-	if ts := pickTime(content.Timestamp, item.ModifiedAt); !ts.IsZero() {
+	if content.TimestampUnset {
+		meta.Timestamp = "unset"
+	} else if ts := pickTime(content.Timestamp, item.ModifiedAt); !ts.IsZero() {
 		meta.Timestamp = ts.UTC().Format(time.RFC3339Nano)
 	}
 	body := io.Reader(content.Body)
@@ -780,7 +794,7 @@ func (r *runner) awaitPending() error {
 }
 
 func (r *runner) checkTaskRevision(db *gorm.DB) error {
-	if r.task.SourceType != "sql" {
+	if r.task.SourceType != "sql" && r.task.SourceType != "webcal" {
 		return nil
 	}
 	var current models.Task
@@ -788,7 +802,7 @@ func (r *runner) checkTaskRevision(db *gorm.DB) error {
 		return err
 	}
 	if current.ConfigRevision != r.task.ConfigRevision {
-		return errors.New("SQL task configuration changed during this run; deletion and state commit skipped")
+		return fmt.Errorf("%s task configuration changed during this run; deletion and state commit skipped", strings.ToUpper(r.task.SourceType))
 	}
 	return nil
 }
@@ -989,6 +1003,28 @@ func (e *Engine) writeTerminal(runID string, updates map[string]any) {
 // normal finish path (load errors, panics, queue cancellation).
 func (e *Engine) MarkTerminal(runID, status, msg string) {
 	e.writeTerminal(runID, map[string]any{"status": status, "finished_at": time.Now().UTC(), "error_message": truncate(msg, 4000)})
+}
+
+func (r *runner) recordCalendarRetainIntent(batch []textJob) error {
+	if r.task.SourceType != "webcal" {
+		return nil
+	}
+	rows := make([]models.TaskItem, 0, len(batch))
+	for index := range batch {
+		// Persist before sending so an interrupted re-ingest cannot be hidden by HTTP 304.
+		batch[index].row.LastError = "Hindsight retain has not been confirmed"
+		rows = append(rows, batch[index].row)
+	}
+	return r.upsertRows(rows)
+}
+
+func (r *runner) hasFailedItems() bool {
+	for _, row := range r.ledger {
+		if row.LastError != "" {
+			return true
+		}
+	}
+	return false
 }
 
 // loadLedger reads the task's ledger in pages to avoid per-item queries.

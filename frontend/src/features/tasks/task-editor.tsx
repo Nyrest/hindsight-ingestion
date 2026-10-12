@@ -181,6 +181,10 @@ export function TaskEditor({ task }: { task?: Task }) {
 
   function changeSourceType(type: string) {
     const spec = findSource(connectors.data, type);
+    const schedule = form.getFieldState("cronExpression");
+    if (!editing && type === "webcal" && !schedule.isDirty && !schedule.isTouched && !form.getValues("cronExpression")) {
+      setValue("cronExpression", "0 * * * *", { shouldDirty: true });
+    }
     setValue("sourceType", type, { shouldDirty: true, shouldValidate: formState.isSubmitted });
     setValue("sourceCredentialId", "", { shouldDirty: true });
     setValue("sourceConfig", spec ? defaultConfig(spec.fields) : {}, { shouldDirty: true });
@@ -731,7 +735,7 @@ export function TaskEditor({ task }: { task?: Task }) {
           <EditorSection id="schedule" icon={CalendarClock} title={t("taskEditor.sections.schedule.title")}>
             <ScheduleFields
               cron={watch("cronExpression")}
-              onCronChange={(v) => setValue("cronExpression", v, { shouldDirty: true, shouldValidate: formState.isSubmitted })}
+              onCronChange={(v) => setValue("cronExpression", v, { shouldDirty: true, shouldTouch: true, shouldValidate: formState.isSubmitted })}
               cronError={errText(errors.cronExpression?.message)}
             />
           </EditorSection>

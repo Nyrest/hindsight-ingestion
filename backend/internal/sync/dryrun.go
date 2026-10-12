@@ -49,7 +49,8 @@ func (e *Engine) DryRunWithOptions(ctx context.Context, taskID string, opts RunO
 	if err := e.DB.WithContext(ctx).First(&r.task, "id = ?", taskID).Error; err != nil {
 		return result, err
 	}
-	if _, err := r.prepareSource(); err != nil {
+	cfg, err := r.prepareSource()
+	if err != nil {
 		return result, err
 	}
 	if r.task.SourceType == connectors.SourceCloudflareCrawl {
@@ -73,6 +74,7 @@ func (e *Engine) DryRunWithOptions(ctx context.Context, taskID string, opts RunO
 	}
 	observed := map[string]DryRunItem{}
 	res, err := r.scanPreview(connectors.ScanRequest{
+		Timezone:   cfg.Timezone,
 		Credential: r.cred, Config: r.srcCfg, Filter: r.filter, Full: true,
 		Log: func(string, string) {},
 		Emit: func(item connectors.SourceItem) error {
@@ -85,15 +87,23 @@ func (e *Engine) DryRunWithOptions(ctx context.Context, taskID string, opts RunO
 		return result, ctx.Err()
 	}
 	err = errors.Join(err, res.Error)
+	if r.task.SourceType == "webcal" {
+		err = errors.Join(err, r.checkTaskRevision(e.DB.WithContext(ctx)))
+		for _, preview := range observed {
+			if preview.Action == "fail" {
+				err = errors.Join(err, errors.New(preview.Reason))
+			}
+		}
+	}
 	result.Complete = err == nil && res.Complete
 	if err != nil {
 		result.Error = err.Error()
 	}
 	result.DiscoveredCount = len(observed)
-	if !result.Complete && r.sharedDocs != nil {
+	if !result.Complete && (r.sharedDocs != nil || r.task.SourceType == "webcal") {
 		for id, preview := range observed {
 			if preview.Action == "delete" {
-				preview.Action, preview.Reason = "skip", "incomplete crawl; reference unchanged"
+				preview.Action, preview.Reason = "skip", "incomplete source inventory; document unchanged"
 				observed[id] = preview
 			}
 		}
@@ -175,6 +185,7 @@ func (r *runner) previewItem(item connectors.SourceItem) DryRunItem {
 	}
 	if row.DestinationPresent &&
 		row.DestinationDocumentID == documentID &&
+		!(r.task.SourceType == "webcal" && row.LastError != "") &&
 		row.SyncedFingerprint == r.itemFingerprint(item, tags, md) && !(r.includesImages() && row.NeedsImageRetry) {
 		preview.Action = "unchanged"
 		return preview
