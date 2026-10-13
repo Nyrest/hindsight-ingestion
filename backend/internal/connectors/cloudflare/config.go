@@ -11,7 +11,7 @@ import (
 
 func init() {
 	connectors.RegisterCredentialType(connectors.CredentialType{
-		Type: connectors.SourceCloudflareCrawl, Name: "Cloudflare Browser Run",
+		Type: connectors.SourceCloudflareCrawl, Name: "Cloudflare",
 		Description: "Cloudflare account and API token with Browser Run Edit permission",
 		Fields: []connectors.FieldSpec{
 			{Key: "accountId", Label: "Account ID", Type: connectors.FieldString, Required: true},

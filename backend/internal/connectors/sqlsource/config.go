@@ -32,7 +32,7 @@ func init() {
 		port      int
 	}{{MySQL, "MySQL", 3306}, {Postgres, "PostgreSQL", 5432}} {
 		connectors.RegisterCredentialType(connectors.CredentialType{
-			Type: spec.typ, Name: spec.name,
+			Type: spec.typ, Name: spec.name, Description: spec.name + " database connection",
 			Fields: []connectors.FieldSpec{
 				{Key: "host", Label: "Host", Type: connectors.FieldString, Required: true},
 				{Key: "port", Label: "Port", Type: connectors.FieldNumber, Required: true, Default: spec.port},
@@ -44,7 +44,7 @@ func init() {
 			},
 		})
 	}
-	connectors.RegisterCredentialType(connectors.CredentialType{Type: SQLite, Name: "SQLite", Fields: []connectors.FieldSpec{{Key: "path", Label: "Server file path", Type: connectors.FieldString, Required: true}}})
+	connectors.RegisterCredentialType(connectors.CredentialType{Type: SQLite, Name: "SQLite", Description: "SQLite database file on the server", Fields: []connectors.FieldSpec{{Key: "path", Label: "Server file path", Type: connectors.FieldString, Required: true}}})
 	connectors.RegisterSource(&Connector{})
 }
 
