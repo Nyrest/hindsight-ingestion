@@ -66,3 +66,21 @@ func TestTimezoneValidation(t *testing.T) {
 		}
 	}
 }
+
+func TestCorruptSettingsDoNotSilentlyRestoreDefaults(t *testing.T) {
+	db, err := database.Open("sqlite", filepath.Join(t.TempDir(), "settings.db"), slog.New(slog.NewTextHandler(io.Discard, nil)))
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { sqlDB, _ := db.DB(); sqlDB.Close() })
+	cipher, err := crypto.New(bytes.Repeat([]byte{1}, 32))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := db.Create(&models.Setting{Key: key, Value: `{broken`}).Error; err != nil {
+		t.Fatal(err)
+	}
+	if _, err := NewStore(db, cipher).Get(t.Context()); err == nil {
+		t.Fatal("corrupt settings silently changed proxy and ingestion policies")
+	}
+}

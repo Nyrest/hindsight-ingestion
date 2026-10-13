@@ -2,7 +2,6 @@ package oauth
 
 import (
 	"context"
-	"net/http"
 
 	"golang.org/x/oauth2"
 
@@ -12,5 +11,5 @@ import (
 
 // oauthContext makes the oauth2 library use the shared transport.
 func oauthContext(ctx context.Context, config proxy.Config) context.Context {
-	return context.WithValue(ctx, oauth2.HTTPClient, &http.Client{Transport: httpx.Transport(config)})
+	return context.WithValue(ctx, oauth2.HTTPClient, httpx.New(nil, nil, config).HTTP)
 }

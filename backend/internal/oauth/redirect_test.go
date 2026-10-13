@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"sync/atomic"
 	"testing"
+	"time"
 
 	"golang.org/x/oauth2"
 
@@ -34,6 +35,7 @@ func TestOAuthUsesStoredRedirectAndRefreshNeedsNoPublicURL(t *testing.T) {
 					redirect = fixed + "/api/oauth/callback"
 				}
 				var exchanged, refreshed atomic.Bool
+				var challenge string
 				tokenServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 					if err := r.ParseForm(); err != nil {
 						t.Error(err)
@@ -41,6 +43,9 @@ func TestOAuthUsesStoredRedirectAndRefreshNeedsNoPublicURL(t *testing.T) {
 					w.Header().Set("Content-Type", "application/json")
 					switch r.Form.Get("grant_type") {
 					case "authorization_code":
+						if verifier := r.Form.Get("code_verifier"); verifier == "" || oauth2.S256ChallengeFromVerifier(verifier) != challenge {
+							t.Error("code exchange did not prove the original PKCE verifier")
+						}
 						exchanged.Store(true)
 						if r.Form.Get("redirect_uri") != redirect || r.Form.Get("code") != "test-code" {
 							t.Error("code exchange changed the redirect URI")
@@ -87,6 +92,10 @@ func TestOAuthUsesStoredRedirectAndRefreshNeedsNoPublicURL(t *testing.T) {
 					t.Fatal(err)
 				}
 				parsed, _ := url.Parse(authURL)
+				challenge = parsed.Query().Get("code_challenge")
+				if challenge == "" || parsed.Query().Get("code_challenge_method") != "S256" {
+					t.Fatal("authorization did not use S256 PKCE")
+				}
 				if parsed.Query().Get("redirect_uri") != redirect {
 					t.Fatal("authorization did not use the effective redirect URI", authURL)
 				}
@@ -99,9 +108,24 @@ func TestOAuthUsesStoredRedirectAndRefreshNeedsNoPublicURL(t *testing.T) {
 				if err := db.First(&row, "id = ?", row.ID).Error; err != nil || row.OAuthState != "" || row.OAuthRedirectURI != "" {
 					t.Fatal("completed flow was not cleared", err)
 				}
+				if _, err := manager.Callback(t.Context(), parsed.Query().Get("state"), "test-code"); err == nil {
+					t.Fatal("completed state was reusable")
+				}
 				cfg.PublicURL = ""
 				if token, err := manager.Refresh(context.Background(), row.ID); err != nil || !refreshed.Load() || token.AccessToken != "at-2" || token.RefreshToken != "rt-2" {
 					t.Fatal("refresh without PUBLIC_URL failed", token, err)
+				}
+				authURL, err = manager.Start(t.Context(), row.ID, redirect)
+				if err != nil {
+					t.Fatal(err)
+				}
+				parsed, _ = url.Parse(authURL)
+				if err := db.Model(&models.Credential{}).Where("id = ?", row.ID).Update("o_auth_state_expires_at", time.Now().UTC().Add(-time.Minute)).Error; err != nil {
+					t.Fatal(err)
+				}
+				exchanged.Store(false)
+				if _, err := manager.Callback(t.Context(), parsed.Query().Get("state"), "test-code"); err == nil || exchanged.Load() {
+					t.Fatal("expired state reached token exchange")
 				}
 			})
 		}

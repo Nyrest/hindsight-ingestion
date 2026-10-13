@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func (r *runner) reserveShared(batch []textJob, operationID string) error {
+func (r *runner) reserveShared(batch []retainJob, operationID string) error {
 	return r.e.DB.WithContext(r.ctx).Transaction(func(tx *gorm.DB) error {
 		documents := *r.sharedDocs
 		documents.DB = tx

@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"strings"
 	"time"
@@ -80,9 +81,7 @@ func (s *Store) Get(ctx context.Context) (Settings, error) {
 		return out, err
 	}
 	if err := json.Unmarshal([]byte(row.Value), &out); err != nil {
-		out = Defaults
-		out.Timezone = DefaultTimezone()
-		return out, nil
+		return out, fmt.Errorf("invalid stored settings: %w", err)
 	}
 	var secret struct {
 		ProxyPassword string `json:"proxyPassword"`

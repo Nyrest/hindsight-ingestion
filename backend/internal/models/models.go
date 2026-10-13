@@ -32,11 +32,13 @@ type Credential struct {
 	ProxyMode       string `gorm:"size:16;not null;default:global"`
 	ProxyJSON       string `gorm:"type:text"`
 
-	Status           string `gorm:"size:32;not null;default:active"`
-	StatusMessage    string `gorm:"type:text"`
-	OAuthExpiresAt   *time.Time
-	OAuthState       string `gorm:"size:128;index"`
-	OAuthRedirectURI string `gorm:"type:text"`
+	Status                 string `gorm:"size:32;not null;default:active"`
+	StatusMessage          string `gorm:"type:text"`
+	OAuthExpiresAt         *time.Time
+	OAuthState             string `gorm:"size:128;index"`
+	OAuthRedirectURI       string `gorm:"type:text"`
+	OAuthStateExpiresAt    *time.Time
+	OAuthVerifierEncrypted string `gorm:"type:text"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -150,15 +152,15 @@ const (
 
 // TaskRun is the execution history of a Task.
 type TaskRun struct {
-	ID     string `gorm:"primaryKey;size:36"`
-	TaskID string `gorm:"size:36;not null;index"`
+	ID     string `gorm:"primaryKey;size:36;index:idx_task_run_latest,priority:3,sort:desc"`
+	TaskID string `gorm:"size:36;not null;index;index:idx_task_run_latest,priority:1"`
 
 	TriggerType string `gorm:"size:16;not null"`
 	Status      string `gorm:"size:32;not null;index"`
 	SyncMode    string `gorm:"size:16;not null"`
 
 	ScheduledFor *time.Time
-	StartedAt    *time.Time `gorm:"index"`
+	StartedAt    *time.Time `gorm:"index;index:idx_task_run_latest,priority:2,sort:desc"`
 	FinishedAt   *time.Time
 
 	DiscoveredCount int `gorm:"not null;default:0"`

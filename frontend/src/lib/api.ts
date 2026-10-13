@@ -33,14 +33,18 @@ const client = createClient<paths>({
       request.headers.set("X-CSRF-Protection", "1");
     }
     try { return await fetch(request); }
-    catch (error) { throw new ApiError(0, "network", errorMessage(error)); }
+    catch (error) {
+      if (request.signal.aborted) throw error;
+      throw new ApiError(0, "network", errorMessage(error));
+    }
   },
 });
 
-async function unwrap<T>(pending: Promise<{ data?: T; error?: ErrorEnvelope | string; response: Response }>): Promise<T> {
+async function unwrap<T>(pending: Promise<{ data?: T; error?: ErrorEnvelope | string | { status: string }; response: Response }>): Promise<T> {
   const { data, error, response } = await pending;
   if (!response.ok) {
     if (typeof error === "string") throw new ApiError(response.status, "unauthorized", error.trim());
+    if (error && "status" in error) throw new ApiError(response.status, error.status, response.statusText);
     throw new ApiError(response.status, error?.code ?? "internal", error?.error ?? response.statusText, error?.fields);
   }
   return data!;
@@ -61,7 +65,7 @@ export const api = {
   testCredential: (id: string) => unwrap(client.POST("/api/credentials/{id}/test", { params: pathParams(id) })),
   oauthStart: (id: string) => unwrap(client.POST("/api/credentials/{id}/oauth/start", { params: pathParams(id) })),
   refreshCredential: (id: string) => unwrap(client.POST("/api/credentials/{id}/refresh", { params: pathParams(id) })),
-  browse: (id: string, body: BrowseRequest) => unwrap(client.POST("/api/credentials/{id}/browse", { params: pathParams(id), body })),
+  browse: (id: string, body: BrowseRequest, signal?: AbortSignal) => unwrap(client.POST("/api/credentials/{id}/browse", { params: pathParams(id), body, signal })),
   previewSQL: (id: string, body: SQLPreviewRequest, signal?: AbortSignal) => unwrap(client.POST("/api/credentials/{id}/sql/preview", { params: pathParams(id), body, signal })),
   strategies: (id: string, bankId: string) => unwrap(client.GET("/api/credentials/{id}/strategies", { params: { ...pathParams(id), query: { bankId } } })),
   tags: (id: string, bankId: string, q = "") => unwrap(client.GET("/api/credentials/{id}/tags", { params: { ...pathParams(id), query: { bankId, q, limit: 100, offset: 0 } } })),

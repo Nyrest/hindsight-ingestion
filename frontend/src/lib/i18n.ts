@@ -1,19 +1,6 @@
-import i18n from "i18next";
+import i18n, { type BackendModule, type ResourceKey } from "i18next";
 import { initReactI18next } from "react-i18next";
 import en from "@/locales/en.json";
-import zhCN from "@/locales/zh-CN.json";
-import es from "@/locales/es.json";
-import ja from "@/locales/ja.json";
-import ptBR from "@/locales/pt-BR.json";
-import de from "@/locales/de.json";
-import fr from "@/locales/fr.json";
-import zhTW from "@/locales/zh-TW.json";
-import ru from "@/locales/ru.json";
-import ko from "@/locales/ko.json";
-import id from "@/locales/id.json";
-import it from "@/locales/it.json";
-import pl from "@/locales/pl.json";
-import tr from "@/locales/tr.json";
 
 export const languages = ["en", "zh-CN", "es", "ja", "pt-BR", "de", "fr", "zh-TW", "ru", "ko", "id", "it", "pl", "tr"] as const;
 export type Language = (typeof languages)[number];
@@ -35,22 +22,19 @@ export const languageNames: Record<Language, string> = {
   tr: "Türkçe",
 };
 
-const resources = {
-  en: { translation: en },
-  "zh-CN": { translation: zhCN },
-  es: { translation: es },
-  ja: { translation: ja },
-  "pt-BR": { translation: ptBR },
-  de: { translation: de },
-  fr: { translation: fr },
-  "zh-TW": { translation: zhTW },
-  ru: { translation: ru },
-  ko: { translation: ko },
-  id: { translation: id },
-  it: { translation: it },
-  pl: { translation: pl },
-  tr: { translation: tr },
-} as const;
+const localeLoaders = import.meta.glob<ResourceKey>("../locales/*.json", { import: "default" });
+const localeBackend: BackendModule = {
+  type: "backend",
+  init() {},
+  read(language, _namespace, callback) {
+    const load = localeLoaders[`../locales/${language}.json`];
+    if (!load) {
+      callback(new Error(`Unsupported language: ${language}`), false);
+      return;
+    }
+    void load().then((translation) => callback(null, translation), (error: Error) => callback(error, false));
+  },
+};
 
 const LANGUAGE_STORAGE_KEY = "hi-language";
 
@@ -79,8 +63,11 @@ function initialLanguage(): Language {
   return "en";
 }
 
-void i18n.use(initReactI18next).init({
-  resources,
+export const i18nReady = i18n.use(localeBackend).use(initReactI18next).init({
+  resources: { en: { translation: en } },
+  partialBundledLanguages: true,
+  supportedLngs: languages,
+  load: "currentOnly",
   lng: initialLanguage(),
   fallbackLng: "en",
   interpolation: { escapeValue: false },

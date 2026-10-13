@@ -3,11 +3,10 @@ package cloudflare
 import (
 	"fmt"
 	"math"
-	"net"
-	"net/url"
 	"strings"
 
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
+	"github.com/Nyrest/hindsight-ingestion/internal/httpx"
 )
 
 func init() {
@@ -69,7 +68,7 @@ func (c *Connector) Info() connectors.SourceInfo {
 }
 
 func (c *Connector) ValidateConfig(cfg map[string]any, filter connectors.Filter) error {
-	if _, err := NormalizeURL(connectors.AsString(cfg["url"])); err != nil {
+	if _, err := httpx.NormalizeURL(connectors.AsString(cfg["url"])); err != nil {
 		return &connectors.FieldError{Field: "url", Message: err.Error()}
 	}
 	if filter.Mode == "advanced" {
@@ -188,23 +187,4 @@ func numberConfig(cfg map[string]any, key string, fallback int64) int64 {
 		}
 	}
 	return fallback
-}
-
-func NormalizeURL(raw string) (string, error) {
-	parsed, err := url.Parse(strings.TrimSpace(raw))
-	if err != nil || parsed == nil || (parsed.Scheme != "http" && parsed.Scheme != "https") || parsed.Hostname() == "" || parsed.User != nil {
-		return "", fmt.Errorf("Enter an HTTP(S) URL without embedded credentials")
-	}
-	host := strings.ToLower(parsed.Hostname())
-	port := parsed.Port()
-	if port != "" && !(parsed.Scheme == "https" && port == "443") && !(parsed.Scheme == "http" && port == "80") {
-		host = net.JoinHostPort(host, port)
-	} else if strings.Contains(host, ":") {
-		host = "[" + host + "]"
-	}
-	parsed.Host, parsed.Fragment, parsed.RawFragment = host, "", ""
-	if parsed.Path == "" {
-		parsed.Path = "/"
-	}
-	return parsed.String(), nil
 }

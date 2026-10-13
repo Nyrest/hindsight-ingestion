@@ -33,7 +33,6 @@ type active struct {
 	runID       string
 	cancel      context.CancelCauseFunc
 	done        chan struct{}
-	start       time.Time
 }
 
 // Manager coordinates run execution.
@@ -162,7 +161,7 @@ func (m *Manager) Start(taskID, trigger, mode string, scheduledFor *time.Time, w
 	ctx, cancel := context.WithCancelCause(m.base)
 	connector, _ := connectors.Source(task.SourceType)
 	_, async := connector.(connectors.AsyncSourceConnector)
-	a := &active{runID: run.ID, cancel: cancel, done: make(chan struct{}), start: now, asyncSource: async}
+	a := &active{runID: run.ID, cancel: cancel, done: make(chan struct{}), asyncSource: async}
 	m.active[taskID] = a
 	m.wg.Add(1)
 	m.mu.Unlock()
@@ -285,7 +284,7 @@ func (m *Manager) DryRun(ctx context.Context, taskID string) (sync.DryRunResult,
 	}
 	ctx, cancel := context.WithCancelCause(ctx)
 	stop := context.AfterFunc(m.base, func() { cancel(ErrShutdown) })
-	a := &active{maintenance: true, cancel: cancel, done: make(chan struct{}), start: time.Now()}
+	a := &active{maintenance: true, cancel: cancel, done: make(chan struct{})}
 	m.active[taskID] = a
 	m.wg.Add(1)
 	m.mu.Unlock()
@@ -360,7 +359,7 @@ func (m *Manager) BeginMaintenance(ctx context.Context, taskID string) (context.
 	}
 	ctx, cancel := context.WithCancelCause(ctx)
 	stop := context.AfterFunc(m.base, func() { cancel(ErrShutdown) })
-	a := &active{maintenance: true, cancel: cancel, done: make(chan struct{}), start: time.Now()}
+	a := &active{maintenance: true, cancel: cancel, done: make(chan struct{})}
 	m.active[taskID] = a
 	m.wg.Add(1)
 	release := func() {

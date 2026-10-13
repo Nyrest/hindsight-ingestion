@@ -5,16 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"reflect"
-	"strings"
 	"time"
 
 	"gorm.io/gorm"
 
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
-	"github.com/Nyrest/hindsight-ingestion/internal/proxy"
-	"github.com/Nyrest/hindsight-ingestion/internal/settings"
 )
 
 type runDTO struct {
@@ -47,14 +43,14 @@ func runView(r *models.TaskRun, taskName string) runDTO {
 	}
 }
 
-func (s *Server) taskNames() map[string]string {
+func (s *Server) taskNames(ctx context.Context) (map[string]string, error) {
 	var tasks []models.Task
-	s.DB.Select("id", "name").Find(&tasks)
+	err := s.DB.WithContext(ctx).Select("id", "name").Find(&tasks).Error
 	out := make(map[string]string, len(tasks))
 	for _, t := range tasks {
 		out[t.ID] = t.Name
 	}
-	return out
+	return out, err
 }
 
 func (s *Server) queryRuns(w http.ResponseWriter, r *http.Request, taskID string) {
@@ -80,7 +76,11 @@ func (s *Server) queryRuns(w http.ResponseWriter, r *http.Request, taskID string
 		s.fail(w, err)
 		return
 	}
-	names := s.taskNames()
+	names, err := s.taskNames(r.Context())
+	if err != nil {
+		s.fail(w, err)
+		return
+	}
 	items := make([]runDTO, 0, len(rows))
 	for i := range rows {
 		items = append(items, runView(&rows[i], names[rows[i].TaskID]))
@@ -111,9 +111,15 @@ func (s *Server) getRun(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var task models.Task
-	s.DB.WithContext(r.Context()).Select("id", "name").First(&task, "id = ?", run.TaskID)
+	if err := s.DB.WithContext(r.Context()).Select("id", "name").First(&task, "id = ?", run.TaskID).Error; err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		s.fail(w, err)
+		return
+	}
 	var ops []models.HindsightOperation
-	s.DB.WithContext(r.Context()).Where("run_id = ?", run.ID).Order("created_at").Limit(1000).Find(&ops)
+	if err := s.DB.WithContext(r.Context()).Where("run_id = ?", run.ID).Order("created_at").Limit(1000).Find(&ops).Error; err != nil {
+		s.fail(w, err)
+		return
+	}
 	opDTOs := make([]operationDTO, 0, len(ops))
 	for _, o := range ops {
 		opDTOs = append(opDTOs, operationDTO{
@@ -141,178 +147,4 @@ func (s *Server) getRun(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, runDetailDTO{SourceJob: sourceJob, runDTO: runView(&run, task.Name), CursorBefore: run.CursorBefore, CursorAfter: run.CursorAfter, Operations: opDTOs, Log: logs})
-}
-
-type settingsDTO struct {
-	settings.Settings
-	OAuthRedirectURI string `json:"oauthRedirectUri"`
-}
-
-func (s *Server) getSettings(w http.ResponseWriter, r *http.Request) {
-	v, err := s.Settings.Get(r.Context())
-	if err != nil {
-		s.fail(w, err)
-		return
-	}
-	writeJSON(w, http.StatusOK, settingsDTO{v.Masked(), s.Cfg.OAuthRedirectURI()})
-}
-
-func (s *Server) patchSettings(w http.ResponseWriter, r *http.Request) {
-	v, err := s.Settings.Get(r.Context())
-	if err != nil {
-		s.fail(w, err)
-		return
-	}
-	previous := v
-	// Decoding custom groups can reuse slice storage; keep the comparison snapshot independent.
-	previous.ObservationScope, err = v.ObservationScope.Normalize()
-	if err != nil {
-		s.fail(w, err)
-		return
-	}
-	// Decoding into the current value applies a partial update.
-	if !decode(w, r, &v) {
-		return
-	}
-	v.Proxy = v.Proxy.Normalize()
-	v.Timezone = strings.TrimSpace(v.Timezone)
-	if v.Proxy.Password == proxy.Mask {
-		v.Proxy.Password = previous.Proxy.Password
-	}
-	v.ObservationScope, err = v.ObservationScope.Normalize()
-	if err != nil {
-		writeValidation(w, err.Error(), map[string]string{"observationScope": err.Error()})
-		return
-	}
-	if err := v.Validate(); err != nil {
-		var fields map[string]string
-		if errors.Is(err, settings.ErrInvalidTimezone) {
-			fields = map[string]string{"timezone": "settings.timezone.invalid"}
-		}
-		writeValidation(w, err.Error(), fields)
-		return
-	}
-	if err := s.saveSettings(r.Context(), previous, v); err != nil {
-		s.fail(w, err)
-		return
-	}
-	if previous.Timezone != v.Timezone {
-		if err := s.Sched.LoadTasks(r.Context()); err != nil {
-			s.fail(w, err)
-			return
-		}
-	}
-	writeJSON(w, http.StatusOK, settingsDTO{v.Masked(), s.Cfg.OAuthRedirectURI()})
-}
-
-func (s *Server) saveSettings(ctx context.Context, previous, current settings.Settings) error {
-	return s.DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		if err := s.Settings.WithDB(tx).Put(ctx, current); err != nil {
-			return err
-		}
-		reconcile := func(query *gorm.DB) error {
-			return query.Updates(map[string]any{"reconcile_required": true, "config_revision": gorm.Expr("config_revision + 1")}).Error
-		}
-		if previous.Timezone != current.Timezone {
-			if err := reconcile(tx.Model(&models.Task{}).Where("source_type = ?", "webcal")); err != nil {
-				return err
-			}
-			tasks := tx.Model(&models.Task{}).Select("id").Where("source_type = ?", "webcal")
-			if err := tx.Model(&models.TaskState{}).Where("task_id IN (?)", tasks).Updates(map[string]any{"committed_cursor_json": "", "last_full_reconcile_at": nil}).Error; err != nil {
-				return err
-			}
-		}
-		if !reflect.DeepEqual(previous.ObservationScope, current.ObservationScope) {
-			if err := tx.Model(&models.Task{}).Where("observation_scope_mode = ? AND source_type IN ?", "global", []string{"notion", "siyuan"}).Updates(map[string]any{"reconcile_required": true, "policy_revision": gorm.Expr("policy_revision + 1"), "config_revision": gorm.Expr("config_revision + 1")}).Error; err != nil {
-				return err
-			}
-		}
-		if previous.FilePolicy != current.FilePolicy {
-			if err := reconcile(tx.Model(&models.Task{}).Where("file_policy_mode = ?", models.FilePolicyGlobal)); err != nil {
-				return err
-			}
-		}
-		if previous.InlineMultimodalEnabled != current.InlineMultimodalEnabled {
-			var sourceTypes []string
-			for _, source := range connectors.Sources() {
-				if source.Capabilities.SupportsInlineMultimodal {
-					sourceTypes = append(sourceTypes, source.Type)
-				}
-			}
-			if len(sourceTypes) > 0 {
-				if err := reconcile(tx.Model(&models.Task{}).Where("inline_multimodal_mode = ? AND source_type IN ?", models.FilePolicyGlobal, sourceTypes)); err != nil {
-					return err
-				}
-			}
-		}
-		if previous.MaxFileSizeMB != current.MaxFileSizeMB {
-			return reconcile(tx.Model(&models.Task{}).Where("1 = 1"))
-		}
-		return nil
-	})
-}
-
-func (s *Server) dashboard(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	var tasks []models.Task
-	s.DB.WithContext(ctx).Order("name").Find(&tasks)
-	names := map[string]string{}
-	enabled := 0
-
-	var next []nextRun
-	for _, t := range tasks {
-		names[t.ID] = t.Name
-		if t.Enabled {
-			enabled++
-			if n := s.Sched.NextRun(t.ID); n != nil {
-				next = append(next, nextRun{t.ID, t.Name, n.Format(time.RFC3339)})
-			}
-		}
-	}
-	for i := range next {
-		for j := i + 1; j < len(next); j++ {
-			if next[j].NextRunAt < next[i].NextRunAt {
-				next[i], next[j] = next[j], next[i]
-			}
-		}
-	}
-	if len(next) > 10 {
-		next = next[:10]
-	}
-	if next == nil {
-		next = []nextRun{}
-	}
-
-	runningList := []running{}
-	for taskID, runID := range s.Runs.ActiveTasks() {
-		var run models.TaskRun
-		s.DB.WithContext(ctx).Select("id", "started_at", "status").First(&run, "id = ?", runID)
-		runningList = append(runningList, running{taskID, names[taskID], runID, timePtr(run.StartedAt), run.Status})
-	}
-
-	var failures []models.TaskRun
-	s.DB.WithContext(ctx).Omit("log_json", "cursor_before", "cursor_after").
-		Where("status IN ?", []string{models.RunFailed, models.RunInterrupted}).
-		Order("started_at DESC").Limit(10).Find(&failures)
-	failureDTOs := make([]runDTO, 0, len(failures))
-	for i := range failures {
-		failureDTOs = append(failureDTOs, runView(&failures[i], names[failures[i].TaskID]))
-	}
-
-	var creds []models.Credential
-	s.DB.WithContext(ctx).Where("status IN ?", []string{models.CredentialReauthRequired, models.CredentialPendingOAuth, models.CredentialError}).Find(&creds)
-
-	reauth := []credRef{}
-	for _, c := range creds {
-		reauth = append(reauth, credRef{c.ID, c.Name, c.Type, c.Status})
-	}
-
-	var items, runs24, failed24 int64
-	since := time.Now().Add(-24 * time.Hour)
-	s.DB.WithContext(ctx).Model(&models.TaskItem{}).Where("destination_present = ?", true).Count(&items)
-	s.DB.WithContext(ctx).Model(&models.TaskRun{}).Where("started_at >= ?", since).Count(&runs24)
-	s.DB.WithContext(ctx).Model(&models.TaskRun{}).Where("started_at >= ? AND status IN ?", since,
-		[]string{models.RunFailed, models.RunInterrupted}).Count(&failed24)
-
-	writeJSON(w, http.StatusOK, dashboardDTO{len(tasks), enabled, runningList, failureDTOs, reauth, next, dashboardTotals{items, runs24, failed24}})
 }

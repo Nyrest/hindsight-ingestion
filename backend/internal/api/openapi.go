@@ -25,6 +25,9 @@ func OpenAPIDocument() ([]byte, error) {
 			responses[strconv.Itoa(route.status)].(schemaMap)["content"] = b.content(route.response)
 		}
 		responses["default"] = schemaMap{"description": "API error", "content": b.content(apiError{})}
+		if route.path == "/api/health" {
+			responses["503"] = schemaMap{"description": "Database unavailable", "content": b.content(healthDTO{})}
+		}
 		if route.path != "/api/health" && route.path != "/api/oauth/callback" {
 			responses["401"] = schemaMap{"description": "Basic Auth required", "content": schemaMap{"text/plain": schemaMap{"schema": schemaMap{"type": "string"}}}}
 		}

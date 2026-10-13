@@ -74,7 +74,7 @@ func normalizeFilterGroup(group *connectors.FilterGroup) {
 	}
 }
 
-func (s *Server) taskView(ctx context.Context, t *models.Task) taskDTO {
+func taskConfigView(t *models.Task) taskDTO {
 	d := taskDTO{
 		ID: t.ID, Name: t.Name, Enabled: t.Enabled, SourceType: t.SourceType,
 		SourceCredentialID: t.SourceCredentialID, DestinationCredentialID: t.DestinationCredentialID,
@@ -104,23 +104,7 @@ func (s *Server) taskView(ctx context.Context, t *models.Task) taskDTO {
 	if err := json.Unmarshal([]byte(t.FilePolicyJSON), &d.FilePolicy); err != nil {
 		d.FilePolicy = connectors.DefaultFilePolicy
 	}
-	_, d.Running = s.Runs.Active(t.ID)
-	if t.Enabled {
-		d.NextRunAt = timePtr(s.Sched.NextRun(t.ID))
-	}
-	var last models.TaskRun
-	if err := s.DB.WithContext(ctx).Where("task_id = ?", t.ID).Order("started_at DESC").Limit(1).Take(&last).Error; err == nil {
-		v := runView(&last, t.Name)
-		d.LastRun = &v
-	}
-	s.DB.WithContext(ctx).Model(&models.TaskItem{}).Where("task_id = ? AND destination_present = ?", t.ID, true).Count(&d.ItemCount)
-	var st models.TaskState
-	if err := s.DB.WithContext(ctx).Where("task_id = ?", t.ID).Take(&st).Error; err == nil {
-		d.State = taskStateDTO{
-			LastStartedAt: timePtr(st.LastStartedAt), LastSuccessAt: timePtr(st.LastSuccessAt),
-			LastFullReconcileAt: timePtr(st.LastFullReconcileAt), HasCursor: st.CommittedCursorJSON != "",
-		}
-	}
+
 	return d
 }
 
@@ -130,9 +114,10 @@ func (s *Server) listTasks(w http.ResponseWriter, r *http.Request) {
 		s.fail(w, err)
 		return
 	}
-	out := make([]taskDTO, 0, len(rows))
-	for i := range rows {
-		out = append(out, s.taskView(r.Context(), &rows[i]))
+	out, err := s.taskViews(r.Context(), rows)
+	if err != nil {
+		s.fail(w, err)
+		return
 	}
 	writeJSON(w, http.StatusOK, out)
 }
@@ -143,7 +128,7 @@ func (s *Server) getTask(w http.ResponseWriter, r *http.Request) {
 		s.fail(w, err)
 		return
 	}
-	writeJSON(w, http.StatusOK, s.taskView(r.Context(), &t))
+	s.writeTask(w, r, &t, http.StatusOK)
 }
 
 // taskBody is a create/patch request. Pointer fields are optional on patch.
@@ -443,6 +428,9 @@ func (s *Server) createTask(w http.ResponseWriter, r *http.Request) {
 	}
 	enabled := t.Enabled
 	err := s.DB.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
+		if err := lockTaskCredentials(tx, &t); err != nil {
+			return err
+		}
 		if err := tx.Create(&t).Error; err != nil {
 			return err
 		}
@@ -455,6 +443,10 @@ func (s *Server) createTask(w http.ResponseWriter, r *http.Request) {
 		}
 		return tx.Create(&models.TaskState{TaskID: t.ID}).Error
 	})
+	if errors.Is(err, errTaskCredentialsChanged) {
+		writeError(w, http.StatusConflict, "conflict", err.Error())
+		return
+	}
 	if err != nil {
 		s.fail(w, err)
 		return
@@ -463,7 +455,7 @@ func (s *Server) createTask(w http.ResponseWriter, r *http.Request) {
 		s.Log.Error("schedule task", "task", t.ID, "error", err)
 	}
 	s.Log.Info("task created", "task", t.ID)
-	writeJSON(w, http.StatusCreated, s.taskView(r.Context(), &t))
+	s.writeTask(w, r, &t, http.StatusCreated)
 }
 
 func (s *Server) patchTask(w http.ResponseWriter, r *http.Request) {
@@ -497,6 +489,9 @@ func (s *Server) patchTask(w http.ResponseWriter, r *http.Request) {
 	errLocked := errors.New("destination locked")
 	errChanged := fmt.Errorf("%s task configuration changed; reload the task", strings.ToUpper(t.SourceType))
 	err = s.DB.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
+		if err := lockTaskCredentials(tx, &t); err != nil {
+			return err
+		}
 		// Re-read engine-owned fields under a row lock: a run may have
 		// locked the destination since the task was loaded.
 		var cur models.Task
@@ -504,7 +499,7 @@ func (s *Server) patchTask(w http.ResponseWriter, r *http.Request) {
 			Select("destination_locked", "config_revision", "reconcile_required").First(&cur, "id = ?", t.ID).Error; err != nil {
 			return err
 		}
-		if (t.SourceType == "sql" || t.SourceType == "webcal" || t.SourceType == "email") && cur.ConfigRevision != originalRevision {
+		if cur.ConfigRevision != originalRevision {
 			return errChanged
 		}
 		if cur.DestinationLocked && destChanged {
@@ -525,8 +520,8 @@ func (s *Server) patchTask(w http.ResponseWriter, r *http.Request) {
 		}
 		return nil
 	})
-	if errors.Is(err, errChanged) {
-		writeError(w, http.StatusConflict, "conflict", errChanged.Error())
+	if errors.Is(err, errChanged) || errors.Is(err, errTaskCredentialsChanged) {
+		writeError(w, http.StatusConflict, "conflict", err.Error())
 		return
 	}
 	if errors.Is(err, errLocked) {
@@ -541,7 +536,7 @@ func (s *Server) patchTask(w http.ResponseWriter, r *http.Request) {
 	if err := s.Sched.SyncTask(t); err != nil {
 		s.Log.Error("schedule task", "task", t.ID, "error", err)
 	}
-	writeJSON(w, http.StatusOK, s.taskView(r.Context(), &t))
+	s.writeTask(w, r, &t, http.StatusOK)
 }
 
 func (s *Server) deleteTask(w http.ResponseWriter, r *http.Request) {

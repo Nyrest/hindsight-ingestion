@@ -74,13 +74,15 @@ func (c *Client) applyToken(ctx context.Context, req *http.Request) error {
 
 // New returns a Client using the shared transport.
 func New(custom, auth map[string]string, config proxy.Config) *Client {
-	return &Client{
+	client := &Client{
 		proxy:         config.Normalize(),
-		HTTP:          &http.Client{Transport: Transport(config)},
+		HTTP:          &http.Client{Transport: Transport(config), Timeout: 10 * time.Minute},
 		CustomHeaders: custom,
 		AuthHeaders:   auth,
 		MaxRetries:    4,
 	}
+	client.HTTP.CheckRedirect = client.checkRedirect
+	return client
 }
 
 // HTTPError is returned for non-2xx responses.
@@ -145,7 +147,7 @@ func (c *Client) Do(ctx context.Context, r Request) (*http.Response, error) {
 		}
 		req, err := http.NewRequestWithContext(ctx, r.Method, r.URL, body)
 		if err != nil {
-			return nil, err
+			return nil, c.safeError(err)
 		}
 		for k, vs := range r.Header {
 			for _, v := range vs {
@@ -162,7 +164,7 @@ func (c *Client) Do(ctx context.Context, r Request) (*http.Response, error) {
 			if ctx.Err() != nil {
 				return nil, ctx.Err()
 			}
-			lastErr = &proxyError{err, c.proxy.Redact(err.Error())}
+			lastErr = c.safeError(err, req.Header)
 			if attempt >= c.MaxRetries {
 				return nil, lastErr
 			}
@@ -176,7 +178,7 @@ func (c *Client) Do(ctx context.Context, r Request) (*http.Response, error) {
 		}
 		b, _ := io.ReadAll(io.LimitReader(resp.Body, 64<<10))
 		resp.Body.Close()
-		lastErr = &HTTPError{Method: r.Method, URL: r.URL, Status: resp.StatusCode, Body: c.proxy.Redact(string(b))}
+		lastErr = &HTTPError{Method: r.Method, URL: redactURL(r.URL), Status: resp.StatusCode, Body: c.redact(string(b), req.Header)}
 		if !retryable(resp.StatusCode) || attempt >= c.MaxRetries {
 			return nil, lastErr
 		}
@@ -195,7 +197,7 @@ func (c *Client) DoStream(ctx context.Context, method, url string, header http.H
 	}
 	req, err := http.NewRequestWithContext(ctx, method, url, body)
 	if err != nil {
-		return nil, err
+		return nil, c.safeError(err)
 	}
 	for k, vs := range header {
 		for _, v := range vs {
@@ -208,12 +210,12 @@ func (c *Client) DoStream(ctx context.Context, method, url string, header http.H
 	}
 	resp, err := c.HTTP.Do(req)
 	if err != nil {
-		return nil, &proxyError{err, c.proxy.Redact(err.Error())}
+		return nil, c.safeError(err, req.Header)
 	}
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		b, _ := io.ReadAll(io.LimitReader(resp.Body, 64<<10))
 		resp.Body.Close()
-		return nil, &HTTPError{Method: method, URL: url, Status: resp.StatusCode, Body: c.proxy.Redact(string(b))}
+		return nil, &HTTPError{Method: method, URL: redactURL(url), Status: resp.StatusCode, Body: c.redact(string(b), req.Header)}
 	}
 	return resp, nil
 }
@@ -322,12 +324,4 @@ func Pacer(interval time.Duration) func(ctx context.Context) error {
 		}
 		return nil
 	}
-}
-
-// redactURL removes query strings, which may carry tokens or signatures.
-func redactURL(u string) string {
-	if i := strings.IndexByte(u, '?'); i >= 0 {
-		return u[:i]
-	}
-	return u
 }

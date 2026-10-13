@@ -26,6 +26,8 @@ import (
 // SafetyMargin is how long before expiry a token is refreshed.
 const SafetyMargin = 15 * time.Minute
 
+const StateLifetime = 10 * time.Minute
+
 // ErrReauthRequired means the refresh token is no longer valid.
 var ErrReauthRequired = errors.New("OAuth reauthorization required")
 
@@ -106,11 +108,13 @@ func (m *Manager) Start(ctx context.Context, credentialID, redirectURI string) (
 		return "", err
 	}
 	state := hex.EncodeToString(b)
-	if err := m.db.WithContext(ctx).Model(&models.Credential{}).Where("id = ?", credentialID).
-		Updates(map[string]any{"o_auth_state": state, "o_auth_redirect_uri": oc.RedirectURL}).Error; err != nil {
+	verifier := oauth2.GenerateVerifier()
+	if err := m.creds.SaveOAuthFlow(ctx, credentialID, credentials.OAuthFlow{
+		State: state, RedirectURI: oc.RedirectURL, Verifier: verifier, ExpiresAt: time.Now().UTC().Add(StateLifetime),
+	}); err != nil {
 		return "", err
 	}
-	opts := []oauth2.AuthCodeOption{oauth2.AccessTypeOffline}
+	opts := []oauth2.AuthCodeOption{oauth2.AccessTypeOffline, oauth2.S256ChallengeOption(verifier)}
 	if cred.Type == "google_drive" {
 		opts = append(opts, oauth2.SetAuthURLParam("prompt", "consent"))
 	} else {
@@ -124,9 +128,9 @@ func (m *Manager) Callback(ctx context.Context, state, code string) (string, err
 	if state == "" || code == "" {
 		return "", errors.New("missing state or code")
 	}
-	var row models.Credential
-	if err := m.db.WithContext(ctx).First(&row, "o_auth_state = ?", state).Error; err != nil {
-		return "", errors.New("unknown or expired OAuth state")
+	row, verifier, err := m.creds.ConsumeOAuthFlow(ctx, state)
+	if err != nil {
+		return "", err
 	}
 	cred, err := m.creds.Load(ctx, row.ID)
 	if err != nil {
@@ -139,7 +143,7 @@ func (m *Manager) Callback(ctx context.Context, state, code string) (string, err
 	if row.OAuthRedirectURI != "" {
 		oc.RedirectURL = row.OAuthRedirectURI
 	}
-	tok, err := oc.Exchange(oauthContext(ctx, cred.Proxy), code)
+	tok, err := oc.Exchange(oauthContext(ctx, cred.Proxy), code, oauth2.VerifierOption(verifier))
 	if err != nil {
 		return row.ID, fmt.Errorf("token exchange failed: %s", cred.Proxy.Redact(sanitize(err)))
 	}
@@ -272,16 +276,6 @@ func OAuthTypes() []string {
 		out = append(out, k)
 	}
 	return out
-}
-
-// TokenSource returns a static token source for API calls.
-func TokenSource(cred connectors.Credential) oauth2.TokenSource {
-	t := &oauth2.Token{TokenType: "Bearer"}
-	if cred.OAuth != nil {
-		t.AccessToken = cred.OAuth.AccessToken
-		t.Expiry = cred.OAuth.Expiry
-	}
-	return oauth2.StaticTokenSource(t)
 }
 
 type provider struct {

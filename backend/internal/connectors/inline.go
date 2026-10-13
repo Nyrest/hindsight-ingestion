@@ -51,20 +51,6 @@ func FetchImageWithProxy(ctx context.Context, rawURL string, credential *Credent
 		cl.CustomHeaders = credential.Headers
 		cl.AuthHeaders = map[string]string{"Authorization": "Token " + credential.String("token")}
 	}
-	cl.HTTP = &http.Client{Transport: httpx.Transport(config), CheckRedirect: func(req *http.Request, via []*http.Request) error {
-		if len(via) >= 10 {
-			return fmt.Errorf("too many image redirects")
-		}
-		if req.URL.Scheme != "http" && req.URL.Scheme != "https" {
-			return fmt.Errorf("unsupported image redirect")
-		}
-		// Custom headers can also hold secrets. Rebuild headers on every redirected request.
-		req.Header = make(http.Header)
-		if credential != nil && req.URL.Scheme == u.Scheme && req.URL.Host == u.Host {
-			cl.ApplyHeaders(req)
-		}
-		return nil
-	}}
 	return cl.Do(ctx, httpx.Request{Method: http.MethodGet, URL: rawURL})
 }
 

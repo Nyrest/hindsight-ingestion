@@ -182,25 +182,25 @@ func (s *Scheduler) RemoveTask(taskID string) {
 	}
 }
 
-// NextRun returns the next scheduled run of a task.
-func (s *Scheduler) NextRun(taskID string) *time.Time {
+func (s *Scheduler) NextRuns() map[string]*time.Time {
 	s.mu.Lock()
-	id, ok := s.taskJobs[taskID]
-	s.mu.Unlock()
-	if !ok {
-		return nil
+	tasks := make(map[uuid.UUID]string, len(s.taskJobs))
+	for taskID, jobID := range s.taskJobs {
+		tasks[jobID] = taskID
 	}
+	s.mu.Unlock()
+	next := make(map[string]*time.Time, len(tasks))
 	for _, j := range s.s.Jobs() {
-		if j.ID() == id {
+		if taskID, ok := tasks[j.ID()]; ok {
 			t, err := j.NextRun()
 			if err != nil || t.IsZero() {
-				return nil
+				continue
 			}
 			t = t.UTC()
-			return &t
+			next[taskID] = &t
 		}
 	}
-	return nil
+	return next
 }
 
 func (s *Scheduler) runScheduled(taskID string) {

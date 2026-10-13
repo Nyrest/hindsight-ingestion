@@ -4,6 +4,7 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"io"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -46,10 +47,12 @@ func (s *Server) Routes(mux *http.ServeMux) {
 
 func (s *Server) health(w http.ResponseWriter, r *http.Request) {
 	status := "ok"
+	code := http.StatusOK
 	if sqlDB, err := s.DB.DB(); err != nil || sqlDB.PingContext(r.Context()) != nil {
 		status = "degraded"
+		code = http.StatusServiceUnavailable
 	}
-	writeJSON(w, http.StatusOK, healthDTO{status, httpx.Version, !s.Cfg.AuthDisabled, s.Cfg.DBType})
+	writeJSON(w, code, healthDTO{status, httpx.Version, !s.Cfg.AuthDisabled, s.Cfg.DBType})
 }
 
 type apiError struct {
@@ -93,7 +96,11 @@ func decode(w http.ResponseWriter, r *http.Request, v any) bool {
 	r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
 	dec := json.NewDecoder(r.Body)
 	if err := dec.Decode(v); err != nil {
-		writeError(w, http.StatusBadRequest, "bad_request", "invalid JSON body: "+err.Error())
+		writeError(w, http.StatusBadRequest, "bad_request", "invalid JSON body")
+		return false
+	}
+	if err := dec.Decode(new(any)); !errors.Is(err, io.EOF) {
+		writeError(w, http.StatusBadRequest, "bad_request", "body must contain one JSON value")
 		return false
 	}
 	return true

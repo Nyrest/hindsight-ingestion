@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm/clause"
 
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
-	"github.com/Nyrest/hindsight-ingestion/internal/connectors/cloudflare"
+	"github.com/Nyrest/hindsight-ingestion/internal/httpx"
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
 )
 
@@ -27,7 +27,7 @@ var bankLocks = struct {
 }{entries: map[string]*bankLock{}}
 
 func TargetKey(cred connectors.Credential, bankID string) (string, error) {
-	endpoint, err := cloudflare.NormalizeURL(cred.String("baseUrl"))
+	endpoint, err := httpx.NormalizeURL(cred.String("baseUrl"))
 	if err != nil {
 		return "", err
 	}

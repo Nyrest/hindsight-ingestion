@@ -82,7 +82,7 @@ export function useBrowse(
 ) {
   return useQuery({
     queryKey: qk.browse(credentialId, request),
-    queryFn: () => api.browse(credentialId, request),
+    queryFn: ({ signal }) => api.browse(credentialId, request, signal),
     enabled: enabled && !!credentialId,
     staleTime: 30_000,
     retry: false,

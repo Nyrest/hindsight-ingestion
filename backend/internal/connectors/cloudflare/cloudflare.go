@@ -129,7 +129,7 @@ func (c *Connector) crawlRequest(req connectors.ScanRequest) (map[string]any, co
 		return nil, connectors.SourceJob{}, err
 	}
 	job := connectors.SourceJob{AccountID: req.Credential.String("accountId"), StartedAt: time.Now().UTC(), Full: req.Full, MaxAge: numberConfig(req.Config, "maxAge", 3600), Status: "running"}
-	pageURL, err := NormalizeURL(connectors.AsString(req.Config["url"]))
+	pageURL, err := httpx.NormalizeURL(connectors.AsString(req.Config["url"]))
 	if err != nil {
 		return nil, job, err
 	}
@@ -413,7 +413,7 @@ func recordItem(record crawlRecord, cfg map[string]any) (connectors.SourceItem, 
 	if pageURL == "" {
 		pageURL = record.URL
 	}
-	normalized, err := NormalizeURL(pageURL)
+	normalized, err := httpx.NormalizeURL(pageURL)
 	if err != nil {
 		return connectors.SourceItem{}, fmt.Errorf("crawl returned an invalid page URL")
 	}
@@ -459,7 +459,7 @@ func (c *Connector) OpenContent(_ context.Context, req connectors.ContentRequest
 
 func outsideScope(cfg map[string]any, rawURL string) bool {
 	parsed, err := url.Parse(rawURL)
-	rootURL, rootErr := NormalizeURL(connectors.AsString(cfg["url"]))
+	rootURL, rootErr := httpx.NormalizeURL(connectors.AsString(cfg["url"]))
 	root, _ := url.Parse(rootURL)
 	if err != nil || rootErr != nil || parsed.Hostname() == "" {
 		return false

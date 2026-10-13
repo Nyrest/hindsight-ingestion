@@ -1027,10 +1027,8 @@
           },
           "status": {
             "enum": [
-              "active",
-              "reauth_required",
-              "pending_oauth",
-              "error"
+              "ok",
+              "degraded"
             ],
             "type": "string"
           },
@@ -2569,6 +2567,16 @@
               }
             },
             "description": "OK"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/healthDTO"
+                }
+              }
+            },
+            "description": "Database unavailable"
           },
           "default": {
             "content": {

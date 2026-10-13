@@ -123,7 +123,7 @@ func run() error {
 	if !cfg.AuthDisabled {
 		public := func(r *http.Request) bool {
 			// Health is unauthenticated for container health checks; the
-			// OAuth callback is protected by its unguessable state value.
+			// OAuth callbacks validate browser-bound, expiring single-use state.
 			return r.URL.Path == "/api/health" || r.URL.Path == "/api/oauth/callback"
 		}
 		handler = auth.BasicAuth(cfg.BasicAuthUsername, cfg.BasicAuthPassword, public)(handler)
@@ -134,7 +134,9 @@ func run() error {
 		Addr:              cfg.ListenAddr,
 		Handler:           handler,
 		ReadHeaderTimeout: 15 * time.Second,
+		ReadTimeout:       30 * time.Second,
 		IdleTimeout:       120 * time.Second,
+		MaxHeaderBytes:    64 << 10,
 	}
 
 	errCh := make(chan error, 1)
@@ -156,12 +158,17 @@ func run() error {
 
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	_ = httpSrv.Shutdown(shutdownCtx)
+	httpStopped := make(chan error, 1)
+	go func() { httpStopped <- httpSrv.Shutdown(shutdownCtx) }()
 	// Interrupt runs first: scheduled jobs block until their run returns, so
 	// the scheduler can only stop promptly once runs are cancelled.
 	runs.Shutdown(shutdownCtx)
 	if err := sched.Shutdown(); err != nil {
 		log.Warn("scheduler shutdown", "error", err)
+	}
+	if err := <-httpStopped; err != nil {
+		log.Warn("http shutdown", "error", err)
+		_ = httpSrv.Close()
 	}
 	if sqlDB, err := db.DB(); err == nil {
 		_ = sqlDB.Close()

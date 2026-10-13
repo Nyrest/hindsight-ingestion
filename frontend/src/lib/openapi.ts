@@ -659,7 +659,7 @@ export interface components {
             authEnabled: boolean;
             dbType: string;
             /** @enum {string} */
-            status: "active" | "reauth_required" | "pending_oauth" | "error";
+            status: "ok" | "degraded";
             version: string;
         };
         logDTO: {
@@ -1446,6 +1446,15 @@ export interface operations {
         responses: {
             /** @description OK */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["healthDTO"];
+                };
+            };
+            /** @description Database unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };

@@ -31,18 +31,6 @@ func subscriptionURL(address string) (*url.URL, error) {
 	return u, nil
 }
 
-func origin(u *url.URL) string {
-	port := u.Port()
-	if port == "" {
-		if u.Scheme == "https" {
-			port = "443"
-		} else {
-			port = "80"
-		}
-	}
-	return strings.ToLower(u.Scheme + "://" + u.Hostname() + ":" + port)
-}
-
 func newClient(cred connectors.Credential) *httpx.Client {
 	custom := map[string]string{}
 	for header, val := range cred.Headers {
@@ -52,32 +40,6 @@ func newClient(cred connectors.Credential) *httpx.Client {
 	}
 	client := httpx.New(custom, nil, cred.Proxy)
 	client.HTTP.Timeout = 30 * time.Second
-	client.HTTP.CheckRedirect = func(req *http.Request, via []*http.Request) error {
-		if len(via) > 10 {
-			return errors.New("redirect limit exceeded")
-		}
-		if req.URL.Scheme != "http" && req.URL.Scheme != "https" {
-			return errors.New("invalid redirect scheme")
-		}
-		if via[len(via)-1].URL.Scheme == "https" && req.URL.Scheme == "http" {
-			return errors.New("HTTPS downgrade refused")
-		}
-		// Go can restore the initial headers on later hops, even after a cross-origin hop.
-		crossedOrigin := origin(req.URL) != origin(via[0].URL)
-		for _, previous := range via {
-			crossedOrigin = crossedOrigin || origin(previous.URL) != origin(via[0].URL)
-		}
-		if crossedOrigin {
-			for header := range cred.Headers {
-				req.Header.Del(header)
-			}
-			req.Header.Del("Authorization")
-			req.Header.Del("Proxy-Authorization")
-			req.Header.Del("Cookie")
-			req.URL.User = nil
-		}
-		return nil
-	}
 	return client
 }
 

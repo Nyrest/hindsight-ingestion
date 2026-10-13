@@ -3,7 +3,7 @@ package api
 import "github.com/Nyrest/hindsight-ingestion/internal/connectors"
 
 type healthDTO struct {
-	Status      string `json:"status" enum:"active,reauth_required,pending_oauth,error"`
+	Status      string `json:"status" enum:"ok,degraded"`
 	Version     string `json:"version"`
 	AuthEnabled bool   `json:"authEnabled"`
 	DBType      string `json:"dbType"`

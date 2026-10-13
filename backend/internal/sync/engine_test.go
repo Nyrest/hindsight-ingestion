@@ -238,6 +238,30 @@ func (d *fakeDest) GetOperation(ctx context.Context, bank, op string) (hindsight
 
 func (d *fakeDest) RetryOperation(ctx context.Context, bank, op string) error { return nil }
 
+type retryingDestination struct {
+	*fakeDest
+	checks int
+}
+
+func (d *retryingDestination) GetOperation(ctx context.Context, bank, op string) (hindsight.OperationStatus, error) {
+	d.checks++
+	if d.checks == 1 {
+		return hindsight.OperationStatus{Status: "retrying"}, nil
+	}
+	return d.fakeDest.GetOperation(ctx, bank, op)
+}
+
+func TestRetryingOperationsWaitForCompletion(t *testing.T) {
+	h := newHarness(t)
+	dest := &retryingDestination{fakeDest: h.dest}
+	h.engine.NewDestination = func(connectors.Credential) (sync.Destination, error) { return dest, nil }
+	h.setDocs(map[string]fakeDoc{"a": {content: "content", rev: "1"}})
+	expectStatus(t, h.run(""), models.RunSucceeded)
+	if dest.checks < 2 || h.state().CommittedCursorJSON == "" {
+		t.Fatal("retrying operation did not complete before cursor commit")
+	}
+}
+
 // --- harness --------------------------------------------------------------
 
 type noOAuth struct{}
@@ -519,6 +543,33 @@ func TestPolicyChangeReRetains(t *testing.T) {
 	h.db.First(&task, "id = ?", h.task.ID)
 	if task.ReconcileRequired {
 		t.Fatal("reconcile flag not cleared")
+	}
+}
+
+func TestConfigurationChangeDuringScanPreventsDeletionAndCursorCommit(t *testing.T) {
+	h := newHarness(t)
+	h.setDocs(map[string]fakeDoc{"a": {rev: "1", content: "a"}, "b": {rev: "1", content: "b"}})
+	expectStatus(t, h.run(""), models.RunSucceeded)
+	before := h.state().CommittedCursorJSON
+	h.setDocs(map[string]fakeDoc{"a": {rev: "2", content: "a2"}})
+	h.src.mu.Lock()
+	h.src.scanHook = func() {
+		if err := h.db.Model(&models.Task{}).Where("id = ?", h.task.ID).
+			Updates(map[string]any{"config_revision": 2, "reconcile_required": true}).Error; err != nil {
+			t.Error(err)
+		}
+	}
+	h.src.mu.Unlock()
+	expectStatus(t, h.run(models.SyncFull), models.RunFailed)
+	if len(h.dest.deleted) != 0 || h.state().CommittedCursorJSON != before {
+		t.Fatal("stale scan deleted documents or committed its cursor")
+	}
+	h.src.mu.Lock()
+	h.src.scanHook = nil
+	h.src.mu.Unlock()
+	expectStatus(t, h.run(""), models.RunSucceeded)
+	if !contains(h.dest.deleted, h.documentID("b")) {
+		t.Fatal("next run did not reconcile with the current configuration")
 	}
 }
 

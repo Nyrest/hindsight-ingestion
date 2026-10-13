@@ -321,7 +321,7 @@ func (s *Service) SaveOAuthToken(ctx context.Context, id string, tok *connectors
 		}
 		cred, err := s.Decrypt(&m)
 		if err != nil {
-			cred = connectors.Credential{Secrets: map[string]string{}}
+			return err
 		}
 		blob := secretBlob{Secrets: cred.Secrets, Headers: cred.Headers, OAuth: tok, ProxyPassword: cred.Proxy.Password}
 		enc, err := s.cipher.EncryptJSON(blob)
@@ -330,11 +330,9 @@ func (s *Service) SaveOAuthToken(ctx context.Context, id string, tok *connectors
 		}
 		exp := tok.Expiry
 		updates := map[string]any{
-			"encrypted_secret":    enc,
-			"status":              models.CredentialActive,
-			"status_message":      "",
-			"o_auth_state":        "",
-			"o_auth_redirect_uri": "",
+			"encrypted_secret": enc,
+			"status":           models.CredentialActive,
+			"status_message":   "",
 		}
 		if exp.IsZero() {
 			updates["o_auth_expires_at"] = nil

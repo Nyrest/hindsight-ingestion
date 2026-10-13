@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"net/url"
 	"sort"
 	"time"
 
@@ -41,15 +40,13 @@ type credentialDTO struct {
 	UpdatedAt      string            `json:"updatedAt"`
 }
 
-func (s *Server) credentialView(ctx context.Context, m *models.Credential) credentialDTO {
+func (s *Server) credentialView(m *models.Credential, used int64) credentialDTO {
 	view, err := s.Creds.MaskedView(m)
 	status, msg := m.Status, m.StatusMessage
 	if err != nil {
 		status, msg = models.CredentialError, "Stored secrets cannot be decrypted (was CREDENTIAL_ENCRYPTION_KEY changed?). Re-enter them."
 	}
-	var used int64
-	s.DB.WithContext(ctx).Model(&models.Task{}).
-		Where("source_credential_id = ? OR destination_credential_id = ?", m.ID, m.ID).Count(&used)
+
 	return credentialDTO{
 		ID: m.ID, Name: m.Name, Type: m.Type, ProxyMode: view.ProxyMode, Proxy: view.Proxy, Config: view.Config, CustomHeaders: view.CustomHeaders,
 		Status: status, StatusMessage: msg, OAuthConnected: view.OAuthConnect,
@@ -64,9 +61,18 @@ func (s *Server) listCredentials(w http.ResponseWriter, r *http.Request) {
 		s.fail(w, err)
 		return
 	}
+	ids := make([]string, len(rows))
+	for i := range rows {
+		ids[i] = rows[i].ID
+	}
+	usage, err := s.credentialUsage(r.Context(), ids)
+	if err != nil {
+		s.fail(w, err)
+		return
+	}
 	out := make([]credentialDTO, 0, len(rows))
 	for i := range rows {
-		out = append(out, s.credentialView(r.Context(), &rows[i]))
+		out = append(out, s.credentialView(&rows[i], usage[rows[i].ID]))
 	}
 	writeJSON(w, http.StatusOK, out)
 }
@@ -120,7 +126,7 @@ func (s *Server) createCredential(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.Log.Info("credential created", "credential", m.ID, "type", m.Type)
-	writeJSON(w, http.StatusCreated, s.credentialView(r.Context(), &m))
+	s.writeCredential(w, r, &m, http.StatusCreated)
 }
 
 func (s *Server) getCredential(w http.ResponseWriter, r *http.Request) {
@@ -129,7 +135,7 @@ func (s *Server) getCredential(w http.ResponseWriter, r *http.Request) {
 		s.fail(w, err)
 		return
 	}
-	writeJSON(w, http.StatusOK, s.credentialView(r.Context(), m))
+	s.writeCredential(w, r, m, http.StatusOK)
 }
 
 func (s *Server) patchCredential(w http.ResponseWriter, r *http.Request) {
@@ -196,25 +202,32 @@ func (s *Server) patchCredential(w http.ResponseWriter, r *http.Request) {
 		s.fail(w, err)
 		return
 	}
-	writeJSON(w, http.StatusOK, s.credentialView(r.Context(), &m))
+	s.writeCredential(w, r, &m, http.StatusOK)
 }
 
 func (s *Server) deleteCredential(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
-	var used int64
-	s.DB.WithContext(r.Context()).Model(&models.Task{}).
-		Where("source_credential_id = ? OR destination_credential_id = ?", id, id).Count(&used)
-	if used > 0 {
+	errInUse := errors.New("credential is used by one or more tasks")
+	err := s.DB.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
+		var row models.Credential
+		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Select("id").First(&row, "id = ?", id).Error; err != nil {
+			return err
+		}
+		var used int64
+		if err := tx.Model(&models.Task{}).Where("source_credential_id = ? OR destination_credential_id = ?", id, id).Count(&used).Error; err != nil {
+			return err
+		}
+		if used > 0 {
+			return errInUse
+		}
+		return tx.Delete(&row).Error
+	})
+	if errors.Is(err, errInUse) {
 		writeError(w, http.StatusConflict, "conflict", "credential is used by one or more tasks")
 		return
 	}
-	res := s.DB.WithContext(r.Context()).Delete(&models.Credential{}, "id = ?", id)
-	if res.Error != nil {
-		s.fail(w, res.Error)
-		return
-	}
-	if res.RowsAffected == 0 {
-		writeError(w, http.StatusNotFound, "not_found", "credential not found")
+	if err != nil {
+		s.fail(w, err)
 		return
 	}
 	s.Sched.CancelRefresh(id)
@@ -276,62 +289,6 @@ func validateCredential(ctx context.Context, cred connectors.Credential) (string
 	return "", errors.New("no connector for credential type " + cred.Type)
 }
 
-func (s *Server) oauthStart(w http.ResponseWriter, r *http.Request) {
-	redirectURI, err := s.oauthRedirectURI(r)
-	if err != nil {
-		writeError(w, http.StatusBadRequest, "bad_request", err.Error())
-		return
-	}
-	u, err := s.OAuth.Start(r.Context(), r.PathValue("id"), redirectURI)
-	if err != nil {
-		if errors.Is(err, credentials.ErrNotFound) {
-			s.fail(w, err)
-			return
-		}
-		writeError(w, http.StatusBadRequest, "bad_request", err.Error())
-		return
-	}
-	writeJSON(w, http.StatusOK, oauthStartDTO{u})
-}
-
-func (s *Server) oauthRedirectURI(r *http.Request) (string, error) {
-	if configured := s.Cfg.OAuthRedirectURI(); configured != "" {
-		return configured, nil
-	}
-	origin := r.Header.Get("Origin")
-	if origin == "" {
-		scheme := "http"
-		if r.TLS != nil {
-			scheme = "https"
-		}
-		origin = (&url.URL{Scheme: scheme, Host: r.Host}).String()
-	}
-	u, err := url.Parse(origin)
-	if err != nil || (u.Scheme != "http" && u.Scheme != "https") || u.Host == "" || u.User != nil || u.Path != "" || u.RawQuery != "" || u.Fragment != "" {
-		return "", errors.New("invalid OAuth request origin")
-	}
-	return origin + "/api/oauth/callback", nil
-}
-
-func (s *Server) oauthCallback(w http.ResponseWriter, r *http.Request) {
-	q := r.URL.Query()
-	if e := q.Get("error"); e != "" {
-		msg := e
-		if d := q.Get("error_description"); d != "" {
-			msg += ": " + d
-		}
-		http.Redirect(w, r, "/credentials?oauth=error&message="+url.QueryEscape(msg), http.StatusFound)
-		return
-	}
-	id, err := s.OAuth.Callback(r.Context(), q.Get("state"), q.Get("code"))
-	if err != nil {
-		s.Log.Warn("oauth callback failed", "error", err)
-		http.Redirect(w, r, "/credentials?oauth=error&id="+url.QueryEscape(id)+"&message="+url.QueryEscape(err.Error()), http.StatusFound)
-		return
-	}
-	http.Redirect(w, r, "/credentials?oauth=success&id="+url.QueryEscape(id), http.StatusFound)
-}
-
 func (s *Server) refreshCredential(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 	m, err := s.Creds.Get(r.Context(), id)
@@ -347,8 +304,12 @@ func (s *Server) refreshCredential(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadRequest, "upstream", msg)
 		return
 	}
-	m, _ = s.Creds.Get(r.Context(), id)
-	writeJSON(w, http.StatusOK, s.credentialView(r.Context(), m))
+	m, err = s.Creds.Get(r.Context(), id)
+	if err != nil {
+		s.fail(w, err)
+		return
+	}
+	s.writeCredential(w, r, m, http.StatusOK)
 }
 
 func (s *Server) browseCredential(w http.ResponseWriter, r *http.Request) {
