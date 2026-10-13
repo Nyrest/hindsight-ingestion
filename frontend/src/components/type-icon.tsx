@@ -14,7 +14,7 @@ function brandIcon(type: string) {
     case "cloudflare_crawl":
       return <Cloudflare aria-hidden="true" className="size-4 shrink-0" />;
     case "sql_mysql":
-      return <MySQL aria-hidden="true" className="size-4 shrink-0" />;
+      return <MySQL aria-hidden="true" className="size-4 shrink-0" variant="wordmark" />;
     case "sql_postgres":
       return <PostgreSQL aria-hidden="true" className="size-4 shrink-0" />;
     case "sql_sqlite":
