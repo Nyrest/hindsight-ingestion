@@ -25,6 +25,7 @@ import { errorMessage, isApiError } from "@/lib/api";
 
 const schema = z.object({
   timezone: z.string().trim().min(1, "validation.required"),
+  maxConcurrentTasks: z.number({ error: "validation.number" }).int("validation.integer").min(1, "validation.min1"),
   proxy: proxySchema,
   observationScope: observationScopeSchema,
   inlineMultimodalEnabled: z.boolean(),
@@ -45,6 +46,7 @@ export default function SettingsPage() {
     resolver: zodResolver(schema),
     defaultValues: {
       timezone: "UTC",
+      maxConcurrentTasks: 4,
       proxy: defaultProxy,
       observationScope: defaultObservationScope,
       inlineMultimodalEnabled: false,
@@ -130,6 +132,13 @@ export default function SettingsPage() {
                   <TimezoneCombobox id="s-timezone" value={field.value} onChange={field.onChange}
                     invalid={!!errors.timezone} />
                 )} />
+              </FieldRow>
+              <FieldRow label={t("settings.sync.maxConcurrentTasks")} htmlFor="s-concurrency"
+                help={t("settings.sync.maxConcurrentTasksHelp")}
+                error={errText(errors.maxConcurrentTasks?.message)}>
+                <Input id="s-concurrency" type="number" min={1} step={1}
+                  aria-invalid={!!errors.maxConcurrentTasks}
+                  {...form.register("maxConcurrentTasks", { valueAsNumber: true })} />
               </FieldRow>
               <Controller
                 control={form.control}

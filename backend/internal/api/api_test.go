@@ -343,12 +343,54 @@ func TestEndToEnd(t *testing.T) {
 	}
 
 	var s map[string]any
+	if code := e.do("GET", "/api/settings", nil, &s); code != 200 || s["maxConcurrentTasks"] != float64(4) {
+		t.Fatalf("default concurrency: %d %v", code, s)
+	}
+	for _, limit := range []any{0, -1, 1.5} {
+		if code := e.do("PATCH", "/api/settings", map[string]any{"maxConcurrentTasks": limit}, &s); code != 422 && code != 400 {
+			t.Fatalf("invalid concurrency accepted: %v, status %d", limit, code)
+		}
+	}
+	if code := e.do("PATCH", "/api/settings", map[string]any{"maxConcurrentTasks": 7}, &s); code != 200 || s["maxConcurrentTasks"] != float64(7) {
+		t.Fatalf("update concurrency: %d %v", code, s)
+	}
+	if code := e.do("GET", "/api/settings", nil, &s); code != 200 || s["maxConcurrentTasks"] != float64(7) {
+		t.Fatalf("persist concurrency: %d %v", code, s)
+	}
 	if code := e.do("PATCH", "/api/settings", map[string]any{"maxFileSizeMB": 0}, &s); code != 422 {
 		t.Fatalf("invalid settings accepted: %d", code)
 	}
 	e.do("PATCH", "/api/settings", map[string]any{"fullReconcileIntervalHours": 6}, &s)
 	if s["fullReconcileIntervalHours"].(float64) != 6 || s["incrementalSyncEnabled"] != true {
 		t.Fatalf("settings: %v", s)
+	}
+}
+
+func TestNotionCredentialAPIBase(t *testing.T) {
+	e := newEnv(t)
+	var credential map[string]any
+	if code := e.do("POST", "/api/credentials", map[string]any{
+		"name": "Notion", "type": "notion", "config": map[string]any{"token": "secret"},
+	}, &credential); code != 201 {
+		t.Fatalf("create Notion credential: %d %v", code, credential)
+	}
+	cfg := credential["config"].(map[string]any)
+	if cfg["baseUrl"] != "https://api.notion.com/v1" || cfg["token"] != credentials.Mask {
+		t.Fatalf("Notion defaults: %v", cfg)
+	}
+	id := credential["id"].(string)
+	if code := e.do("PATCH", "/api/credentials/"+id, map[string]any{
+		"config": map[string]any{"baseUrl": "https://proxy.example/v1/"},
+	}, &credential); code != 200 {
+		t.Fatalf("update Notion endpoint: %d %v", code, credential)
+	}
+	cfg = credential["config"].(map[string]any)
+	if cfg["baseUrl"] != "https://proxy.example/v1" || cfg["token"] != credentials.Mask {
+		t.Fatalf("Notion endpoint or token: %v", cfg)
+	}
+	resolved, err := e.creds.Load(t.Context(), id)
+	if err != nil || resolved.String("baseUrl") != "https://proxy.example/v1" || resolved.String("token") != "secret" {
+		t.Fatal("Notion endpoint update did not preserve the encrypted token", err)
 	}
 }
 

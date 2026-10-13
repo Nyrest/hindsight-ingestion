@@ -9,9 +9,9 @@
   },
   "app": {
     "name": "Hindsight Ingestion",
-    "tagline": "소스를 Hindsight 메모리 뱅크에 동기화",
+    "tagline": "데이터 소스를 Hindsight 메모리 뱅크로 동기화",
     "version": "v{{version}}",
-    "authDisabled": "인증이 비활성화되었습니다"
+    "authDisabled": "인증 비활성화됨"
   },
   "language": {
     "label": "언어"
@@ -39,16 +39,16 @@
     "close": "닫기",
     "confirm": "확인",
     "commandPaletteTitle": "명령 팔레트",
-    "commandPaletteDescription": "실행할 명령을 검색하세요…",
-    "copied": "클립보드에 복사됨",
+    "commandPaletteDescription": "명령 검색…",
+    "copied": "클립보드에 복사되었습니다",
     "copy": "복사",
-    "copyFailed": "클립보드에 복사할 수 없습니다.",
+    "copyFailed": "클립보드 복사에 실패했습니다",
     "create": "만들기",
     "delete": "삭제",
     "edit": "편집",
     "false": "아니요",
     "true": "예",
-    "loadFailed": "데이터를 불러올 수 없습니다.",
+    "loadFailed": "데이터를 불러오지 못했습니다",
     "loading": "불러오는 중…",
     "moreActions": "추가 작업",
     "new": "새로 만들기",
@@ -89,8 +89,8 @@
     "error": "오류"
   },
   "chips": {
-    "placeholder": "입력하고 Enter를 누르세요",
-    "duplicate": "\"{{value}}\"가 이미 추가되었습니다.",
+    "placeholder": "입력 후 Enter",
+    "duplicate": "“{{value}}” 항목이 이미 추가되었습니다",
     "remove": "{{value}} 제거",
     "automatic": "자동으로 추가됨"
   },
@@ -101,12 +101,12 @@
     "remove": "행 삭제"
   },
   "secret": {
-    "keepHint": "값이 저장되어 있습니다. 기존 값을 유지하려면 마스킹된 값을 그대로 두고, 바꾸려면 새 값을 입력하세요.",
+    "keepHint": "기존 비밀번호/키는 마스킹 처리되어 있습니다. 유지하려면 그대로 두고, 변경하려면 새 값을 입력하세요.",
     "clear": "저장된 값 지우기"
   },
   "headers": {
-    "title": "맞춤 헤더",
-    "help": "이 공급자에게 요청할 때마다 전송됩니다. 커넥터 인증 헤더가 우선적으로 적용됩니다.",
+    "title": "사용자 지정 헤더",
+    "help": "이 공급자에 대한 모든 요청에 포함됩니다. 커넥터 자체의 인증 헤더가 우선 적용됩니다.",
     "mode": "에디터 모드",
     "ui": "양식",
     "json": "JSON",
@@ -114,8 +114,8 @@
     "value": "값",
     "valuePlaceholder": "헤더 값",
     "add": "헤더 추가",
-    "empty": "맞춤 헤더 없음",
-    "maskHint": "저장된 값은 {{mask}}로 표시됩니다. 값을 변경하지 않고 그대로 두려면 마스크를 유지하세요.",
+    "empty": "설정된 사용자 지정 헤더가 없습니다",
+    "maskHint": "저장된 값은 {{mask}}로 표시됩니다. 유지하려면 마스크를 그대로 두세요.",
     "errors": {
       "duplicate": "중복된 헤더 이름 \"{{name}}\"(이름은 대/소문자를 구분하지 않음)",
       "invalidJson": "잘못된 JSON: {{detail}}",
@@ -126,7 +126,7 @@
   },
   "browse": {
     "searchSources": "데이터 소스 검색…",
-    "searchList": "현재 목록 검색…",
+    "searchList": "목록 검색…",
     "searchSourcesHelp": "이 연결에 공유된 데이터 소스를 제목으로 검색합니다.",
     "searchListHelp": "현재 목록을 이름, 경로 또는 ID로 필터링합니다.",
     "clearSearch": "검색 지우기",
@@ -134,11 +134,11 @@
     "button": "찾아보기…",
     "title": "찾아보기",
     "titleFor": "{{label}}를 선택하세요.",
-    "description": "폴더로 이동하여 항목을 선택합니다.",
+    "description": "폴더로 이동하여 동기화할 항목을 선택하세요.",
     "breadcrumbs": "위치",
     "root": "루트",
-    "empty": "여기에는 아무것도 없습니다",
-    "hint": "항목을 선택하거나 화살표로 폴더를 엽니다.",
+    "empty": "항목이 없습니다",
+    "hint": "항목을 클릭하여 선택하거나 화살표를 눌러 폴더를 여세요",
     "open": "{{name}} 열기",
     "select": "선택",
     "selected": "선택됨",
@@ -177,18 +177,18 @@
   },
   "credentials": {
     "title": "자격 증명",
-    "description": "소스 및 Hindsight 대상에 대한 재사용 가능한 연결 세부 정보입니다.",
+    "description": "데이터 소스 및 Hindsight 대상 연결에 사용할 재사용 가능한 자격 증명입니다.",
     "new": "새 자격 증명",
     "createTitle": "새 자격 증명",
-    "createDescription": "공급자를 선택하고 연결 세부정보를 입력하세요.",
+    "createDescription": "공급자를 선택하고 연결 정보를 입력하세요.",
     "editTitle": "자격 증명 편집",
-    "editDescription": "저장된 키는 마스킹되어 표시됩니다. 기존 값을 유지하려면 마스킹된 값을 그대로 두세요.",
+    "editDescription": "저장된 비밀번호/키는 마스킹 처리됩니다. 기존 값을 유지하려면 그대로 두세요.",
     "createInline": "새 자격 증명 만들기",
     "namePlaceholder": "예: {{type}} — 업무용",
     "pick": "자격 증명을 선택하세요",
     "noneOfType": "아직 {{type}} 자격 증명이 없습니다.",
-    "notActiveWarning": "이 자격 증명은 현재 \"{{status}}\"입니다. 문제가 해결될 때까지 실행이 실패할 수 있습니다.",
-    "oauthHint": "저장한 뒤 ‘연결’을 클릭하고 안내에 따라 액세스를 승인하세요.",
+    "notActiveWarning": "이 자격 증명은 현재 “{{status}}” 상태입니다. 해결될 때까지 실행이 실패할 수 있습니다.",
+    "oauthHint": "저장 후 “연결”을 클릭하여 공급자 인증을 완료하세요.",
     "usedByCount_one": "작업 {{count}}개",
     "usedByCount_other": "작업 {{count}}개",
     "fields": {
@@ -209,11 +209,11 @@
       "refresh": "토큰 갱신"
     },
     "empty": {
-      "title": "아직 자격 증명 없음",
-      "description": "작업을 생성하려면 소스(예: Notion)에 대한 자격 증명과 Hindsight 인스턴스에 대한 자격 증명을 추가하세요."
+      "title": "자격 증명이 없습니다",
+      "description": "작업을 생성하려면 데이터 소스(예: Notion) 및 Hindsight 인스턴스에 대한 자격 증명을 추가하세요."
     },
     "test": {
-      "ok": "{{name}}: 연결 OK",
+      "ok": "{{name}}: 연결 성공",
       "failed": "{{name}}: 연결 실패"
     },
     "oauth": {
@@ -251,15 +251,15 @@
     "simple": "단순",
     "advanced": "고급",
     "advancedQuery": "쿼리",
-    "advancedHint": "공급자의 쿼리 구문을 직접 입력합니다.",
+    "advancedHint": "데이터 소스 네이티브 쿼리 구문입니다.",
     "driveHint": "Google Drive 검색 문법 예: mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'. 휴지통의 파일은 항상 제외됩니다.",
     "noFields": "이 소스는 필터를 지원하지 않습니다.",
     "selectValues": "값 선택…",
     "valuePlaceholder": "값",
-    "valuesPlaceholder": "값을 입력하고 Enter를 누르세요.",
+    "valuesPlaceholder": "값을 입력하고 Enter를 누르세요",
     "empty": {
       "title": "필터 없음",
-      "description": "소스 범위의 모든 항목이 동기화됩니다."
+      "description": "선택한 데이터 소스 범위 내의 모든 콘텐츠가 동기화됩니다."
     },
     "operators": {
       "equals": "=",
@@ -306,10 +306,10 @@
     "audios": "오디오",
     "globalPreview": "현재 전역 정책(설정에서 변경):",
     "mode": {
-      "global": "전역 설정 사용",
-      "globalHelp": "설정에서 지정한 파일 형식을 사용합니다.",
-      "override": "이 작업에서 재정의",
-      "overrideHelp": "이 작업에만 파일 형식을 선택하세요."
+      "global": "글로벌 설정 따름",
+      "globalHelp": "설정 페이지에 구성된 파일 형식을 사용합니다.",
+      "override": "개별 설정",
+      "overrideHelp": "이 작업에만 적용할 파일 형식을 선택합니다."
     }
   },
   "source": {
@@ -324,14 +324,14 @@
     "bankPlaceholder": "메모리 뱅크 ID",
     "browseBanks": "메모리 뱅크 선택",
     "pickCredentialFirst": "먼저 Hindsight 자격 증명을 선택하세요.",
-    "locked": "첫 실행이 성공하면 대상 메모리 뱅크가 잠깁니다. 다른 자격 증명이나 메모리 뱅크를 사용하려면 새 작업을 만드세요.",
+    "locked": "첫 번째 성공적인 실행 후에는 대상 설정이 고정됩니다. 다른 자격 증명이나 메모리 뱅크로 변경하려면 작업을 복제(새 작업 생성)하세요.",
     "lockNotice": "첫 번째 성공적인 실행 후에 대상은 읽기 전용이 됩니다."
   },
   "retain": {
-    "label": "콘텐츠 처리 전략",
+    "label": "보존 전략 (Retain strategy)",
     "bankDefault": "메모리 뱅크 기본 전략",
     "bankDefaultNamed": "메모리 뱅크 기본 전략({{name}})",
-    "help": "메모리 뱅크로 보내는 콘텐츠를 Hindsight가 처리하는 방식을 정합니다. 기본값을 선택하면 해당 메모리 뱅크에 설정된 전략을 사용합니다.",
+    "help": "Hindsight가 수집된 콘텐츠를 처리하고 보존하는 방법입니다. 비워두면 메모리 뱅크 기본 설정을 사용합니다.",
     "freeTextPlaceholder": "메모리 뱅크 기본값을 사용하려면 비워 두세요",
     "pickDestinationFirst": "사용 가능한 전략을 불러오려면 먼저 대상 자격 증명과 메모리 뱅크를 선택하세요.",
     "loadFailed": "Hindsight에서 전략을 로드할 수 없습니다. 전략 이름을 수동으로 입력하세요."
@@ -379,7 +379,7 @@
     "title": "작업",
     "description": "각 작업은 하나의 소스를 Hindsight 메모리 뱅크에 수동으로 또는 일정에 따라 동기화합니다.",
     "new": "새 작업",
-    "neverRun": "아직 실행되지 않음",
+    "neverRun": "실행 이력 없음",
     "reconcileRequired": "전체 동기화 필요",
     "itemCount_one": "항목 {{count}}개",
     "itemCount_other": "항목 {{count}}개",
@@ -400,13 +400,13 @@
     },
     "actions": {
       "runNow": "지금 실행",
-      "fullReconcile": "전체 동기화",
-      "fullReingest": "전체 다시 가져오기",
+      "fullReconcile": "전체 정합성 맞춤 (Full reconcile)",
+      "fullReingest": "전체 재수집 (Full re-ingest)",
       "cancel": "실행 취소",
       "enable": "활성화",
       "disable": "비활성화",
       "viewRuns": "실행 기록 보기",
-      "dryRun": "시험 실행",
+      "dryRun": "드라이 런 (Dry-run)",
       "deleteDocuments": "문서 삭제"
     },
     "empty": {
@@ -452,8 +452,10 @@
     "clearDocuments": {
       "title": "“{{name}}”의 문서를 삭제할까요?",
       "description": "이 작업의 태그가 지정된 Hindsight 문서와 관련 기억을 삭제하고 작업을 일시 중지합니다. 원본 콘텐츠에는 영향을 주지 않습니다.",
-      "success": "문서 {{count}}개 삭제됨",
-      "failed": "문서를 삭제할 수 없습니다"
+      "success": "문서 {{count}}개를 삭제했습니다",
+      "failed": "문서를 삭제할 수 없습니다",
+      "success_one": "문서 {{count}}개를 삭제했습니다",
+      "success_other": "문서 {{count}}개를 삭제했습니다"
     }
   },
   "taskEditor": {
@@ -475,11 +477,11 @@
       "enabled": "활성화됨"
     },
     "hints": {
-      "sourceReset": "소스 자격 증명이나 루트(버킷, 폴더, 데이터베이스, 노트 모음 등)를 변경하면 증분 커서가 초기화되고 전체 항목을 다시 스캔해 동기화 기준을 새로 설정합니다.",
-      "sourceTypeLocked": "생성 후에는 소스 유형을 변경할 수 없습니다. 다른 소스를 사용하려면 새 작업을 만드세요.",
-      "filtersReconcile": "필터를 변경하면 전체 동기화가 예약됩니다. 이때 필터에 더 이상 맞지 않는 항목은 Hindsight에서 삭제됩니다.",
-      "filesReconcile": "파일 형식을 변경하면 전체 동기화가 실행됩니다. 제외된 파일은 Hindsight에서 삭제됩니다.",
-      "policyRevision": "처리 전략, 태그 또는 메타데이터를 변경하면 다음 실행 시 조건에 맞는 모든 콘텐츠를 Hindsight로 다시 전송합니다."
+      "sourceReset": "데이터 소스 자격 증명 또는 루트 위치(버킷, 폴더, 데이터베이스 등)를 변경하면 증분 커서가 재설정되고 전체 기준 스캔이 트리거됩니다.",
+      "sourceTypeLocked": "생성 후에는 데이터 소스 유형을 변경할 수 없습니다. 다른 유형을 사용하려면 새 작업을 생성하세요.",
+      "filtersReconcile": "필터를 변경하면 전체 정합성 맞춤이 대기열에 추가되며 더 이상 일치하지 않는 항목은 Hindsight에서 삭제됩니다.",
+      "filesReconcile": "파일 형식을 변경하면 전체 정합성 맞춤이 트리거되며 제외된 파일은 Hindsight에서 삭제됩니다.",
+      "policyRevision": "보존 전략, 태그 또는 메타데이터를 변경하면 다음 실행 시 모든 일치 항목이 다시 동기화됩니다."
     },
     "sections": {
       "general": {
@@ -547,7 +549,7 @@
       "mode": "실행 모드",
       "started": "시작 시간",
       "duration": "소요 시간",
-      "counters": "결과"
+      "counters": "동기화 결과"
     },
     "trigger": {
       "scheduled": "예정됨",
@@ -559,11 +561,11 @@
       "reingest": "전체 다시 가져오기"
     },
     "counters": {
-      "discoveredCount": "발견",
+      "discoveredCount": "스캔됨",
       "createdCount": "생성됨",
       "updatedCount": "업데이트됨",
       "deletedCount": "삭제됨",
-      "unchangedCount": "변경되지 않음",
+      "unchangedCount": "변경 없음",
       "skippedCount": "건너뜀",
       "failedCount": "실패"
     },
@@ -617,8 +619,8 @@
       "items": "동기화된 항목",
       "itemsSub": "전체 작업 합계",
       "failures24h": "실패(24시간)",
-      "needsAttention": "주의가 필요함",
-      "allGood": "문제 없음"
+      "needsAttention": "확인 필요",
+      "allGood": "모두 정상"
     },
     "getStarted": {
       "title": "첫 번째 동기화 설정",
@@ -642,7 +644,7 @@
     }
   },
   "observationScope": {
-    "title": "관찰 범위",
+    "title": "통합 범위 (Observation scope)",
     "rule": "지식 통합 범위",
     "learnMore": "공식 문서",
     "inherit": "전역 설정 사용",
@@ -692,6 +694,8 @@
       "incrementalHelp": "지원되는 경우 공급자의 변경 추적 기능을 사용합니다. 끄면 매번 전체 콘텐츠를 스캔하지만 변경되지 않은 콘텐츠는 다시 업로드하지 않습니다.",
       "reconcileInterval": "전체 동기화 간격",
       "reconcileIntervalHelp": "마지막 전체 동기화 후 이 간격보다 오래 지나면 다음 작업에서 전체 스캔을 수행합니다.",
+      "maxConcurrentTasks": "최대 동시 실행 작업 수",
+      "maxConcurrentTasksHelp": "기본값은 4입니다. 변경 사항은 즉시 적용되며, 한도를 낮춰도 실행 중인 작업은 계속됩니다.",
       "maxFileSize": "최대 파일 크기",
       "maxFileSizeHelp": "더 큰 파일은 건너뜁니다."
     },
@@ -719,8 +723,8 @@
     "home": "대시보드로 이동"
   },
   "dryRun": {
-    "title": "시험 실행: {{name}}",
-    "description": "저장된 작업으로 소스 전체를 스캔해 확인합니다. 문서를 전송하거나 삭제하지 않으며, 동기화 진행 상태와 실행 기록도 변경하지 않습니다.",
+    "title": "드라이 런: {{name}}",
+    "description": "저장된 작업 설정으로 전체 데이터 소스 스캔을 시뮬레이션합니다. 문서를 전송하거나 삭제하지 않으며 동기화 진행 상황과 실행 기록도 변경되지 않습니다.",
     "start": "시험 실행 시작",
     "running": "스캔 중…",
     "complete_one": "소스 항목 {{count}}개를 스캔했습니다.",
@@ -738,7 +742,7 @@
       "unchanged": "변경되지 않음",
       "skip": "건너뛰기",
       "fail": "실패",
-      "release": "이 작업의 참조 해제"
+      "release": "작업 참조 해제"
     }
   },
   "providerCopy": {

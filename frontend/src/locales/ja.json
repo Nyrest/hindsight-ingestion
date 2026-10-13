@@ -9,9 +9,9 @@
   },
   "app": {
     "name": "Hindsight Ingestion",
-    "tagline": "ソースを Hindsight のメモリバンクに同期",
+    "tagline": "データソースを Hindsight のメモリバンクに同期",
     "version": "v{{version}}",
-    "authDisabled": "認証が無効です"
+    "authDisabled": "認証なし（無効化中）"
   },
   "language": {
     "label": "言語"
@@ -39,10 +39,10 @@
     "close": "閉じる",
     "confirm": "確認",
     "commandPaletteTitle": "コマンドパレット",
-    "commandPaletteDescription": "実行するコマンドを検索してください…",
-    "copied": "クリップボードにコピーされました",
+    "commandPaletteDescription": "コマンドを検索…",
+    "copied": "クリップボードにコピーしました",
     "copy": "コピー",
-    "copyFailed": "クリップボードにコピーできませんでした",
+    "copyFailed": "クリップボードへのコピーに失敗しました",
     "create": "作成",
     "delete": "削除",
     "edit": "編集",
@@ -89,8 +89,8 @@
     "error": "エラー"
   },
   "chips": {
-    "placeholder": "入力して Enter キーを押してください",
-    "duplicate": "「{{value}}」はすでに追加されています",
+    "placeholder": "入力して Enter",
+    "duplicate": "「{{value}}」は既に追加されています",
     "remove": "{{value}} を削除",
     "automatic": "自動的に追加される"
   },
@@ -101,12 +101,12 @@
     "remove": "行を削除"
   },
   "secret": {
-    "keepHint": "値は保存済みです。元の値を使う場合はマスクを変更せず、置き換える場合は新しい値を入力してください。",
+    "keepHint": "既存のシークレットはマスクされています。保持する場合はそのままにし、変更する場合は新しい値を入力してください。",
     "clear": "保存された値をクリアする"
   },
   "headers": {
     "title": "カスタムヘッダー",
-    "help": "このプロバイダーへのすべてのリクエストとともに送信されます。コネクタ認証ヘッダーが優先されます。",
+    "help": "このプロバイダーへのすべてのリクエストに付与されます。コネクタ自体の認証ヘッダーが優先されます。",
     "mode": "エディターモード",
     "ui": "フォーム",
     "json": "JSON",
@@ -114,8 +114,8 @@
     "value": "値",
     "valuePlaceholder": "ヘッダー値",
     "add": "ヘッダーの追加",
-    "empty": "カスタムヘッダーはありません",
-    "maskHint": "保存済みの値は {{mask}} と表示されます。元の値を使う場合は、マスクを変更しないでください。",
+    "empty": "カスタムヘッダーは設定されていません",
+    "maskHint": "保存された値は {{mask}} と表示されます。そのまま残すと現在の値を維持します。",
     "errors": {
       "duplicate": "ヘッダー名「{{name}}」が重複しています (名前は大文字と小文字が区別されません)",
       "invalidJson": "無効な JSON: {{detail}}",
@@ -126,7 +126,7 @@
   },
   "browse": {
     "searchSources": "データソースを検索…",
-    "searchList": "この一覧を検索…",
+    "searchList": "一覧を検索…",
     "searchSourcesHelp": "この接続に共有されたデータソースをタイトルで検索します。",
     "searchListHelp": "現在の一覧を名前、パス、IDで絞り込みます。",
     "clearSearch": "検索をクリア",
@@ -134,11 +134,11 @@
     "button": "参照…",
     "title": "参照",
     "titleFor": "{{label}} を選択",
-    "description": "フォルダーに移動してアイテムを選択します。",
+    "description": "フォルダ内を移動し、同期する項目を選択してください。",
     "breadcrumbs": "場所",
     "root": "ルート",
-    "empty": "ここには何もありません",
-    "hint": "項目を選択するか、矢印でフォルダーを開きます",
+    "empty": "項目がありません",
+    "hint": "項目をクリックして選択するか、矢印でフォルダを開いてください",
     "open": "{{name}}を開く",
     "select": "選択",
     "selected": "選択済み",
@@ -177,18 +177,18 @@
   },
   "credentials": {
     "title": "認証情報",
-    "description": "同期元と Hindsight への接続に使う認証情報を管理します。",
+    "description": "データソースおよび Hindsight 接続先で使用する共通の認証情報。",
     "new": "新しい認証情報",
     "createTitle": "新しい認証情報",
-    "createDescription": "プロバイダーを選択して接続情報を入力してください。",
+    "createDescription": "プロバイダーを選択し、接続情報を設定してください。",
     "editTitle": "認証情報の編集",
-    "editDescription": "保存済みの秘密情報はマスク表示されます。元の値を使う場合は、マスクを変更しないでください。",
+    "editDescription": "保存済みのシークレットはマスク表示されます。現在の値を維持する場合はそのままにしてください。",
     "createInline": "認証情報を追加",
     "namePlaceholder": "例: {{type}} — 仕事用",
     "pick": "認証情報を選択してください",
     "noneOfType": "{{type}} 認証情報がまだありません",
-    "notActiveWarning": "この認証情報は現在「{{status}}」です。修正されるまで実行は失敗する可能性があります。",
-    "oauthHint": "保存後に「接続」をクリックし、画面の案内に沿ってアクセスを許可してください。",
+    "notActiveWarning": "この認証情報は現在「{{status}}」です。修復されるまで実行が失敗する可能性があります。",
+    "oauthHint": "保存後、「接続」をクリックしてプロバイダーでのアクセス認証を完了してください。",
     "usedByCount_one": "{{count}} 件のタスク",
     "usedByCount_other": "{{count}} 件のタスク",
     "fields": {
@@ -209,12 +209,12 @@
       "refresh": "トークンを更新"
     },
     "empty": {
-      "title": "まだ認証情報がありません",
-      "description": "ソース (例: Notion) の認証情報と Hindsight インスタンスの認証情報を追加して、タスクを作成します。"
+      "title": "認証情報がありません",
+      "description": "タスクを作成するには、データソース（Notion など）の認証情報と Hindsight の認証情報を追加してください。"
     },
     "test": {
-      "ok": "{{name}}: 接続に成功しました",
-      "failed": "{{name}}: 接続に失敗しました"
+      "ok": "{{name}}: 接続成功",
+      "failed": "{{name}}: 接続失敗"
     },
     "oauth": {
       "success": "OAuth が正常に接続されました",
@@ -251,15 +251,15 @@
     "simple": "シンプル",
     "advanced": "詳細",
     "advancedQuery": "クエリ",
-    "advancedHint": "プロバイダーのクエリ構文を直接入力します。",
+    "advancedHint": "データソースのネイティブクエリ構文。",
     "driveHint": "Google Drive の検索構文。例: mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'。ゴミ箱内のファイルは常に除外されます。",
     "noFields": "このソースはフィルターをサポートしていません。",
     "selectValues": "値を選択してください…",
     "valuePlaceholder": "値",
-    "valuesPlaceholder": "値を入力して Enter キーを押します",
+    "valuesPlaceholder": "値を入力して Enter",
     "empty": {
       "title": "フィルターなし",
-      "description": "ソーススコープ内のすべてが同期されます。"
+      "description": "選択したデータソースのすべてのコンテンツが同期されます。"
     },
     "operators": {
       "equals": "=",
@@ -306,10 +306,10 @@
     "audios": "オーディオ",
     "globalPreview": "現在の全体設定（「設定」で変更できます）：",
     "mode": {
-      "global": "全体設定を使う",
-      "globalHelp": "「設定」で指定したファイル種別を使います。",
-      "override": "個別に設定",
-      "overrideHelp": "このタスクのみのファイル タイプを選択してください。"
+      "global": "グローバル設定に従う",
+      "globalHelp": "「設定」で指定されたファイル種別を使用します。",
+      "override": "個別設定",
+      "overrideHelp": "このタスク専用のファイル種別を指定します。"
     }
   },
   "source": {
@@ -324,14 +324,14 @@
     "bankPlaceholder": "メモリバンク ID",
     "browseBanks": "メモリバンクを選択",
     "pickCredentialFirst": "先に Hindsight の認証情報を選択してください。",
-    "locked": "最初の実行が成功すると、宛先のメモリバンクは変更できなくなります。別の認証情報やメモリバンクを使うには、新しいタスクを作成してください。",
+    "locked": "初回の同期成功後、同期先の設定はロックされます。別の認証情報やメモリバンクに変更する場合は、このタスクを複製（新規作成）してください。",
     "lockNotice": "最初の実行が成功すると、宛先は読み取り専用になります。"
   },
   "retain": {
-    "label": "コンテンツの処理方法",
+    "label": "保持ポリシー (Retain strategy)",
     "bankDefault": "メモリバンクの既定値",
     "bankDefaultNamed": "メモリバンクの既定値（{{name}}）",
-    "help": "メモリバンクに送るコンテンツを Hindsight がどのように処理するかを設定します。既定値を選ぶと、メモリバンク側の設定が使われます。",
+    "help": "Hindsight が取り込んだコンテンツを処理・保持する方法です。空欄の場合はメモリバンクのデフォルト設定を使用します。",
     "freeTextPlaceholder": "メモリバンクの既定値を使う場合は空欄のままにします",
     "pickDestinationFirst": "利用可能な戦略を読み込むには、先に送信先の認証情報とメモリバンクを選択してください。",
     "loadFailed": "Hindsight から戦略を読み込めませんでした。戦略名を手動で入力してください。"
@@ -400,13 +400,13 @@
     },
     "actions": {
       "runNow": "今すぐ実行",
-      "fullReconcile": "全件同期",
-      "fullReingest": "すべて再取り込み",
+      "fullReconcile": "フル整合 (Reconcile)",
+      "fullReingest": "全件再取り込み (Re-ingest)",
       "cancel": "実行をキャンセルする",
       "enable": "有効にする",
       "disable": "無効にする",
       "viewRuns": "実行履歴を見る",
-      "dryRun": "シミュレーション",
+      "dryRun": "ドライラン (Dry-run)",
       "deleteDocuments": "ドキュメントを削除"
     },
     "empty": {
@@ -452,8 +452,10 @@
     "clearDocuments": {
       "title": "「{{name}}」のドキュメントを削除しますか？",
       "description": "このタスクのタグが付いた Hindsight のドキュメントと関連する記憶を削除し、タスクを一時停止します。同期元のコンテンツには影響しません。",
-      "success": "{{count}} 件のドキュメントを削除しました",
-      "failed": "ドキュメントを削除できませんでした"
+      "success": "ドキュメント {{count}} 件を削除しました",
+      "failed": "ドキュメントを削除できませんでした",
+      "success_one": "ドキュメント {{count}} 件を削除しました",
+      "success_other": "ドキュメント {{count}} 件を削除しました"
     }
   },
   "taskEditor": {
@@ -475,11 +477,11 @@
       "enabled": "有効"
     },
     "hints": {
-      "sourceReset": "ソースの認証情報またはルート（バケット、フォルダー、データベース、ノートブックなど）を変更すると、増分カーソルがリセットされ、全件スキャンを行って同期の基準を作り直します。",
-      "sourceTypeLocked": "ソースタイプは作成後に変更することはできません。別のソースを使用するには、新しいタスクを作成します。",
-      "filtersReconcile": "フィルターを変更すると、タスクは全件同期を行います。その際、条件に一致しなくなった項目は Hindsight から削除されます。",
-      "filesReconcile": "ファイル形式を変更すると、タスクは全件同期を行います。対象外になったファイルは Hindsight から削除されます。",
-      "policyRevision": "処理方法、タグ、メタデータを変更すると、次回の実行時に条件に一致するコンテンツをすべて Hindsight に再送信します。"
+      "sourceReset": "データソースの認証情報またはルート（バケット、フォルダ、データベース、ノート等）を変更すると、増分カーソルがリセットされ、ベースラインスキャンが実行されます。",
+      "sourceTypeLocked": "作成後にデータソースの種類を変更することはできません。別の種類を使用する場合は新規タスクを作成してください。",
+      "filtersReconcile": "フィルターを変更するとフル整合が予約されます。条件に一致しなくなった項目は Hindsight から削除されます。",
+      "filesReconcile": "ファイル種別を変更するとフル整合が予約されます。除外されたファイルは Hindsight から削除されます。",
+      "policyRevision": "保持ポリシー、タグ、メタデータを変更すると、次回の実行時にすべての一致項目が再同期されます。"
     },
     "sections": {
       "general": {
@@ -547,7 +549,7 @@
       "mode": "実行モード",
       "started": "開始時刻",
       "duration": "所要時間",
-      "counters": "結果"
+      "counters": "同期結果"
     },
     "trigger": {
       "scheduled": "スケジュール",
@@ -559,13 +561,13 @@
       "reingest": "全件再取り込み"
     },
     "counters": {
-      "discoveredCount": "検出数",
-      "createdCount": "作成数",
-      "updatedCount": "更新数",
-      "deletedCount": "削除数",
+      "discoveredCount": "スキャン済み",
+      "createdCount": "新規作成",
+      "updatedCount": "更新",
+      "deletedCount": "削除",
       "unchangedCount": "変更なし",
-      "skippedCount": "スキップ数",
-      "failedCount": "失敗数"
+      "skippedCount": "スキップ",
+      "failedCount": "失敗"
     },
     "filters": {
       "status": "ステータスでフィルタリングする",
@@ -617,8 +619,8 @@
       "items": "同期済みの項目",
       "itemsSub": "全タスクの合計",
       "failures24h": "失敗（24 時間）",
-      "needsAttention": "注意が必要です",
-      "allGood": "問題なし"
+      "needsAttention": "要確認",
+      "allGood": "すべて正常"
     },
     "getStarted": {
       "title": "最初の同期をセットアップする",
@@ -642,7 +644,7 @@
     }
   },
   "observationScope": {
-    "title": "観測スコープ",
+    "title": "統合スコープ (Observation scope)",
     "rule": "知識統合のスコープ",
     "learnMore": "公式ドキュメント",
     "inherit": "全体設定を使用",
@@ -692,6 +694,8 @@
       "incrementalHelp": "可能な場合は、プロバイダーネイティブの変更追跡を使用します。オフの場合、実行のたびに完全なインベントリが実行されます (変更されていないコンテンツは再アップロードされません)。",
       "reconcileInterval": "全件同期の間隔",
       "reconcileIntervalHelp": "前回の全件同期からこの期間を過ぎると、通常の実行が全件スキャンに切り替わります。",
+      "maxConcurrentTasks": "同時実行タスク数の上限",
+      "maxConcurrentTasksHelp": "既定値は 4 です。保存後すぐに反映されます。上限を下げても実行中のタスクは継続します。",
       "maxFileSize": "最大ファイルサイズ",
       "maxFileSizeHelp": "大きなファイルはスキップされます。"
     },
@@ -719,8 +723,8 @@
     "home": "ダッシュボードに移動"
   },
   "dryRun": {
-    "title": "シミュレーション：{{name}}",
-    "description": "保存済みタスクでソース全体をスキャンして動作を確認します。ドキュメントの送信や削除は行わず、同期の進捗と実行履歴も変更しません。",
+    "title": "ドライラン: {{name}}",
+    "description": "保存済みタスクの設定でデータソース全体をシミュレーションスキャンします。ドキュメントの送信や削除は行われず、同期の進捗や実行履歴も変更されません。",
     "start": "シミュレーションを開始",
     "running": "スキャン中…",
     "complete_one": "ソース項目を {{count}} 件スキャンしました。",
@@ -738,7 +742,7 @@
       "unchanged": "変更なし",
       "skip": "スキップ",
       "fail": "失敗",
-      "release": "このタスクの参照を解除"
+      "release": "タスクの参照を解除"
     }
   },
   "providerCopy": {

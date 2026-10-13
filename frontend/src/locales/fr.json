@@ -9,9 +9,9 @@
   },
   "app": {
     "name": "Hindsight Ingestion",
-    "tagline": "Synchronisez vos sources avec les espaces mémoire de Hindsight",
+    "tagline": "Synchroniser vos sources avec la mémoire Hindsight",
     "version": "v{{version}}",
-    "authDisabled": "authentification désactivée"
+    "authDisabled": "Authentification désactivée"
   },
   "language": {
     "label": "Langue"
@@ -39,10 +39,10 @@
     "close": "Fermer",
     "confirm": "Confirmer",
     "commandPaletteTitle": "Palette de commandes",
-    "commandPaletteDescription": "Recherchez une commande à exécuter…",
+    "commandPaletteDescription": "Rechercher une commande…",
     "copied": "Copié dans le presse-papiers",
     "copy": "Copier",
-    "copyFailed": "Impossible de copier dans le presse-papiers",
+    "copyFailed": "Échec de la copie dans le presse-papiers",
     "create": "Créer",
     "delete": "Supprimer",
     "edit": "Modifier",
@@ -89,8 +89,8 @@
     "error": "Erreur"
   },
   "chips": {
-    "placeholder": "Tapez et appuyez sur Entrée",
-    "duplicate": "\"{{value}}\" est déjà ajouté",
+    "placeholder": "Saisissez et appuyez sur Entrée",
+    "duplicate": "« {{value}} » a déjà été ajouté",
     "remove": "Supprimer {{value}}",
     "automatic": "Ajouté automatiquement"
   },
@@ -101,12 +101,12 @@
     "remove": "Supprimer la ligne"
   },
   "secret": {
-    "keepHint": "Une valeur est enregistrée. Laissez le masque inchangé pour conserver cette valeur ou saisissez une nouvelle valeur pour la remplacer.",
+    "keepHint": "Le secret existant est masqué. Laissez-le inchangé pour le conserver, ou saisissez une nouvelle valeur.",
     "clear": "Effacer la valeur stockée"
   },
   "headers": {
     "title": "En-têtes personnalisés",
-    "help": "Envoyé avec chaque demande à ce fournisseur. Les en-têtes d’authentification du connecteur sont prioritaires.",
+    "help": "Inclus dans chaque requête envoyée à ce fournisseur. Les en-têtes d'authentification du connecteur sont prioritaires.",
     "mode": "Mode éditeur",
     "ui": "Formulaire",
     "json": "JSON",
@@ -114,8 +114,8 @@
     "value": "Valeur",
     "valuePlaceholder": "Valeur d'en-tête",
     "add": "Ajouter un en-tête",
-    "empty": "Pas d'en-têtes personnalisés",
-    "maskHint": "Les valeurs stockées sont affichées sous la forme {{mask}} ; conserver le masque pour laisser une valeur inchangée.",
+    "empty": "Aucun en-tête personnalisé configuré",
+    "maskHint": "Les valeurs enregistrées sont affichées sous la forme {{mask}} ; conservez le masque pour ne pas les modifier.",
     "errors": {
       "duplicate": "Nom d'en-tête en double \"{{name}}\" (les noms ne sont pas sensibles à la casse)",
       "invalidJson": "JSON non valide : {{detail}}",
@@ -125,8 +125,8 @@
     }
   },
   "browse": {
-    "searchSources": "Rechercher des sources de données…",
-    "searchList": "Rechercher dans cette liste…",
+    "searchSources": "Rechercher des sources…",
+    "searchList": "Filtrer la liste…",
     "searchSourcesHelp": "Recherchez par titre les sources de données partagées avec cette connexion.",
     "searchListHelp": "Filtrez la liste actuelle par nom, chemin ou identifiant.",
     "clearSearch": "Effacer la recherche",
@@ -134,11 +134,11 @@
     "button": "Parcourir…",
     "title": "Parcourir",
     "titleFor": "Sélectionnez {{label}}",
-    "description": "Naviguez dans les dossiers et sélectionnez un élément.",
+    "description": "Parcourez les dossiers et sélectionnez un élément à synchroniser.",
     "breadcrumbs": "Emplacement",
     "root": "Racine",
-    "empty": "Rien ici",
-    "hint": "Sélectionnez un élément ou ouvrez un dossier avec la flèche",
+    "empty": "Aucun élément trouvé",
+    "hint": "Sélectionnez un élément ou cliquez sur la flèche pour ouvrir un dossier",
     "open": "Ouvrir {{name}}",
     "select": "Sélectionnez",
     "selected": "Sélectionné",
@@ -177,18 +177,18 @@
   },
   "credentials": {
     "title": "Identifiants",
-    "description": "Détails de connexion réutilisables pour les sources et les destinations Hindsight.",
+    "description": "Identifiants réutilisables pour les sources et les destinations Hindsight.",
     "new": "Nouveaux identifiants",
     "createTitle": "Nouveaux identifiants",
-    "createDescription": "Choisissez un fournisseur et saisissez ses détails de connexion.",
+    "createDescription": "Choisissez un fournisseur et configurez les paramètres de connexion.",
     "editTitle": "Modifier les identifiants",
-    "editDescription": "Les clés enregistrées sont masquées. Laissez les valeurs masquées inchangées pour conserver les valeurs enregistrées.",
+    "editDescription": "Les secrets enregistrés sont masqués. Laissez-les inchangés pour conserver les valeurs actuelles.",
     "createInline": "Ajouter des identifiants",
     "namePlaceholder": "p. ex. {{type}} — Travail",
     "pick": "Sélectionnez des identifiants",
     "noneOfType": "Aucun identifiant pour {{type}}",
-    "notActiveWarning": "Cet identifiant est actuellement « {{status}} ». Les exécutions peuvent échouer jusqu'à ce que le problème soit corrigé.",
-    "oauthHint": "Après l’enregistrement, cliquez sur « Connecter » et suivez les instructions pour autoriser l’accès.",
+    "notActiveWarning": "Cet identifiant est actuellement « {{status}} ». Les synchronisations peuvent échouer jusqu'à sa résolution.",
+    "oauthHint": "Après enregistrement, cliquez sur Connecter pour autoriser l'accès auprès du fournisseur.",
     "usedByCount_one": "{{count}} tâche",
     "usedByCount_other": "{{count}} tâches",
     "fields": {
@@ -210,11 +210,11 @@
     },
     "empty": {
       "title": "Aucun identifiant pour le moment",
-      "description": "Ajoutez un identifiant pour une source (par exemple Notion) et un pour votre instance Hindsight afin de créer une tâche."
+      "description": "Ajoutez un identifiant pour une source et un pour votre instance Hindsight afin de créer une tâche."
     },
     "test": {
-      "ok": "{{name}} : connexion OK",
-      "failed": "{{name}} : échec de la connexion"
+      "ok": "{{name}} : Connexion réussie",
+      "failed": "{{name}} : Échec de la connexion"
     },
     "oauth": {
       "success": "OAuth connecté avec succès",
@@ -251,15 +251,15 @@
     "simple": "Simple",
     "advanced": "Avancé",
     "advancedQuery": "Requête",
-    "advancedHint": "Saisissez directement une requête dans la syntaxe du fournisseur.",
+    "advancedHint": "Syntaxe native de requête de la source.",
     "driveHint": "Syntaxe de requête Google Drive, par exemple : mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'. Les fichiers dans la corbeille sont toujours exclus.",
     "noFields": "Cette source ne prend pas en charge les filtres.",
     "selectValues": "Sélectionnez des valeurs…",
     "valuePlaceholder": "Valeur",
-    "valuesPlaceholder": "Tapez une valeur et appuyez sur Entrée",
+    "valuesPlaceholder": "Saisissez une valeur et appuyez sur Entrée",
     "empty": {
       "title": "Aucun filtre",
-      "description": "Tout dans la portée source sera synchronisé."
+      "description": "Tous les contenus de la source sélectionnée seront synchronisés."
     },
     "operators": {
       "equals": "=",
@@ -306,10 +306,10 @@
     "audios": "Audio",
     "globalPreview": "Règle globale actuelle (modifiable dans les paramètres) :",
     "mode": {
-      "global": "Utiliser les paramètres globaux",
-      "globalHelp": "Utilisez les types de fichiers définis dans les paramètres.",
-      "override": "Personnaliser",
-      "overrideHelp": "Choisissez les types de fichiers pour cette tâche uniquement."
+      "global": "Suivre les paramètres globaux",
+      "globalHelp": "Utiliser les types de fichiers configurés dans les paramètres.",
+      "override": "Personnalisé",
+      "overrideHelp": "Définir les types de fichiers pour cette tâche uniquement."
     }
   },
   "source": {
@@ -324,14 +324,14 @@
     "bankPlaceholder": "ID de la banque",
     "browseBanks": "Choisir un espace mémoire",
     "pickCredentialFirst": "Sélectionnez d’abord les identifiants Hindsight.",
-    "locked": "La destination est verrouillée après la première exécution réussie. Pour utiliser d’autres identifiants ou un autre espace mémoire, créez une nouvelle tâche.",
+    "locked": "Les paramètres de destination sont verrouillés après la première exécution réussie. Pour synchroniser vers une autre destination, dupliquez cette tâche.",
     "lockNotice": "La destination passe en lecture seule après la première exécution réussie."
   },
   "retain": {
-    "label": "Stratégie de traitement",
+    "label": "Stratégie de rétention (Retain strategy)",
     "bankDefault": "Stratégie par défaut de l’espace mémoire",
     "bankDefaultNamed": "Stratégie par défaut de l’espace mémoire ({{name}})",
-    "help": "Définit comment Hindsight traite le contenu. L’option par défaut utilise la stratégie configurée dans l’espace mémoire.",
+    "help": "Définit comment Hindsight traite et retient le contenu ingéré. Laissez vide pour utiliser le paramètre par défaut de la banque.",
     "freeTextPlaceholder": "Laissez vide pour utiliser la valeur par défaut de l’espace mémoire",
     "pickDestinationFirst": "Sélectionnez les identifiants de destination et une espace mémoire pour charger les stratégies disponibles.",
     "loadFailed": "Impossible de charger les stratégies depuis Hindsight ; saisissez manuellement un nom de stratégie."
@@ -400,13 +400,13 @@
     },
     "actions": {
       "runNow": "Exécuter maintenant",
-      "fullReconcile": "Synchroniser tout",
-      "fullReingest": "Tout importer à nouveau",
+      "fullReconcile": "Réconciliation complète (Reconcile)",
+      "fullReingest": "Réingestion complète (Re-ingest)",
       "cancel": "Annuler l’exécution",
       "enable": "Activer",
       "disable": "Désactiver",
       "viewRuns": "Voir les exécutions",
-      "dryRun": "Simulation",
+      "dryRun": "Exécution à blanc (Dry-run)",
       "deleteDocuments": "Supprimer les documents"
     },
     "empty": {
@@ -454,7 +454,8 @@
       "description": "Supprime de Hindsight les documents portant l’étiquette de cette tâche et les souvenirs associés. La tâche sera mise en pause. Le contenu source ne sera pas modifié.",
       "failed": "Impossible de supprimer les documents",
       "success_one": "{{count}} document supprimé",
-      "success_other": "{{count}} documents supprimés"
+      "success_other": "{{count}} documents supprimés",
+      "success": "{{count}} documents supprimés"
     }
   },
   "taskEditor": {
@@ -476,11 +477,11 @@
       "enabled": "Activé"
     },
     "hints": {
-      "sourceReset": "Modifier les identifiants de la source ou son dossier racine (compartiment, dossier, base de données, carnet…) réinitialise le curseur incrémentiel et lance un scan complet pour reconstituer l’état de référence.",
-      "sourceTypeLocked": "Le type de source ne peut pas être modifié après la création. Créez une nouvelle tâche pour utiliser une source différente.",
-      "filtersReconcile": "Modifier les filtres programme une synchronisation complète. Les éléments qui ne correspondent plus aux filtres seront alors supprimés de Hindsight.",
-      "filesReconcile": "Modifier les types de fichiers déclenche une synchronisation complète. Les fichiers exclus sont supprimés de Hindsight.",
-      "policyRevision": "La modification de la stratégie de traitement, des étiquettes ou des métadonnées renvoie tout le contenu correspondant à Hindsight lors de la prochaine exécution."
+      "sourceReset": "Modifier les identifiants ou l'emplacement racine de la source réinitialise le curseur incrémentiel et déclenche une analyse de référence complète.",
+      "sourceTypeLocked": "Le type de source ne peut pas être modifié après la création. Créez une nouvelle tâche pour changer de type de source.",
+      "filtersReconcile": "Modifier les filtres déclenche une réconciliation complète ; les éléments qui ne correspondent plus seront retirés de Hindsight.",
+      "filesReconcile": "Modifier les types de fichiers déclenche une réconciliation complète ; les fichiers exclus seront retirés de Hindsight.",
+      "policyRevision": "Modifier la stratégie, les tags ou les métadonnées renverra tous les éléments correspondants lors de la prochaine exécution."
     },
     "sections": {
       "general": {
@@ -548,7 +549,7 @@
       "mode": "Mode d’exécution",
       "started": "Début",
       "duration": "Durée",
-      "counters": "Résultats"
+      "counters": "Résultats de synchronisation"
     },
     "trigger": {
       "scheduled": "Programmé",
@@ -560,13 +561,13 @@
       "reingest": "Nouvelle importation complète"
     },
     "counters": {
-      "discoveredCount": "Détectés",
+      "discoveredCount": "Analysés",
       "createdCount": "Créés",
       "updatedCount": "Mis à jour",
       "deletedCount": "Supprimés",
       "unchangedCount": "Inchangés",
       "skippedCount": "Ignorés",
-      "failedCount": "Échec"
+      "failedCount": "Échoués"
     },
     "filters": {
       "status": "Filtrer par statut",
@@ -618,8 +619,8 @@
       "items": "Éléments synchronisés",
       "itemsSub": "dans toutes les tâches",
       "failures24h": "Échecs (24 h)",
-      "needsAttention": "Action requise",
-      "allGood": "Tout va bien"
+      "needsAttention": "Attention requise",
+      "allGood": "Tout fonctionne normalement"
     },
     "getStarted": {
       "title": "Configurez votre première synchronisation",
@@ -693,6 +694,8 @@
       "incrementalHelp": "Utilisez le suivi des modifications natif du fournisseur lorsque cela est disponible. Lorsqu'elle est désactivée, chaque exécution effectue un inventaire complet (le contenu inchangé n'est toujours pas rechargé).",
       "reconcileInterval": "Intervalle de synchronisation complète",
       "reconcileIntervalHelp": "Si cet intervalle s’est écoulé depuis la dernière synchronisation complète, la prochaine exécution effectuera un scan complet.",
+      "maxConcurrentTasks": "Nombre maximal de tâches simultanées",
+      "maxConcurrentTasksHelp": "La valeur par défaut est 4. Les modifications prennent effet immédiatement ; les tâches en cours se poursuivent si la limite est réduite.",
       "maxFileSize": "Taille maximale du fichier",
       "maxFileSizeHelp": "Les fichiers plus volumineux sont ignorés."
     },
@@ -720,8 +723,8 @@
     "home": "Aller au tableau de bord"
   },
   "dryRun": {
-    "title": "Simulation : {{name}}",
-    "description": "Testez la tâche enregistrée en analysant toute la source. Aucun document n’est envoyé ni supprimé, et l’avancement de la synchronisation ainsi que l’historique des exécutions restent inchangés.",
+    "title": "Exécution à blanc : {{name}}",
+    "description": "Simule une analyse complète de la source sans modifier Hindsight. Aucun document n'est envoyé ou supprimé, et l'historique reste intact.",
     "start": "Lancer la simulation",
     "running": "Analyse en cours…",
     "complete_one": "{{count}} élément source analysé.",
@@ -739,7 +742,7 @@
       "unchanged": "Inchangé",
       "skip": "Ignorer",
       "fail": "Échec",
-      "release": "Retirer la référence de cette tâche"
+      "release": "Dissocier la tâche"
     }
   },
   "providerCopy": {

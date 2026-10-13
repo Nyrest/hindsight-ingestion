@@ -1,49 +1,203 @@
 {
   "inlineMultimodal": {
     "title": "内嵌多模态内容",
-    "description": "同步笔记中嵌入的媒体。目前支持 Notion 和 SiYuan 中的图片。",
-    "enabled": "处理内嵌媒体",
-    "policyHelp": "只有同时启用内嵌媒体和文件类型策略中的“图片”，才会同步图片。",
+    "description": "同步笔记与文档中嵌入的多媒体资源。目前支持 Notion 和思源笔记中的图片。",
+    "enabled": "处理内嵌多媒体",
+    "policyHelp": "需同时启用“处理内嵌多媒体”与文件类型策略中的“图片”，才会同步内嵌图片。",
     "active": "将同步内嵌图片。",
-    "inactive": "笔记将按纯文本同步。如需包含图片，请同时启用内嵌媒体和“图片”。"
+    "inactive": "仅同步纯文本。如需包含图片，请同时启用“处理内嵌多媒体”与文件类型中的“图片”。"
   },
   "app": {
     "name": "Hindsight Ingestion",
-    "tagline": "将数据源同步到 Hindsight 记忆库",
+    "tagline": "将数据源内容同步至记忆库",
     "version": "v{{version}}",
-    "authDisabled": "身份验证已禁用"
+    "authDisabled": "免登录模式"
+  },
+  "language": {
+    "label": "语言"
+  },
+  "providerCopy": {
+    "webcalDescription": "日程与待办事项的 iCalendar 日历订阅",
+    "webcalURL": "日历订阅地址 (URL)",
+    "webcalURLHelp": "订阅地址将加密存储。支持 HTTP、HTTPS 以及 webcal:// 协议。",
+    "webcalSize": "日历文件大小上限 (MiB)",
+    "webcalSnapshotHelp": "全量快照会自动清理已删除的条目（包括空日历）。若启用滚动订阅窗口，超出时间窗口的早期历史条目也会被移除。",
+    "webcalComponents": "日历组件数量上限",
+    "webcalSeriesHelp": "针对循环事件时间窗口，允许未指定明确边界的条目：起始时间为空或早于窗口结束、结束时间为空或晚于窗口开始的事件均会保留。",
+    "webcalComponent": "日历组件",
+    "webcalEvent": "日程事件",
+    "webcalTodo": "待办事项",
+    "webcalRecurring": "循环周期",
+    "webcalStatus": "日历状态",
+    "webcalLocation": "活动地点",
+    "webcalCategories": "分类标签",
+    "webcalAttendees": "参与者",
+    "webcalStart": "原始开始时间",
+    "webcalEnd": "原始结束时间",
+    "webcalDue": "原始截止时间",
+    "webcalCompleted": "完成时间",
+    "webcalSeriesStart": "系列最早时间",
+    "webcalSeriesEnd": "系列结束边界",
+    "fileSystem": "本地文件系统",
+    "cloudflareAccountId": "Cloudflare 账户 ID",
+    "cloudflareWebsiteUrl": "目标网站地址 (URL)",
+    "cloudflareDiscovery": "页面发现方式",
+    "cloudflareRender": "JavaScript 浏览器渲染",
+    "cloudflareLimit": "抓取页数上限",
+    "cloudflareDepth": "最大链接爬取深度",
+    "cloudflareMaxAge": "缓存有效期（秒）",
+    "cloudflareExternal": "允许爬取外链域名",
+    "cloudflareSubdomains": "包含子域名",
+    "cloudflareInclude": "包含 URL 匹配规则",
+    "cloudflareExclude": "排除 URL 匹配规则",
+    "cloudflareSize": "单页大小限制 (MiB)",
+    "cloudflareWaitUntil": "页面加载等待条件",
+    "cloudflareNavigationTimeout": "页面导航超时（毫秒）",
+    "cloudflareSelector": "正文提取 CSS 选择器",
+    "cloudflareSelectorTimeout": "选择器等待超时（毫秒）",
+    "cloudflareVisible": "等待内容元素可见",
+    "cloudflareExtraWait": "额外等待延时（毫秒）",
+    "cloudflareResources": "拦截资源类型",
+    "cloudflarePageUrl": "页面地址",
+    "cloudflareAll": "站点地图与页面超链接",
+    "cloudflareSitemaps": "仅解析站点地图 (Sitemap)",
+    "cloudflareLinks": "仅跟随页面超链接",
+    "cloudflareCredentialHelp": "需提供 Cloudflare 账户 ID 以及具备 Browser Run Edit 权限的 API 令牌。",
+    "cloudflareRenderHelp": "适用于依赖客户端 JavaScript 动态加载的页面（SPA）。启用无头浏览器渲染可能会产生额外账单计费。",
+    "cloudflareLimitHelp": "Cloudflare 免费账户单次爬取上限为 100 页。若达到页数上限，将自动跳过删除对齐清理以防误删。",
+    "cloudflareCacheHelp": "执行全量对齐时将忽略缓存，直接拉取最新页面内容。",
+    "cloudflareIncludeHelp": "每行一个规则。* 匹配单个路径层级，** 匹配多级路径。",
+    "cloudflareExcludeHelp": "排除规则的优先级高于包含规则。",
+    "sqlHost": "主机地址",
+    "sqlPort": "端口",
+    "sqlDatabase": "数据库名称",
+    "sqlPassword": "密码",
+    "sqlTLSMode": "TLS 加密模式",
+    "sqlCA": "CA 根证书 (PEM)",
+    "sqlPath": "SQLite 文件路径",
+    "sqlTLSDisable": "禁用 TLS",
+    "sqlTLSVerify": "严格校验 CA 证书与主机名",
+    "emailName": "电子邮箱 (IMAP)",
+    "imapDescription": "通过密码或应用专用密码连接 IMAP 邮箱",
+    "imapSecurity": "传输加密方式",
+    "imapConnectionTimeout": "连接超时（秒）",
+    "imapCommandTimeout": "命令响应超时（秒）",
+    "emailFolders": "同步邮件文件夹",
+    "emailExcludeFolders": "排除邮件文件夹",
+    "emailStripQuotes": "过滤历史回复引用",
+    "emailBodyLimit": "邮件正文解码大小上限（字节）",
+    "emailBodyHelp": "仅提取附件列表元数据，不下载附件实体。超大正文将保留邮件头信息并附带截断警告。",
+    "emailSubject": "邮件主题",
+    "emailFrom": "发件人",
+    "emailTo": "收件人",
+    "emailCc": "抄送",
+    "emailDate": "发件日期",
+    "emailAttachments": "包含附件",
+    "emailFoldersHelp": "全量扫描完成且确认邮件已删除时，Hindsight 中对应文档将被清理。默认同步文件夹：INBOX 与服务器指定的发件箱。",
+    "integrationToken": "集成令牌",
+    "dataSource": "数据源",
+    "pageTitle": "页面标题",
+    "lastEdited": "最后修改时间",
+    "created": "创建时间",
+    "oauthClientId": "OAuth 客户端 ID",
+    "oauthClientSecret": "OAuth 客户端密钥",
+    "drive": "云端硬盘",
+    "folder": "文件夹",
+    "includeSubfolders": "递归包含子文件夹",
+    "exportGoogleDocs": "自动转换 Google 文档/表格/幻灯片",
+    "fileName": "文件名",
+    "path": "文件路径",
+    "extension": "文件扩展名",
+    "mimeType": "MIME 类型",
+    "fileType": "文件类别",
+    "sizeBytes": "文件大小（字节）",
+    "modified": "修改时间",
+    "rootDirectory": "根目录路径",
+    "rootFolder": "根目录",
+    "serverUrl": "服务器地址",
+    "username": "用户名",
+    "passwordApp": "密码 / 应用专用密码",
+    "bearerToken": "Bearer 令牌",
+    "endpoint": "API 端点",
+    "region": "存储区域 (Region)",
+    "accessKeyId": "访问密钥 ID (Access Key ID)",
+    "secretAccessKey": "访问密钥 (Secret Access Key)",
+    "sessionToken": "临时会话令牌 (Session Token)",
+    "pathStyle": "使用路径风格寻址 (Path-style addressing)",
+    "baseUrl": "基础 URL (Base URL)",
+    "instanceId": "实例唯一标识",
+    "apiToken": "API 令牌",
+    "notebook": "笔记本",
+    "pathPrefix": "路径前缀",
+    "bucket": "存储桶名称",
+    "prefix": "对象键前缀",
+    "applicationId": "应用程序（客户端）ID",
+    "clientSecret": "客户端密码 (Client Secret)",
+    "tenant": "租户 ID (Tenant)",
+    "title": "标题",
+    "updated": "更新时间",
+    "tags": "标签",
+    "notionDescription": "具备已授权数据源读取权限的 Notion 内部集成令牌。",
+    "siYuanDescription": "思源笔记内核 API 地址与 API 令牌（可在思源软件内「设置 → 关于 → API 令牌」查看）。",
+    "filesystemDescription": "当前应用服务器可直接访问的本地或挂载目录。",
+    "googleDriveDescription": "通过 OAuth 授权连接 Google 账号，只读访问云端硬盘。",
+    "oneDriveDescription": "通过 OAuth 授权连接 Microsoft 账号或 Microsoft 365（支持 OneDrive 与 SharePoint）。",
+    "s3Description": "Amazon S3 以及 MinIO、Cloudflare R2、Backblaze B2、Wasabi 等兼容对象存储服务。",
+    "webdavDescription": "支持 WebDAV 协议的服务，如群晖 Synology NAS、Nextcloud、ownCloud、Apache mod_dav 等。",
+    "hindsightDescription": "用于接收并存储记忆数据的 Hindsight 实例 API 地址。",
+    "filesystemRootHelp": "宿主机或容器内的绝对路径。使用 Docker 部署时，请填写容器内挂载的目录路径。",
+    "filesystemFolderHelp": "相对于所选凭据根目录的相对路径，填 . 表示直接同步根目录。",
+    "notionDataSourceHelp": "填写 Notion 数据源 ID（注意非 Database ID）。可通过点击「浏览」直接选择已授权给此集成的页面或数据库。",
+    "siYuanInstanceHelp": "为该思源笔记实例指定的唯一标识符，留空则默认使用其基础服务地址。",
+    "s3EndpointHelp": "使用官方 AWS S3 时直接留空即可。",
+    "s3PathStyleHelp": "绝大多数自建 S3 兼容服务（如 MinIO、Ceph）均需启用此项。",
+    "s3PrefixHelp": "仅同步此前缀路径下的存储对象。",
+    "webdavTokenHelp": "若服务器采用 Bearer 令牌鉴权，可在此填写，无需输入用户名和密码。",
+    "webdavRootHelp": "相对于 WebDAV 服务器根地址的路径。",
+    "googleDriveHelp": "留空表示使用「我的云端硬盘」，也可下拉选择团队共享云端硬盘。",
+    "wholeDriveHelp": "留空表示同步整个云端硬盘。",
+    "googleExportHelp": "文档自动转为 Markdown，表格自动转为 CSV，幻灯片自动转为 PDF。",
+    "tenantHelp": "支持 common、organizations、consumers 或企业专属租户 ID。",
+    "oneDriveHelp": "留空表示使用个人 OneDrive 空间。",
+    "siYuanPathHelp": "仅同步人类可读路径以此前缀开头的文档。",
+    "siYuanNotebookHelp": "留空则同步思源笔记中所有已打开的笔记本。",
+    "hindsightApiKeyHelp": "将作为 Bearer 令牌随请求发送。若 Hindsight 实例未开启认证可直接留空。",
+    "syncCollectionHelp": "在服务器支持时优先采用 RFC 6578 sync-collection 高效同步。"
   },
   "nav": {
-    "dashboard": "仪表板",
-    "tasks": "任务",
+    "dashboard": "仪表盘",
+    "tasks": "任务列表",
     "runs": "运行记录",
-    "credentials": "凭据",
-    "settings": "设置",
+    "credentials": "连接凭据",
+    "settings": "系统设置",
     "open": "打开导航",
     "title": "导航",
-    "description": "主导航"
+    "description": "主导航菜单"
   },
   "theme": {
-    "toggle": "更改主题",
-    "light": "浅色",
-    "dark": "深色",
-    "system": "系统"
+    "toggle": "切换主题",
+    "light": "浅色模式",
+    "dark": "深色模式",
+    "system": "跟随系统"
   },
   "common": {
     "actions": "操作",
     "backTo": "返回 {{page}}",
     "cancel": "取消",
+    "close": "关闭",
     "confirm": "确认",
+    "commandPaletteTitle": "命令面板",
+    "commandPaletteDescription": "搜索命令或操作…",
     "copied": "已复制到剪贴板",
     "copy": "复制",
-    "copyFailed": "无法复制到剪贴板",
-    "create": "创建",
+    "copyFailed": "复制失败",
+    "create": "新建",
     "delete": "删除",
     "edit": "编辑",
     "false": "否",
     "true": "是",
-    "loadFailed": "无法加载数据",
-    "loading": "正在加载...",
+    "loadFailed": "数据加载失败",
+    "loading": "加载中…",
     "moreActions": "更多操作",
     "new": "新建",
     "next": "下一页",
@@ -53,92 +207,94 @@
     "refresh": "刷新",
     "retry": "重试",
     "save": "保存",
-    "saveChanges": "保存更改",
-    "select": "选择...",
-    "viewAll": "查看全部",
-    "close": "关闭",
-    "commandPaletteTitle": "命令面板",
-    "commandPaletteDescription": "搜索要执行的命令…"
+    "saveChanges": "保存修改",
+    "select": "请选择…",
+    "viewAll": "查看全部"
   },
   "validation": {
-    "required": "此字段为必填项",
-    "number": "必须是数字",
-    "integer": "必须是整数",
-    "min1": "必须至少为 1",
-    "url": "必须是有效的 URL",
-    "tooLong": "内容过长",
-    "list": "请输入有效列表"
+    "required": "此项为必填项",
+    "number": "请输入有效数字",
+    "integer": "请输入整数",
+    "min1": "数值不能小于 1",
+    "url": "请输入有效的 URL 地址",
+    "tooLong": "内容超出长度限制",
+    "list": "请输入有效的列表内容"
   },
   "runStatus": {
-    "pending": "等待中",
+    "pending": "排队中",
     "running": "运行中",
     "waiting_operations": "等待异步操作完成",
     "succeeded": "成功",
     "failed": "失败",
     "interrupted": "已中断",
     "cancelled": "已取消",
-    "waiting_source": "等待网站抓取"
+    "waiting_source": "等待网页抓取"
   },
   "credentialStatus": {
-    "active": "可用",
-    "reauth_required": "需要重新连接",
-    "pending_oauth": "等待 OAuth",
-    "error": "错误"
+    "active": "正常",
+    "reauth_required": "需重新授权",
+    "pending_oauth": "等待 OAuth 授权",
+    "error": "异常"
   },
   "chips": {
-    "placeholder": "键入并按 Enter",
-    "duplicate": "“{{value}}”已添加",
-    "remove": "删除 {{value}}",
+    "placeholder": "输入内容后按回车",
+    "duplicate": "“{{value}}”已存在",
+    "remove": "移除 {{value}}",
     "automatic": "自动添加"
   },
   "kv": {
     "key": "键",
     "value": "值",
     "add": "添加",
-    "remove": "删除行"
+    "remove": "删除此行"
   },
   "secret": {
-    "keepHint": "已保存一个值。保留掩码即可继续使用当前值；输入新值可将其替换。",
-    "clear": "清除已保存的值"
+    "keepHint": "已保存加密密钥。保持掩码不变将沿用原值，输入新内容将覆盖现有值。",
+    "clear": "清除已保存的密钥"
   },
   "headers": {
     "title": "自定义请求头",
-    "help": "每次向该服务发送请求时都会附带这些请求头。连接器自身的认证请求头优先。",
-    "mode": "编辑方式",
-    "ui": "表单",
-    "json": "JSON",
+    "help": "发送给该服务的每个请求都会附带这些请求头。如与连接器内置认证头冲突，以连接器为准。",
+    "mode": "编辑模式",
+    "ui": "表单视图",
+    "json": "JSON 视图",
     "name": "请求头名称",
-    "value": "值",
-    "valuePlaceholder": "请求头的值",
+    "value": "内容",
+    "valuePlaceholder": "请输入值",
     "add": "添加请求头",
-    "empty": "尚未添加自定义请求头",
-    "maskHint": "已保存的值显示为 {{mask}}。保留掩码即可继续使用原值。",
+    "empty": "暂未配置自定义请求头",
+    "maskHint": "已保存的值显示为 {{mask}}，保持掩码不变即可沿用原值。",
     "errors": {
-      "duplicate": "请求头名称“{{name}}”重复（名称不区分大小写）。",
-      "invalidJson": "无效 JSON：{{detail}}",
-      "notObject": "JSON 必须是类似 {\"Header\": \"Value\"} 的对象",
-      "nonString": "“{{name}}”的值必须是字符串",
-      "emptyName": "请求头名称不能为空。"
+      "duplicate": "请求头名称“{{name}}”重复（不区分大小写）",
+      "invalidJson": "JSON 格式错误：{{detail}}",
+      "notObject": "JSON 必须为键值对象格式，例如 {\"Header\": \"Value\"}",
+      "nonString": "“{{name}}”的值必须为字符串",
+      "emptyName": "请求头名称不能为空"
     }
   },
   "browse": {
     "searchSources": "搜索数据源…",
-    "searchList": "搜索当前列表…",
-    "searchSourcesHelp": "按标题搜索已共享给此连接的数据源。",
+    "searchList": "筛选列表…",
+    "searchSourcesHelp": "按标题搜索已对该连接授权的数据源。",
     "searchListHelp": "按名称、路径或 ID 筛选当前列表。",
     "clearSearch": "清空搜索",
-    "noResults": "没有匹配的项目",
-    "button": "浏览...",
-    "title": "浏览",
+    "noResults": "未找到匹配项",
+    "button": "浏览选择…",
+    "title": "浏览选择",
     "titleFor": "选择 {{label}}",
-    "description": "进入文件夹并选择要同步的内容。",
-    "breadcrumbs": "当前位置",
+    "description": "浏览目录层级并选择目标项目。",
+    "breadcrumbs": "当前路径",
     "root": "根目录",
-    "empty": "此处无内容",
-    "hint": "选择一项，或点击箭头进入文件夹",
+    "memoryBanks": "记忆库",
+    "drives": "云端硬盘",
+    "buckets": "存储桶",
+    "dataSources": "数据源",
+    "notebooks": "笔记本",
+    "empty": "暂无内容",
+    "hint": "点击选中目标项目，或点击箭头展开子目录",
     "open": "打开 {{name}}",
     "select": "选择",
-    "selected": "已选择",
+    "selected": "已选定",
     "kinds": {
       "folder": "文件夹",
       "file": "文件",
@@ -148,454 +304,456 @@
       "bank": "记忆库",
       "drive": "云端硬盘",
       "site": "站点"
-    },
-    "memoryBanks": "记忆库",
-    "drives": "云端硬盘",
-    "buckets": "存储桶",
-    "dataSources": "数据源",
-    "notebooks": "笔记本"
+    }
   },
   "capabilities": {
     "incremental": {
-      "conditional_inventory": "条件请求与快照比对",
-      "high_water_mark": "按修改时间追踪",
-      "delta_token": "增量令牌",
-      "sync_token": "同步令牌",
-      "inventory": "清单差异"
+      "conditional_inventory": "条件请求与清单比对",
+      "high_water_mark": "时间戳位点跟踪",
+      "delta_token": "增量变动令牌 (Delta Token)",
+      "sync_token": "同步令牌 (Sync Token)",
+      "inventory": "全量清单比对"
     },
     "deletion": {
-      "full_reconcile": "全量校准时删除",
-      "scan_generation": "扫描时删除",
-      "delta": "增量同步时删除"
+      "full_reconcile": "全量对齐清理",
+      "scan_generation": "扫描周期清理",
+      "delta": "增量变动清理"
     },
-    "files": "文件",
-    "oauth": "OAuth",
+    "files": "文件支持",
+    "oauth": "OAuth 授权",
     "advancedFilter": "高级筛选"
   },
   "credentials": {
-    "title": "凭据",
-    "description": "用于连接数据源和 Hindsight 目标记忆库的凭据。",
-    "new": "新凭据",
-    "createTitle": "新凭据",
-    "createDescription": "选择提供商并输入其连接详细信息。",
+    "title": "连接凭据",
+    "description": "用于连接各类数据源与 Hindsight 目标记忆库的授权凭据。",
+    "new": "新建凭据",
+    "createTitle": "新建凭据",
+    "createDescription": "选择服务提供商并配置连接信息。",
     "editTitle": "编辑凭据",
-    "editDescription": "已保存的密钥会以掩码显示。保留掩码即可继续使用原值。",
+    "editDescription": "已保存的密钥将以掩码显示。保持掩码不变即可沿用原值。",
     "createInline": "新建凭据",
-    "namePlaceholder": "例如：工作用 {{type}}",
+    "namePlaceholder": "例如：个人 {{type}}",
     "pick": "选择凭据",
-    "noneOfType": "尚无 {{type}} 凭据",
-    "notActiveWarning": "此凭据当前为“{{status}}”。在修复之前，运行可能会失败。",
-    "oauthHint": "保存后，点击“连接”并按提示授权访问。",
+    "noneOfType": "暂无 {{type}} 凭据",
+    "notActiveWarning": "当前凭据状态为“{{status}}”，可能导致关联任务执行失败，请及时排查。",
+    "oauthHint": "保存配置后，点击“连接”完成 OAuth 授权流程。",
+    "usedByCount": "{{count}} 个任务",
     "usedByCount_one": "{{count}} 个任务",
     "usedByCount_other": "{{count}} 个任务",
     "fields": {
       "type": "服务类型",
-      "name": "名称"
+      "name": "凭据名称"
     },
     "columns": {
       "name": "名称",
       "type": "类型",
       "status": "状态",
       "usedBy": "关联任务",
-      "oauth": "OAuth"
+      "oauth": "OAuth 状态"
     },
     "actions": {
-      "test": "测试",
-      "connect": "连接",
+      "test": "测试连接",
+      "connect": "授权连接",
       "reconnect": "重新连接",
       "refresh": "刷新令牌"
     },
     "empty": {
-      "title": "尚无凭据",
-      "description": "请添加一个数据源凭据（例如 Notion），再添加 Hindsight 凭据，然后创建任务。"
+      "title": "暂无凭据",
+      "description": "添加一个数据源凭据（如 Notion）以及一个 Hindsight 凭据，即可开始创建同步任务。"
     },
     "test": {
-      "ok": "{{name}}：连接正常",
+      "ok": "{{name}}：连接成功",
       "failed": "{{name}}：连接失败"
     },
     "oauth": {
-      "success": "OAuth 连接成功",
-      "error": "OAuth 连接失败",
-      "startFailed": "无法启动 OAuth",
+      "success": "OAuth 授权成功",
+      "error": "OAuth 授权失败",
+      "startFailed": "无法启动 OAuth 授权流程",
       "connected": "已连接",
       "notConnected": "未连接",
       "expires": "令牌将于 {{when}} 过期"
     },
     "toast": {
-      "created": "凭据已创建",
+      "created": "凭据创建成功",
       "updated": "凭据已更新",
       "deleted": "凭据已删除",
-      "deleteFailed": "无法删除凭据",
-      "inUse": "凭据正在使用",
+      "deleteFailed": "凭据删除失败",
+      "inUse": "凭据正被任务使用中，无法删除",
       "refreshed": "令牌已刷新",
       "refreshFailed": "令牌刷新失败"
     },
     "delete": {
-      "title": "删除“{{name}}”？",
-      "description": "这将永久删除凭据及其存储的机密。",
-      "inUse_one": "此凭据正被 {{count}} 个任务使用。请先删除这些任务或更换其凭据。",
-      "inUse_other": "此凭据正被 {{count}} 个任务使用。请先删除这些任务或更换其凭据。"
+      "title": "确认删除“{{name}}”？",
+      "description": "此操作将永久移除该凭据及保存的密钥信息。",
+      "inUse": "该凭据正被 {{count}} 个任务使用。请先解绑或修改相关任务。",
+      "inUse_one": "该凭据正被 {{count}} 个任务使用。请先解绑或修改相关任务。",
+      "inUse_other": "该凭据正被 {{count}} 个任务使用。请先解绑或修改相关任务。"
     }
   },
   "filters": {
     "add": "添加筛选条件",
-    "remove": "删除筛选条件",
-    "where": "条件",
-    "and": "并且",
+    "remove": "移除条件",
+    "where": "筛选范围",
+    "and": "并且 (AND)",
+    "or": "或者 (OR)",
     "field": "字段",
     "operator": "运算符",
-    "mode": "筛选条件模式",
-    "simple": "简单",
-    "advanced": "高级",
-    "advancedQuery": "查询",
-    "advancedHint": "使用数据源原生的查询语法。",
-    "driveHint": "Google Drive 查询语法示例：mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'。回收站中的文件始终会被排除。",
-    "noFields": "该源不支持筛选条件。",
-    "selectValues": "选择值...",
-    "valuePlaceholder": "值",
-    "valuesPlaceholder": "键入一个值并按 Enter 键",
+    "mode": "筛选模式",
+    "simple": "可视模式",
+    "advanced": "原生查询",
+    "advancedQuery": "查询表达式",
+    "advancedHint": "数据源原生查询语法。",
+    "driveHint": "Google Drive 检索语法，例如 mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'。回收站文件会自动排除。",
+    "noFields": "当前数据源不支持字段级筛选。",
+    "selectValues": "请选择可选值…",
+    "valuePlaceholder": "请输入匹配值",
+    "valuesPlaceholder": "输入内容后按回车",
     "empty": {
-      "title": "无筛选条件",
-      "description": "源范围中的所有内容都将同步。"
+      "title": "未设置筛选条件",
+      "description": "将同步所选数据源范围内的全部内容。"
     },
     "operators": {
-      "equals": "=",
-      "notEquals": "≠",
+      "equals": "等于 (=)",
+      "notEquals": "不等于 (≠)",
       "contains": "包含",
-      "in": "属于以下任一值",
-      "notIn": "不属于以下任何值",
-      "greaterThan": ">",
-      "lessThan": "<",
+      "in": "属于其中之一",
+      "notIn": "不属于其中任何一项",
+      "greaterThan": "大于 (>)",
+      "lessThan": "小于 (<)",
       "notContains": "不包含",
-      "startsWith": "开头是",
-      "endsWith": "结尾是",
-      "regex": "匹配正则",
-      "exists": "存在",
-      "notExists": "不存在",
+      "startsWith": "开头为",
+      "endsWith": "结尾为",
+      "regex": "正则匹配",
+      "exists": "字段存在",
+      "notExists": "字段不存在",
       "containsAny": "包含任一",
       "containsAll": "包含全部",
-      "geq": "≥",
-      "leq": "≤"
+      "geq": "大于等于 (≥)",
+      "leq": "小于等于 (≤)"
     },
     "errors": {
-      "field": "选择有效字段",
-      "operator": "该字段不支持运算符",
-      "value": "输入一个值",
-      "valueList": "添加至少一个值",
-      "number": "必须是数字",
-      "emptyGroup": "请添加条件或删除此条件组",
-      "depth": "条件组嵌套层级超出上限",
-      "date": "请输入有效的日期和时间"
+      "field": "请选择有效字段",
+      "operator": "该字段不支持所选运算符",
+      "value": "请输入匹配值",
+      "valueList": "请至少添加一个匹配值",
+      "number": "必须为数字",
+      "emptyGroup": "请添加筛选条件或移除该空条件组",
+      "depth": "超过条件嵌套层级上限",
+      "date": "请输入有效的日期与时间"
     },
-    "or": "或",
-    "match": "条件匹配方式",
-    "matchAll": "满足全部（AND）",
-    "matchAny": "满足任一（OR）",
+    "match": "条件匹配规则",
+    "matchAll": "符合全部条件 (AND)",
+    "matchAny": "符合任一条件 (OR)",
     "addGroup": "添加条件组",
-    "removeGroup": "删除条件组",
-    "combineHint": "这些条件将在上方查询结果的基础上进一步筛选。",
-    "regexHint": "使用 Go/RE2 语法，可用 (?i) 忽略大小写。"
+    "removeGroup": "移除条件组",
+    "combineHint": "在此对上方原生查询的结果做进一步过滤。",
+    "regexHint": "支持 Go/RE2 正则语法。可在表达式开头添加 (?i) 实现忽略大小写。"
   },
   "filePolicy": {
     "plainText": "纯文本",
-    "documents": "文档",
+    "documents": "办公文档",
     "images": "图片",
     "audios": "音频",
-    "globalPreview": "当前全局策略（可在“设置”中修改）：",
+    "globalPreview": "当前全局策略（可在“系统设置”中调整）：",
     "mode": {
-      "global": "跟随全局设置",
-      "globalHelp": "使用“设置”中配置的文件类型。",
-      "override": "自定义",
-      "overrideHelp": "仅为此任务选择文件类型。"
+      "global": "继承全局设置",
+      "globalHelp": "沿用全局设置中定义的文件类型策略。",
+      "override": "自定义配置",
+      "overrideHelp": "仅为此任务单独指定需要同步的文件类型。"
     }
   },
   "source": {
     "type": "数据源类型",
     "credential": "数据源凭据",
     "pickTypeFirst": "请先选择数据源类型。",
-    "pickCredentialFirst": "请先选择一个凭据。"
+    "pickCredentialFirst": "请先选择数据源凭据。"
   },
   "destination": {
-    "credential": "Hindsight 连接凭据",
-    "bank": "记忆库",
-    "bankPlaceholder": "记忆库 ID",
+    "credential": "Hindsight 凭据",
+    "bank": "目标记忆库",
+    "bankPlaceholder": "记忆库 ID (bank-id)",
     "browseBanks": "选择记忆库",
-    "pickCredentialFirst": "请先选择 Hindsight 连接凭据。",
-    "locked": "首次运行成功后，目标记忆库就会锁定。若要改用其他连接凭据或记忆库，请新建任务。",
-    "lockNotice": "首次运行成功后，目标记忆库将变为只读。"
+    "pickCredentialFirst": "请先选择 Hindsight 凭据。",
+    "locked": "首次成功运行后，目标配置将锁定。如需同步至其他凭据或记忆库，请新建或复制此任务。",
+    "lockNotice": "任务首次运行成功后，目标配置将变为只读锁定状态。"
   },
   "retain": {
-    "label": "内容处理策略",
-    "bankDefault": "使用记忆库默认策略",
-    "bankDefaultNamed": "使用记忆库默认策略（{{name}}）",
-    "help": "设置 Hindsight 如何处理写入记忆库的内容。选择“使用记忆库默认策略”可沿用该记忆库中的配置。",
-    "freeTextPlaceholder": "留空以使用记忆库默认策略",
-    "pickDestinationFirst": "请先选择目标连接凭据和记忆库，再加载可用策略。",
-    "loadFailed": "无法从 Hindsight 加载策略，请手动输入策略名称。"
+    "label": "记忆沉淀策略",
+    "bankDefault": "记忆库默认策略",
+    "bankDefaultNamed": "记忆库默认（{{name}}）",
+    "help": "决定 Hindsight 如何提炼并沉淀记忆内容。留空将使用目标记忆库设置的默认策略。",
+    "freeTextPlaceholder": "留空则使用记忆库默认策略",
+    "pickDestinationFirst": "请先选择目标凭据和记忆库以加载可选策略。",
+    "loadFailed": "无法从 Hindsight 加载策略列表，支持手动输入策略名称。"
   },
   "tags": {
     "custom": "自定义标签",
-    "help": "每篇文档都会自动附加导入来源、数据源和任务标签。",
-    "placeholder": "team:alpha",
-    "newTaskId": "<new>"
+    "help": "系统会自动为每个同步文档附加数据源、任务相关的内置标签。",
+    "placeholder": "如：team:alpha",
+    "newTaskId": "<新任务>"
   },
   "metadata": {
-    "add": "添加字段",
-    "empty": "无自定义元数据",
-    "reservedHint": "以 _ingestion_ 开头的键名为系统来源信息保留。",
+    "add": "添加元数据",
+    "empty": "暂未配置自定义元数据",
+    "reservedHint": "以 _ingestion_ 开头的键为系统溯源保留字段，不可使用。",
     "errors": {
-      "emptyKey": "请输入键名",
-      "reserved": "以 _ingestion_ 开头的键名为系统保留项",
-      "duplicate": "键名重复"
+      "emptyKey": "键名不能为空",
+      "reserved": "以 _ingestion_ 开头的键名为系统保留字段",
+      "duplicate": "键名已存在"
     }
   },
   "schedule": {
     "cron": "Cron 表达式",
-    "cronHelp": "标准 5 字段 Cron：分钟、小时、日期、月份、星期",
-    "timezone": "时区",
+    "cronHelp": "标准 5 位 Cron 语法：分 时 日 月 星期",
+    "timezone": "调度时区",
     "selectTimezone": "选择时区",
-    "searchTimezone": "搜索时区...",
-    "noTimezone": "未找到时区",
-    "suggested": "建议",
+    "searchTimezone": "搜索时区…",
+    "noTimezone": "未找到对应时区",
+    "suggested": "常用时区",
     "allTimezones": "所有时区",
-    "nextRuns": "后续运行时间",
-    "manualOnly": "仅手动运行",
-    "manualHelp": "留空则仅手动运行。",
-    "invalid": "计划表达式无效",
-    "previewUnavailable": "无法预览",
+    "nextRuns": "未来运行预估",
+    "manualOnly": "仅手动执行",
+    "manualHelp": "留空则仅在手动点击时运行。",
+    "invalid": "无效的调度计划表达式",
+    "previewUnavailable": "无法预览未来运行时间",
     "presets": {
-      "manualOnly": "仅手动运行",
+      "manualOnly": "仅手动",
       "every15m": "每 15 分钟",
       "everyHour": "每小时",
       "every6h": "每 6 小时",
-      "daily3": "每日 03:00",
-      "weeklyMon8": "周一 08:00"
+      "daily3": "每天凌晨 03:00",
+      "weeklyMon8": "每周一早 08:00"
     }
   },
   "tasks": {
-    "title": "任务",
-    "description": "每个任务将一个数据源同步到 Hindsight 记忆库，可手动运行或按计划运行。",
-    "new": "新任务",
-    "neverRun": "尚未运行",
-    "reconcileRequired": "等待全量校准",
-    "itemCount_one": "{{count}} 条内容",
-    "itemCount_other": "{{count}} 条内容",
+    "title": "同步任务",
+    "description": "管理从各类数据源向 Hindsight 记忆库的内容同步，支持定时调度与手动执行。",
+    "new": "新建任务",
+    "neverRun": "从未运行",
+    "reconcileRequired": "待全量对齐",
+    "itemCount": "{{count}} 个项目",
+    "itemCount_one": "{{count}} 个项目",
+    "itemCount_other": "{{count}} 个项目",
     "columns": {
-      "enabled": "启用",
-      "name": "名称",
-      "source": "源",
-      "destination": "目标",
-      "schedule": "计划",
+      "enabled": "状态",
+      "name": "任务名称",
+      "source": "数据源",
+      "destination": "目标记忆库",
+      "schedule": "定时计划",
       "lastRun": "上次运行",
       "nextRun": "下次运行",
-      "status": "状态"
+      "status": "运行状态"
     },
     "status": {
       "idle": "空闲",
       "disabled": "已禁用",
-      "reconcilePending": "等待全量校准"
+      "reconcilePending": "等待对齐"
     },
     "actions": {
       "runNow": "立即运行",
-      "fullReconcile": "全量校准",
-      "fullReingest": "全部重新写入",
+      "fullReconcile": "全量对齐",
+      "fullReingest": "全量重新录入",
       "cancel": "取消运行",
       "enable": "启用",
       "disable": "禁用",
-      "viewRuns": "查看运行",
-      "dryRun": "试运行",
-      "deleteDocuments": "删除文档"
+      "viewRuns": "查看运行历史",
+      "dryRun": "试运行 (Dry-run)",
+      "deleteDocuments": "清理已同步文档"
     },
     "empty": {
-      "title": "尚无任务",
-      "description": "创建一个任务以开始将源同步到 Hindsight。"
+      "title": "暂无同步任务",
+      "description": "新建一个任务，开始将数据源内容同步至 Hindsight 记忆库。"
     },
     "trigger": {
       "run": {
-        "success": "运行开始"
+        "success": "已触发运行"
       },
       "fullReconcile": {
-        "success": "已开始全量校准"
+        "success": "已触发全量对齐"
       },
       "fullReingest": {
-        "success": "已开始全部重新写入"
+        "success": "已触发全量重新录入"
       },
-      "alreadyRunning": "任务已在运行",
-      "failed": "无法开始运行"
+      "alreadyRunning": "任务已在运行中",
+      "failed": "启动运行失败"
     },
     "cancel": {
-      "success": "已请求取消",
-      "notRunning": "任务未运行",
-      "failed": "无法取消运行"
+      "success": "已发送取消请求",
+      "notRunning": "当前任务未在运行",
+      "failed": "取消运行失败"
     },
     "toast": {
       "enabled": "任务已启用",
       "disabled": "任务已禁用",
-      "updateFailed": "无法更新任务",
+      "updateFailed": "更新任务失败",
       "deleted": "任务已删除",
-      "deleteFailed": "无法删除任务",
-      "deleteRunning": "任务正在执行操作，请等待操作完成后再删除。"
+      "deleteFailed": "删除任务失败",
+      "deleteRunning": "任务正在运行中，请等待当前操作结束后再试"
     },
     "delete": {
-      "title": "删除任务“{{name}}”？",
-      "description": "删除任务、运行记录和同步状态。默认保留 Hindsight 中的文档。",
-      "alsoDeleteDocuments": "同时删除 Hindsight 中的文档",
-      "documentsHelp": "勾选后，还会删除标记为属于此任务的 Hindsight 文档及相关记忆。"
+      "title": "确认删除任务“{{name}}”？",
+      "description": "将永久删除该任务及其所有运行历史。原始数据源中的文件与内容不会受到影响。",
+      "alsoDeleteDocuments": "同步删除 Hindsight 中由该任务生成的文档",
+      "documentsHelp": "勾选后，带有该任务标识的 Hindsight 文档及其关联提炼的记忆内容均会被一同清除。"
     },
     "reingest": {
-      "title": "要重新写入“{{name}}”的所有内容吗？",
-      "description": "将所有符合条件的内容重新发送到 Hindsight，包括未发生变化的内容。此操作可能耗时较长，并消耗额外的处理资源。"
+      "title": "全量重新录入“{{name}}”的所有内容？",
+      "description": "将重新向 Hindsight 传输所有匹配的内容（包括未变更项）。此操作可能耗时较长并占用较多计算资源。"
     },
     "clearDocuments": {
-      "title": "删除“{{name}}”的文档？",
-      "description": "删除标记为属于此任务的 Hindsight 文档及相关记忆，并暂停任务。数据源中的内容不受影响。",
-      "success": "已删除 {{count}} 个文档",
-      "failed": "无法删除文档"
+      "title": "确认清除“{{name}}”在 Hindsight 中的文档？",
+      "description": "将从 Hindsight 中清理带有该任务标识的全部文档及提炼记忆。清理期间任务将被暂停。原始数据源不受影响。",
+      "failed": "文档清理失败",
+      "success": "已成功清理 {{count}} 个文档",
+      "success_one": "已成功清理 {{count}} 个文档",
+      "success_other": "已成功清理 {{count}} 个文档"
     }
   },
   "taskEditor": {
-    "newTitle": "新任务",
+    "newTitle": "新建同步任务",
     "create": "创建任务",
-    "namePlaceholder": "例如：Notion → 个人笔记",
-    "enabledHelp": "停用任务后，同步状态会保留，但任务不会按计划运行。",
-    "notFound": "未找到任务",
-    "nextRun": "下次运行：{{when}}",
-    "itemCount_one": "已同步 {{count}} 条内容",
-    "itemCount_other": "已同步 {{count}} 条内容",
-    "recentRuns": "最近运行",
-    "saveBeforeRun": "运行前请先保存更改。",
-    "saveError": "无法保存任务",
-    "unsaved": "未保存的更改",
-    "saved": "更改已全部保存",
+    "namePlaceholder": "例如：Notion → 知识库",
+    "enabledHelp": "禁用的任务会保留其同步位点与配置，但不会按计划自动执行。",
+    "notFound": "未找到该任务",
+    "nextRun": "下次运行时间：{{when}}",
+    "itemCount": "已同步 {{count}} 个项目",
+    "itemCount_one": "已同步 {{count}} 个项目",
+    "itemCount_other": "已同步 {{count}} 个项目",
+    "recentRuns": "最近运行记录",
+    "saveBeforeRun": "执行前请先保存当前修改",
+    "saveError": "任务保存失败",
+    "unsaved": "有未保存的修改",
+    "saved": "所有修改已保存",
     "fields": {
-      "name": "名称",
-      "enabled": "已启用"
+      "name": "任务名称",
+      "enabled": "启用状态"
     },
     "hints": {
-      "sourceReset": "更改数据源凭据或根目录（存储桶、文件夹、数据库、笔记本等）会重置增量游标，并触发完整扫描以重新建立同步基线。",
-      "sourceTypeLocked": "创建后无法更改数据源类型。要使用其他数据源，请新建任务。",
-      "filtersReconcile": "更改筛选条件后，下次运行会执行全量校准，并从 Hindsight 删除不再符合条件的文档。",
-      "filesReconcile": "更改文件类型后，下次运行会执行全量校准，并从 Hindsight 删除不再包含的文件。",
-      "policyRevision": "修改内容处理策略、标签或元数据后，下次运行会将所有符合条件的内容重新发送到 Hindsight。"
+      "sourceReset": "变更数据源凭据或根位置（存储桶、目录、数据库、笔记本等）将重置增量位点，并在下次触发全量基线对齐。",
+      "sourceTypeLocked": "任务创建后不可更改数据源类型。如需接入其他类型数据源，请创建新任务。",
+      "filtersReconcile": "修改筛选条件后将触发全量对齐检查；不再符合条件的内容将从 Hindsight 中清理。",
+      "filesReconcile": "调整文件类型后将触发全量对齐检查；被排除的文件将从 Hindsight 中清理。",
+      "policyRevision": "修改记忆沉淀策略、标签或元数据后，下次运行时将重新处理所有符合条件的项目。"
     },
     "sections": {
       "general": {
-        "title": "常规",
-        "description": "设置任务名称和启用状态。"
+        "title": "基本信息",
+        "description": "任务名称及启用状态。"
       },
       "source": {
         "title": "数据源",
-        "description": "选择要同步的数据源。"
+        "description": "指定待读取的内容来源及范围。"
       },
       "filters": {
         "title": "筛选条件",
-        "description": "限制同步的项目。"
+        "description": "限定需要同步的内容范围。"
       },
       "destination": {
-        "title": "目标",
-        "description": "接收同步内容的 Hindsight 记忆库。"
+        "title": "同步目标",
+        "description": "接收并存储内容的 Hindsight 记忆库。"
       },
       "retain": {
-        "title": "内容处理策略",
-        "description": "设置 Hindsight 如何处理写入记忆库的内容。"
-      },
-      "observations": {
-        "title": "观察范围",
-        "description": ""
+        "title": "记忆沉淀策略",
+        "description": "Hindsight 处理并提炼记忆内容的方式。"
       },
       "files": {
         "title": "文件类型",
-        "description": "选择需要同步的文件类型。"
+        "description": "指定允许摄取的文件类型分类。"
       },
       "inline": {
         "title": "内嵌多模态内容",
-        "description": "笔记中嵌入的媒体内容。"
+        "description": "同步笔记和文档中包含的内嵌媒体文件。"
       },
       "tags": {
-        "title": "标签",
-        "description": "附加到每个文档的标签。"
+        "title": "标签标记",
+        "description": "自动附加到每份文档的元标签。"
       },
       "metadata": {
         "title": "元数据",
-        "description": "附加到每个文档的键/值元数据。"
+        "description": "附加到每份文档的键值对元数据。"
       },
       "schedule": {
-        "title": "计划",
-        "description": "设置任务的自动运行时间。"
+        "title": "定时调度",
+        "description": "设置任务自动执行的时间计划。"
+      },
+      "observations": {
+        "title": "记忆整合范围",
+        "description": "配置 Hindsight 提炼记忆与观察结论的范围规则。"
       }
     },
     "toast": {
-      "created": "已创建任务",
-      "updated": "已保存任务",
-      "saveFailed": "无法保存任务",
-      "conflict": "冲突"
+      "created": "任务创建成功",
+      "updated": "任务保存成功",
+      "saveFailed": "任务保存失败",
+      "conflict": "版本冲突，请刷新后重试"
     }
   },
   "runs": {
     "title": "运行记录",
-    "description": "所有任务的执行历史记录。",
+    "description": "所有同步任务的历史执行记录。",
     "notStarted": "尚未开始",
-    "total_one": "{{formatted}} 次运行",
-    "total_other": "{{formatted}} 次运行",
+    "total": "共 {{formatted}} 次运行",
+    "total_one": "共 {{formatted}} 次运行",
+    "total_other": "共 {{formatted}} 次运行",
     "columns": {
-      "task": "任务",
+      "task": "所属任务",
       "status": "状态",
       "trigger": "触发方式",
       "mode": "同步模式",
       "started": "开始时间",
       "duration": "耗时",
-      "counters": "统计"
+      "counters": "同步指标"
     },
     "trigger": {
-      "scheduled": "定时",
-      "manual": "手动"
+      "scheduled": "定时调度",
+      "manual": "手动触发"
     },
     "mode": {
-      "incremental": "增量",
-      "full": "全量",
-      "reingest": "重新写入"
+      "incremental": "增量同步",
+      "full": "全量对齐",
+      "reingest": "全量重录"
     },
     "counters": {
-      "discoveredCount": "已发现",
-      "createdCount": "已创建",
-      "updatedCount": "已更新",
-      "deletedCount": "已删除",
-      "unchangedCount": "未更改",
+      "discoveredCount": "已扫描",
+      "createdCount": "新增",
+      "updatedCount": "更新",
+      "deletedCount": "删除",
+      "unchangedCount": "无变动",
       "skippedCount": "已跳过",
       "failedCount": "失败"
     },
     "filters": {
-      "status": "按状态过滤",
-      "task": "按任务过滤",
-      "allStatuses": "所有状态",
-      "allTasks": "所有任务",
-      "clear": "清除过滤器"
+      "status": "按状态筛选",
+      "task": "按任务筛选",
+      "allStatuses": "全部状态",
+      "allTasks": "全部任务",
+      "clear": "重置筛选"
     },
     "empty": {
-      "title": "尚未运行",
-      "description": "任务定时或手动运行后，记录会显示在这里。",
-      "filteredTitle": "没有匹配的运行",
-      "filteredDescription": "尝试不同的状态或任务。",
-      "taskTitle": "尚未运行",
-      "taskDescription": "点击“立即运行”开始首次同步。"
+      "title": "暂无运行记录",
+      "description": "当任务按定时计划或手动触发执行后，运行记录将展示在此处。",
+      "filteredTitle": "未找到匹配的运行记录",
+      "filteredDescription": "请尝试调整状态或任务筛选条件。",
+      "taskTitle": "该任务暂无运行记录",
+      "taskDescription": "点击“立即运行”即可开始首次同步。"
     }
   },
   "runDetail": {
-    "notFound": "未找到运行",
-    "error": "运行错误",
-    "scheduledFor": "计划运行时间",
+    "notFound": "未找到该运行记录",
+    "error": "错误信息",
+    "scheduledFor": "计划执行时间",
     "finished": "完成时间",
-    "inProgress": "进行中",
-    "cursorBefore": "运行前的游标",
-    "cursorAfter": "运行后的游标",
+    "inProgress": "正在进行中",
+    "cursorBefore": "执行前位点",
+    "cursorAfter": "执行后位点",
     "noCursor": "无",
-    "operations": "Hindsight 操作",
-    "noOperations": "本次运行没有异步操作。",
-    "log": "日志",
-    "noLog": "暂无日志。",
+    "operations": "Hindsight 异步操作",
+    "noOperations": "本次运行无关联的异步写入操作。",
+    "log": "运行日志",
+    "noLog": "暂无日志输出。",
     "opColumns": {
-      "remoteId": "远程 ID",
-      "type": "类型",
+      "remoteId": "远程操作 ID",
+      "type": "操作类型",
       "status": "状态",
       "retries": "重试次数",
       "created": "创建时间",
@@ -603,339 +761,190 @@
     }
   },
   "dashboard": {
-    "title": "仪表板",
-    "description": "查看同步任务和运行情况。",
+    "title": "仪表盘",
+    "description": "数据同步状态与运行动态概览。",
     "stats": {
-      "enabledTasks": "已启用的任务",
-      "ofTotal": "共 {{total}} 个任务",
-      "running": "正在运行",
-      "runs24h_one": "过去 24 小时运行 {{count}} 次",
-      "runs24h_other": "过去 24 小时运行 {{count}} 次",
-      "items": "已同步内容",
-      "itemsSub": "所有任务合计",
-      "failures24h": "失败 (24 小时)",
-      "needsAttention": "需要注意",
-      "allGood": "一切顺利"
+      "enabledTasks": "启用任务",
+      "ofTotal": "共 {{total}} 个",
+      "running": "运行中",
+      "runs24h": "近 24 小时运行 {{count}} 次",
+      "runs24h_one": "近 24 小时运行 {{count}} 次",
+      "runs24h_other": "近 24 小时运行 {{count}} 次",
+      "items": "已同步条目",
+      "itemsSub": "所有任务总计",
+      "failures24h": "近 24 小时失败",
+      "needsAttention": "需关注排查",
+      "allGood": "运行正常"
     },
     "getStarted": {
-      "title": "开始首次同步",
-      "description": "分别添加数据源和 Hindsight 的连接凭据，然后创建任务。",
+      "title": "开始配置首次同步",
+      "description": "分别添加数据源凭据与 Hindsight 凭据，随后即可创建同步任务。",
       "credentials": "添加凭据"
     },
     "reauth": {
-      "title": "凭据需要重新连接"
+      "title": "需要重新授权的凭据"
     },
     "running": {
-      "title": "正在运行",
-      "empty": "当前没有任务在运行"
+      "title": "正在运行的任务",
+      "empty": "当前暂无运行中的任务"
     },
     "nextRuns": {
-      "title": "即将运行的任务",
-      "empty": "没有待运行的任务"
+      "title": "即将执行的任务",
+      "empty": "暂无后续计划中的运行"
     },
     "failures": {
-      "title": "最近失败",
-      "empty": "最近没有失败"
+      "title": "最近失败记录",
+      "empty": "近期无失败记录"
     }
   },
-  "observationScope": {
-    "title": "观察范围",
-    "rule": "知识归纳范围",
-    "learnMore": "官方文档",
-    "inherit": "沿用全局设置",
-    "inheritHelp": "沿用全局设置中的观察范围。",
-    "inheritedRule": "当前规则：{{rule}}。",
-    "rules": {
-      "combined": "完整标签组合（默认）",
-      "shared": "全局共享",
-      "per_tag": "按单个标签",
-      "all_combinations": "所有标签组合",
-      "custom": "自定义"
-    },
-    "descriptions": {
-      "combined": "将全部标签作为一个范围进行一次归纳。生成的观察结论属于完整标签集合，知识按这一标签组合独立积累。",
-      "shared": "不同标签的记忆在同一个无标签的全局范围内归纳。适合保留会话等来源标签，同时让知识跨会话共同积累。",
-      "per_tag": "为每个标签分别归纳，独立积累带有该标签的记忆中的知识。不会生成多个标签组合的范围。",
-      "all_combinations": "为标签的每个非空子集分别归纳，涵盖单个标签及各种组合。例如，3 个标签会生成 7 个范围，执行 7 次归纳。",
-      "custom": "明确指定需要归纳的标签组。每组形成一个独立范围，避免处理不需要的标签组合。"
-    },
-    "customHelp": "每个范围至少添加一个标签。动态标签会随当前任务、来源或来源分组自动变化；如需无标签的全局范围，请选择「全局共享」。",
-    "dynamic": {
-      "task": "当前任务",
-      "source": "当前来源",
-      "source_group": "当前来源分组"
-    },
-    "group": "范围 {{number}}",
-    "removeGroup": "移除范围 {{number}}",
-    "addGroup": "添加范围",
-    "addTag": "添加标签",
-    "searchTags": "搜索或输入标签…",
-    "useTag": "使用「{{tag}}」",
-    "emptyGroup": "请为每个范围至少添加一个标签。",
-    "exponentialWarning": "范围数量呈指数增长：n 个标签会为每份文档生成 2ⁿ − 1 个范围，增加处理时间和费用。",
-    "fileLimitation": "观察范围设置适用于文本和内嵌内容。文件上传使用完整标签组合。",
-    "tagsUnavailable": "无法加载记忆库标签。你仍可手动输入标签。"
-  },
   "settings": {
-    "title": "设置",
-    "description": "配置适用于所有任务的同步行为。",
+    "title": "系统设置",
+    "description": "全局同步策略与默认运行参数。",
     "units": {
       "hours": "小时"
     },
     "sync": {
-      "title": "同步",
-      "description": "适用于所有任务。",
+      "title": "同步参数",
+      "description": "应用于所有同步任务的全局策略。",
       "incremental": "增量同步",
-      "incrementalHelp": "如果数据源支持原生变更跟踪，系统会优先使用。关闭后，每次运行都会扫描全部内容；未变更的内容仍不会重复上传。",
-      "reconcileInterval": "全量校准间隔",
-      "reconcileIntervalHelp": "距离上次全量校准超过此间隔后，普通运行会改为全量扫描。",
-      "maxFileSize": "最大文件大小",
-      "maxFileSizeHelp": "超过此大小的文件将被跳过。"
+      "incrementalHelp": "在数据源支持时使用原生变更流追踪增量。关闭后，每次运行均执行全量清单核对（未变更内容仍不会重复上传）。",
+      "reconcileInterval": "全量对齐周期",
+      "reconcileIntervalHelp": "距离上次全量对齐超过该时长时，下一次常规运行将自动转为全量扫描。",
+      "maxFileSize": "单个文件大小上限",
+      "maxFileSizeHelp": "超过此大小限制的文件将在摄取过程中自动跳过。"
     },
     "files": {
-      "title": "全局文件类型",
-      "description": "选择“沿用全局设置”的任务使用这些文件类型。排除的内容会在全量校准时从 Hindsight 中删除。"
+      "title": "全局文件类型策略",
+      "description": "为选择“继承全局设置”的任务提供默认文件类型。被排除的文件类型将在全量对齐时从 Hindsight 中清理。"
     },
     "oauth": {
-      "title": "OAuth",
-      "description": "为 Google Drive 和 OneDrive 凭据配置 OAuth 时，请将此重定向 URI 添加到 Google Cloud 或 Microsoft Entra（Azure）的应用设置中。",
+      "title": "OAuth 授权配置",
+      "description": "为 Google Drive 或 OneDrive 配置凭据时，请将下方重定向 URI 登记至 Google Cloud Console 或 Microsoft Entra (Azure) 应用管理后台。",
       "redirectUri": "重定向 URI"
     },
     "toast": {
-      "saved": "已保存设置",
-      "failed": "无法保存设置"
+      "saved": "设置已保存",
+      "failed": "保存设置失败"
     },
     "timezone": {
-      "help": "所有任务统一使用此时区。默认使用服务器的 TZ，未设置时使用 UTC。",
-      "invalid": "请选择有效的时区。"
+      "help": "用于定时任务调度的全局默认时区。默认读取服务器系统的 TZ 环境变量，未配置时为 UTC。",
+      "invalid": "请选择有效的时区"
     }
   },
   "notFound": {
-    "title": "未找到页面",
-    "description": "您正在查找的页面不存在。",
-    "home": "返回仪表板"
+    "title": "页面未找到",
+    "description": "你访问的页面不存在或已被移除。",
+    "home": "返回仪表盘"
   },
   "dryRun": {
     "title": "试运行：{{name}}",
-    "description": "对已保存的任务执行完整数据源扫描。不会发送或删除文档，也不会改变同步进度或运行记录。",
+    "description": "模拟当前已保存任务的完整同步过程。此操作不会向 Hindsight 写入或删除任何数据，亦不会更新同步位点或记录运行历史。",
     "start": "开始试运行",
-    "running": "扫描…",
-    "complete_one": "已扫描 {{count}} 个数据源项目。",
-    "complete_other": "已扫描 {{count}} 个数据源项目。",
-    "incomplete_one": "扫描未完成（{{count}} 个项目）。缺失项目不会被标记为删除。",
-    "incomplete_other": "扫描未完成（{{count}} 个项目）。缺失项目不会被标记为删除。",
-    "truncated": "显示前 100 项。计数包括所有项目。",
-    "file": "源项目",
-    "action": "操作",
-    "reason": "原因",
+    "running": "正在扫描数据源…",
+    "complete": "已扫描 {{count}} 个数据源条目。",
+    "complete_one": "已扫描 {{count}} 个数据源条目。",
+    "complete_other": "已扫描 {{count}} 个数据源条目。",
+    "incomplete": "扫描未全部完成（仅获取到 {{count}} 个条目）。缺失的条目不会被标记为删除。",
+    "incomplete_one": "扫描未全部完成（仅获取到 {{count}} 个条目）。缺失的条目不会被标记为删除。",
+    "incomplete_other": "扫描未全部完成（仅获取到 {{count}} 个条目）。缺失的条目不会被标记为删除。",
+    "truncated": "当前仅展示前 100 条明细，统计汇总包含全部项目。",
+    "file": "数据源条目",
+    "action": "预估动作",
+    "reason": "原因说明",
     "actions": {
-      "create": "创建",
+      "create": "新增",
       "update": "更新",
       "delete": "删除",
-      "unchanged": "未更改",
+      "unchanged": "无变动",
       "skip": "跳过",
       "fail": "失败",
-      "release": "解除本任务引用"
+      "release": "解绑任务引用"
     }
   },
-  "language": {
-    "label": "语言"
-  },
-  "providerCopy": {
-    "webcalDescription": "日程与待办的 iCalendar 订阅",
-    "webcalURL": "日历订阅 URL",
-    "webcalURLHelp": "订阅 URL 加密保存。支持 HTTP、HTTPS 和 webcal 地址。",
-    "webcalSize": "日历大小上限（MiB）",
-    "webcalSnapshotHelp": "完整快照会删除已消失的文档，包括空日历。订阅采用滚动窗口时，退出窗口的历史文档也会删除。",
-    "webcalComponents": "日历组件数量上限",
-    "webcalSeriesHelp": "筛选系列时间窗口时应保留未知边界：最早时间为空或不晚于窗口结束，且结束边界为空或不早于窗口开始。",
-    "webcalComponent": "日历组件",
-    "webcalEvent": "日程",
-    "webcalTodo": "待办",
-    "webcalRecurring": "重复系列",
-    "webcalStatus": "日历状态",
-    "webcalLocation": "地点",
-    "webcalCategories": "分类",
-    "webcalAttendees": "参与人",
-    "webcalStart": "原始开始时间",
-    "webcalEnd": "原始结束时间",
-    "webcalDue": "原始截止时间",
-    "webcalCompleted": "完成时间",
-    "webcalSeriesStart": "系列最早时间",
-    "webcalSeriesEnd": "系列结束边界",
-    "integrationToken": "集成令牌",
-    "dataSource": "数据源",
-    "pageTitle": "页面标题",
-    "lastEdited": "最后编辑时间",
-    "created": "创建时间",
-    "oauthClientId": "OAuth 客户端 ID",
-    "oauthClientSecret": "OAuth 客户端密钥",
-    "drive": "云端硬盘",
-    "folder": "文件夹",
-    "includeSubfolders": "包含子文件夹",
-    "exportGoogleDocs": "导出 Google 文档、表格和演示文稿",
-    "fileName": "文件名",
-    "path": "路径",
-    "extension": "扩展名",
-    "mimeType": "MIME 类型",
-    "fileType": "文件类型",
-    "sizeBytes": "大小（字节）",
-    "modified": "修改时间",
-    "rootDirectory": "根目录",
-    "rootFolder": "根文件夹",
-    "serverUrl": "服务器 URL",
-    "username": "用户名",
-    "passwordApp": "密码 / 应用专用密码",
-    "bearerToken": "Bearer 令牌",
-    "endpoint": "终端节点",
-    "region": "区域",
-    "accessKeyId": "访问密钥 ID",
-    "secretAccessKey": "访问密钥",
-    "sessionToken": "会话令牌",
-    "pathStyle": "路径式寻址",
-    "baseUrl": "基础 URL",
-    "instanceId": "实例 ID",
-    "apiToken": "API 令牌",
-    "notebook": "笔记本",
-    "pathPrefix": "路径前缀",
-    "bucket": "存储桶",
-    "prefix": "前缀",
-    "applicationId": "应用程序（客户端）ID",
-    "clientSecret": "客户端密钥",
-    "tenant": "租户",
-    "title": "标题",
-    "updated": "更新时间",
-    "tags": "标签",
-    "notionDescription": "Notion 内部集成令牌，可读取已共享的数据源。",
-    "siYuanDescription": "SiYuan 内核 API 地址和令牌（位于“设置 → 关于 → API 令牌”）。",
-    "filesystemDescription": "应用可以访问的本地文件。",
-    "googleDriveDescription": "通过 OAuth 连接 Google 账号，以只读方式访问云端硬盘。",
-    "oneDriveDescription": "通过 OAuth 连接 Microsoft 账号或 Microsoft 365，访问 OneDrive 和 SharePoint。",
-    "s3Description": "兼容 Amazon S3 的存储服务，例如 MinIO、Cloudflare R2、Backblaze B2 和 Wasabi。",
-    "webdavDescription": "支持 Nextcloud、ownCloud、Synology、Apache mod_dav 和 rclone serve 等服务。",
-    "hindsightDescription": "用作数据接收目标的 Hindsight API 地址。",
-    "filesystemRootHelp": "填写应用服务器上的绝对路径。使用 Docker 时，请填写挂载到容器中的路径。",
-    "filesystemFolderHelp": "相对于此凭据的根目录。填写 . 表示根目录。",
-    "notionDataSourceHelp": "填写 Notion 数据源 ID（不是数据库 ID）。点击“浏览”可选择已共享给此集成的数据源。",
-    "siYuanInstanceHelp": "用于识别此 SiYuan 实例的固定标识。留空时使用基础 URL。",
-    "s3EndpointHelp": "使用 AWS S3 时可留空。",
-    "s3PathStyleHelp": "大多数自托管 S3 服务（例如 MinIO）都需要启用此选项。",
-    "s3PrefixHelp": "仅同步此键名前缀下的对象。",
-    "webdavTokenHelp": "如果服务器要求使用令牌，请用它代替用户名和密码。",
-    "webdavRootHelp": "相对于服务器 URL 的路径。",
-    "googleDriveHelp": "留空以使用“我的云端硬盘”，也可以选择共享云端硬盘。",
-    "wholeDriveHelp": "留空以同步整个云端硬盘。",
-    "googleExportHelp": "Google 文档导出为 Markdown，表格导出为 CSV，演示文稿导出为 PDF。",
-    "tenantHelp": "可填写 common、organizations、consumers 或租户 ID。",
-    "oneDriveHelp": "留空以使用个人 OneDrive。",
-    "siYuanPathHelp": "仅同步可读路径以此为前缀的文档。",
-    "siYuanNotebookHelp": "留空以同步所有已打开的笔记本。",
-    "hindsightApiKeyHelp": "此密钥会作为 Bearer 令牌发送。如果实例未启用身份验证，请留空。",
-    "syncCollectionHelp": "服务器支持时使用 sync-collection（RFC 6578）。",
-    "fileSystem": "文件系统",
-    "cloudflareAccountId": "账户 ID",
-    "cloudflareWebsiteUrl": "网站 URL",
-    "cloudflareDiscovery": "URL 发现方式",
-    "cloudflareRender": "JavaScript 渲染",
-    "cloudflareLimit": "最大页数",
-    "cloudflareDepth": "最大链接深度",
-    "cloudflareMaxAge": "缓存时间（秒）",
-    "cloudflareExternal": "包含外部网站",
-    "cloudflareSubdomains": "包含子域名",
-    "cloudflareInclude": "包含 URL 规则",
-    "cloudflareExclude": "排除 URL 规则",
-    "cloudflareSize": "单页大小上限（MiB）",
-    "cloudflareWaitUntil": "导航等待条件",
-    "cloudflareNavigationTimeout": "导航超时（毫秒）",
-    "cloudflareSelector": "内容 CSS 选择器",
-    "cloudflareSelectorTimeout": "选择器超时（毫秒）",
-    "cloudflareVisible": "等待内容可见",
-    "cloudflareExtraWait": "额外等待（毫秒）",
-    "cloudflareResources": "屏蔽资源类型",
-    "cloudflarePageUrl": "网页 URL",
-    "cloudflareAll": "站点地图和链接",
-    "cloudflareSitemaps": "仅站点地图",
-    "cloudflareLinks": "仅链接",
-    "cloudflareCredentialHelp": "Cloudflare 账户及具有 Browser Run 编辑权限的 API Token",
-    "cloudflareRenderHelp": "适用于通过浏览器加载内容的网站。浏览器使用时间可能产生费用。",
-    "cloudflareLimitHelp": "免费账户每次最多抓取 100 页。达到页数上限时不会执行删除对账。",
-    "cloudflareCacheHelp": "完整对账始终抓取最新内容。",
-    "cloudflareIncludeHelp": "每行一个规则。* 匹配单个路径段，** 可跨路径段匹配。",
-    "cloudflareExcludeHelp": "排除规则优先于包含规则。",
-    "sqlHost": "主机",
-    "sqlPort": "端口",
-    "sqlDatabase": "数据库",
-    "sqlPassword": "密码",
-    "sqlTLSMode": "TLS 模式",
-    "sqlCA": "CA 证书（PEM）",
-    "sqlPath": "服务端文件路径",
-    "sqlTLSDisable": "禁用",
-    "sqlTLSVerify": "验证证书和主机名",
-    "emailName": "电子邮件",
-    "imapDescription": "使用密码或应用专用密码连接邮箱",
-    "imapSecurity": "连接安全方式",
-    "imapConnectionTimeout": "连接超时（秒）",
-    "imapCommandTimeout": "命令超时（秒）",
-    "emailFolders": "邮件文件夹",
-    "emailExcludeFolders": "排除的邮件文件夹",
-    "emailStripQuotes": "移除回复引用的历史内容",
-    "emailBodyLimit": "解码后正文大小上限（字节）",
-    "emailBodyHelp": "仅列出附件，不下载附件内容。正文超限时保留邮件头并显示提示。",
-    "emailSubject": "主题",
-    "emailFrom": "发件人",
-    "emailTo": "收件人",
-    "emailCc": "抄送",
-    "emailDate": "邮件日期",
-    "emailAttachments": "含附件",
-    "emailFoldersHelp": "完整扫描成功后立即删除已消失的逻辑邮件。默认选择收件箱及服务器标识的已发送文件夹。"
-  },
   "proxy": {
-    "title": "代理",
-    "global": "沿用全局设置",
+    "title": "网络代理",
+    "global": "使用全局代理设置",
     "types": {
-      "default": "使用环境变量",
-      "none": "不使用代理",
-      "http": "HTTP",
-      "https": "HTTPS",
-      "socks5": "SOCKS5"
+      "default": "环境变量代理",
+      "none": "直连（不使用代理）",
+      "http": "HTTP 代理",
+      "https": "HTTPS 代理",
+      "socks5": "SOCKS5 代理"
     },
-    "defaultHelp": "使用服务器环境变量中的代理设置。",
-    "address": "地址",
-    "username": "用户名（可选）",
-    "password": "密码（可选）",
-    "invalidAddress": "请输入 host:port 格式的代理地址，端口范围为 1–65535。"
+    "defaultHelp": "遵循服务器系统环境变量中配置的代理（HTTP_PROXY / HTTPS_PROXY）。",
+    "address": "代理服务器地址",
+    "username": "认证用户名（可选）",
+    "password": "认证密码（可选）",
+    "invalidAddress": "请输入正确的代理地址（格式为 host:port，端口范围 1~65535）。"
+  },
+  "observationScope": {
+    "title": "记忆整合范围",
+    "rule": "整合范围规则",
+    "learnMore": "查看官方文档",
+    "inherit": "使用全局配置",
+    "inheritHelp": "沿用全局设置中配置的记忆整合规则。",
+    "inheritedRule": "当前全局配置：{{rule}}",
+    "rules": {
+      "combined": "联合范围 (默认)",
+      "shared": "全局共享",
+      "per_tag": "按单标签隔离",
+      "all_combinations": "全排列子集",
+      "custom": "自定义范围组"
+    },
+    "descriptions": {
+      "combined": "将文档的所有标签作为一个整体联合归纳。观察结论归属于完整标签组，保留该组合特定的上下文知识。",
+      "shared": "忽略标签差异，将所有记忆沉淀归纳至同一个全局共享空间。适用于不希望会话或来源标签割裂通用知识的场景。",
+      "per_tag": "为每个标签分别独立归纳。每个标签在记忆间建立独立的观察结论，不会为标签组合生成交叉范围。",
+      "all_combinations": "为标签的所有非空子集（包括各个单独标签及其任意组合）分别进行归纳。例如 3 个标签将生成 7 个独立范围并执行 7 次提炼。",
+      "custom": "手动指定需要整合沉淀的标签组合。每个组合生成一个独立范围，避免产生非必要的组合计算。"
+    },
+    "customHelp": "每个范围至少需指定一个标签。支持使用动态标签自动关联当前任务、来源或来源分组；选择“全局共享”则建立无标签全局范围。",
+    "dynamic": {
+      "task": "当前任务",
+      "source": "当前数据源",
+      "source_group": "当前数据源分组"
+    },
+    "group": "范围组 {{number}}",
+    "removeGroup": "移除范围组 {{number}}",
+    "addGroup": "添加范围组",
+    "addTag": "添加标签",
+    "searchTags": "搜索或输入标签…",
+    "useTag": "使用“{{tag}}”",
+    "emptyGroup": "每个范围组必须包含至少一个标签。",
+    "exponentialWarning": "范围数量呈指数级增长：n 个标签将为每份文档生成 2ⁿ − 1 个处理范围，会显著增加同步耗时与模型调用开销。",
+    "fileLimitation": "记忆整合范围设置仅适用于文本与内嵌内容。二进制文件上传默认使用“联合范围”。"
   },
   "cloudflare": {
-    "crawlProgress": "网站抓取",
-    "jobId": "Job ID",
-    "phase": "阶段",
-    "pages": "完成页数 / 总页数",
-    "browserSeconds": "浏览器使用量（秒）",
-    "previewNotice": "预演会执行真实的 Cloudflare 抓取并消耗账户额度，不会写入 Hindsight。",
+    "crawlProgress": "网页抓取进度",
+    "jobId": "抓取任务 ID",
+    "phase": "当前阶段",
+    "pages": "已抓取 / 总页数",
+    "browserSeconds": "无头浏览器耗时（秒）",
+    "previewNotice": "试运行将真实调用 Cloudflare 爬虫并消耗账户配额，但不会向 Hindsight 写入数据。",
     "phases": {
-      "submitting": "提交抓取",
-      "running": "等待网站抓取",
-      "completed": "导入抓取结果",
-      "consumed": "已完成",
-      "failed": "失败",
+      "submitting": "正在提交抓取任务",
+      "running": "正在抓取网页",
+      "completed": "正在导入抓取结果",
+      "consumed": "抓取完成",
+      "failed": "抓取失败",
       "cancelled": "已取消",
-      "superseded": "已由恢复运行接续",
-      "cancel_failed": "失败"
+      "superseded": "已在其他运行中恢复",
+      "cancel_failed": "取消失败"
     }
   },
   "sql": {
-    "mode": "文档模式",
-    "rows": "一行一文档",
-    "query": "整个查询一文档",
-    "rowsHint": "必需：唯一且非空的 __id，以及非空文本 __content。可选文本 __context。其他列忽略。",
-    "queryHint": "全部结果生成一个包含 columns 和 rows 的 JSON 文档，保留列序、行序及空结果。",
-    "queryLabel": "SQL 查询",
-    "limits": "仅允许单条 SELECT 或 WITH。同步上限：10 万行、累计 16 MiB、单文档 4 MiB、300 秒。",
-    "preview": "抽样预览",
-    "previewHint": "最多读取 100 行 / 4 MiB，限时 30 秒；不写入、不检查删除。抽样通过不代表全部 ID 唯一。已保存任务的 Dry-run 执行完整查询。",
-    "columns": "返回列",
-    "truncated": "样本达到预览上限，已截断。",
-    "empty": "样本中没有记录。",
-    "context": "Context"
+    "mode": "文档组织方式",
+    "rows": "每行数据生成独立文档",
+    "query": "完整查询结果合并为一个文档",
+    "rowsHint": "SQL 规范：必须包含唯一非空的 __id 字段和非空文本 __content 字段，可选文本 __context 字段。其他列将被忽略。",
+    "queryHint": "查询结果将以包含列定义和数据行的单个 JSON 文档保存。保持行列顺序，支持空结果集。",
+    "queryLabel": "SQL 查询语句",
+    "limits": "仅支持单条 SELECT 或 WITH 查询语句。同步限制：最多 100,000 行、总量 16 MiB、单文档 4 MiB、执行超时 300 秒。",
+    "preview": "执行预览采样",
+    "previewHint": "最多读取 100 行或 4 MiB（超时 30 秒）。仅供结构检查，不执行写入或删除对齐。预览成功不代表全量数据中 __id 一定唯一；可通过试运行 (Dry-run) 扫描完整查询。",
+    "columns": "字段列表",
+    "truncated": "已达预览采样上限，结果已被截断。",
+    "empty": "查询采样结果为空。",
+    "context": "上下文信息"
   }
 }

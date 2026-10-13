@@ -1,17 +1,17 @@
 {
   "inlineMultimodal": {
     "title": "Inline multimodal content",
-    "description": "Include media embedded in notes. Currently supports images in Notion and SiYuan.",
+    "description": "Sync media embedded within notes. Currently supports images in Notion and SiYuan.",
     "enabled": "Process inline media",
-    "policyHelp": "Images are included only when both inline media and Images in the file type policy are enabled.",
-    "active": "Inline images will be included.",
-    "inactive": "Notes will sync as text. Enable both inline media and Images to include pictures."
+    "policyHelp": "Images are synced only when both inline media and Images in the file type policy are enabled.",
+    "active": "Inline images will be synced.",
+    "inactive": "Notes will sync as text only. Enable both inline media and Images in file types to include images."
   },
   "app": {
     "name": "Hindsight Ingestion",
     "tagline": "Sync sources into memory",
     "version": "v{{version}}",
-    "authDisabled": "auth disabled"
+    "authDisabled": "Auth disabled"
   },
   "language": {
     "label": "Language"
@@ -19,11 +19,11 @@
   "providerCopy": {
     "webcalDescription": "iCalendar subscription for events and to-dos",
     "webcalURL": "Calendar subscription URL",
-    "webcalURLHelp": "The subscription URL is encrypted. HTTP, HTTPS and webcal URLs are supported.",
+    "webcalURLHelp": "The subscription URL is encrypted. HTTP, HTTPS, and webcal protocols are supported.",
     "webcalSize": "Maximum calendar size (MiB)",
-    "webcalSnapshotHelp": "Complete snapshots delete missing documents, including an empty calendar. A rolling subscription window also removes older documents.",
+    "webcalSnapshotHelp": "Full snapshots delete missing documents, including an empty calendar. A rolling subscription window also removes older documents.",
     "webcalComponents": "Maximum calendar components",
-    "webcalSeriesHelp": "For a series time window, allow missing boundaries: earliest time is missing or before the window ends, and end boundary is missing or after the window starts.",
+    "webcalSeriesHelp": "For recurring series with rolling windows, allow open boundaries: start time is missing or before window end, and end boundary is missing or after window start.",
     "webcalComponent": "Calendar component",
     "webcalEvent": "Event",
     "webcalTodo": "To-do",
@@ -63,7 +63,7 @@
     "cloudflareSitemaps": "Sitemaps only",
     "cloudflareLinks": "Links only",
     "cloudflareCredentialHelp": "Cloudflare account and API token with Browser Run Edit permission",
-    "cloudflareRenderHelp": "Enable for websites whose content loads in the browser. Browser time may be billed.",
+    "cloudflareRenderHelp": "Enable for websites whose content loads in the browser. Browser execution time may be billed.",
     "cloudflareLimitHelp": "Free accounts allow up to 100 pages per crawl. Reaching the page limit prevents deletion reconciliation.",
     "cloudflareCacheHelp": "Full reconciliation always fetches fresh content.",
     "cloudflareIncludeHelp": "One pattern per line. * matches within a path segment; ** matches across segments.",
@@ -93,7 +93,76 @@
     "emailCc": "Cc",
     "emailDate": "Mail date",
     "emailAttachments": "Has attachments",
-    "emailFoldersHelp": "Missing logical emails are deleted after a successful complete scan. Default folders: INBOX and server-designated Sent."
+    "emailFoldersHelp": "Missing emails are cleaned up after a successful complete scan. Default folders: INBOX and server-designated Sent.",
+    "integrationToken": "Integration token",
+    "dataSource": "Data source",
+    "pageTitle": "Page title",
+    "lastEdited": "Last edited",
+    "created": "Created",
+    "oauthClientId": "OAuth client ID",
+    "oauthClientSecret": "OAuth client secret",
+    "drive": "Drive",
+    "folder": "Folder",
+    "includeSubfolders": "Include sub-folders",
+    "exportGoogleDocs": "Export Google Docs/Sheets/Slides",
+    "fileName": "File name",
+    "path": "Path",
+    "extension": "Extension",
+    "mimeType": "MIME type",
+    "fileType": "File type",
+    "sizeBytes": "Size (bytes)",
+    "modified": "Modified",
+    "rootDirectory": "Root directory",
+    "rootFolder": "Root folder",
+    "serverUrl": "Server URL",
+    "username": "Username",
+    "passwordApp": "Password / app password",
+    "bearerToken": "Bearer token",
+    "endpoint": "Endpoint",
+    "region": "Region",
+    "accessKeyId": "Access key ID",
+    "secretAccessKey": "Secret access key",
+    "sessionToken": "Session token",
+    "pathStyle": "Path-style addressing",
+    "baseUrl": "Base URL",
+    "instanceId": "Instance ID",
+    "apiToken": "API token",
+    "notebook": "Notebook",
+    "pathPrefix": "Path prefix",
+    "bucket": "Bucket",
+    "prefix": "Prefix",
+    "applicationId": "Application (client) ID",
+    "clientSecret": "Client secret",
+    "tenant": "Tenant",
+    "title": "Title",
+    "updated": "Updated",
+    "tags": "Tags",
+    "notionDescription": "Notion internal integration token with read access to shared data sources",
+    "siYuanDescription": "SiYuan kernel API endpoint and token (Settings → About → API token)",
+    "filesystemDescription": "Local files accessible to the application.",
+    "googleDriveDescription": "Google account via OAuth (read-only Drive access)",
+    "oneDriveDescription": "Microsoft account / Microsoft 365 via OAuth (OneDrive and SharePoint)",
+    "s3Description": "Amazon S3, MinIO, Cloudflare R2, Backblaze B2, Wasabi, …",
+    "webdavDescription": "Nextcloud, ownCloud, Synology, Apache mod_dav, rclone serve, …",
+    "hindsightDescription": "Hindsight API endpoint used as a destination",
+    "filesystemRootHelp": "Absolute path on the application server. In Docker, use the mounted container path.",
+    "filesystemFolderHelp": "Relative to the credential's root directory. Use . for the root.",
+    "notionDataSourceHelp": "Notion data source ID (not the database ID). Use Browse to pick one shared with the integration.",
+    "siYuanInstanceHelp": "Stable identifier for this SiYuan instance. Leave empty to use its base URL.",
+    "s3EndpointHelp": "Leave empty to use AWS S3.",
+    "s3PathStyleHelp": "Required by most self-hosted S3 servers (e.g. MinIO).",
+    "s3PrefixHelp": "Only objects under this key prefix.",
+    "webdavTokenHelp": "Use instead of username/password if the server expects a token.",
+    "webdavRootHelp": "Path relative to the server URL.",
+    "googleDriveHelp": "Leave empty for My Drive, or pick a shared drive.",
+    "wholeDriveHelp": "Leave empty for the whole drive.",
+    "googleExportHelp": "Docs → Markdown, Sheets → CSV, Slides → PDF.",
+    "tenantHelp": "common, organizations, consumers, or a tenant ID.",
+    "oneDriveHelp": "Leave empty for your personal OneDrive.",
+    "siYuanPathHelp": "Only documents whose human-readable path starts with this prefix.",
+    "siYuanNotebookHelp": "Leave empty to sync every open notebook.",
+    "hindsightApiKeyHelp": "Sent as a Bearer token. Leave empty if the instance has no authentication.",
+    "syncCollectionHelp": "Use sync-collection (RFC 6578) when available"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -106,7 +175,7 @@
     "description": "Main navigation"
   },
   "theme": {
-    "toggle": "Change theme",
+    "toggle": "Toggle theme",
     "light": "Light",
     "dark": "Dark",
     "system": "System"
@@ -118,16 +187,16 @@
     "close": "Close",
     "confirm": "Confirm",
     "commandPaletteTitle": "Command palette",
-    "commandPaletteDescription": "Search for a command to run…",
+    "commandPaletteDescription": "Type a command or search…",
     "copied": "Copied to clipboard",
     "copy": "Copy",
-    "copyFailed": "Could not copy to clipboard",
+    "copyFailed": "Failed to copy to clipboard",
     "create": "Create",
     "delete": "Delete",
     "edit": "Edit",
     "false": "No",
     "true": "Yes",
-    "loadFailed": "Could not load data",
+    "loadFailed": "Failed to load data",
     "loading": "Loading…",
     "moreActions": "More actions",
     "new": "New",
@@ -144,11 +213,11 @@
   },
   "validation": {
     "required": "This field is required",
-    "number": "Must be a number",
+    "number": "Must be a valid number",
     "integer": "Must be a whole number",
     "min1": "Must be at least 1",
     "url": "Must be a valid URL",
-    "tooLong": "Too long",
+    "tooLong": "Value is too long",
     "list": "Enter a valid list"
   },
   "runStatus": {
@@ -180,7 +249,7 @@
     "remove": "Remove row"
   },
   "secret": {
-    "keepHint": "A value is stored. Leave the mask unchanged to keep it, or type a new value to replace it.",
+    "keepHint": "Existing secret is masked. Leave unchanged to keep it, or enter a new value to update.",
     "clear": "Clear stored value"
   },
   "headers": {
@@ -194,7 +263,7 @@
     "valuePlaceholder": "Header value",
     "add": "Add header",
     "empty": "No custom headers",
-    "maskHint": "Stored values are shown as {{mask}}; keep the mask to leave a value unchanged.",
+    "maskHint": "Stored values appear as {{mask}}; keep the mask unchanged to leave a value unchanged.",
     "errors": {
       "duplicate": "Duplicate header name \"{{name}}\" (names are case-insensitive)",
       "invalidJson": "Invalid JSON: {{detail}}",
@@ -213,7 +282,7 @@
     "button": "Browse…",
     "title": "Browse",
     "titleFor": "Select {{label}}",
-    "description": "Navigate into folders and select an item.",
+    "description": "Browse folders and select an item to sync.",
     "breadcrumbs": "Location",
     "root": "Root",
     "memoryBanks": "Memory banks",
@@ -261,13 +330,13 @@
     "createTitle": "New credential",
     "createDescription": "Choose a provider and enter its connection details.",
     "editTitle": "Edit credential",
-    "editDescription": "Secrets are never shown. Leave masked values unchanged to keep them.",
+    "editDescription": "Stored secrets are masked. Leave unchanged to keep them.",
     "createInline": "Create a new credential",
     "namePlaceholder": "e.g. Work {{type}}",
     "pick": "Select a credential",
     "noneOfType": "No {{type}} credentials yet",
     "notActiveWarning": "This credential is currently “{{status}}”. Runs may fail until it is fixed.",
-    "oauthHint": "After saving, use Connect to authorize access with the provider.",
+    "oauthHint": "After saving, click Connect to authorize access with the provider.",
     "usedByCount_one": "{{count}} task",
     "usedByCount_other": "{{count}} tasks",
     "fields": {
@@ -395,14 +464,14 @@
     "type": "Source type",
     "credential": "Source credential",
     "pickTypeFirst": "Select a source type first.",
-    "pickCredentialFirst": "Select a credential first"
+    "pickCredentialFirst": "Select a credential first."
   },
   "destination": {
     "credential": "Hindsight credential",
     "bank": "Memory bank",
     "bankPlaceholder": "bank-id",
     "browseBanks": "Select a memory bank",
-    "pickCredentialFirst": "Select a Hindsight credential first",
+    "pickCredentialFirst": "Select a Hindsight credential first.",
     "locked": "The destination is locked after the first successful run. To send data to a different credential or bank, clone this task (create a new one) instead.",
     "lockNotice": "The destination becomes read-only after the first successful run."
   },
@@ -417,7 +486,7 @@
   },
   "tags": {
     "custom": "Custom tags",
-    "help": "The ingestion, source and task tags are added automatically to every document.",
+    "help": "The ingestion, source, and task tags are added automatically to every document.",
     "placeholder": "team:alpha",
     "newTaskId": "<new>"
   },
@@ -533,7 +602,8 @@
       "description": "Delete documents tagged for this task and their associated memories from Hindsight. The task will be paused. Source content will not be affected.",
       "failed": "Could not delete documents",
       "success_one": "Deleted {{count}} document",
-      "success_other": "Deleted {{count}} documents"
+      "success_other": "Deleted {{count}} documents",
+      "success": "Deleted {{count}} documents"
     }
   },
   "taskEditor": {
@@ -555,7 +625,7 @@
       "enabled": "Enabled"
     },
     "hints": {
-      "sourceReset": "Changing the source credential or root (bucket, folder, database, notebook…) resets the incremental cursor and triggers a full rebaseline.",
+      "sourceReset": "Changing the source credential or root (bucket, folder, database, notebook…) resets the incremental cursor and triggers a full baseline scan.",
       "sourceTypeLocked": "The source type cannot be changed after creation. Create a new task to use a different source.",
       "filtersReconcile": "Changing filters marks the task for full reconciliation; items that no longer match are removed from Hindsight.",
       "filesReconcile": "Changing file types triggers full reconciliation; excluded files are removed from Hindsight.",
@@ -604,7 +674,7 @@
       },
       "observations": {
         "title": "Observation scope",
-        "description": ""
+        "description": "How observations are consolidated across memories."
       }
     },
     "toast": {
@@ -723,7 +793,7 @@
   },
   "settings": {
     "title": "Settings",
-    "description": "Global synchronization behaviour.",
+    "description": "Global synchronization settings and defaults.",
     "units": {
       "hours": "hours"
     },
@@ -731,7 +801,7 @@
       "title": "Synchronization",
       "description": "Applies to all tasks.",
       "incremental": "Incremental sync",
-      "incrementalHelp": "Use provider-native change tracking where available. When off, every run performs a full inventory (unchanged content is still not re-uploaded).",
+      "incrementalHelp": "Use provider-native change tracking where available. When off, every run performs a full inventory check (unchanged content is not re-uploaded).",
       "reconcileInterval": "Full reconcile interval",
       "reconcileIntervalHelp": "A normal run becomes a full scan when the last full reconcile is older than this.",
       "maxFileSize": "Max file size",
@@ -805,7 +875,7 @@
     "learnMore": "Official documentation",
     "inherit": "Use global setting",
     "inheritHelp": "Follow the observation scope configured in global settings.",
-    "inheritedRule": "Currently: {{rule}}.",
+    "inheritedRule": "Currently: {{rule}}",
     "rules": {
       "combined": "Combined (default)",
       "shared": "Shared",
@@ -817,10 +887,10 @@
       "combined": "Consolidate once using all tags together. Observations belong to the full tag set, keeping knowledge specific to that combination.",
       "shared": "Consolidate into one global, untagged scope across memories with different tags. Useful when session tags should not separate shared knowledge.",
       "per_tag": "Consolidate separately for each tag. Each tag builds independent observations across memories, without creating scopes for tag combinations.",
-      "all_combinations": "Consolidate for every non-empty subset of tags, including individual tags and combinations. Three tags create seven scopes and seven consolidation passes.",
+      "all_combinations": "Consolidate for every non-empty subset of tags, including individual tags and combinations. For example, three tags create seven distinct scopes and seven consolidation passes.",
       "custom": "Choose the exact tag groups to consolidate. Each group creates one independent scope, avoiding combinations you do not need."
     },
-    "customHelp": "Add at least one tag to each scope. Use dynamic tags to follow the current task, source or source group; choose Shared for a global, untagged scope.",
+    "customHelp": "Add at least one tag to each scope. Use dynamic tags to follow the current task, source, or source group; choose Shared for a global, untagged scope.",
     "dynamic": {
       "task": "Current task",
       "source": "Current source",
@@ -834,8 +904,8 @@
     "useTag": "Use “{{tag}}”",
     "emptyGroup": "Add at least one tag to each scope.",
     "exponentialWarning": "Scopes can grow exponentially: n tags produce 2ⁿ − 1 scopes per document, increasing processing time and cost.",
-    "fileLimitation": "Observation scopes apply to text and inline content. File uploads use Combined.",
-    "tagsUnavailable": "Could not load bank tags. You can still enter a tag."
+    "fileLimitation": "Observation scopes apply to text and inline content. File uploads use Combined scope.",
+    "tagsUnavailable": "Could not load bank tags. You can still enter a tag manually."
   },
   "cloudflare": {
     "crawlProgress": "Website crawl",
@@ -862,7 +932,7 @@
     "rowsHint": "Required: unique, nonempty __id and nonempty text __content. Optional text __context. Other columns are ignored.",
     "queryHint": "All results become one JSON document with columns and rows. Column and row order are preserved, including empty results.",
     "queryLabel": "SQL query",
-    "limits": "One SELECT or WITH query. Sync: 100,000 rows, 16 MiB total, 4 MiB per document, 300 seconds.",
+    "limits": "One SELECT or WITH query. Sync limits: 100,000 rows, 16 MiB total, 4 MiB per document, 300 seconds.",
     "preview": "Preview sample",
     "previewHint": "Reads up to 100 rows / 4 MiB in 30 seconds. No writes or deletion checks. Sample success does not prove all IDs are unique. Saved-task Dry-run scans the full query.",
     "columns": "Columns",

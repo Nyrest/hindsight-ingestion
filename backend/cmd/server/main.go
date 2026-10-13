@@ -56,8 +56,7 @@ func run() error {
 	}
 	log := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: cfg.LogLevel}))
 	slog.SetDefault(log)
-	log.Info("starting hindsight-ingestion", "version", httpx.Version, "auth", !cfg.AuthDisabled, "db", cfg.DBType,
-		"maxConcurrentTasks", cfg.MaxConcurrentTasks)
+	log.Info("starting hindsight-ingestion", "version", httpx.Version, "auth", !cfg.AuthDisabled, "db", cfg.DBType)
 	if cfg.AuthDisabled {
 		log.Warn("authentication is DISABLED (DISABLE_AUTH=true); the WebUI and API are open to anyone who can reach them")
 	}
@@ -86,7 +85,14 @@ func run() error {
 		DB: db, Creds: creds, Settings: store, OAuth: oauthMgr, Log: log,
 		NewDestination: func(c connectors.Credential) (sync.Destination, error) { return hindsight.NewClient(c) },
 	}
-	runs := runner.NewManager(db, engine, cfg.MaxConcurrentTasks, log)
+	global, err := store.Get(context.Background())
+	if err != nil {
+		return err
+	}
+	if err := global.Validate(); err != nil {
+		return err
+	}
+	runs := runner.NewManager(db, engine, global.MaxConcurrentTasks, log)
 
 	ctx := context.Background()
 	// Crash recovery: runs left active by a previous process.

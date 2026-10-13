@@ -9,9 +9,9 @@
   },
   "app": {
     "name": "Hindsight Ingestion",
-    "tagline": "Sinkronkan sumber ke bank memori Hindsight",
+    "tagline": "Sinkronkan sumber data dengan memori Hindsight",
     "version": "v{{version}}",
-    "authDisabled": "autentikasi dinonaktifkan"
+    "authDisabled": "Autentikasi dinonaktifkan"
   },
   "language": {
     "label": "Bahasa"
@@ -39,16 +39,16 @@
     "close": "Tutup",
     "confirm": "Konfirmasikan",
     "commandPaletteTitle": "Palet perintah",
-    "commandPaletteDescription": "Cari perintah untuk dijalankan…",
+    "commandPaletteDescription": "Cari perintah atau tindakan…",
     "copied": "Disalin ke papan klip",
     "copy": "Salin",
-    "copyFailed": "Tidak dapat menyalin ke papan klip",
+    "copyFailed": "Gagal menyalin ke papan klip",
     "create": "Buat",
     "delete": "Hapus",
     "edit": "Sunting",
     "false": "Tidak",
     "true": "Ya",
-    "loadFailed": "Tidak dapat memuat data",
+    "loadFailed": "Gagal memuat data",
     "loading": "Memuat…",
     "moreActions": "Tindakan lainnya",
     "new": "Baru",
@@ -90,7 +90,7 @@
   },
   "chips": {
     "placeholder": "Ketik dan tekan Enter",
-    "duplicate": "\"{{value}}\" sudah ditambahkan",
+    "duplicate": "“{{value}}” sudah ditambahkan",
     "remove": "Hapus {{value}}",
     "automatic": "Ditambahkan secara otomatis"
   },
@@ -101,12 +101,12 @@
     "remove": "Hapus baris"
   },
   "secret": {
-    "keepHint": "Nilai sudah tersimpan. Biarkan nilai tersamarkan tetap sama untuk mempertahankannya, atau masukkan nilai baru untuk menggantinya.",
+    "keepHint": "Kunci rahasia saat ini disamarkan. Biarkan tidak berubah untuk mempertahankan, atau masukkan nilai baru untuk memperbarui.",
     "clear": "Hapus nilai yang disimpan"
   },
   "headers": {
-    "title": "Header khusus",
-    "help": "Dikirim dengan setiap permintaan ke penyedia ini. Header autentikasi konektor diutamakan.",
+    "title": "Header kustom",
+    "help": "Dikirim bersama setiap permintaan ke penyedia ini. Header autentikasi konektor memiliki prioritas lebih tinggi.",
     "mode": "Mode editor",
     "ui": "Formulir",
     "json": "JSON",
@@ -114,8 +114,8 @@
     "value": "Nilai",
     "valuePlaceholder": "Nilai tajuk",
     "add": "Tambahkan tajuk",
-    "empty": "Tidak ada tajuk khusus",
-    "maskHint": "Nilai tersimpan ditampilkan sebagai {{mask}}. Biarkan nilai tersamarkan tetap sama untuk mempertahankan nilai tersimpan.",
+    "empty": "Belum ada header kustom yang dikonfigurasi",
+    "maskHint": "Nilai yang tersimpan ditampilkan sebagai {{mask}}; pertahankan masker agar nilainya tidak berubah.",
     "errors": {
       "duplicate": "Nama header duplikat \"{{name}}\" (nama tidak peka huruf besar-kecil)",
       "invalidJson": "JSON tidak valid: {{detail}}",
@@ -126,7 +126,7 @@
   },
   "browse": {
     "searchSources": "Cari sumber data…",
-    "searchList": "Cari di daftar ini…",
+    "searchList": "Filter daftar ini…",
     "searchSourcesHelp": "Cari judul sumber data yang dibagikan dengan koneksi ini.",
     "searchListHelp": "Filter daftar saat ini berdasarkan nama, jalur, atau ID.",
     "clearSearch": "Hapus pencarian",
@@ -134,11 +134,11 @@
     "button": "Jelajahi…",
     "title": "Jelajahi",
     "titleFor": "Pilih {{label}}",
-    "description": "Navigasikan ke dalam folder dan pilih item.",
+    "description": "Jelajahi folder dan pilih item yang ingin disinkronkan.",
     "breadcrumbs": "Lokasi",
     "root": "Direktori utama",
-    "empty": "Tidak ada apa pun di sini",
-    "hint": "Pilih item, atau buka folder dengan panah",
+    "empty": "Tidak ada item",
+    "hint": "Pilih item atau klik panah untuk membuka folder",
     "open": "Buka {{name}}",
     "select": "Pilih",
     "selected": "Dipilih",
@@ -177,18 +177,18 @@
   },
   "credentials": {
     "title": "Kredensial",
-    "description": "Detail koneksi yang dapat digunakan kembali untuk sumber dan tujuan Hindsight.",
+    "description": "Kredensial yang dapat digunakan kembali untuk sumber data dan tujuan Hindsight.",
     "new": "Kredensial baru",
     "createTitle": "Kredensial baru",
-    "createDescription": "Pilih penyedia dan masukkan detail koneksinya.",
+    "createDescription": "Pilih penyedia dan konfigurasikan detail koneksi.",
     "editTitle": "Edit kredensial",
-    "editDescription": "Kunci yang tersimpan ditampilkan dalam bentuk tersamarkan. Biarkan nilai tersamarkan tetap sama untuk menggunakan nilai yang sudah tersimpan.",
+    "editDescription": "Kunci rahasia yang tersimpan disamarkan. Biarkan tidak berubah untuk mempertahankan nilai yang ada.",
     "createInline": "Buat kredensial baru",
     "namePlaceholder": "misalnya {{type}} — Kantor",
     "pick": "Pilih kredensial",
     "noneOfType": "Belum ada kredensial {{type}}",
-    "notActiveWarning": "Kredensial ini saat ini adalah “{{status}}”. Proses mungkin gagal sampai diperbaiki.",
-    "oauthHint": "Setelah menyimpan, klik “Hubungkan” dan ikuti petunjuk untuk memberikan izin akses.",
+    "notActiveWarning": "Kredensial ini saat ini berstatus “{{status}}”. Eksekusi dapat gagal hingga masalah diselesaikan.",
+    "oauthHint": "Setelah menyimpan, klik Hubungkan untuk menyelesaikan otorisasi akses dengan penyedia.",
     "usedByCount_one": "{{count}} tugas",
     "usedByCount_other": "{{count}} tugas",
     "fields": {
@@ -210,11 +210,11 @@
     },
     "empty": {
       "title": "Belum ada kredensial",
-      "description": "Tambahkan kredensial untuk sumber (misalnya Notion) dan satu untuk instans Hindsight Anda untuk membuat tugas."
+      "description": "Tambahkan kredensial untuk sumber data dan satu untuk instans Hindsight Anda untuk membuat tugas."
     },
     "test": {
-      "ok": "{{name}}: koneksi oke",
-      "failed": "{{name}}: koneksi gagal"
+      "ok": "{{name}}: Koneksi berhasil",
+      "failed": "{{name}}: Koneksi gagal"
     },
     "oauth": {
       "success": "OAuth berhasil terhubung",
@@ -251,15 +251,15 @@
     "simple": "Sederhana",
     "advanced": "Lanjutan",
     "advancedQuery": "Kueri",
-    "advancedHint": "Masukkan kueri menggunakan sintaks penyedia.",
+    "advancedHint": "Sintaks kueri asli penyedia data.",
     "driveHint": "Sintaks kueri Google Drive, misalnya mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'. File di sampah selalu dikecualikan.",
     "noFields": "Sumber ini tidak mendukung filter.",
     "selectValues": "Pilih nilai…",
     "valuePlaceholder": "Nilai",
-    "valuesPlaceholder": "Ketikkan nilai dan tekan Enter",
+    "valuesPlaceholder": "Ketik nilai dan tekan Enter",
     "empty": {
-      "title": "Tidak ada filter",
-      "description": "Segala sesuatu dalam lingkup sumber akan disinkronkan."
+      "title": "Tanpa filter",
+      "description": "Semua konten dalam cakupan sumber yang dipilih akan disinkronkan."
     },
     "operators": {
       "equals": "=",
@@ -307,9 +307,9 @@
     "globalPreview": "Kebijakan global saat ini (ubah di Pengaturan):",
     "mode": {
       "global": "Gunakan pengaturan global",
-      "globalHelp": "Gunakan jenis file yang ditetapkan di Pengaturan.",
-      "override": "Atur khusus untuk tugas ini",
-      "overrideHelp": "Pilih jenis file untuk tugas ini saja."
+      "globalHelp": "Menggunakan jenis berkas yang dikonfigurasi di Pengaturan.",
+      "override": "Kustom",
+      "overrideHelp": "Tentukan jenis berkas khusus untuk tugas ini saja."
     }
   },
   "source": {
@@ -324,14 +324,14 @@
     "bankPlaceholder": "ID bank",
     "browseBanks": "Pilih bank memori",
     "pickCredentialFirst": "Pilih kredensial Hindsight terlebih dahulu.",
-    "locked": "Tujuan dikunci setelah proses pertama berhasil. Untuk memakai kredensial atau bank memori lain, buat tugas baru.",
+    "locked": "Pengaturan tujuan dikunci setelah eksekusi pertama yang berhasil. Untuk menyinkronkan ke tujuan lain, duplikasi tugas ini.",
     "lockNotice": "Tujuannya menjadi hanya-baca setelah proses pertama berhasil."
   },
   "retain": {
-    "label": "Strategi pemrosesan",
+    "label": "Strategi retensi (Retain strategy)",
     "bankDefault": "Strategi bawaan bank memori",
     "bankDefaultNamed": "Strategi bawaan bank memori ({{name}})",
-    "help": "Menentukan cara Hindsight memproses konten yang dikirim ke bank memori. Setelan bawaan menggunakan strategi yang dikonfigurasi pada bank tersebut.",
+    "help": "Menentukan cara Hindsight memproses dan mempertahankan konten yang diserap. Kosongkan untuk menggunakan default bank memori.",
     "freeTextPlaceholder": "Biarkan kosong untuk menggunakan setelan bawaan bank memori",
     "pickDestinationFirst": "Pilih kredensial tujuan dan bank memori untuk memuat strategi yang tersedia.",
     "loadFailed": "Tidak dapat memuat strategi dari Hindsight; masukkan nama strategi secara manual."
@@ -400,13 +400,13 @@
     },
     "actions": {
       "runNow": "Jalankan sekarang",
-      "fullReconcile": "Sinkronkan semua",
-      "fullReingest": "Impor ulang semua",
+      "fullReconcile": "Rekonsiliasi penuh (Reconcile)",
+      "fullReingest": "Ingest ulang penuh (Re-ingest)",
       "cancel": "Batalkan eksekusi",
       "enable": "Aktifkan",
       "disable": "Nonaktifkan",
       "viewRuns": "Lihat riwayat eksekusi",
-      "dryRun": "Simulasi",
+      "dryRun": "Uji coba (Dry-run)",
       "deleteDocuments": "Hapus dokumen"
     },
     "empty": {
@@ -453,7 +453,9 @@
       "title": "Hapus dokumen untuk “{{name}}”?",
       "description": "Menghapus dokumen berlabel tugas ini beserta memori terkait dari Hindsight. Tugas akan dijeda. Konten sumber tidak terpengaruh.",
       "success": "{{count}} dokumen dihapus",
-      "failed": "Tidak dapat menghapus dokumen"
+      "failed": "Tidak dapat menghapus dokumen",
+      "success_one": "{{count}} dokumen dihapus",
+      "success_other": "{{count}} dokumen dihapus"
     }
   },
   "taskEditor": {
@@ -475,11 +477,11 @@
       "enabled": "Diaktifkan"
     },
     "hints": {
-      "sourceReset": "Mengubah kredensial sumber atau direktori akar (bucket, folder, database, buku catatan, dan sebagainya) akan mereset kursor inkremental dan memicu pemindaian penuh untuk membangun ulang data dasar sinkronisasi.",
-      "sourceTypeLocked": "Jenis sumber tidak dapat diubah setelah pembuatan. Buat tugas baru untuk menggunakan sumber yang berbeda.",
-      "filtersReconcile": "Perubahan filter akan menandai tugas untuk sinkronisasi penuh. Item yang tidak lagi sesuai dengan filter akan dihapus dari Hindsight.",
-      "filesReconcile": "Perubahan jenis file akan memicu sinkronisasi penuh. File yang dikecualikan akan dihapus dari Hindsight.",
-      "policyRevision": "Jika strategi pemrosesan, tag, atau metadata diubah, semua konten yang memenuhi kriteria akan dikirim ulang ke Hindsight pada eksekusi berikutnya."
+      "sourceReset": "Mengubah kredensial sumber atau lokasi akar akan menyetel ulang kursor inkremental dan memicu pemindaian dasar penuh.",
+      "sourceTypeLocked": "Jenis sumber data tidak dapat diubah setelah dibuat. Buat tugas baru jika ingin menggunakan jenis lain.",
+      "filtersReconcile": "Mengubah filter menjadwalkan rekonsiliasi penuh; item yang tidak cocok lagi akan dihapus dari Hindsight.",
+      "filesReconcile": "Mengubah jenis berkas memicu rekonsiliasi penuh; berkas yang dikecualikan akan dihapus dari Hindsight.",
+      "policyRevision": "Mengubah strategi retensi, tag, atau metadata akan menyinkronkan ulang semua item yang cocok pada eksekusi berikutnya."
     },
     "sections": {
       "general": {
@@ -547,7 +549,7 @@
       "mode": "Mode eksekusi",
       "started": "Waktu mulai",
       "duration": "Durasi",
-      "counters": "Hasil"
+      "counters": "Hasil sinkronisasi"
     },
     "trigger": {
       "scheduled": "Dijadwalkan",
@@ -559,7 +561,7 @@
       "reingest": "Impor ulang semua"
     },
     "counters": {
-      "discoveredCount": "Ditemukan",
+      "discoveredCount": "Dipindai",
       "createdCount": "Dibuat",
       "updatedCount": "Diperbarui",
       "deletedCount": "Dihapus",
@@ -618,7 +620,7 @@
       "itemsSub": "di semua tugas",
       "failures24h": "Kegagalan (24 jam)",
       "needsAttention": "Perlu perhatian",
-      "allGood": "Semuanya baik-baik saja"
+      "allGood": "Semua normal"
     },
     "getStarted": {
       "title": "Siapkan sinkronisasi pertama Anda",
@@ -692,6 +694,8 @@
       "incrementalHelp": "Gunakan pelacakan perubahan bawaan penyedia jika tersedia. Jika dinonaktifkan, setiap eksekusi memindai semua konten, tetapi konten yang tidak berubah tidak diunggah ulang.",
       "reconcileInterval": "Interval sinkronisasi penuh",
       "reconcileIntervalHelp": "Jika waktu sejak sinkronisasi penuh terakhir melebihi interval ini, pemindaian penuh akan dilakukan pada eksekusi berikutnya.",
+      "maxConcurrentTasks": "Jumlah maksimum tugas bersamaan",
+      "maxConcurrentTasksHelp": "Default: 4. Perubahan langsung berlaku; tugas yang sedang berjalan tetap dilanjutkan saat batas dikurangi.",
       "maxFileSize": "Ukuran file maksimal",
       "maxFileSizeHelp": "File yang lebih besar dilewati."
     },
@@ -719,8 +723,8 @@
     "home": "Buka dasbor"
   },
   "dryRun": {
-    "title": "Simulasi: {{name}}",
-    "description": "Uji tugas tersimpan dengan memindai seluruh sumber. Tidak ada dokumen yang dikirim atau dihapus, dan progres sinkronisasi serta riwayat eksekusi tetap sama.",
+    "title": "Uji coba: {{name}}",
+    "description": "Mensimulasikan pemindaian sumber penuh untuk tugas yang disimpan tanpa mengubah data di Hindsight. Tidak ada dokumen yang dikirim atau dihapus.",
     "start": "Mulai simulasi",
     "running": "Memindai…",
     "complete_one": "{{count}} item sumber dipindai.",
@@ -738,7 +742,7 @@
       "unchanged": "Tidak berubah",
       "skip": "Lewati",
       "fail": "Gagal",
-      "release": "Hapus referensi tugas ini"
+      "release": "Lepas referensi tugas"
     }
   },
   "providerCopy": {

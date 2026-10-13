@@ -4,17 +4,15 @@ import "context"
 
 func (m *Manager) waitWithoutSlot(ctx context.Context, held *bool) func(func() error) error {
 	return func(wait func() error) error {
-		<-m.sem
+		m.releaseSlot()
 		*held = false
 		if err := wait(); err != nil {
 			return err
 		}
-		select {
-		case m.sem <- struct{}{}:
-			*held = true
-			return nil
-		case <-ctx.Done():
-			return ctx.Err()
+		if err := m.acquireSlot(ctx); err != nil {
+			return err
 		}
+		*held = true
+		return nil
 	}
 }

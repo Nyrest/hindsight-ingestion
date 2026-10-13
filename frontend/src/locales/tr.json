@@ -9,9 +9,9 @@
   },
   "app": {
     "name": "Hindsight Ingestion",
-    "tagline": "Kaynakları Hindsight bellek bankalarıyla eşitleyin",
+    "tagline": "Veri kaynaklarını Hindsight belleğiyle eşitleyin",
     "version": "v{{version}}",
-    "authDisabled": "kimlik doğrulama devre dışı"
+    "authDisabled": "Kimlik doğrulama devre dışı"
   },
   "language": {
     "label": "Dil"
@@ -39,7 +39,7 @@
     "close": "Kapat",
     "confirm": "Onayla",
     "commandPaletteTitle": "Komut paleti",
-    "commandPaletteDescription": "Çalıştırılacak bir komut arayın…",
+    "commandPaletteDescription": "Komut veya eylem ara…",
     "copied": "Panoya kopyalandı",
     "copy": "Kopyala",
     "copyFailed": "Panoya kopyalanamadı",
@@ -90,7 +90,7 @@
   },
   "chips": {
     "placeholder": "Yazın ve Enter'a basın",
-    "duplicate": "\"{{value}}\" zaten eklenmiş",
+    "duplicate": "“{{value}}” zaten eklendi",
     "remove": "Kaldır: {{value}}",
     "automatic": "Otomatik olarak eklendi"
   },
@@ -101,12 +101,12 @@
     "remove": "Satırı kaldır"
   },
   "secret": {
-    "keepHint": "Kayıtlı bir değer var. Mevcut değeri korumak için maskeyi değiştirmeyin; değiştirmek için yeni bir değer girin.",
+    "keepHint": "Mevcut gizli anahtar maskelenmiştir. Korumak için değiştirmeyin veya güncellemek için yeni bir değer girin.",
     "clear": "Saklanan değeri temizle"
   },
   "headers": {
-    "title": "Özel başlıklar",
-    "help": "Bu sağlayıcıya her istekle birlikte gönderilir. Bağlayıcı kimlik doğrulama üstbilgileri önceliklidir.",
+    "title": "Özel üstbilgiler (Headers)",
+    "help": "Bu sağlayıcıya yapılan her istekle birlikte gönderilir. Bağlayıcı kimlik doğrulama üstbilgileri önceliklidir.",
     "mode": "Editör modu",
     "ui": "Form",
     "json": "JSON",
@@ -114,8 +114,8 @@
     "value": "Değer",
     "valuePlaceholder": "Başlık değeri",
     "add": "Başlık ekle",
-    "empty": "Özel başlık yok",
-    "maskHint": "Saklanan değerler {{mask}} olarak gösterilir; değeri değiştirmeden bırakmak için maskeyi koruyun.",
+    "empty": "Özel üstbilgi yapılandırılmadı",
+    "maskHint": "Kaydedilen değerler {{mask}} olarak gösterilir; değiştirmemek için maskeyi koruyun.",
     "errors": {
       "duplicate": "Yinelenen başlık adı \"{{name}}\" (adlar büyük/küçük harfe duyarlı değildir)",
       "invalidJson": "Geçersiz JSON: {{detail}}",
@@ -125,7 +125,7 @@
     }
   },
   "browse": {
-    "searchSources": "Veri kaynaklarında ara…",
+    "searchSources": "Veri kaynaklarını ara…",
     "searchList": "Bu listede ara…",
     "searchSourcesHelp": "Bu bağlantıyla paylaşılan veri kaynaklarını başlığa göre arayın.",
     "searchListHelp": "Geçerli listeyi ada, yola veya kimliğe göre filtreleyin.",
@@ -134,11 +134,11 @@
     "button": "Göz at…",
     "title": "Göz at",
     "titleFor": "Seçim: {{label}}",
-    "description": "Klasörlere gidin ve bir öğe seçin.",
+    "description": "Klasörler arasında gezinin ve eşitlenecek öğeyi seçin.",
     "breadcrumbs": "Konum",
     "root": "Kök",
-    "empty": "Burada hiçbir şey yok",
-    "hint": "Bir öğe seçin veya okla bir klasörü açın",
+    "empty": "Öğe bulunamadı",
+    "hint": "Bir öğe seçin veya klasörü açmak için oka tıklayın",
     "open": "Aç: {{name}}",
     "select": "Seç",
     "selected": "Seçildi",
@@ -177,18 +177,18 @@
   },
   "credentials": {
     "title": "Kimlik bilgileri",
-    "description": "Kaynaklar ve Hindsight hedefleri için yeniden kullanılabilir bağlantı ayrıntıları.",
+    "description": "Kaynaklar ve Hindsight hedefleri için yeniden kullanılabilir bağlantı bilgileri.",
     "new": "Yeni kimlik bilgisi",
     "createTitle": "Yeni kimlik bilgisi",
-    "createDescription": "Bir sağlayıcı seçin ve bağlantı ayrıntılarını girin.",
+    "createDescription": "Bir sağlayıcı seçin ve bağlantı ayrıntılarını yapılandırın.",
     "editTitle": "Kimlik bilgisini düzenle",
-    "editDescription": "Kayıtlı anahtarlar maskelenmiş olarak gösterilir. Kayıtlı değerleri korumak için maskelenmiş değerleri değiştirmeyin.",
+    "editDescription": "Kayıtlı gizli anahtarlar maskelenir. Mevcut değerleri korumak için değiştirmeyin.",
     "createInline": "Yeni bir kimlik bilgisi oluştur",
     "namePlaceholder": "ör. {{type}} — İş",
     "pick": "Bir kimlik bilgisi seçin",
     "noneOfType": "Henüz {{type}} kimlik bilgisi yok",
-    "notActiveWarning": "Bu kimlik bilgisi şu anda “{{status}}”dur. Sorun giderilene kadar çalıştırmalar başarısız olabilir.",
-    "oauthHint": "Kaydettikten sonra “Bağlan”a tıklayın ve erişim izni vermek için yönergeleri izleyin.",
+    "notActiveWarning": "Bu kimlik bilgisi şu anda “{{status}}” durumunda. Çözülene kadar çalıştırmalar başarısız olabilir.",
+    "oauthHint": "Kaydettikten sonra sağlayıcı yetkilendirmesini tamamlamak için Bağlan'a tıklayın.",
     "usedByCount_one": "{{count}} görev",
     "usedByCount_other": "{{count}} görev",
     "fields": {
@@ -210,11 +210,11 @@
     },
     "empty": {
       "title": "Henüz kimlik bilgisi yok",
-      "description": "Bir görev oluşturmak için bir kaynak için (ör. Notion) ve Hindsight örneğiniz için bir kimlik bilgisi ekleyin."
+      "description": "Bir görev oluşturmak için bir kaynak ve bir Hindsight kimlik bilgisi ekleyin."
     },
     "test": {
-      "ok": "{{name}}: bağlantı tamam",
-      "failed": "{{name}}: bağlantı başarısız oldu"
+      "ok": "{{name}}: Bağlantı başarılı",
+      "failed": "{{name}}: Bağlantı başarısız"
     },
     "oauth": {
       "success": "OAuth başarıyla bağlandı",
@@ -251,7 +251,7 @@
     "simple": "Basit",
     "advanced": "Gelişmiş",
     "advancedQuery": "Sorgu",
-    "advancedHint": "Sağlayıcının sorgu sözdizimini doğrudan kullanın.",
+    "advancedHint": "Sağlayıcının yerel sorgu sözdizimi.",
     "driveHint": "Google Drive sorgu sözdizimi. Örnek: mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'. Çöp kutusundaki dosyalar her zaman hariç tutulur.",
     "noFields": "Bu kaynak filtreleri desteklemiyor.",
     "selectValues": "Değerleri seç…",
@@ -259,7 +259,7 @@
     "valuesPlaceholder": "Bir değer yazın ve Enter'a basın",
     "empty": {
       "title": "Filtre yok",
-      "description": "Kaynak kapsamındaki her şey senkronize edilecektir."
+      "description": "Seçilen kaynak kapsamındaki tüm içerik eşitlenecektir."
     },
     "operators": {
       "equals": "=",
@@ -307,9 +307,9 @@
     "globalPreview": "Mevcut genel politika (bunu Ayarlar'dan değiştirin):",
     "mode": {
       "global": "Genel ayarları kullan",
-      "globalHelp": "Ayarlar'da belirlenen dosya türlerini kullanır.",
-      "override": "Özelleştir",
-      "overrideHelp": "Yalnızca bu görev için dosya türlerini seçin."
+      "globalHelp": "Ayarlar bölümünde yapılandırılan dosya türlerini kullanır.",
+      "override": "Özel",
+      "overrideHelp": "Yalnızca bu görev için geçerli dosya türlerini belirleyin."
     }
   },
   "source": {
@@ -324,14 +324,14 @@
     "bankPlaceholder": "Bellek bankası kimliği",
     "browseBanks": "Bellek bankası seçin",
     "pickCredentialFirst": "Önce Hindsight kimlik bilgilerini seçin.",
-    "locked": "İlk başarılı çalıştırmadan sonra hedef kilitlenir. Başka kimlik bilgileri veya bellek bankası kullanmak için yeni bir görev oluşturun.",
+    "locked": "İlk başarılı çalıştırmanın ardından hedef ayarları kilitlenir. Farklı bir hedefe eşitlemek için bu görevi kopyalayın.",
     "lockNotice": "Hedef, ilk başarılı çalıştırmanın ardından salt okunur hale gelir."
   },
   "retain": {
-    "label": "İşleme stratejisi",
+    "label": "Saklama stratejisi (Retain strategy)",
     "bankDefault": "Bellek bankasının varsayılan stratejisi",
     "bankDefaultNamed": "Bellek bankasının varsayılan stratejisi ({{name}})",
-    "help": "Hindsight’ın bellek bankasına gönderilen içeriği nasıl işleyeceğini belirler. Varsayılan seçenek, bu bankada yapılandırılan stratejiyi kullanır.",
+    "help": "Hindsight'ın aktarılan içerikleri nasıl işleyeceğini ve saklayacağını belirler. Bellek bankası varsayılanı için boş bırakın.",
     "freeTextPlaceholder": "Bellek alanı varsayılanını kullanmak için boş bırakın",
     "pickDestinationFirst": "Kullanılabilir stratejileri yüklemek için önce hedef kimlik bilgilerini ve bellek bankasını seçin.",
     "loadFailed": "Hindsight'dan stratejiler yüklenemedi; manuel olarak bir strateji adı girin."
@@ -400,13 +400,13 @@
     },
     "actions": {
       "runNow": "Şimdi çalıştır",
-      "fullReconcile": "Tümünü eşitle",
-      "fullReingest": "Tümünü yeniden içe aktar",
+      "fullReconcile": "Tam eşitleme (Reconcile)",
+      "fullReingest": "Yeniden içe aktarma (Re-ingest)",
       "cancel": "Çalıştırmayı iptal et",
       "enable": "Etkinleştir",
       "disable": "Devre dışı bırak",
       "viewRuns": "Çalıştırma geçmişini görüntüle",
-      "dryRun": "Deneme çalıştırması",
+      "dryRun": "Test çalıştırması (Dry-run)",
       "deleteDocuments": "Belgeleri sil"
     },
     "empty": {
@@ -453,7 +453,9 @@
       "title": "“{{name}}” görevinin belgeleri silinsin mi?",
       "description": "Bu görevin etiketiyle işaretlenmiş belgeleri ve ilişkili anıları Hindsight’tan siler. Görev duraklatılır. Kaynak içerik etkilenmez.",
       "success": "{{count}} belge silindi",
-      "failed": "Belgeler silinemedi"
+      "failed": "Belgeler silinemedi",
+      "success_one": "{{count}} belge silindi",
+      "success_other": "{{count}} belge silindi"
     }
   },
   "taskEditor": {
@@ -475,11 +477,11 @@
       "enabled": "Etkin"
     },
     "hints": {
-      "sourceReset": "Kaynak kimlik bilgilerini veya kök dizini (bucket, klasör, veritabanı, not defteri vb.) değiştirmek artımlı imleci sıfırlar ve eşitleme temelini yeniden oluşturmak için tam tarama başlatır.",
-      "sourceTypeLocked": "Kaynak türü oluşturulduktan sonra değiştirilemez. Farklı bir kaynak kullanmak için yeni bir görev oluşturun.",
-      "filtersReconcile": "Filtreleri değiştirmek görevi tam eşitleme için işaretler. Filtrelere artık uymayan öğeler Hindsight’tan silinir.",
-      "filesReconcile": "Dosya türlerini değiştirmek tam eşitlemeyi başlatır. Hariç tutulan dosyalar Hindsight’tan silinir.",
-      "policyRevision": "İşleme stratejisi, etiketler veya meta veriler değiştirildiğinde, kriterlere uyan tüm içerikler sonraki çalıştırmada Hindsight’a yeniden gönderilir."
+      "sourceReset": "Kaynak kimlik bilgilerini veya kök konumu değiştirmek artımlı imleci sıfırlar ve tam bir temel taraması tetikler.",
+      "sourceTypeLocked": "Kaynak türü oluşturulduktan sonra değiştirilemez. Farklı bir kaynak için yeni bir görev oluşturun.",
+      "filtersReconcile": "Filtreleri değiştirmek tam eşitlemeyi kuyruğa alır; artık eşleşmeyen öğeler Hindsight'tan kaldırılır.",
+      "filesReconcile": "Dosya türlerini değiştirmek tam eşitlemeyi tetikler; hariç tutulan dosyalar Hindsight'tan kaldırılır.",
+      "policyRevision": "Saklama stratejisini, etiketleri veya meta verileri değiştirmek bir sonraki çalıştırmada tüm eşleşen öğeleri yeniden eşitler."
     },
     "sections": {
       "general": {
@@ -547,7 +549,7 @@
       "mode": "Çalıştırma modu",
       "started": "Başlangıç zamanı",
       "duration": "Süre",
-      "counters": "Sonuçlar"
+      "counters": "Eşitleme sonuçları"
     },
     "trigger": {
       "scheduled": "Zamanlanmış",
@@ -559,7 +561,7 @@
       "reingest": "Tümünü yeniden içe aktar"
     },
     "counters": {
-      "discoveredCount": "Bulunan",
+      "discoveredCount": "Tarandı",
       "createdCount": "Oluşturuldu",
       "updatedCount": "Güncellendi",
       "deletedCount": "Silindi",
@@ -617,7 +619,7 @@
       "items": "Eşitlenen öğeler",
       "itemsSub": "tüm görevler genelinde",
       "failures24h": "Başarısız (24 saat)",
-      "needsAttention": "Dikkat edilmesi gerekiyor",
+      "needsAttention": "İnceleme gerekli",
       "allGood": "Her şey yolunda"
     },
     "getStarted": {
@@ -692,6 +694,8 @@
       "incrementalHelp": "Mümkün olduğunda sağlayıcıya özgü değişiklik izlemeyi kullanın. Kapalıyken her çalıştırma tam bir envanter gerçekleştirir (değişmeyen içerik yine de yeniden yüklenmez).",
       "reconcileInterval": "Tam eşitleme aralığı",
       "reconcileIntervalHelp": "Son tam eşitlemenin üzerinden bu aralıktan daha uzun süre geçtiyse, sonraki çalıştırmada tam tarama yapılır.",
+      "maxConcurrentTasks": "En fazla eşzamanlı görev",
+      "maxConcurrentTasksHelp": "Varsayılan değer 4’tür. Değişiklikler hemen uygulanır; sınır azaltıldığında çalışan görevler devam eder.",
       "maxFileSize": "Maksimum dosya boyutu",
       "maxFileSizeHelp": "Daha büyük dosyalar atlanır."
     },
@@ -719,8 +723,8 @@
     "home": "Kontrol paneline git"
   },
   "dryRun": {
-    "title": "Deneme çalıştırması: {{name}}",
-    "description": "Kaydedilen görevi, kaynağın tamamını tarayarak sınayın. Hiçbir belge gönderilmez veya silinmez; eşitleme ilerlemesi ve çalıştırma geçmişi değişmeden kalır.",
+    "title": "Test çalıştırması: {{name}}",
+    "description": "Hindsight'ta değişiklik yapmadan kayıtlı görevin tam kaynak taramasını simüle eder. Hiçbir belge gönderilmez veya silinmez.",
     "start": "Deneme çalıştırmasını başlat",
     "running": "Taranıyor…",
     "complete_one": "{{count}} kaynak öğe tarandı.",
@@ -738,7 +742,7 @@
       "unchanged": "Değişmedi",
       "skip": "Atla",
       "fail": "Başarısız",
-      "release": "Bu görevin başvurusunu kaldır"
+      "release": "Görev referansını kaldır"
     }
   },
   "providerCopy": {

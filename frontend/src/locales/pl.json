@@ -9,9 +9,9 @@
   },
   "app": {
     "name": "Hindsight Ingestion",
-    "tagline": "Synchronizuj źródła z bankami pamięci Hindsight",
+    "tagline": "Synchronizuj źródła danych z pamięcią Hindsight",
     "version": "v{{version}}",
-    "authDisabled": "autoryzacja wyłączona"
+    "authDisabled": "Uwierzytelnianie wyłączone"
   },
   "language": {
     "label": "Język"
@@ -39,16 +39,16 @@
     "close": "Zamknij",
     "confirm": "Potwierdź",
     "commandPaletteTitle": "Paleta poleceń",
-    "commandPaletteDescription": "Wyszukaj polecenie do uruchomienia…",
+    "commandPaletteDescription": "Wyszukaj polecenie…",
     "copied": "Skopiowano do schowka",
     "copy": "Kopiuj",
-    "copyFailed": "Nie można skopiować do schowka",
+    "copyFailed": "Nie udało się skopiować do schowka",
     "create": "Utwórz",
     "delete": "Usuń",
     "edit": "Edytuj",
     "false": "Nie",
     "true": "Tak",
-    "loadFailed": "Nie udało się wczytać danych",
+    "loadFailed": "Nie udało się załadować danych",
     "loading": "Ładowanie…",
     "moreActions": "Więcej działań",
     "new": "Nowe",
@@ -90,7 +90,7 @@
   },
   "chips": {
     "placeholder": "Wpisz i naciśnij Enter",
-    "duplicate": "„{{value}}” został już dodany",
+    "duplicate": "Wartość „{{value}}” została już dodana",
     "remove": "Usuń {{value}}",
     "automatic": "Dodano automatycznie"
   },
@@ -101,12 +101,12 @@
     "remove": "Usuń wiersz"
   },
   "secret": {
-    "keepHint": "Wartość została zapisana. Pozostaw maskę bez zmian, aby zachować wartość, lub wpisz nową, aby ją zastąpić.",
+    "keepHint": "Zapisana wartość jest zamaskowana. Pozostaw maskę bez zmian, aby ją zachować, lub wpisz nową wartość.",
     "clear": "Wyczyść zapisaną wartość"
   },
   "headers": {
     "title": "Niestandardowe nagłówki",
-    "help": "Wysyłane przy każdym żądaniu do tego dostawcy. Nagłówki uwierzytelniania łącznika mają pierwszeństwo.",
+    "help": "Wysyłane z każdym żądaniem do tego dostawcy. Nagłówki uwierzytelniania łącznika mają pierwszeństwo.",
     "mode": "Tryb edytora",
     "ui": "Formularz",
     "json": "JSON",
@@ -115,7 +115,7 @@
     "valuePlaceholder": "Wartość nagłówka",
     "add": "Dodaj nagłówek",
     "empty": "Brak niestandardowych nagłówków",
-    "maskHint": "Przechowywane wartości są wyświetlane jako {{mask}}; zachowaj maskę, aby pozostawić wartość bez zmian.",
+    "maskHint": "Zapisane wartości są wyświetlane jako {{mask}}; pozostaw maskę, aby ich nie zmieniać.",
     "errors": {
       "duplicate": "Zduplikowana nazwa nagłówka „{{name}}” (w nazwach nie ma znaczenia wielkość liter)",
       "invalidJson": "Nieprawidłowy JSON: {{detail}}",
@@ -126,7 +126,7 @@
   },
   "browse": {
     "searchSources": "Szukaj źródeł danych…",
-    "searchList": "Szukaj na tej liście…",
+    "searchList": "Filtruj listę…",
     "searchSourcesHelp": "Szukaj po tytule źródeł danych udostępnionych temu połączeniu.",
     "searchListHelp": "Filtruj bieżącą listę według nazwy, ścieżki lub identyfikatora.",
     "clearSearch": "Wyczyść wyszukiwanie",
@@ -134,11 +134,11 @@
     "button": "Przeglądaj…",
     "title": "Przeglądaj",
     "titleFor": "Wybierz {{label}}",
-    "description": "Przejdź do folderów i wybierz element.",
+    "description": "Przechodź między folderami i wybierz element do synchronizacji.",
     "breadcrumbs": "Lokalizacja",
     "root": "Katalog główny",
-    "empty": "Nic tutaj",
-    "hint": "Wybierz element lub otwórz folder za pomocą strzałki",
+    "empty": "Brak elementów",
+    "hint": "Wybierz element lub kliknij strzałkę, aby otworzyć folder",
     "open": "Otwórz {{name}}",
     "select": "Wybierz",
     "selected": "Wybrane",
@@ -177,18 +177,18 @@
   },
   "credentials": {
     "title": "Poświadczenia",
-    "description": "Szczegóły połączeń wielokrotnego użytku dla źródeł i miejsc docelowych Hindsight.",
+    "description": "Dane logowania wielokrotnego użytku dla źródeł i instancji docelowych Hindsight.",
     "new": "Nowe poświadczenie",
     "createTitle": "Nowe poświadczenie",
-    "createDescription": "Wybierz dostawcę i wprowadź szczegóły jego połączenia.",
+    "createDescription": "Wybierz dostawcę i skonfiguruj szczegóły połączenia.",
     "editTitle": "Edytuj dane uwierzytelniające",
-    "editDescription": "Zapisane klucze są zamaskowane. Pozostaw maskę bez zmian, aby zachować zapisaną wartość.",
+    "editDescription": "Zapisane dane uwierzytelniające są zamaskowane. Pozostaw je bez zmian, aby zachować istniejące wartości.",
     "createInline": "Utwórz nowe poświadczenie",
     "namePlaceholder": "np. {{type}} — Praca",
     "pick": "Wybierz dane uwierzytelniające",
     "noneOfType": "Brak jeszcze poświadczeń {{type}}",
-    "notActiveWarning": "To poświadczenie to obecnie „{{status}}”. Uruchamianie może zakończyć się niepowodzeniem, dopóki nie zostanie naprawione.",
-    "oauthHint": "Po zapisaniu kliknij „Połącz” i postępuj zgodnie z instrukcjami, aby przyznać dostęp.",
+    "notActiveWarning": "To poświadczenie ma obecnie stan „{{status}}”. Zadania mogą kończyć się niepowodzeniem do czasu rozwiązania problemu.",
+    "oauthHint": "Po zapisaniu kliknij Połącz, aby przeprowadzić autoryzację u dostawcy.",
     "usedByCount_one": "{{count}} zadanie",
     "usedByCount_other": "{{count}} zadania",
     "fields": {
@@ -209,12 +209,12 @@
       "refresh": "Odśwież token"
     },
     "empty": {
-      "title": "Nie ma jeszcze żadnych poświadczeń",
-      "description": "Dodaj poświadczenia dla źródła (np. Notion) i poświadczenia dla instancji Hindsight, aby utworzyć zadanie."
+      "title": "Brak danych logowania",
+      "description": "Dodaj dane logowania dla źródła i instancji Hindsight, aby utworzyć zadanie."
     },
     "test": {
-      "ok": "{{name}}: połączenie OK",
-      "failed": "{{name}}: połączenie nie powiodło się"
+      "ok": "{{name}}: Połączenie pomyślne",
+      "failed": "{{name}}: Błąd połączenia"
     },
     "oauth": {
       "success": "Pomyślnie podłączono OAuth",
@@ -255,15 +255,15 @@
     "simple": "Proste",
     "advanced": "Zaawansowane",
     "advancedQuery": "Zapytanie",
-    "advancedHint": "Wprowadź zapytanie w składni dostawcy.",
+    "advancedHint": "Natywna składnia zapytań dostawcy danych.",
     "driveHint": "Składnia zapytań Google Drive, np. mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'. Pliki z kosza są zawsze pomijane.",
     "noFields": "To źródło nie obsługuje filtrów.",
     "selectValues": "Wybierz wartości…",
     "valuePlaceholder": "Wartość",
-    "valuesPlaceholder": "Wpisz wartość i naciśnij klawisz Enter",
+    "valuesPlaceholder": "Wpisz wartość i naciśnij Enter",
     "empty": {
-      "title": "Żadnych filtrów",
-      "description": "Wszystko w zakresie źródłowym zostanie zsynchronizowane."
+      "title": "Brak filtrów",
+      "description": "Cała zawartość w wybranym źródle zostanie zsynchronizowana."
     },
     "operators": {
       "equals": "=",
@@ -311,8 +311,8 @@
     "globalPreview": "Aktualna polityka globalna (zmień ją w Ustawieniach):",
     "mode": {
       "global": "Użyj ustawień globalnych",
-      "globalHelp": "Użyj typów plików ustawionych w Ustawieniach.",
-      "override": "Dostosuj",
+      "globalHelp": "Użyj typów plików skonfigurowanych w Ustawieniach.",
+      "override": "Własne",
       "overrideHelp": "Wybierz typy plików tylko dla tego zadania."
     }
   },
@@ -328,14 +328,14 @@
     "bankPlaceholder": "ID banku",
     "browseBanks": "Wybierz bank pamięci",
     "pickCredentialFirst": "Najpierw wybierz dane dostępowe Hindsight.",
-    "locked": "Po pierwszym udanym uruchomieniu miejsce docelowe zostaje zablokowane. Aby użyć innych danych dostępowych lub innego banku pamięci, utwórz nowe zadanie.",
+    "locked": "Ustawienia docelowe są blokowane po pierwszym pomyślnym uruchomieniu. Aby zmienić cel, sklonuj to zadanie.",
     "lockNotice": "Miejsce docelowe staje się tylko do odczytu po pierwszym pomyślnym uruchomieniu."
   },
   "retain": {
-    "label": "Strategia przetwarzania",
+    "label": "Strategia przechowywania (Retain strategy)",
     "bankDefault": "Domyślna strategia banku pamięci",
     "bankDefaultNamed": "Domyślna strategia banku pamięci ({{name}})",
-    "help": "Określa, jak Hindsight przetwarza treści wysyłane do banku pamięci. Opcja domyślna korzysta ze strategii ustawionej dla tego banku.",
+    "help": "Określa, w jaki sposób Hindsight przetwarza i przechowuje pobrane treści. Pozostaw puste dla ustawień domyślnych.",
     "freeTextPlaceholder": "Pozostaw puste, aby użyć ustawień domyślnych banku pamięci",
     "pickDestinationFirst": "Wybierz dane dostępowe miejsca docelowego i bank pamięci, aby wczytać dostępne strategie.",
     "loadFailed": "Nie można załadować strategii z Hindsight; wprowadź ręcznie nazwę strategii."
@@ -404,13 +404,13 @@
     },
     "actions": {
       "runNow": "Uruchom teraz",
-      "fullReconcile": "Pełna synchronizacja",
-      "fullReingest": "Zaimportuj wszystko ponownie",
+      "fullReconcile": "Pełna synchronizacja (Reconcile)",
+      "fullReingest": "Pełne ponowne pobranie (Re-ingest)",
       "cancel": "Anuluj uruchomienie",
       "enable": "Włącz",
       "disable": "Wyłącz",
       "viewRuns": "Zobacz historię uruchomień",
-      "dryRun": "Symulacja",
+      "dryRun": "Uruchomienie testowe (Dry-run)",
       "deleteDocuments": "Usuń dokumenty"
     },
     "empty": {
@@ -458,8 +458,12 @@
     "clearDocuments": {
       "title": "Usunąć dokumenty zadania „{{name}}”?",
       "description": "Usuwa z Hindsight dokumenty oznaczone dla tego zadania oraz powiązane wspomnienia. Zadanie zostanie wstrzymane. Treść źródłowa pozostanie bez zmian.",
-      "success": "Usunięte dokumenty: {{count}}",
-      "failed": "Nie udało się usunąć dokumentów"
+      "success": "Usunięto {{count}} dokumentów",
+      "failed": "Nie udało się usunąć dokumentów",
+      "success_one": "Usunięto {{count}} dokument",
+      "success_few": "Usunięto {{count}} dokumenty",
+      "success_many": "Usunięto {{count}} dokumentów",
+      "success_other": "Usunięto {{count}} dokumentów"
     }
   },
   "taskEditor": {
@@ -481,11 +485,11 @@
       "enabled": "Włączone"
     },
     "hints": {
-      "sourceReset": "Zmiana danych dostępowych źródła lub katalogu głównego (zasobnika, folderu, bazy danych, notatnika itd.) resetuje kursor przyrostowy i uruchamia pełne skanowanie, aby ponownie utworzyć punkt odniesienia synchronizacji.",
-      "sourceTypeLocked": "Po utworzeniu nie można zmienić typu źródła. Utwórz nowe zadanie, aby użyć innego źródła.",
-      "filtersReconcile": "Zmiana filtrów oznacza, że zadanie wymaga pełnej synchronizacji. Elementy, które przestaną pasować do filtrów, zostaną usunięte z Hindsight.",
-      "filesReconcile": "Zmiana typów plików uruchamia pełną synchronizację. Wykluczone pliki zostaną usunięte z Hindsight.",
-      "policyRevision": "Zmiana strategii przetwarzania, tagów lub metadanych spowoduje ponowne wysłanie wszystkich pasujących treści do Hindsight przy następnym uruchomieniu."
+      "sourceReset": "Zmiana danych logowania źródła lub ścieżki głównej resetuje kursor przyrostowy i uruchamia pełne skanowanie bazowe.",
+      "sourceTypeLocked": "Typ źródła nie może zostać zmieniony po utworzeniu. Utwórz nowe zadanie dla innego typu.",
+      "filtersReconcile": "Zmiana filtrów planuje pełną synchronizację; elementy, które przestały pasować, zostaną usunięte z Hindsight.",
+      "filesReconcile": "Zmiana typów plików planuje pełną synchronizację; wykluczone pliki zostaną usunięte z Hindsight.",
+      "policyRevision": "Zmiana strategii, tagów lub metadanych spowoduje ponowne wysłanie wszystkich pasujących elementów przy następnym uruchomieniu."
     },
     "sections": {
       "general": {
@@ -555,7 +559,7 @@
       "mode": "Tryb uruchomienia",
       "started": "Czas rozpoczęcia",
       "duration": "Czas trwania",
-      "counters": "Wyniki"
+      "counters": "Wyniki synchronizacji"
     },
     "trigger": {
       "scheduled": "Zaplanowane",
@@ -567,13 +571,13 @@
       "reingest": "Ponownie zaimportuj wszystko"
     },
     "counters": {
-      "discoveredCount": "Wykryto",
+      "discoveredCount": "Przeskanowano",
       "createdCount": "Utworzono",
       "updatedCount": "Zaktualizowano",
       "deletedCount": "Usunięto",
-      "unchangedCount": "Niezmienione",
-      "skippedCount": "Pominięte",
-      "failedCount": "Nie udało się"
+      "unchangedCount": "Bez zmian",
+      "skippedCount": "Pominięto",
+      "failedCount": "Niepowodzenie"
     },
     "filters": {
       "status": "Filtruj według stanu",
@@ -628,7 +632,7 @@
       "itemsSub": "we wszystkich zadaniach",
       "failures24h": "Błędy (24 godz.)",
       "needsAttention": "Wymaga uwagi",
-      "allGood": "Wszystko dobrze",
+      "allGood": "Wszystko w porządku",
       "runs24h_few": "{{count}} uruchomienia w ciągu ostatnich 24 godzin",
       "runs24h_many": "{{count}} uruchomień w ciągu ostatnich 24 godzin"
     },
@@ -704,6 +708,8 @@
       "incrementalHelp": "Jeśli to możliwe, użyj natywnego śledzenia zmian dostawcy. Gdy opcja jest wyłączona, przy każdym uruchomieniu wykonywana jest pełna inwentaryzacja (niezmieniona zawartość nadal nie jest ponownie przesyłana).",
       "reconcileInterval": "Odstęp między pełnymi synchronizacjami",
       "reconcileIntervalHelp": "Jeśli od ostatniej pełnej synchronizacji minęło więcej czasu niż ten odstęp, następne uruchomienie wykona pełne skanowanie.",
+      "maxConcurrentTasks": "Maksymalna liczba równoczesnych zadań",
+      "maxConcurrentTasksHelp": "Domyślnie: 4. Zmiany obowiązują od razu; po obniżeniu limitu trwające zadania są kontynuowane.",
       "maxFileSize": "Maksymalny rozmiar pliku",
       "maxFileSizeHelp": "Większe pliki są pomijane."
     },
@@ -731,8 +737,8 @@
     "home": "Przejdź do pulpitu nawigacyjnego"
   },
   "dryRun": {
-    "title": "Symulacja: {{name}}",
-    "description": "Sprawdź zapisane zadanie, skanując całe źródło. Dokumenty nie zostaną wysłane ani usunięte, a postęp synchronizacji i historia uruchomień pozostaną bez zmian.",
+    "title": "Uruchomienie testowe: {{name}}",
+    "description": "Symuluje pełne skanowanie źródła dla zapisanego zadania bez wprowadzania zmian w Hindsight. Żadne dokumenty nie są przesyłane ani usuwane.",
     "start": "Uruchom symulację",
     "running": "Skanowanie…",
     "complete_one": "Zeskanowano {{count}} element źródłowy.",
@@ -750,7 +756,7 @@
       "unchanged": "Niezmienione",
       "skip": "Pomiń",
       "fail": "Nie udało się",
-      "release": "Usuń odwołanie tego zadania"
+      "release": "Odłącz referencję zadania"
     },
     "complete_few": "Zeskanowano {{count}} elementy.",
     "complete_many": "Zeskanowano {{count}} elementów.",

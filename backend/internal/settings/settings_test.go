@@ -27,7 +27,7 @@ func TestTimezoneDefaultsAndPersistence(t *testing.T) {
 	for _, tc := range []struct{ env, want string }{{"", "UTC"}, {"Asia/Tokyo", "Asia/Tokyo"}} {
 		t.Setenv("TZ", tc.env)
 		v, err := store.Get(t.Context())
-		if err != nil || v.Timezone != tc.want {
+		if err != nil || v.Timezone != tc.want || v.MaxConcurrentTasks != 4 {
 			t.Fatalf("TZ=%q: timezone=%q, err=%v", tc.env, v.Timezone, err)
 		}
 	}
@@ -36,17 +36,35 @@ func TestTimezoneDefaultsAndPersistence(t *testing.T) {
 		t.Fatal(err)
 	}
 	v, err := store.Get(t.Context())
-	if err != nil || v.Timezone != "Asia/Tokyo" || v.MaxFileSizeMB != 20 {
+	if err != nil || v.Timezone != "Asia/Tokyo" || v.MaxFileSizeMB != 20 || v.MaxConcurrentTasks != 4 {
 		t.Fatal(v, err)
 	}
 	v.Timezone = "Europe/Berlin"
+	v.MaxConcurrentTasks = 7
 	if err := store.Put(t.Context(), v); err != nil {
 		t.Fatal(err)
 	}
 	t.Setenv("TZ", "America/New_York")
 	v, err = store.Get(t.Context())
-	if err != nil || v.Timezone != "Europe/Berlin" {
+	if err != nil || v.Timezone != "Europe/Berlin" || v.MaxConcurrentTasks != 7 {
 		t.Fatal(v, err)
+	}
+}
+
+func TestConcurrencyValidation(t *testing.T) {
+	for _, limit := range []int{-1, 0} {
+		v := Defaults
+		v.MaxConcurrentTasks = limit
+		if err := v.Validate(); err == nil {
+			t.Fatalf("accepted limit %d", limit)
+		}
+	}
+	for _, limit := range []int{1, 4, 100} {
+		v := Defaults
+		v.MaxConcurrentTasks = limit
+		if err := v.Validate(); err != nil {
+			t.Fatal(limit, err)
+		}
 	}
 }
 

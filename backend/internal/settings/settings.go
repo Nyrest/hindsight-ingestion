@@ -23,6 +23,7 @@ import (
 // Settings are the global, UI-editable settings.
 type Settings struct {
 	Timezone                   string                `json:"timezone"`
+	MaxConcurrentTasks         int                   `json:"maxConcurrentTasks"`
 	Proxy                      proxy.Config          `json:"proxy"`
 	ObservationScope           observations.Scope    `json:"observationScope"`
 	InlineMultimodalEnabled    bool                  `json:"inlineMultimodalEnabled"`
@@ -35,6 +36,7 @@ type Settings struct {
 // Defaults are applied for missing settings.
 var Defaults = Settings{
 	Timezone:                   "UTC",
+	MaxConcurrentTasks:         4,
 	Proxy:                      proxy.Default,
 	ObservationScope:           observations.Default,
 	IncrementalSyncEnabled:     true,
@@ -98,6 +100,9 @@ func (s *Store) Get(ctx context.Context) (Settings, error) {
 func (v Settings) Validate() error {
 	if _, err := time.LoadLocation(v.Timezone); v.Timezone == "" || err != nil {
 		return ErrInvalidTimezone
+	}
+	if v.MaxConcurrentTasks < 1 {
+		return errors.New("maxConcurrentTasks must be a positive integer")
 	}
 	if err := v.Proxy.Validate(); err != nil {
 		return err

@@ -1459,6 +1459,9 @@
           "inlineMultimodalEnabled": {
             "type": "boolean"
           },
+          "maxConcurrentTasks": {
+            "type": "integer"
+          },
           "maxFileSizeMB": {
             "type": "integer"
           },
@@ -1477,6 +1480,7 @@
         },
         "required": [
           "timezone",
+          "maxConcurrentTasks",
           "proxy",
           "observationScope",
           "inlineMultimodalEnabled",
@@ -2811,6 +2815,9 @@
                   },
                   "inlineMultimodalEnabled": {
                     "type": "boolean"
+                  },
+                  "maxConcurrentTasks": {
+                    "type": "integer"
                   },
                   "maxFileSizeMB": {
                     "type": "integer"

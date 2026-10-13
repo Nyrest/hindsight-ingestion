@@ -68,6 +68,7 @@ func (s *Server) patchSettings(w http.ResponseWriter, r *http.Request) {
 		s.fail(w, err)
 		return
 	}
+	s.Runs.SetMaxConcurrentTasks(v.MaxConcurrentTasks)
 	if previous.Timezone != v.Timezone {
 		if err := s.Sched.LoadTasks(r.Context()); err != nil {
 			s.fail(w, err)

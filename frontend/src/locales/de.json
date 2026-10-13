@@ -9,7 +9,7 @@
   },
   "app": {
     "name": "Hindsight Ingestion",
-    "tagline": "Datenquellen mit dem Hindsight-Erinnerungsspeicher synchronisieren",
+    "tagline": "Datenquellen mit dem Hindsight-Gedächtnis synchronisieren",
     "version": "v{{version}}",
     "authDisabled": "Authentifizierung deaktiviert"
   },
@@ -39,10 +39,10 @@
     "close": "Schließen",
     "confirm": "Bestätigen",
     "commandPaletteTitle": "Befehlspalette",
-    "commandPaletteDescription": "Suchen Sie nach einem auszuführenden Befehl ...",
+    "commandPaletteDescription": "Befehl eingeben oder suchen…",
     "copied": "In die Zwischenablage kopiert",
     "copy": "Kopieren",
-    "copyFailed": "Konnte nicht in die Zwischenablage kopieren",
+    "copyFailed": "Kopieren in die Zwischenablage fehlgeschlagen",
     "create": "Erstellen",
     "delete": "Löschen",
     "edit": "Bearbeiten",
@@ -89,8 +89,8 @@
     "error": "Fehler"
   },
   "chips": {
-    "placeholder": "Wert eingeben und die Eingabetaste drücken",
-    "duplicate": "„{{value}}“ ist bereits hinzugefügt",
+    "placeholder": "Eingeben und Enter drücken",
+    "duplicate": "„{{value}}“ wurde bereits hinzugefügt",
     "remove": "Entfernen Sie {{value}}",
     "automatic": "Automatisch hinzugefügt"
   },
@@ -101,12 +101,12 @@
     "remove": "Zeile entfernen"
   },
   "secret": {
-    "keepHint": "Ein Wert ist gespeichert. Lassen Sie die Maske unverändert, um den Wert beizubehalten, oder geben Sie einen neuen Wert ein.",
+    "keepHint": "Bestehendes Geheimnis ist maskiert. Unverändert lassen, um es beizubehalten, oder neuen Wert eingeben.",
     "clear": "Gespeicherten Wert löschen"
   },
   "headers": {
     "title": "Benutzerdefinierte Header",
-    "help": "Wird bei jeder Anfrage an diesen Anbieter gesendet. Connector-Authentifizierungsheader haben Vorrang.",
+    "help": "Wird bei jeder Anfrage an diesen Anbieter gesendet. Authentifizierungs-Header des Connectors haben Vorrang.",
     "mode": "Editormodus",
     "ui": "Formular",
     "json": "JSON",
@@ -114,8 +114,8 @@
     "value": "Wert",
     "valuePlaceholder": "Header-Wert",
     "add": "Header hinzufügen",
-    "empty": "Keine benutzerdefinierten Header",
-    "maskHint": "Gespeicherte Werte werden als {{mask}} angezeigt; Behalten Sie die Maske bei, um einen Wert unverändert zu lassen.",
+    "empty": "Keine benutzerdefinierten Header konfiguriert",
+    "maskHint": "Gespeicherte Werte werden als {{mask}} angezeigt; Maskierung beibehalten, um den Wert nicht zu ändern.",
     "errors": {
       "duplicate": "Doppelter Header-Name „{{name}}“ (bei Namen wird die Groß-/Kleinschreibung nicht beachtet)",
       "invalidJson": "Ungültiges JSON: {{detail}}",
@@ -125,8 +125,8 @@
     }
   },
   "browse": {
-    "searchSources": "Datenquellen suchen…",
-    "searchList": "Diese Liste durchsuchen…",
+    "searchSources": "Datenquellen durchsuchen…",
+    "searchList": "Liste durchsuchen…",
     "searchSourcesHelp": "Titel der Datenquellen suchen, die mit dieser Verbindung geteilt wurden.",
     "searchListHelp": "Aktuelle Liste nach Name, Pfad oder ID filtern.",
     "clearSearch": "Suche löschen",
@@ -134,11 +134,11 @@
     "button": "Durchsuchen…",
     "title": "Durchsuchen",
     "titleFor": "Wählen Sie {{label}}",
-    "description": "Navigieren Sie in Ordner und wählen Sie ein Element aus.",
+    "description": "Navigieren Sie durch Ordner und wählen Sie ein zu synchronisierendes Element aus.",
     "breadcrumbs": "Standort",
     "root": "Stammverzeichnis",
-    "empty": "Nichts hier",
-    "hint": "Wählen Sie ein Element aus oder öffnen Sie einen Ordner mit dem Pfeil",
+    "empty": "Keine Elemente vorhanden",
+    "hint": "Element auswählen oder Ordner mit dem Pfeil öffnen",
     "open": "Öffnen Sie {{name}}",
     "select": "Auswählen",
     "selected": "Ausgewählt",
@@ -177,18 +177,18 @@
   },
   "credentials": {
     "title": "Zugangsdaten",
-    "description": "Wiederverwendbare Verbindungsdetails für Quellen und Hindsight-Ziele.",
+    "description": "Wiederverwendbare Zugangsdaten für Datenquellen und Hindsight-Ziele.",
     "new": "Neue Zugangsdaten",
     "createTitle": "Neue Zugangsdaten",
-    "createDescription": "Wählen Sie einen Anbieter und geben Sie dessen Verbindungsdaten ein.",
+    "createDescription": "Wählen Sie einen Anbieter und konfigurieren Sie die Verbindungsdetails.",
     "editTitle": "Zugangsdaten bearbeiten",
-    "editDescription": "Gespeicherte Schlüssel werden maskiert angezeigt. Lassen Sie maskierte Werte unverändert, um die gespeicherten Werte beizubehalten.",
+    "editDescription": "Gespeicherte Geheimnisse sind maskiert. Unverändert lassen, um bestehende Werte beizubehalten.",
     "createInline": "Zugangsdaten hinzufügen",
     "namePlaceholder": "z. B. {{type}} – Arbeit",
     "pick": "Zugangsdaten auswählen",
     "noneOfType": "Noch keine Zugangsdaten für {{type}}",
-    "notActiveWarning": "Diese Zugangsdaten haben den Status „{{status}}“. Ausführungen können fehlschlagen, bis das Problem behoben ist.",
-    "oauthHint": "Klicken Sie nach dem Speichern auf „Verbinden“ und folgen Sie den Anweisungen zur Freigabe des Zugriffs.",
+    "notActiveWarning": "Diese Anmeldedaten haben derzeit den Status „{{status}}“. Ausführungen können fehlschlagen, bis dies behoben ist.",
+    "oauthHint": "Klicken Sie nach dem Speichern auf Verbinden, um die Autorisierung abzuschließen.",
     "usedByCount_one": "{{count}} Aufgabe",
     "usedByCount_other": "{{count}} Aufgaben",
     "fields": {
@@ -210,10 +210,10 @@
     },
     "empty": {
       "title": "Noch keine Zugangsdaten",
-      "description": "Fügen Sie Zugangsdaten für eine Quelle (z. B. Notion) und für Hindsight hinzu, um eine Aufgabe zu erstellen."
+      "description": "Fügen Sie Zugangsdaten für eine Datenquelle und für Ihre Hindsight-Instanz hinzu, um eine Aufgabe zu erstellen."
     },
     "test": {
-      "ok": "{{name}}: Verbindung OK",
+      "ok": "{{name}}: Verbindung erfolgreich",
       "failed": "{{name}}: Verbindung fehlgeschlagen"
     },
     "oauth": {
@@ -251,15 +251,15 @@
     "simple": "Einfach",
     "advanced": "Erweitert",
     "advancedQuery": "Abfrage",
-    "advancedHint": "Abfragesyntax des Anbieters direkt verwenden.",
+    "advancedHint": "Native Abfragesyntax der Datenquelle.",
     "driveHint": "Google-Drive-Abfragesyntax, z. B. mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'. Dateien im Papierkorb werden immer ausgeschlossen.",
     "noFields": "Diese Quelle unterstützt keine Filter.",
     "selectValues": "Werte auswählen…",
     "valuePlaceholder": "Wert",
-    "valuesPlaceholder": "Geben Sie einen Wert ein und drücken Sie die Eingabetaste",
+    "valuesPlaceholder": "Wert eingeben und Enter drücken",
     "empty": {
       "title": "Keine Filter",
-      "description": "Alles im Quellbereich wird synchronisiert."
+      "description": "Alle Inhalte innerhalb der Datenquelle werden synchronisiert."
     },
     "operators": {
       "equals": "=",
@@ -306,10 +306,10 @@
     "audios": "Audio",
     "globalPreview": "Aktuelle globale Richtlinie (in den Einstellungen ändern):",
     "mode": {
-      "global": "Globale Einstellungen verwenden",
-      "globalHelp": "Verwendet die in den Einstellungen festgelegten Dateitypen.",
+      "global": "Globalen Einstellungen folgen",
+      "globalHelp": "Verwendet die in den Einstellungen konfigurierten Dateitypen.",
       "override": "Benutzerdefiniert",
-      "overrideHelp": "Wählen Sie Dateitypen nur für diese Aufgabe aus."
+      "overrideHelp": "Dateitypen speziell für diese Aufgabe festlegen."
     }
   },
   "source": {
@@ -324,14 +324,14 @@
     "bankPlaceholder": "Erinnerungsspeicher-ID",
     "browseBanks": "Erinnerungsspeicher auswählen",
     "pickCredentialFirst": "Wählen Sie zuerst die Hindsight-Zugangsdaten aus.",
-    "locked": "Nach der ersten erfolgreichen Ausführung ist das Ziel gesperrt. Erstellen Sie eine neue Aufgabe, um andere Zugangsdaten oder einen anderen Erinnerungsspeicher zu verwenden.",
+    "locked": "Nach der ersten erfolgreichen Ausführung sind die Zieleinstellungen gesperrt. Um zu anderen Zugangsdaten oder einem anderen Memory Bank zu synchronisieren, duplizieren Sie diese Aufgabe.",
     "lockNotice": "Das Ziel wird nach der ersten erfolgreichen Ausführung schreibgeschützt."
   },
   "retain": {
-    "label": "Verarbeitungsstrategie",
+    "label": "Beibehaltungsstrategie (Retain strategy)",
     "bankDefault": "Standardstrategie des Erinnerungsspeichers",
     "bankDefaultNamed": "Standardstrategie des Erinnerungsspeichers ({{name}})",
-    "help": "Legt fest, wie Hindsight die Inhalte verarbeitet. Die Standardoption verwendet die im Erinnerungsspeicher konfigurierte Strategie.",
+    "help": "Legt fest, wie Hindsight erfasste Inhalte verarbeitet und speichert. Leer lassen für Standardeinstellung der Memory Bank.",
     "freeTextPlaceholder": "Leer lassen, um die Standardeinstellung der Speicherbank zu verwenden",
     "pickDestinationFirst": "Wählen Sie zuerst die Zugangsdaten für das Ziel und einen Erinnerungsspeicher, um verfügbare Strategien zu laden.",
     "loadFailed": "Strategien konnten nicht von Hindsight geladen werden; Geben Sie manuell einen Strategienamen ein."
@@ -400,13 +400,13 @@
     },
     "actions": {
       "runNow": "Jetzt ausführen",
-      "fullReconcile": "Vollständigen Abgleich starten",
-      "fullReingest": "Alles erneut importieren",
+      "fullReconcile": "Vollständiger Abgleich (Reconcile)",
+      "fullReingest": "Vollständig neu erfassen (Re-ingest)",
       "cancel": "Lauf abbrechen",
       "enable": "Aktivieren",
       "disable": "Deaktivieren",
       "viewRuns": "Ausführungen anzeigen",
-      "dryRun": "Probelauf",
+      "dryRun": "Testlauf (Dry-Run)",
       "deleteDocuments": "Dokumente löschen"
     },
     "empty": {
@@ -454,7 +454,8 @@
       "description": "Löscht die mit dieser Aufgabe markierten Dokumente und die zugehörigen Erinnerungen aus Hindsight. Die Aufgabe wird pausiert. Die Quelldaten bleiben erhalten.",
       "failed": "Dokumente konnten nicht gelöscht werden",
       "success_one": "{{count}} Dokument gelöscht",
-      "success_other": "{{count}} Dokumente gelöscht"
+      "success_other": "{{count}} Dokumente gelöscht",
+      "success": "{{count}} Dokumente gelöscht"
     }
   },
   "taskEditor": {
@@ -476,11 +477,11 @@
       "enabled": "Aktiviert"
     },
     "hints": {
-      "sourceReset": "Wenn Sie die Zugangsdaten der Quelle oder das Stammverzeichnis ändern (Bucket, Ordner, Datenbank, Notizbuch usw.), wird der inkrementelle Cursor zurückgesetzt und ein vollständiger Scan gestartet, um den Ausgangsbestand neu zu erfassen.",
-      "sourceTypeLocked": "Der Quelltyp kann nach der Erstellung nicht mehr geändert werden. Erstellen Sie eine neue Aufgabe, um eine andere Quelle zu verwenden.",
-      "filtersReconcile": "Wenn Sie Filter ändern, wird ein vollständiger Abgleich vorgemerkt. Dabei werden Inhalte, die nicht mehr den Filtern entsprechen, aus Hindsight entfernt.",
-      "filesReconcile": "Wenn Sie die Dateitypen ändern, wird ein vollständiger Abgleich durchgeführt. Ausgeschlossene Dateien werden aus Hindsight entfernt.",
-      "policyRevision": "Wenn Sie die Verarbeitungsstrategie, Tags oder Metadaten ändern, werden beim nächsten Lauf alle passenden Inhalte erneut an Hindsight übertragen."
+      "sourceReset": "Das Ändern der Datenquellen-Zugangsdaten oder des Stammverzeichnisses setzt den inkrementellen Cursor zurück und löst einen vollständigen Basis-Scan aus.",
+      "sourceTypeLocked": "Der Datenquellentyp kann nach der Erstellung nicht mehr geändert werden. Erstellen Sie eine neue Aufgabe für einen anderen Typ.",
+      "filtersReconcile": "Das Ändern von Filtern löst einen vollständigen Abgleich aus; nicht mehr passende Elemente werden aus Hindsight entfernt.",
+      "filesReconcile": "Das Ändern von Dateitypen löst einen vollständigen Abgleich aus; ausgeschlossene Dateien werden aus Hindsight entfernt.",
+      "policyRevision": "Das Ändern der Beibehaltungsstrategie, Tags oder Metadaten synchronisiert beim nächsten Lauf alle passenden Elemente erneut."
     },
     "sections": {
       "general": {
@@ -548,7 +549,7 @@
       "mode": "Ausführungsmodus",
       "started": "Startzeit",
       "duration": "Dauer",
-      "counters": "Ergebnisse"
+      "counters": "Synchronisationsergebnisse"
     },
     "trigger": {
       "scheduled": "Geplant",
@@ -560,7 +561,7 @@
       "reingest": "Alles erneut einlesen"
     },
     "counters": {
-      "discoveredCount": "Erkannt",
+      "discoveredCount": "Geprüft",
       "createdCount": "Erstellt",
       "updatedCount": "Aktualisiert",
       "deletedCount": "Gelöscht",
@@ -618,8 +619,8 @@
       "items": "Elemente synchronisiert",
       "itemsSub": "über alle Aufgaben hinweg",
       "failures24h": "Fehlgeschlagen (24 Std.)",
-      "needsAttention": "Handlungsbedarf",
-      "allGood": "Alles gut"
+      "needsAttention": "Aktion erforderlich",
+      "allGood": "Alles in Ordnung"
     },
     "getStarted": {
       "title": "Richten Sie Ihre erste Synchronisierung ein",
@@ -693,6 +694,8 @@
       "incrementalHelp": "Verwenden Sie, sofern verfügbar, die native Änderungsverfolgung des Anbieters. Wenn diese Option deaktiviert ist, wird bei jedem Lauf eine vollständige Bestandsaufnahme durchgeführt (unveränderte Inhalte werden immer noch nicht erneut hochgeladen).",
       "reconcileInterval": "Intervall für den vollständigen Abgleich",
       "reconcileIntervalHelp": "Ist der letzte vollständige Abgleich länger her als dieses Intervall, wird beim nächsten Lauf ein vollständiger Scan durchgeführt.",
+      "maxConcurrentTasks": "Maximale Anzahl paralleler Aufgaben",
+      "maxConcurrentTasksHelp": "Standard: 4. Änderungen gelten sofort; laufende Aufgaben werden bei einer Verringerung des Limits fortgesetzt.",
       "maxFileSize": "Maximale Dateigröße",
       "maxFileSizeHelp": "Größere Dateien werden übersprungen."
     },
@@ -720,8 +723,8 @@
     "home": "Zur Übersicht"
   },
   "dryRun": {
-    "title": "Probelauf: {{name}}",
-    "description": "Testen Sie die gespeicherte Aufgabe mit einem vollständigen Scan der Quelle. Es werden keine Dokumente gesendet oder gelöscht. Synchronisierungsfortschritt und Ausführungsverlauf bleiben unverändert.",
+    "title": "Testlauf: {{name}}",
+    "description": "Simuliert einen vollständigen Datenquellen-Scan für die gespeicherte Aufgabe. Es werden keine Dokumente gesendet oder gelöscht, und der Synchronisationsfortschritt bleibt unverändert.",
     "start": "Probelauf starten",
     "running": "Scan läuft…",
     "complete_one": "{{count}} Quellelement gescannt.",
@@ -739,7 +742,7 @@
       "unchanged": "Unverändert",
       "skip": "Überspringen",
       "fail": "Fehlgeschlagen",
-      "release": "Aufgabenreferenz lösen"
+      "release": "Aufgabenreferenz aufheben"
     }
   },
   "providerCopy": {

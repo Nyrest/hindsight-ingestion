@@ -113,9 +113,8 @@ Use `.env` for the bundled Compose deployment. Configure source credentials, tas
 | `BASIC_AUTH_PASSWORD` | ✅ | WebUI and API password. |
 | `CREDENTIAL_ENCRYPTION_KEY` | ✅ | Credential encryption key: 64 hex characters, base64-encoded 32 bytes, or a passphrase of at least 16 characters. |
 | `PUBLIC_URL` | — | Empty by default; OAuth uses the current browser origin. Set to use a fixed external URL. |
-| `MAX_CONCURRENT_TASKS` | — | `4`. Maximum number of task runs at the same time. |
 | `LOG_LEVEL` | — | `info`. Also accepts `debug`, `warn` and `error`. |
-| `TZ` | — | `UTC`. Default application timezone. |
+| `TZ` | — | Unset. Optional container timezone override; also initializes the application timezone (UTC when unset). |
 | `DISABLE_AUTH` | — | `false`. Set to `true` to allow access without signing in; DO THIS ONLY IF YOU HAVE EXTERNAL AUTHENTICATION SETUP LIKE CLOUDFLARE ACCESS. |
 
 For these additional variables, edit the Compose service's `environment` section. Setting them only in `.env` does not override the bundled configuration.
@@ -125,7 +124,6 @@ For these additional variables, edit the Compose service's `environment` section
 | `DB_TYPE` | `sqlite` | Database: `sqlite`, `postgres` or `mysql`. |
 | `DB_DSN` | `/data/hindsight-ingestion.db` for SQLite | SQLite file path or database connection string. Required for PostgreSQL and MySQL. |
 | `LISTEN_ADDR` | `:8080` | HTTP listen address. |
-| `NOTION_API_BASE` | `https://api.notion.com/v1` | Alternative Notion API URL for a proxy or local testing. |
 
 ## 🛠️ Development
 

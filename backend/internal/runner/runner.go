@@ -37,10 +37,13 @@ type active struct {
 
 // Manager coordinates run execution.
 type Manager struct {
-	db     *gorm.DB
-	engine *sync.Engine
-	log    *slog.Logger
-	sem    chan struct{}
+	db                 *gorm.DB
+	engine             *sync.Engine
+	log                *slog.Logger
+	slotMu             stdsync.Mutex
+	maxConcurrentTasks int
+	usedSlots          int
+	slotsChanged       chan struct{}
 
 	base       context.Context
 	cancelBase context.CancelCauseFunc
@@ -56,8 +59,9 @@ func NewManager(db *gorm.DB, engine *sync.Engine, maxConcurrent int, log *slog.L
 	base, cancel := context.WithCancelCause(context.Background())
 	return &Manager{
 		db: db, engine: engine, log: log,
-		sem:  make(chan struct{}, maxConcurrent),
-		base: base, cancelBase: cancel,
+		maxConcurrentTasks: maxConcurrent,
+		slotsChanged:       make(chan struct{}),
+		base:               base, cancelBase: cancel,
 		active:  map[string]*active{},
 		editing: map[string]bool{},
 	}
@@ -201,9 +205,7 @@ func (m *Manager) execute(ctx context.Context, taskID string, a *active, mode st
 	}()
 
 	// Global concurrency limit.
-	select {
-	case m.sem <- struct{}{}:
-	case <-ctx.Done():
+	if err := m.acquireSlot(ctx); err != nil {
 		status := models.RunCancelled
 		msg := "Run cancelled while queued"
 		if cause := context.Cause(ctx); errors.Is(cause, ErrShutdown) {
@@ -215,7 +217,7 @@ func (m *Manager) execute(ctx context.Context, taskID string, a *active, mode st
 	held := true
 	defer func() {
 		if held {
-			<-m.sem
+			m.releaseSlot()
 		}
 	}()
 
@@ -297,18 +299,16 @@ func (m *Manager) DryRun(ctx context.Context, taskID string) (sync.DryRunResult,
 		close(a.done)
 		m.wg.Done()
 	}()
-	select {
-	case m.sem <- struct{}{}:
-		held := true
-		defer func() {
-			if held {
-				<-m.sem
-			}
-		}()
-		return m.engine.DryRunWithOptions(ctx, taskID, sync.RunOptions{WaitSource: m.waitWithoutSlot(ctx, &held)})
-	case <-ctx.Done():
-		return sync.DryRunResult{}, ctx.Err()
+	if err := m.acquireSlot(ctx); err != nil {
+		return sync.DryRunResult{}, err
 	}
+	held := true
+	defer func() {
+		if held {
+			m.releaseSlot()
+		}
+	}()
+	return m.engine.DryRunWithOptions(ctx, taskID, sync.RunOptions{WaitSource: m.waitWithoutSlot(ctx, &held)})
 }
 
 // Shutdown interrupts every active run and waits for them to record state.

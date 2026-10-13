@@ -27,8 +27,7 @@ type Config struct {
 
 	EncryptionKey []byte
 
-	MaxConcurrentTasks int
-	LogLevel           slog.Level
+	LogLevel slog.Level
 }
 
 // Load reads and validates the environment. Startup must fail on error.
@@ -74,15 +73,6 @@ func Load() (*Config, error) {
 		return nil, err
 	}
 	cfg.EncryptionKey = key
-
-	cfg.MaxConcurrentTasks = 4
-	if v := os.Getenv("MAX_CONCURRENT_TASKS"); v != "" {
-		n, err := strconv.Atoi(v)
-		if err != nil || n < 1 {
-			return nil, fmt.Errorf("MAX_CONCURRENT_TASKS must be a positive integer")
-		}
-		cfg.MaxConcurrentTasks = n
-	}
 
 	switch strings.ToLower(env("LOG_LEVEL", "info")) {
 	case "debug":

@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"os"
 	"sort"
 	"strings"
 	"time"
@@ -17,15 +16,13 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/httpx"
 )
 
-// apiBase can be overridden with NOTION_API_BASE (e.g. for an egress proxy
-// or a local test double).
-var apiBase = envOr("NOTION_API_BASE", "https://api.notion.com/v1")
+const defaultAPIBase = "https://api.notion.com/v1"
 
-func envOr(key, def string) string {
-	if v := strings.TrimRight(os.Getenv(key), "/"); v != "" {
-		return v
+func apiBase(cred connectors.Credential) string {
+	if base := strings.TrimRight(strings.TrimSpace(cred.String("baseUrl")), "/"); base != "" {
+		return base
 	}
-	return def
+	return defaultAPIBase
 }
 
 const (
@@ -44,6 +41,7 @@ func init() {
 		Name:        "Notion",
 		Description: "Notion internal integration token with read access to shared data sources",
 		Fields: []connectors.FieldSpec{
+			{Key: "baseUrl", Label: "Base URL", Type: connectors.FieldURL, Default: defaultAPIBase, Placeholder: defaultAPIBase},
 			{Key: "token", Label: "Integration token", Type: connectors.FieldPassword, Secret: true, Required: true, Placeholder: "ntn_…"},
 		},
 	})
@@ -95,7 +93,7 @@ func (c *Connector) ValidateCredential(ctx context.Context, cred connectors.Cred
 			WorkspaceName string `json:"workspace_name"`
 		} `json:"bot"`
 	}
-	if err := client(cred).JSON(ctx, http.MethodGet, apiBase+"/users/me", nil, &me); err != nil {
+	if err := client(cred).JSON(ctx, http.MethodGet, apiBase(cred)+"/users/me", nil, &me); err != nil {
 		return "", err
 	}
 	if me.Bot.WorkspaceName != "" {
@@ -136,7 +134,7 @@ func (c *Connector) Browse(ctx context.Context, cred connectors.Credential, req 
 			HasMore    bool   `json:"has_more"`
 			NextCursor string `json:"next_cursor"`
 		}
-		if err := cl.JSON(ctx, http.MethodPost, apiBase+"/search", body, &out); err != nil {
+		if err := cl.JSON(ctx, http.MethodPost, apiBase(cred)+"/search", body, &out); err != nil {
 			return res, err
 		}
 		for _, r := range out.Results {
@@ -195,7 +193,7 @@ func (c *Connector) Scan(ctx context.Context, req connectors.ScanRequest) (conne
 	var ds struct {
 		Title []richText `json:"title"`
 	}
-	if err := cl.JSON(ctx, http.MethodGet, apiBase+"/data_sources/"+url.PathEscape(dsID), nil, &ds); err != nil {
+	if err := cl.JSON(ctx, http.MethodGet, apiBase(req.Credential)+"/data_sources/"+url.PathEscape(dsID), nil, &ds); err != nil {
 		return connectors.ScanResult{}, fmt.Errorf("retrieve data source: %w", err)
 	}
 	if t := plainText(ds.Title); t != "" {
@@ -234,7 +232,7 @@ func (c *Connector) Scan(ctx context.Context, req connectors.ScanRequest) (conne
 				IncompleteReason string `json:"incomplete_reason"`
 			} `json:"request_status"`
 		}
-		if err := cl.JSON(ctx, http.MethodPost, apiBase+"/data_sources/"+url.PathEscape(dsID)+"/query", body, &out); err != nil {
+		if err := cl.JSON(ctx, http.MethodPost, apiBase(req.Credential)+"/data_sources/"+url.PathEscape(dsID)+"/query", body, &out); err != nil {
 			return connectors.ScanResult{}, fmt.Errorf("query data source: %w", err)
 		}
 		if out.RequestStatus != nil && out.RequestStatus.Type == "incomplete" {
@@ -340,7 +338,7 @@ func readMarkdown(ctx context.Context, req connectors.ContentRequest) (string, e
 		Truncated      bool     `json:"truncated"`
 		UnknownBlockID []string `json:"unknown_block_ids"`
 	}
-	u := apiBase + "/pages/" + url.PathEscape(req.Item.ID) + "/markdown?include_transcript=true"
+	u := apiBase(req.Credential) + "/pages/" + url.PathEscape(req.Item.ID) + "/markdown?include_transcript=true"
 	if err := client(req.Credential).JSON(ctx, http.MethodGet, u, nil, &md); err != nil {
 		if httpx.IsStatus(err, http.StatusNotFound) {
 			return "", connectors.Skip("page no longer accessible")

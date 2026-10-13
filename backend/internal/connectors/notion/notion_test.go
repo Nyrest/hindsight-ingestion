@@ -14,6 +14,31 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 )
 
+func TestCredentialAPIBase(t *testing.T) {
+	for _, base := range []string{"", " \t", "https://api.notion.com/v1"} {
+		if got := apiBase(connectors.Credential{Config: map[string]any{"baseUrl": base}}); got != defaultAPIBase {
+			t.Fatalf("base %q: got %q", base, got)
+		}
+	}
+	if got := apiBase(connectors.Credential{Config: map[string]any{"baseUrl": " https://proxy.example/v1/ "}}); got != "https://proxy.example/v1" {
+		t.Fatal("custom base was not normalized", got)
+	}
+	for _, name := range []string{"first", "second"} {
+		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if r.URL.Path != "/v1/users/me" {
+				t.Errorf("unexpected path %q", r.URL.Path)
+			}
+			json.NewEncoder(w).Encode(map[string]string{"name": name})
+		}))
+		defer srv.Close()
+		cred := connectors.Credential{Config: map[string]any{"baseUrl": srv.URL + "/v1/"}}
+		message, err := (&Connector{}).ValidateCredential(t.Context(), cred)
+		if err != nil || message != "Connected as "+name {
+			t.Fatal("credential did not use its own endpoint", message, err)
+		}
+	}
+}
+
 func TestInlineImagesRefreshAndPolicy(t *testing.T) {
 	for _, tc := range []struct {
 		name            string
@@ -48,12 +73,9 @@ func TestInlineImagesRefreshAndPolicy(t *testing.T) {
 				w.Write(append([]byte{137, 80, 78, 71, 13, 10, 26, 10}, bytes.Repeat([]byte{0}, 24)...))
 			}))
 			defer srv.Close()
-			old := apiBase
-			apiBase = srv.URL
-			defer func() { apiBase = old }()
 			op, _ := json.Marshal(opaque{Title: "Title", Source: "Wiki", Properties: json.RawMessage(`{"Name":{"type":"title","title":[{"plain_text":"Title"}]}}`)})
 			content, err := (&Connector{}).OpenContent(t.Context(), connectors.ContentRequest{
-				Credential: connectors.Credential{Secrets: map[string]string{"token": "secret"}},
+				Credential: connectors.Credential{Config: map[string]any{"baseUrl": srv.URL}, Secrets: map[string]string{"token": "secret"}},
 				Item: connectors.SourceItem{
 					ID: "p1", Opaque: op, ModifiedAt: time.Date(2026, 10, 13, 1, 0, 0, 0, time.UTC),
 					Attributes: map[string]any{"createdAt": time.Date(2026, 10, 1, 1, 0, 0, 0, time.UTC)},
@@ -116,10 +138,7 @@ func TestBrowseSearch(t *testing.T) {
 				}
 			}))
 			defer srv.Close()
-			old := apiBase
-			apiBase = srv.URL
-			defer func() { apiBase = old }()
-			listing, err := (&Connector{}).Browse(t.Context(), connectors.Credential{}, connectors.BrowseRequest{Query: query})
+			listing, err := (&Connector{}).Browse(t.Context(), connectors.Credential{Config: map[string]any{"baseUrl": srv.URL}}, connectors.BrowseRequest{Query: query})
 			if err != nil || !listing.SupportsSearch || requests != 2 || len(listing.Items) != 2 {
 				t.Fatalf("browse: %+v, requests=%d, err=%v", listing, requests, err)
 			}
@@ -178,11 +197,8 @@ func TestScanAndContent(t *testing.T) {
 		}
 	}))
 	defer srv.Close()
-	old := apiBase
-	apiBase = srv.URL
-	defer func() { apiBase = old }()
 
-	cred := connectors.Credential{Secrets: map[string]string{"token": "secret"}}
+	cred := connectors.Credential{Config: map[string]any{"baseUrl": srv.URL}, Secrets: map[string]string{"token": "secret"}}
 	var items []connectors.SourceItem
 	c := &Connector{}
 	res, err := c.Scan(context.Background(), connectors.ScanRequest{

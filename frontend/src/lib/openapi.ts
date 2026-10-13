@@ -749,6 +749,7 @@ export interface components {
             fullReconcileIntervalHours: number;
             incrementalSyncEnabled: boolean;
             inlineMultimodalEnabled: boolean;
+            maxConcurrentTasks: number;
             maxFileSizeMB: number;
             oauthRedirectUri: string;
             observationScope: components["schemas"]["Scope"];
@@ -1639,6 +1640,7 @@ export interface operations {
                     fullReconcileIntervalHours?: number;
                     incrementalSyncEnabled?: boolean;
                     inlineMultimodalEnabled?: boolean;
+                    maxConcurrentTasks?: number;
                     maxFileSizeMB?: number;
                     observationScope?: components["schemas"]["Scope"];
                     proxy?: components["schemas"]["Config"];

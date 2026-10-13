@@ -19,9 +19,8 @@ services:
       DISABLE_AUTH: ${DISABLE_AUTH:-false}
       CREDENTIAL_ENCRYPTION_KEY: ${CREDENTIAL_ENCRYPTION_KEY:?set CREDENTIAL_ENCRYPTION_KEY in .env}
       PUBLIC_URL: ${PUBLIC_URL:-}
-      MAX_CONCURRENT_TASKS: ${MAX_CONCURRENT_TASKS:-4}
       LOG_LEVEL: ${LOG_LEVEL:-debug}
-      TZ: ${TZ:-UTC}
+      TZ:
     volumes:
       - hindsight-ingestion-data:/data
     deploy:

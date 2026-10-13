@@ -9,9 +9,9 @@
   },
   "app": {
     "name": "Hindsight Ingestion",
-    "tagline": "Sincronizza le fonti con gli archivi di memoria di Hindsight",
+    "tagline": "Sincronizza le tue origini con la memoria di Hindsight",
     "version": "v{{version}}",
-    "authDisabled": "autenticazione disabilitata"
+    "authDisabled": "Autenticazione disattivata"
   },
   "language": {
     "label": "Lingua"
@@ -39,7 +39,7 @@
     "close": "Chiudi",
     "confirm": "Conferma",
     "commandPaletteTitle": "Tavolozza dei comandi",
-    "commandPaletteDescription": "Cerca un comando da eseguire...",
+    "commandPaletteDescription": "Cerca un comando o un'azione…",
     "copied": "Copiato negli appunti",
     "copy": "Copia",
     "copyFailed": "Impossibile copiare negli appunti",
@@ -90,7 +90,7 @@
   },
   "chips": {
     "placeholder": "Digita e premi Invio",
-    "duplicate": "\"{{value}}\" è già aggiunto",
+    "duplicate": "“{{value}}” è già stato aggiunto",
     "remove": "Rimuovi {{value}}",
     "automatic": "Aggiunto automaticamente"
   },
@@ -101,12 +101,12 @@
     "remove": "Rimuovi riga"
   },
   "secret": {
-    "keepHint": "È presente un valore salvato. Lascia invariata la maschera per conservarlo o inserisci un nuovo valore per sostituirlo.",
+    "keepHint": "Il segreto esistente è mascherato. Lascialo invariato per conservarlo, oppure inserisci un nuovo valore per aggiornarlo.",
     "clear": "Cancella il valore memorizzato"
   },
   "headers": {
     "title": "Intestazioni personalizzate",
-    "help": "Inviato con ogni richiesta a questo fornitore. Le intestazioni di autenticazione del connettore hanno la precedenza.",
+    "help": "Inviate con ogni richiesta a questo provider. Le intestazioni di autenticazione del connettore hanno la precedenza.",
     "mode": "Modalità di modifica",
     "ui": "Modulo",
     "json": "JSON",
@@ -114,8 +114,8 @@
     "value": "Valore",
     "valuePlaceholder": "Valore dell'intestazione",
     "add": "Aggiungi intestazione",
-    "empty": "Nessuna intestazione personalizzata",
-    "maskHint": "I valori memorizzati vengono visualizzati come {{mask}}; mantenere la maschera per lasciare invariato un valore.",
+    "empty": "Nessuna intestazione personalizzata configurata",
+    "maskHint": "I valori salvati sono mostrati come {{mask}}; mantieni la maschera per non modificarli.",
     "errors": {
       "duplicate": "Nome dell'intestazione duplicato \"{{name}}\" (i nomi non fanno distinzione tra maiuscole e minuscole)",
       "invalidJson": "JSON non valido: {{detail}}",
@@ -125,8 +125,8 @@
     }
   },
   "browse": {
-    "searchSources": "Cerca fonti di dati…",
-    "searchList": "Cerca in questo elenco…",
+    "searchSources": "Cerca origini dati…",
+    "searchList": "Filtra questo elenco…",
     "searchSourcesHelp": "Cerca per titolo le fonti di dati condivise con questa connessione.",
     "searchListHelp": "Filtra l’elenco attuale per nome, percorso o ID.",
     "clearSearch": "Cancella ricerca",
@@ -134,11 +134,11 @@
     "button": "Sfoglia...",
     "title": "Sfoglia",
     "titleFor": "Selezionare {{label}}",
-    "description": "Navigare nelle cartelle e selezionare un elemento.",
+    "description": "Esplora le cartelle e seleziona l'elemento da sincronizzare.",
     "breadcrumbs": "Posizione",
     "root": "Radice",
-    "empty": "Niente qui",
-    "hint": "Seleziona un elemento o apri una cartella con la freccia",
+    "empty": "Nessun elemento trovato",
+    "hint": "Seleziona un elemento o clicca sulla freccia per aprire la cartella",
     "open": "Apri {{name}}",
     "select": "Seleziona",
     "selected": "Selezionato",
@@ -177,18 +177,18 @@
   },
   "credentials": {
     "title": "Credenziali",
-    "description": "Dettagli di connessione riutilizzabili per origini e destinazioni Hindsight.",
+    "description": "Credenziali riutilizzabili per le origini e le destinazioni di Hindsight.",
     "new": "Nuova credenziale",
     "createTitle": "Nuova credenziale",
-    "createDescription": "Scegli un provider e inserisci i dettagli della sua connessione.",
+    "createDescription": "Seleziona un provider e configura i dettagli di connessione.",
     "editTitle": "Modifica credenziale",
-    "editDescription": "Le chiavi salvate sono nascoste. Lascia invariati i valori mascherati per mantenere quelli salvati.",
+    "editDescription": "I segreti salvati sono mascherati. Lasciali invariati per conservare i valori correnti.",
     "createInline": "Crea una nuova credenziale",
     "namePlaceholder": "es. {{type}} — Lavoro",
     "pick": "Seleziona una credenziale",
     "noneOfType": "Nessuna credenziale {{type}} ancora",
-    "notActiveWarning": "Questa credenziale è attualmente \"{{status}}\". Le esecuzioni potrebbero non riuscire finché il problema non viene risolto.",
-    "oauthHint": "Dopo aver salvato, fai clic su “Connetti” e segui le istruzioni per autorizzare l’accesso.",
+    "notActiveWarning": "Questa credenziale è attualmente in stato “{{status}}”. Le sincronizzazioni potrebbero non riuscire fino alla risoluzione.",
+    "oauthHint": "Dopo aver salvato, clicca su Connetti per completare l'autorizzazione con il provider.",
     "usedByCount_one": "{{count}} attività",
     "usedByCount_other": "{{count}} attività",
     "fields": {
@@ -209,12 +209,12 @@
       "refresh": "Aggiorna token"
     },
     "empty": {
-      "title": "Nessuna credenziale ancora",
-      "description": "Aggiungi una credenziale per un'origine (ad esempio Notion) e una per la tua istanza Hindsight per creare un'attività."
+      "title": "Nessuna credenziale",
+      "description": "Aggiungi una credenziale per l'origine e una per la tua istanza Hindsight per creare un'attività."
     },
     "test": {
-      "ok": "{{name}}: connessione OK",
-      "failed": "{{name}}: connessione non riuscita"
+      "ok": "{{name}}: Connessione riuscita",
+      "failed": "{{name}}: Connessione non riuscita"
     },
     "oauth": {
       "success": "OAuth connesso correttamente",
@@ -251,15 +251,15 @@
     "simple": "Semplice",
     "advanced": "Avanzato",
     "advancedQuery": "Query",
-    "advancedHint": "Inserisci una query usando la sintassi del provider.",
+    "advancedHint": "Sintassi nativa di query del provider.",
     "driveHint": "Sintassi di ricerca di Google Drive, ad esempio: mimeType = 'application/pdf' and modifiedTime > '2024-01-01T00:00:00'. I file nel cestino sono sempre esclusi.",
     "noFields": "Questa fonte non supporta i filtri.",
     "selectValues": "Seleziona i valori...",
     "valuePlaceholder": "Valore",
-    "valuesPlaceholder": "Digitare un valore e premere Invio",
+    "valuesPlaceholder": "Inserisci un valore e premi Invio",
     "empty": {
       "title": "Nessun filtro",
-      "description": "Tutto nell'ambito di origine verrà sincronizzato."
+      "description": "Tutti i contenuti all'interno dell'origine selezionata saranno sincronizzati."
     },
     "operators": {
       "equals": "=",
@@ -306,10 +306,10 @@
     "audios": "Audio",
     "globalPreview": "Politica globale attuale (modificala in Impostazioni):",
     "mode": {
-      "global": "Usa le impostazioni globali",
-      "globalHelp": "Usa i tipi di file configurati nelle impostazioni.",
-      "override": "Personalizza",
-      "overrideHelp": "Scegli i tipi di file solo per questa attività."
+      "global": "Segui impostazioni globali",
+      "globalHelp": "Usa i tipi di file configurati nelle Impostazioni.",
+      "override": "Personalizzato",
+      "overrideHelp": "Specifica i tipi di file solo per questa attività."
     }
   },
   "source": {
@@ -324,14 +324,14 @@
     "bankPlaceholder": "ID archivio di memoria",
     "browseBanks": "Seleziona un archivio di memoria",
     "pickCredentialFirst": "Seleziona prima le credenziali Hindsight.",
-    "locked": "La destinazione viene bloccata dopo la prima esecuzione riuscita. Per usare credenziali o un archivio di memoria diversi, crea una nuova attività.",
+    "locked": "Le impostazioni di destinazione sono bloccate dopo la prima esecuzione completata con successo. Per inviare a un'altra destinazione, duplica questa attività.",
     "lockNotice": "La destinazione diventa di sola lettura dopo la prima esecuzione riuscita."
   },
   "retain": {
-    "label": "Strategia di elaborazione",
+    "label": "Strategia di conservazione (Retain strategy)",
     "bankDefault": "Strategia predefinita dell’archivio di memoria",
     "bankDefaultNamed": "Strategia predefinita dell’archivio di memoria ({{name}})",
-    "help": "Definisce come Hindsight elabora i contenuti. L’opzione predefinita usa la strategia configurata nell’archivio di memoria.",
+    "help": "Come Hindsight elabora e memorizza i contenuti acquisiti. Lascia vuoto per usare l'impostazione predefinita del banco di memoria.",
     "freeTextPlaceholder": "Lascia vuoto per usare l’impostazione predefinita dell’archivio di memoria",
     "pickDestinationFirst": "Seleziona le credenziali di destinazione e un archivio di memoria per caricare le strategie disponibili.",
     "loadFailed": "Impossibile caricare le strategie da Hindsight; inserisci manualmente il nome di una strategia."
@@ -400,13 +400,13 @@
     },
     "actions": {
       "runNow": "Esegui ora",
-      "fullReconcile": "Sincronizza tutto",
-      "fullReingest": "Importa di nuovo tutto",
+      "fullReconcile": "Riconciliazione completa (Reconcile)",
+      "fullReingest": "Re-importazione completa (Re-ingest)",
       "cancel": "Annulla esecuzione",
       "enable": "Abilita",
       "disable": "Disabilita",
       "viewRuns": "Visualizza esecuzioni",
-      "dryRun": "Simulazione",
+      "dryRun": "Simulazione (Dry-run)",
       "deleteDocuments": "Elimina documenti"
     },
     "empty": {
@@ -454,7 +454,8 @@
       "description": "Elimina da Hindsight i documenti contrassegnati per questa attività e i ricordi associati. L’attività verrà sospesa. Il contenuto di origine non verrà modificato.",
       "failed": "Impossibile eliminare i documenti",
       "success_one": "{{count}} documento eliminato",
-      "success_other": "{{count}} documenti eliminati"
+      "success_other": "{{count}} documenti eliminati",
+      "success": "{{count}} documenti eliminati"
     }
   },
   "taskEditor": {
@@ -476,11 +477,11 @@
       "enabled": "Abilitato"
     },
     "hints": {
-      "sourceReset": "Modificando le credenziali dell'origine o la cartella radice (bucket, cartella, database, taccuino...), il cursore incrementale viene azzerato e viene avviata una scansione completa per ricostruire l'inventario iniziale.",
-      "sourceTypeLocked": "Il tipo di origine non può essere modificato dopo la creazione. Crea una nuova attività per utilizzare una fonte diversa.",
-      "filtersReconcile": "Quando modifichi i filtri, l’attività viene contrassegnata per una sincronizzazione completa. Gli elementi che non corrispondono più ai filtri verranno rimossi da Hindsight.",
-      "filesReconcile": "Quando modifichi i tipi di file, viene eseguita una sincronizzazione completa. I file esclusi vengono rimossi da Hindsight.",
-      "policyRevision": "Modificando la strategia di elaborazione, i tag o i metadati, tutti i contenuti che corrispondono ai criteri verranno inviati di nuovo a Hindsight alla prossima esecuzione."
+      "sourceReset": "La modifica delle credenziali dell'origine o della cartella principale reimposta il cursore incrementale e avvia una scansione completa iniziale.",
+      "sourceTypeLocked": "Il tipo di origine non può essere modificato dopo la creazione. Crea una nuova attività per utilizzare un tipo diverso.",
+      "filtersReconcile": "La modifica dei filtri pianifica una riconciliazione completa; gli elementi non più corrispondenti saranno rimossi da Hindsight.",
+      "filesReconcile": "La modifica dei tipi di file pianifica una riconciliazione completa; i file esclusi saranno rimossi da Hindsight.",
+      "policyRevision": "La modifica della strategia, dei tag o dei metadati risincronizzerà tutti gli elementi corrispondenti alla prossima esecuzione."
     },
     "sections": {
       "general": {
@@ -548,7 +549,7 @@
       "mode": "Modalità di esecuzione",
       "started": "Ora di avvio",
       "duration": "Durata",
-      "counters": "Risultati"
+      "counters": "Risultati sincronizzazione"
     },
     "trigger": {
       "scheduled": "Programmato",
@@ -560,13 +561,13 @@
       "reingest": "Reimporta tutto"
     },
     "counters": {
-      "discoveredCount": "Rilevati",
-      "createdCount": "Creato",
-      "updatedCount": "Aggiornato",
-      "deletedCount": "Eliminato",
-      "unchangedCount": "Invariato",
-      "skippedCount": "Saltato",
-      "failedCount": "Fallito"
+      "discoveredCount": "Esaminati",
+      "createdCount": "Creati",
+      "updatedCount": "Aggiornati",
+      "deletedCount": "Eliminati",
+      "unchangedCount": "Invariati",
+      "skippedCount": "Ignorati",
+      "failedCount": "Non riusciti"
     },
     "filters": {
       "status": "Filtra per stato",
@@ -618,8 +619,8 @@
       "items": "Elementi sincronizzati",
       "itemsSub": "in tutte le attività",
       "failures24h": "Errori (24 ore)",
-      "needsAttention": "Ha bisogno di attenzione",
-      "allGood": "Tutto bene"
+      "needsAttention": "Richiede attenzione",
+      "allGood": "Tutto normale"
     },
     "getStarted": {
       "title": "Configura la tua prima sincronizzazione",
@@ -693,6 +694,8 @@
       "incrementalHelp": "Utilizza il monitoraggio delle modifiche nativo del provider, ove disponibile. Quando è disattivato, ogni esecuzione esegue un inventario completo (il contenuto non modificato non viene ancora ricaricato).",
       "reconcileInterval": "Intervallo di sincronizzazione completa",
       "reconcileIntervalHelp": "Se è trascorso questo intervallo dall’ultima sincronizzazione completa, la prossima esecuzione effettuerà una scansione completa.",
+      "maxConcurrentTasks": "Numero massimo di attività simultanee",
+      "maxConcurrentTasksHelp": "Il valore predefinito è 4. Le modifiche hanno effetto immediato; le attività in corso continuano se il limite viene ridotto.",
       "maxFileSize": "Dimensione massima del file",
       "maxFileSizeHelp": "I file più grandi vengono saltati."
     },
@@ -721,7 +724,7 @@
   },
   "dryRun": {
     "title": "Simulazione: {{name}}",
-    "description": "Verifica l’attività salvata eseguendo una scansione completa dell’origine. Nessun documento verrà inviato o eliminato; l’avanzamento della sincronizzazione e la cronologia delle esecuzioni resteranno invariati.",
+    "description": "Simula una scansione completa dell'origine per l'attività salvata senza modificare Hindsight. Nessun documento viene inviato o eliminato.",
     "start": "Avvia simulazione",
     "running": "Scansione in corso…",
     "complete_one": "Scansione completata: {{count}} elemento di origine.",
@@ -739,7 +742,7 @@
       "unchanged": "Invariato",
       "skip": "Salta",
       "fail": "Fallito",
-      "release": "Rimuovi riferimento di questa attività"
+      "release": "Rilascia riferimento attività"
     }
   },
   "providerCopy": {
