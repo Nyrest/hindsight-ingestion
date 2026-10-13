@@ -24,6 +24,7 @@ Sync **Notion, SiYuan, S3, WebDAV, WebCAL, Email (IMAP), Google Drive, OneDrive 
 - 🛡️ **Built to recover** — Persisted checkpoints and operation retries recover from failures and restarts. Overlap protection keeps each task from running twice at once.
 - 🧪 **Preview and trace every change** — Dry-run shows planned changes before ingestion. Follow real runs through sync counters, Hindsight operations and detailed logs.
 - 🔐 **Self-hosted, secrets encrypted** — Deploy with Docker, encrypt credentials with AES-256-GCM, and choose SQLite, PostgreSQL or MySQL for persistent storage.
+- 🌍 **Localized interface** — Built-in multi-language WebUI supporting 14 locales with automatic browser detection and seamless switching.
 
 ## 🔌 Supported Sources
 
