@@ -810,6 +810,8 @@
       "incrementalHelp": "在数据源支持时使用原生变更流追踪增量。关闭后，每次运行均执行全量清单核对（未变更内容仍不会重复上传）。",
       "reconcileInterval": "全量对齐周期",
       "reconcileIntervalHelp": "距离上次全量对齐超过该时长时，下一次常规运行将自动转为全量扫描。",
+      "maxConcurrentTasks": "最大并发任务数",
+      "maxConcurrentTasksHelp": "默认为 4，保存后立即生效。更改上限不影响正在运行的任务。",
       "maxFileSize": "单个文件大小上限",
       "maxFileSizeHelp": "超过此大小限制的文件将在摄取过程中自动跳过。"
     },
@@ -885,11 +887,11 @@
     "inheritHelp": "沿用全局设置中配置的记忆整合规则。",
     "inheritedRule": "当前全局配置：{{rule}}",
     "rules": {
-      "combined": "联合范围 (默认)",
-      "shared": "全局共享",
-      "per_tag": "按单标签隔离",
-      "all_combinations": "全排列子集",
-      "custom": "自定义范围组"
+      "combined": "Combined（默认）",
+      "shared": "Shared",
+      "per_tag": "Per Tag",
+      "all_combinations": "All Combinations",
+      "custom": "Custom"
     },
     "descriptions": {
       "combined": "将文档的所有标签作为一个整体联合归纳。观察结论归属于完整标签组，保留该组合特定的上下文知识。",
@@ -898,7 +900,7 @@
       "all_combinations": "为标签的所有非空子集（包括各个单独标签及其任意组合）分别进行归纳。例如 3 个标签将生成 7 个独立范围并执行 7 次提炼。",
       "custom": "手动指定需要整合沉淀的标签组合。每个组合生成一个独立范围，避免产生非必要的组合计算。"
     },
-    "customHelp": "每个范围至少需指定一个标签。支持使用动态标签自动关联当前任务、来源或来源分组；选择“全局共享”则建立无标签全局范围。",
+    "customHelp": "每个范围至少需指定一个标签。支持使用动态标签自动关联当前任务、来源或来源分组；选择“Shared”则建立无标签全局范围。",
     "dynamic": {
       "task": "当前任务",
       "source": "当前数据源",
@@ -912,7 +914,7 @@
     "useTag": "使用“{{tag}}”",
     "emptyGroup": "每个范围组必须包含至少一个标签。",
     "exponentialWarning": "范围数量呈指数级增长：n 个标签将为每份文档生成 2ⁿ − 1 个处理范围，会显著增加同步耗时与模型调用开销。",
-    "fileLimitation": "记忆整合范围设置仅适用于文本与内嵌内容。二进制文件上传默认使用“联合范围”。"
+    "fileLimitation": "记忆整合范围设置仅适用于文本与内嵌内容。二进制文件上传默认使用“Combined”。"
   },
   "cloudflare": {
     "crawlProgress": "网页抓取进度",

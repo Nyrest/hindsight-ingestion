@@ -810,6 +810,8 @@
       "incrementalHelp": "在資料來源支援時使用原生變更流追蹤增量。關閉後，每次執行均執行全量清單核對（未變更內容仍不會重複上傳）。",
       "reconcileInterval": "全量對齊週期",
       "reconcileIntervalHelp": "距離上次全量對齊超過該時長時，下一次常規執行將自動轉為全量掃描。",
+      "maxConcurrentTasks": "最大並行任務數",
+      "maxConcurrentTasksHelp": "預設為 4，儲存後立即生效。變更上限不影響正在執行的任務。",
       "maxFileSize": "單一檔案大小上限",
       "maxFileSizeHelp": "超過此大小限制的檔案將在擷取過程中自動略過。"
     },
@@ -885,11 +887,11 @@
     "inheritHelp": "沿用全域設定中配置的記憶整合規則。",
     "inheritedRule": "目前全域設定：{{rule}}",
     "rules": {
-      "combined": "聯合範圍 (預設)",
-      "shared": "全域共用",
-      "per_tag": "依單一標籤隔離",
-      "all_combinations": "全排列子集",
-      "custom": "自訂範圍群組"
+      "combined": "Combined（預設）",
+      "shared": "Shared",
+      "per_tag": "Per Tag",
+      "all_combinations": "All Combinations",
+      "custom": "Custom"
     },
     "descriptions": {
       "combined": "將文件的所有標籤作為一個整體聯合歸納。觀察結論歸屬於完整標籤組，保留該組合特定的情境知識。",
@@ -898,7 +900,7 @@
       "all_combinations": "為標籤的所有非空子集（包含各個單獨標籤及其任意組合）分別進行歸納。例如 3 個標籤將產生 7 個獨立範圍並執行 7 次提煉。",
       "custom": "手動指定需要整合沉澱的標籤組合。每個組合產生一個獨立範圍，避免產生非必要的組合運算。"
     },
-    "customHelp": "每個範圍至少需指定一個標籤。支援使用動態標籤自動關聯目前任務、來源或來源分組；選擇「全域共用」則建立無標籤全域範圍。",
+    "customHelp": "每個範圍至少需指定一個標籤。支援使用動態標籤自動關聯目前任務、來源或來源分組；選擇「Shared」則建立無標籤全域範圍。",
     "dynamic": {
       "task": "目前任務",
       "source": "目前資料來源",
@@ -912,7 +914,7 @@
     "useTag": "使用「{{tag}}」",
     "emptyGroup": "每個範圍群組必須包含至少一個標籤。",
     "exponentialWarning": "範圍數量呈指數級增長：n 個標籤將為每份文件產生 2ⁿ − 1 個處理範圍，會顯著增加同步耗時與模型調用開銷。",
-    "fileLimitation": "記憶整合範圍設定僅適用於文字與內嵌內容。二進位檔案上傳預設使用「聯合範圍」。"
+    "fileLimitation": "記憶整合範圍設定僅適用於文字與內嵌內容。二進位檔案上傳預設使用「Combined」。"
   },
   "cloudflare": {
     "crawlProgress": "網頁抓取進度",

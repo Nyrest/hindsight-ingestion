@@ -651,11 +651,11 @@
     "inheritHelp": "Ikuti cakupan observasi yang ditetapkan dalam pengaturan global.",
     "inheritedRule": "Aturan saat ini: {{rule}}.",
     "rules": {
-      "combined": "Semua tag sekaligus (default)",
-      "shared": "Berbagi secara global",
-      "per_tag": "Per tag",
-      "all_combinations": "Semua kombinasi tag",
-      "custom": "Kustom"
+      "combined": "Combined (bawaan)",
+      "shared": "Shared",
+      "per_tag": "Per Tag",
+      "all_combinations": "All Combinations",
+      "custom": "Custom"
     },
     "descriptions": {
       "combined": "Melakukan satu kali konsolidasi dengan semua tag sekaligus. Observasi menjadi bagian dari kumpulan tag lengkap dan menghimpun pengetahuan khusus untuk kombinasi tersebut.",
@@ -664,7 +664,7 @@
       "all_combinations": "Mengonsolidasikan setiap himpunan bagian tag yang tidak kosong, termasuk tag tunggal dan kombinasinya. Tiga tag menghasilkan tujuh cakupan dan tujuh proses konsolidasi.",
       "custom": "Pilih kelompok tag yang ingin dikonsolidasikan. Setiap kelompok membentuk cakupan independen sehingga kombinasi yang tidak diperlukan tidak diproses."
     },
-    "customHelp": "Tambahkan setidaknya satu tag ke setiap cakupan. Tag dinamis mengikuti tugas, sumber, atau kelompok sumber saat ini. Untuk cakupan global tanpa tag, pilih “Berbagi secara global”.",
+    "customHelp": "Tambahkan setidaknya satu tag ke setiap cakupan. Tag dinamis mengikuti tugas, sumber, atau kelompok sumber saat ini. Untuk cakupan global tanpa tag, pilih “Shared”.",
     "dynamic": {
       "task": "Tugas saat ini",
       "source": "Sumber saat ini",
@@ -695,7 +695,7 @@
       "reconcileInterval": "Interval sinkronisasi penuh",
       "reconcileIntervalHelp": "Jika waktu sejak sinkronisasi penuh terakhir melebihi interval ini, pemindaian penuh akan dilakukan pada eksekusi berikutnya.",
       "maxConcurrentTasks": "Jumlah maksimum tugas bersamaan",
-      "maxConcurrentTasksHelp": "Default: 4. Perubahan langsung berlaku; tugas yang sedang berjalan tetap dilanjutkan saat batas dikurangi.",
+      "maxConcurrentTasksHelp": "Default: 4. Perubahan langsung berlaku. Mengubah batas tidak memengaruhi tugas yang sedang berjalan.",
       "maxFileSize": "Ukuran file maksimal",
       "maxFileSizeHelp": "File yang lebih besar dilewati."
     },

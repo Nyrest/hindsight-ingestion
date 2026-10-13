@@ -651,11 +651,11 @@
     "inheritHelp": "Den in den globalen Einstellungen festgelegten Beobachtungsbereich verwenden.",
     "inheritedRule": "Aktuell: {{rule}}.",
     "rules": {
-      "combined": "Alle Tags zusammen (Standard)",
-      "shared": "Global gemeinsam",
-      "per_tag": "Pro Tag",
-      "all_combinations": "Alle Tag-Kombinationen",
-      "custom": "Benutzerdefiniert"
+      "combined": "Combined (Standard)",
+      "shared": "Shared",
+      "per_tag": "Per Tag",
+      "all_combinations": "All Combinations",
+      "custom": "Custom"
     },
     "descriptions": {
       "combined": "Alle Tags werden gemeinsam in einem Durchlauf konsolidiert. Die Beobachtungen gehören zum vollständigen Tag-Satz; Wissen wird für genau diese Kombination gesammelt.",
@@ -664,7 +664,7 @@
       "all_combinations": "Jede nicht leere Teilmenge der Tags wird separat konsolidiert, einschließlich einzelner Tags und ihrer Kombinationen. Drei Tags erzeugen sieben Bereiche und sieben Konsolidierungsdurchläufe.",
       "custom": "Die zu konsolidierenden Tag-Gruppen gezielt auswählen. Jede Gruppe bildet einen unabhängigen Bereich; unnötige Kombinationen entfallen."
     },
-    "customHelp": "Jedem Bereich mindestens ein Tag hinzufügen. Dynamische Tags beziehen sich auf die aktuelle Aufgabe, Quelle oder Quellengruppe. Für einen globalen Bereich ohne Tags „Global gemeinsam“ wählen.",
+    "customHelp": "Jedem Bereich mindestens ein Tag hinzufügen. Dynamische Tags beziehen sich auf die aktuelle Aufgabe, Quelle oder Quellengruppe. Für einen globalen Bereich ohne Tags „Shared“ wählen.",
     "dynamic": {
       "task": "Aktuelle Aufgabe",
       "source": "Aktuelle Quelle",
@@ -695,7 +695,7 @@
       "reconcileInterval": "Intervall für den vollständigen Abgleich",
       "reconcileIntervalHelp": "Ist der letzte vollständige Abgleich länger her als dieses Intervall, wird beim nächsten Lauf ein vollständiger Scan durchgeführt.",
       "maxConcurrentTasks": "Maximale Anzahl paralleler Aufgaben",
-      "maxConcurrentTasksHelp": "Standard: 4. Änderungen gelten sofort; laufende Aufgaben werden bei einer Verringerung des Limits fortgesetzt.",
+      "maxConcurrentTasksHelp": "Standard: 4. Änderungen gelten sofort. Eine Änderung des Limits hat keine Auswirkungen auf laufende Aufgaben.",
       "maxFileSize": "Maximale Dateigröße",
       "maxFileSizeHelp": "Größere Dateien werden übersprungen."
     },

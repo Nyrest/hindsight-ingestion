@@ -665,11 +665,11 @@
     "inheritHelp": "Użyj zakresu obserwacji określonego w ustawieniach globalnych.",
     "inheritedRule": "Bieżąca reguła: {{rule}}.",
     "rules": {
-      "combined": "Wszystkie tagi razem (domyślnie)",
-      "shared": "Wspólny zakres globalny",
-      "per_tag": "Osobno dla każdego tagu",
-      "all_combinations": "Wszystkie kombinacje tagów",
-      "custom": "Niestandardowy"
+      "combined": "Combined (domyślnie)",
+      "shared": "Shared",
+      "per_tag": "Per Tag",
+      "all_combinations": "All Combinations",
+      "custom": "Custom"
     },
     "descriptions": {
       "combined": "Wykonuje jedną konsolidację dla wszystkich tagów razem. Obserwacje należą do pełnego zestawu tagów i gromadzą wiedzę dotyczącą tej konkretnej kombinacji.",
@@ -678,7 +678,7 @@
       "all_combinations": "Konsoliduje każdy niepusty podzbiór tagów, w tym pojedyncze tagi i ich kombinacje. Trzy tagi tworzą siedem zakresów i wymagają siedmiu przebiegów konsolidacji.",
       "custom": "Wybierz dokładnie, które grupy tagów mają być konsolidowane. Każda grupa tworzy niezależny zakres, bez przetwarzania zbędnych kombinacji."
     },
-    "customHelp": "Dodaj co najmniej jeden tag do każdego zakresu. Tagi dynamiczne odpowiadają bieżącemu zadaniu, źródłu lub grupie źródeł. Aby użyć globalnego zakresu bez tagów, wybierz „Wspólny zakres globalny”.",
+    "customHelp": "Dodaj co najmniej jeden tag do każdego zakresu. Tagi dynamiczne odpowiadają bieżącemu zadaniu, źródłu lub grupie źródeł. Aby użyć globalnego zakresu bez tagów, wybierz „Shared”.",
     "dynamic": {
       "task": "Bieżące zadanie",
       "source": "Bieżące źródło",
@@ -709,7 +709,7 @@
       "reconcileInterval": "Odstęp między pełnymi synchronizacjami",
       "reconcileIntervalHelp": "Jeśli od ostatniej pełnej synchronizacji minęło więcej czasu niż ten odstęp, następne uruchomienie wykona pełne skanowanie.",
       "maxConcurrentTasks": "Maksymalna liczba równoczesnych zadań",
-      "maxConcurrentTasksHelp": "Domyślnie: 4. Zmiany obowiązują od razu; po obniżeniu limitu trwające zadania są kontynuowane.",
+      "maxConcurrentTasksHelp": "Domyślnie: 4. Zmiany obowiązują od razu. Zmiana limitu nie wpływa na trwające zadania.",
       "maxFileSize": "Maksymalny rozmiar pliku",
       "maxFileSizeHelp": "Większe pliki są pomijane."
     },

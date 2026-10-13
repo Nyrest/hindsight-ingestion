@@ -804,6 +804,8 @@
       "incrementalHelp": "Use provider-native change tracking where available. When off, every run performs a full inventory check (unchanged content is not re-uploaded).",
       "reconcileInterval": "Full reconcile interval",
       "reconcileIntervalHelp": "A normal run becomes a full scan when the last full reconcile is older than this.",
+      "maxConcurrentTasks": "Max concurrent tasks",
+      "maxConcurrentTasksHelp": "Defaults to 4. Changes take effect immediately. Changing the limit doesn't affect running tasks.",
       "maxFileSize": "Max file size",
       "maxFileSizeHelp": "Larger files are skipped."
     },
@@ -879,8 +881,8 @@
     "rules": {
       "combined": "Combined (default)",
       "shared": "Shared",
-      "per_tag": "Per tag",
-      "all_combinations": "All combinations",
+      "per_tag": "Per Tag",
+      "all_combinations": "All Combinations",
       "custom": "Custom"
     },
     "descriptions": {

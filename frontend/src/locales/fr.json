@@ -651,11 +651,11 @@
     "inheritHelp": "Utiliser la portée des observations définie dans les réglages globaux.",
     "inheritedRule": "Règle actuelle : {{rule}}.",
     "rules": {
-      "combined": "Toutes les étiquettes ensemble (par défaut)",
-      "shared": "Partage global",
-      "per_tag": "Par étiquette",
-      "all_combinations": "Toutes les combinaisons",
-      "custom": "Personnalisée"
+      "combined": "Combined (par défaut)",
+      "shared": "Shared",
+      "per_tag": "Per Tag",
+      "all_combinations": "All Combinations",
+      "custom": "Custom"
     },
     "descriptions": {
       "combined": "Effectue une seule consolidation avec toutes les étiquettes réunies. Les observations appartiennent à cet ensemble complet et accumulent des connaissances propres à cette combinaison.",
@@ -664,7 +664,7 @@
       "all_combinations": "Consolide chaque sous-ensemble non vide d’étiquettes, y compris les étiquettes seules et leurs combinaisons. Trois étiquettes génèrent sept portées et sept passes de consolidation.",
       "custom": "Choisissez précisément les groupes d’étiquettes à consolider. Chaque groupe crée une portée indépendante, sans traiter les combinaisons inutiles."
     },
-    "customHelp": "Ajoutez au moins une étiquette à chaque portée. Les étiquettes dynamiques suivent la tâche, la source ou le groupe de sources actuel. Pour une portée globale sans étiquette, choisissez « Partage global ».",
+    "customHelp": "Ajoutez au moins une étiquette à chaque portée. Les étiquettes dynamiques suivent la tâche, la source ou le groupe de sources actuel. Pour une portée globale sans étiquette, choisissez « Shared ».",
     "dynamic": {
       "task": "Tâche actuelle",
       "source": "Source actuelle",
@@ -695,7 +695,7 @@
       "reconcileInterval": "Intervalle de synchronisation complète",
       "reconcileIntervalHelp": "Si cet intervalle s’est écoulé depuis la dernière synchronisation complète, la prochaine exécution effectuera un scan complet.",
       "maxConcurrentTasks": "Nombre maximal de tâches simultanées",
-      "maxConcurrentTasksHelp": "La valeur par défaut est 4. Les modifications prennent effet immédiatement ; les tâches en cours se poursuivent si la limite est réduite.",
+      "maxConcurrentTasksHelp": "La valeur par défaut est 4. Les modifications prennent effet immédiatement. Modifier la limite n’affecte pas les tâches en cours.",
       "maxFileSize": "Taille maximale du fichier",
       "maxFileSizeHelp": "Les fichiers plus volumineux sont ignorés."
     },

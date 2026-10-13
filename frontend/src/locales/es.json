@@ -651,11 +651,11 @@
     "inheritHelp": "Usar el ámbito de observaciones definido en la configuración global.",
     "inheritedRule": "Regla actual: {{rule}}.",
     "rules": {
-      "combined": "Todas las etiquetas juntas (predeterminado)",
-      "shared": "Global compartido",
-      "per_tag": "Por etiqueta",
-      "all_combinations": "Todas las combinaciones",
-      "custom": "Personalizado"
+      "combined": "Combined (predeterminado)",
+      "shared": "Shared",
+      "per_tag": "Per Tag",
+      "all_combinations": "All Combinations",
+      "custom": "Custom"
     },
     "descriptions": {
       "combined": "Consolida una sola vez con todas las etiquetas juntas. Las observaciones pertenecen al conjunto completo de etiquetas y acumulan conocimiento específico de esa combinación.",
@@ -664,7 +664,7 @@
       "all_combinations": "Consolida cada subconjunto no vacío de etiquetas, incluidas las etiquetas individuales y sus combinaciones. Tres etiquetas generan siete ámbitos y siete pasadas de consolidación.",
       "custom": "Elige los grupos exactos de etiquetas que se consolidarán. Cada grupo crea un ámbito independiente y evita combinaciones innecesarias."
     },
-    "customHelp": "Añade al menos una etiqueta a cada ámbito. Las etiquetas dinámicas se adaptan a la tarea, fuente o grupo de fuentes actual. Para un ámbito global sin etiquetas, elige «Global compartido».",
+    "customHelp": "Añade al menos una etiqueta a cada ámbito. Las etiquetas dinámicas se adaptan a la tarea, fuente o grupo de fuentes actual. Para un ámbito global sin etiquetas, elige «Shared».",
     "dynamic": {
       "task": "Tarea actual",
       "source": "Fuente actual",
@@ -695,7 +695,7 @@
       "reconcileInterval": "Intervalo de sincronización completa",
       "reconcileIntervalHelp": "Si ha pasado este intervalo desde la última sincronización completa, la siguiente ejecución hará un escaneo completo.",
       "maxConcurrentTasks": "Máximo de tareas simultáneas",
-      "maxConcurrentTasksHelp": "El valor predeterminado es 4. Los cambios se aplican de inmediato; al reducir el límite, las tareas en curso continúan.",
+      "maxConcurrentTasksHelp": "El valor predeterminado es 4. Los cambios se aplican de inmediato. Cambiar el límite no afecta a las tareas en curso.",
       "maxFileSize": "Tamaño máximo de archivo",
       "maxFileSizeHelp": "Se omiten los archivos más grandes."
     },

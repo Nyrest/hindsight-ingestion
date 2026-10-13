@@ -651,11 +651,11 @@
     "inheritHelp": "Usa l’ambito delle osservazioni definito nelle impostazioni globali.",
     "inheritedRule": "Regola attuale: {{rule}}.",
     "rules": {
-      "combined": "Tutti i tag insieme (predefinito)",
-      "shared": "Globale condiviso",
-      "per_tag": "Per tag",
-      "all_combinations": "Tutte le combinazioni",
-      "custom": "Personalizzato"
+      "combined": "Combined (predefinito)",
+      "shared": "Shared",
+      "per_tag": "Per Tag",
+      "all_combinations": "All Combinations",
+      "custom": "Custom"
     },
     "descriptions": {
       "combined": "Esegue un solo consolidamento con tutti i tag insieme. Le osservazioni appartengono all’insieme completo dei tag e accumulano conoscenze specifiche di quella combinazione.",
@@ -664,7 +664,7 @@
       "all_combinations": "Consolida ogni sottoinsieme non vuoto di tag, inclusi i singoli tag e le loro combinazioni. Tre tag generano sette ambiti e sette passaggi di consolidamento.",
       "custom": "Scegli esattamente quali gruppi di tag consolidare. Ogni gruppo crea un ambito indipendente, evitando combinazioni inutili."
     },
-    "customHelp": "Aggiungi almeno un tag a ogni ambito. I tag dinamici seguono l’attività, la sorgente o il gruppo di sorgenti corrente. Per un ambito globale senza tag, scegli «Globale condiviso».",
+    "customHelp": "Aggiungi almeno un tag a ogni ambito. I tag dinamici seguono l’attività, la sorgente o il gruppo di sorgenti corrente. Per un ambito globale senza tag, scegli «Shared».",
     "dynamic": {
       "task": "Attività corrente",
       "source": "Sorgente corrente",
@@ -695,7 +695,7 @@
       "reconcileInterval": "Intervallo di sincronizzazione completa",
       "reconcileIntervalHelp": "Se è trascorso questo intervallo dall’ultima sincronizzazione completa, la prossima esecuzione effettuerà una scansione completa.",
       "maxConcurrentTasks": "Numero massimo di attività simultanee",
-      "maxConcurrentTasksHelp": "Il valore predefinito è 4. Le modifiche hanno effetto immediato; le attività in corso continuano se il limite viene ridotto.",
+      "maxConcurrentTasksHelp": "Il valore predefinito è 4. Le modifiche hanno effetto immediato. Cambiare il limite non influisce sulle attività in corso.",
       "maxFileSize": "Dimensione massima del file",
       "maxFileSizeHelp": "I file più grandi vengono saltati."
     },

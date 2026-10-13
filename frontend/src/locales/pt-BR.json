@@ -651,11 +651,11 @@
     "inheritHelp": "Usa o escopo das observações definido nas configurações globais.",
     "inheritedRule": "Regra atual: {{rule}}.",
     "rules": {
-      "combined": "Todas as tags juntas (padrão)",
-      "shared": "Global compartilhado",
-      "per_tag": "Por tag",
-      "all_combinations": "Todas as combinações",
-      "custom": "Personalizado"
+      "combined": "Combined (padrão)",
+      "shared": "Shared",
+      "per_tag": "Per Tag",
+      "all_combinations": "All Combinations",
+      "custom": "Custom"
     },
     "descriptions": {
       "combined": "Consolida uma única vez com todas as tags juntas. As observações pertencem ao conjunto completo de tags e acumulam conhecimento específico dessa combinação.",
@@ -664,7 +664,7 @@
       "all_combinations": "Consolida cada subconjunto não vazio de tags, incluindo tags individuais e suas combinações. Três tags geram sete escopos e sete etapas de consolidação.",
       "custom": "Escolha exatamente quais grupos de tags consolidar. Cada grupo cria um escopo independente, evitando combinações desnecessárias."
     },
-    "customHelp": "Adicione pelo menos uma tag a cada escopo. As tags dinâmicas acompanham a tarefa, a fonte ou o grupo de fontes atual. Para um escopo global sem tags, escolha “Global compartilhado”.",
+    "customHelp": "Adicione pelo menos uma tag a cada escopo. As tags dinâmicas acompanham a tarefa, a fonte ou o grupo de fontes atual. Para um escopo global sem tags, escolha “Shared”.",
     "dynamic": {
       "task": "Tarefa atual",
       "source": "Fonte atual",
@@ -695,7 +695,7 @@
       "reconcileInterval": "Intervalo da sincronização completa",
       "reconcileIntervalHelp": "Se este intervalo tiver passado desde a última sincronização completa, a próxima execução fará uma varredura completa.",
       "maxConcurrentTasks": "Máximo de tarefas simultâneas",
-      "maxConcurrentTasksHelp": "O padrão é 4. As alterações entram em vigor imediatamente; ao reduzir o limite, as tarefas em execução continuam.",
+      "maxConcurrentTasksHelp": "O padrão é 4. As alterações entram em vigor imediatamente. Alterar o limite não afeta as tarefas em execução.",
       "maxFileSize": "Tamanho máximo do arquivo",
       "maxFileSizeHelp": "Arquivos maiores são ignorados."
     },

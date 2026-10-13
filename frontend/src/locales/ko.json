@@ -651,11 +651,11 @@
     "inheritHelp": "전역 설정에 지정된 관찰 범위를 사용합니다.",
     "inheritedRule": "현재 규칙: {{rule}}.",
     "rules": {
-      "combined": "모든 태그를 함께 사용 (기본값)",
-      "shared": "전역 공유",
-      "per_tag": "태그별",
-      "all_combinations": "모든 태그 조합",
-      "custom": "사용자 지정"
+      "combined": "Combined (기본값)",
+      "shared": "Shared",
+      "per_tag": "Per Tag",
+      "all_combinations": "All Combinations",
+      "custom": "Custom"
     },
     "descriptions": {
       "combined": "모든 태그를 하나의 범위로 묶어 한 번 통합합니다. 관찰 결과는 전체 태그 집합에 속하며, 해당 조합에 대한 지식을 축적합니다.",
@@ -664,7 +664,7 @@
       "all_combinations": "개별 태그와 조합을 포함해 비어 있지 않은 모든 태그 부분집합을 통합합니다. 태그가 3개면 7개의 범위에서 7번 통합합니다.",
       "custom": "통합할 태그 그룹을 직접 지정합니다. 각 그룹이 독립된 범위를 이루므로 불필요한 조합을 처리하지 않아도 됩니다."
     },
-    "customHelp": "각 범위에 태그를 하나 이상 추가하세요. 동적 태그는 현재 작업, 소스 또는 소스 그룹에 따라 바뀝니다. 태그 없는 전역 범위가 필요하면 ‘전역 공유’를 선택하세요.",
+    "customHelp": "각 범위에 태그를 하나 이상 추가하세요. 동적 태그는 현재 작업, 소스 또는 소스 그룹에 따라 바뀝니다. 태그 없는 전역 범위가 필요하면 ‘Shared’를 선택하세요.",
     "dynamic": {
       "task": "현재 작업",
       "source": "현재 소스",
@@ -695,7 +695,7 @@
       "reconcileInterval": "전체 동기화 간격",
       "reconcileIntervalHelp": "마지막 전체 동기화 후 이 간격보다 오래 지나면 다음 작업에서 전체 스캔을 수행합니다.",
       "maxConcurrentTasks": "최대 동시 실행 작업 수",
-      "maxConcurrentTasksHelp": "기본값은 4입니다. 변경 사항은 즉시 적용되며, 한도를 낮춰도 실행 중인 작업은 계속됩니다.",
+      "maxConcurrentTasksHelp": "기본값은 4입니다. 변경 사항은 즉시 적용됩니다. 한도를 변경해도 실행 중인 작업에는 영향을 주지 않습니다.",
       "maxFileSize": "최대 파일 크기",
       "maxFileSizeHelp": "더 큰 파일은 건너뜁니다."
     },
