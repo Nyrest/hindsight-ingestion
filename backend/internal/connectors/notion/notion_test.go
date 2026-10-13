@@ -9,6 +9,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 )
@@ -52,11 +53,18 @@ func TestInlineImagesRefreshAndPolicy(t *testing.T) {
 			defer func() { apiBase = old }()
 			op, _ := json.Marshal(opaque{Title: "Title", Source: "Wiki", Properties: json.RawMessage(`{"Name":{"type":"title","title":[{"plain_text":"Title"}]}}`)})
 			content, err := (&Connector{}).OpenContent(t.Context(), connectors.ContentRequest{
-				Credential: connectors.Credential{Secrets: map[string]string{"token": "secret"}}, Item: connectors.SourceItem{ID: "p1", Opaque: op},
+				Credential: connectors.Credential{Secrets: map[string]string{"token": "secret"}},
+				Item: connectors.SourceItem{
+					ID: "p1", Opaque: op, ModifiedAt: time.Date(2026, 10, 13, 1, 0, 0, 0, time.UTC),
+					Attributes: map[string]any{"createdAt": time.Date(2026, 10, 1, 1, 0, 0, 0, time.UTC)},
+				},
 				InlineMultimodalEnabled: tc.enabled, FilePolicy: connectors.FilePolicy{Images: tc.images}, MaxFileSize: 1000,
 			})
 			if err != nil || len(content.Warnings) > 0 {
 				t.Fatalf("content: %+v %v", content, err)
+			}
+			if !content.TimestampUnset || !content.Timestamp.IsZero() {
+				t.Fatalf("Notion content must not use page timestamps: %+v", content)
 			}
 			if tc.enabled && tc.images {
 				if reads != 2 || downloads != 2 {

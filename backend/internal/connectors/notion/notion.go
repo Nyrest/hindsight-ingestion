@@ -329,7 +329,7 @@ func (c *Connector) OpenContent(ctx context.Context, req connectors.ContentReque
 			content.Blocks = append(content.Blocks, connectors.TextBlock(properties))
 		}
 		content.Context = fmt.Sprintf("Notion Page %q in Data Source %q", op.Title, op.Source)
-		content.Timestamp = req.Item.ModifiedAt
+		content.TimestampUnset = true
 		return content, nil
 	}
 }
