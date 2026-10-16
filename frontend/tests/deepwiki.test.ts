@@ -1,14 +1,26 @@
-import { expect, test } from "bun:test";
+import { afterAll, beforeAll, expect, test } from "bun:test";
 import { readdirSync, readFileSync } from "node:fs";
 import { createInstance } from "i18next";
 import { renderToStaticMarkup } from "react-dom/server";
 import { createElement } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { I18nextProvider } from "react-i18next";
-import { SourceConfigFields } from "../src/features/tasks/source-section";
 import { emptyTaskForm, taskFormSchema } from "../src/features/tasks/task-form-model";
 import { providerCopy } from "../src/lib/provider-copy";
 import type { SourceSpec } from "../src/lib/types";
+
+const browserWindow = Object.getOwnPropertyDescriptor(globalThis, "window");
+let SourceConfigFields: typeof import("../src/features/tasks/source-section").SourceConfigFields;
+
+beforeAll(async () => {
+  Object.defineProperty(globalThis, "window", { configurable: true, value: { location: { origin: "http://localhost" } } });
+  ({ SourceConfigFields } = await import("../src/features/tasks/source-section"));
+});
+
+afterAll(() => {
+  if (browserWindow) Object.defineProperty(globalThis, "window", browserWindow);
+  else Reflect.deleteProperty(globalThis, "window");
+});
 
 const wiki = {
   type: "deepwiki", name: "DeepWiki", credentialTypes: [], browseKinds: [],

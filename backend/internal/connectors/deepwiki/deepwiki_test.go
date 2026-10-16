@@ -16,13 +16,19 @@ import (
 func TestScan(t *testing.T) {
 	for _, jsonResponse := range []bool{false, true} {
 		t.Run(map[bool]string{false: "SSE", true: "JSON"}[jsonResponse], func(t *testing.T) {
+			structure := "# Contents\n- Overview\n- Architecture"
+			var toolCalls []string
 			result := &mcp.CallToolResult{Content: []mcp.Content{
 				&mcp.TextContent{Text: "# Overview\nWiki content"},
 				&mcp.TextContent{Text: "# Architecture\nMore content"},
 			}}
-			source, calls := testSource(t, jsonResponse, func(repo string) *mcp.CallToolResult {
+			source, calls := testSource(t, jsonResponse, func(tool, repo string) *mcp.CallToolResult {
+				toolCalls = append(toolCalls, tool)
 				if repo != "Owner/Repo" {
 					t.Errorf("repository case changed: %q", repo)
+				}
+				if tool == "read_wiki_structure" {
+					return &mcp.CallToolResult{Content: []mcp.Content{&mcp.TextContent{Text: structure}}}
 				}
 				return result
 			})
@@ -43,18 +49,23 @@ func TestScan(t *testing.T) {
 				t.Fatal(item)
 			}
 			content, err := source.OpenContent(t.Context(), connectors.ContentRequest{Item: item})
-			if err != nil || content.Text != "# Overview\nWiki content\n\n# Architecture\nMore content" || !content.TimestampUnset {
+			if err != nil || content.Text != structure+"\n\n# Overview\nWiki content\n\n# Architecture\nMore content" || !content.TimestampUnset {
 				t.Fatalf("content: %+v, error: %v", content, err)
 			}
-			if *calls != 1 {
-				t.Fatal("OpenContent fetched the wiki again")
+			if *calls != 2 || strings.Join(toolCalls, ",") != "read_wiki_structure,read_wiki_contents" {
+				t.Fatal("expected structure then contents, without refetching in OpenContent", toolCalls)
 			}
 			if scan().Revision != item.Revision {
 				t.Fatal("unchanged content changed revision")
 			}
 			result.Content = []mcp.Content{&mcp.TextContent{Text: "Updated wiki"}}
-			if scan().Revision == item.Revision {
+			updated := scan()
+			if updated.Revision == item.Revision {
 				t.Fatal("changed content retained revision")
+			}
+			structure = "# Updated contents"
+			if scan().Revision == updated.Revision {
+				t.Fatal("changed structure retained revision")
 			}
 		})
 	}
@@ -67,20 +78,27 @@ func TestScanFailures(t *testing.T) {
 		want   string
 	}{
 		{"tool error", &mcp.CallToolResult{IsError: true, Content: []mcp.Content{&mcp.TextContent{Text: "Repository not found"}}}, "Repository not found"},
-		{"empty content", &mcp.CallToolResult{Content: []mcp.Content{&mcp.TextContent{Text: "  "}}}, "no wiki contents"},
+		{"empty content", &mcp.CallToolResult{Content: []mcp.Content{&mcp.TextContent{Text: "  "}}}, "no text"},
 	} {
-		t.Run(tc.name, func(t *testing.T) {
-			source, _ := testSource(t, false, func(string) *mcp.CallToolResult { return tc.result })
-			res, err := source.Scan(t.Context(), connectors.ScanRequest{
-				Config: map[string]any{"repoName": "Owner/Repo"},
-				Emit:   func(connectors.SourceItem) error { t.Fatal("failed scan emitted a document"); return nil },
+		for _, failedTool := range []string{"read_wiki_structure", "read_wiki_contents"} {
+			t.Run(tc.name+"/"+failedTool, func(t *testing.T) {
+				source, _ := testSource(t, false, func(tool, _ string) *mcp.CallToolResult {
+					if tool == failedTool {
+						return tc.result
+					}
+					return &mcp.CallToolResult{Content: []mcp.Content{&mcp.TextContent{Text: "Wiki"}}}
+				})
+				res, err := source.Scan(t.Context(), connectors.ScanRequest{
+					Config: map[string]any{"repoName": "Owner/Repo"},
+					Emit:   func(connectors.SourceItem) error { t.Fatal("failed scan emitted a document"); return nil },
+				})
+				if err == nil || !strings.Contains(err.Error(), tc.want) || res.Complete || len(res.Cursor) != 0 {
+					t.Fatalf("result: %+v, error: %v", res, err)
+				}
 			})
-			if err == nil || !strings.Contains(err.Error(), tc.want) || res.Complete || len(res.Cursor) != 0 {
-				t.Fatalf("result: %+v, error: %v", res, err)
-			}
-		})
+		}
 	}
-	source, _ := testSource(t, true, func(string) *mcp.CallToolResult {
+	source, _ := testSource(t, true, func(string, string) *mcp.CallToolResult {
 		return &mcp.CallToolResult{Content: []mcp.Content{&mcp.TextContent{Text: "Wiki"}}}
 	})
 	want := errors.New("emit failed")
@@ -107,16 +125,18 @@ func TestConfig(t *testing.T) {
 	}
 }
 
-func testSource(t *testing.T, jsonResponse bool, result func(string) *mcp.CallToolResult) (*Source, *int) {
+func testSource(t *testing.T, jsonResponse bool, result func(string, string) *mcp.CallToolResult) (*Source, *int) {
 	t.Helper()
 	calls := new(int)
 	server := mcp.NewServer(&mcp.Implementation{Name: "deepwiki-test", Version: "1"}, nil)
-	mcp.AddTool(server, &mcp.Tool{Name: "read_wiki_contents"}, func(_ context.Context, _ *mcp.CallToolRequest, args struct {
-		RepoName string `json:"repoName"`
-	}) (*mcp.CallToolResult, any, error) {
-		*calls++
-		return result(args.RepoName), nil, nil
-	})
+	for _, tool := range []string{"read_wiki_structure", "read_wiki_contents"} {
+		mcp.AddTool(server, &mcp.Tool{Name: tool}, func(_ context.Context, _ *mcp.CallToolRequest, args struct {
+			RepoName string `json:"repoName"`
+		}) (*mcp.CallToolResult, any, error) {
+			*calls++
+			return result(tool, args.RepoName), nil, nil
+		})
+	}
 	handler := mcp.NewStreamableHTTPHandler(func(*http.Request) *mcp.Server { return server }, &mcp.StreamableHTTPOptions{JSONResponse: jsonResponse})
 	srv := httptest.NewServer(handler)
 	t.Cleanup(srv.Close)

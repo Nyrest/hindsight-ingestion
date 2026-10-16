@@ -69,25 +69,30 @@ func (s *Source) Scan(ctx context.Context, req connectors.ScanRequest) (connecto
 		return connectors.ScanResult{}, fmt.Errorf("connect to DeepWiki: %w", err)
 	}
 	defer session.Close()
-	result, err := session.CallTool(ctx, &mcp.CallToolParams{
-		Name: "read_wiki_contents", Arguments: map[string]any{"repoName": repo},
-	})
-	if err != nil {
-		return connectors.ScanResult{}, fmt.Errorf("read DeepWiki contents: %w", err)
-	}
-	var parts []string
-	for _, content := range result.Content {
-		if text, ok := content.(*mcp.TextContent); ok && strings.TrimSpace(text.Text) != "" {
-			parts = append(parts, text.Text)
+	var sections []string
+	for _, tool := range []string{"read_wiki_structure", "read_wiki_contents"} {
+		result, err := session.CallTool(ctx, &mcp.CallToolParams{
+			Name: tool, Arguments: map[string]any{"repoName": repo},
+		})
+		if err != nil {
+			return connectors.ScanResult{}, fmt.Errorf("DeepWiki %s: %w", tool, err)
 		}
+		var parts []string
+		for _, content := range result.Content {
+			if text, ok := content.(*mcp.TextContent); ok && strings.TrimSpace(text.Text) != "" {
+				parts = append(parts, text.Text)
+			}
+		}
+		text := strings.Join(parts, "\n\n")
+		if result.IsError {
+			return connectors.ScanResult{}, fmt.Errorf("DeepWiki %s: %s", tool, text)
+		}
+		if strings.TrimSpace(text) == "" {
+			return connectors.ScanResult{}, fmt.Errorf("DeepWiki returned no text from %s for %s", tool, repo)
+		}
+		sections = append(sections, text)
 	}
-	text := strings.Join(parts, "\n\n")
-	if result.IsError {
-		return connectors.ScanResult{}, fmt.Errorf("read DeepWiki contents: %s", text)
-	}
-	if strings.TrimSpace(text) == "" {
-		return connectors.ScanResult{}, fmt.Errorf("DeepWiki returned no wiki contents for %s", repo)
-	}
+	text := strings.Join(sections, "\n\n")
 	body, err := json.Marshal(connectors.SourceContent{
 		Text: text, Context: "DeepWiki documentation for " + repo, TimestampUnset: true,
 	})
