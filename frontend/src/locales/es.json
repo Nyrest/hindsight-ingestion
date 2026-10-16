@@ -451,6 +451,16 @@
       "description": "Todo el contenido que cumpla los criterios se volverá a enviar a Hindsight, incluido el que no haya cambiado. Puede tardar bastante y consumir recursos de procesamiento adicionales."
     },
     "clearDocuments": {
+      "progress": {
+        "label": "Progreso de eliminación de documentos",
+        "preparing": "Preparando la eliminación…",
+        "deleting": "Eliminando documentos…",
+        "finalizing": "Finalizando la limpieza…",
+        "count": "{{completed}} / {{total}} procesados · {{deleted}} eliminados",
+        "eta": "Tiempo restante estimado: {{time}}",
+        "estimating": "Calculando…",
+        "unavailable": "El progreso no está disponible temporalmente. La eliminación sigue en curso."
+      },
       "title": "¿Eliminar los documentos de «{{name}}»?",
       "description": "Se eliminarán de Hindsight los documentos etiquetados para esta tarea y sus recuerdos asociados. La tarea se pausará. El contenido de origen no se verá afectado.",
       "failed": "No se pudieron eliminar los documentos",

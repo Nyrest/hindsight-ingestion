@@ -451,6 +451,16 @@
       "description": "条件に一致するコンテンツを、変更の有無にかかわらず Hindsight に再送信します。時間がかかり、追加の処理リソースを消費する場合があります。"
     },
     "clearDocuments": {
+      "progress": {
+        "label": "ドキュメントの削除状況",
+        "preparing": "削除を準備しています…",
+        "deleting": "ドキュメントを削除しています…",
+        "finalizing": "クリーンアップを完了しています…",
+        "count": "{{completed}} / {{total}} 件処理済み · {{deleted}} 件削除済み",
+        "eta": "推定残り時間：{{time}}",
+        "estimating": "推定中…",
+        "unavailable": "進捗を一時的に取得できません。削除は続行中です。"
+      },
       "title": "「{{name}}」のドキュメントを削除しますか？",
       "description": "このタスクのタグが付いた Hindsight のドキュメントと関連する記憶を削除し、タスクを一時停止します。同期元のコンテンツには影響しません。",
       "success": "ドキュメント {{count}} 件を削除しました",

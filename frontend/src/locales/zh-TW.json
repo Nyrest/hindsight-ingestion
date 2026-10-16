@@ -610,6 +610,16 @@
       "description": "將重新向 Hindsight 傳輸所有符合的內容（包含未變更項目）。此操作可能耗時較長並占用較多運算資源。"
     },
     "clearDocuments": {
+      "progress": {
+        "label": "文件刪除進度",
+        "preparing": "正在準備刪除…",
+        "deleting": "正在刪除文件…",
+        "finalizing": "正在完成清理…",
+        "count": "已處理 {{completed}} / {{total}}，已刪除 {{deleted}}",
+        "eta": "預估剩餘：{{time}}",
+        "estimating": "正在估算…",
+        "unavailable": "暫時無法取得進度，刪除仍在進行。"
+      },
       "title": "確認清除「{{name}}」在 Hindsight 中的文件？",
       "description": "將從 Hindsight 中清理帶有該任務標識的全部文件及提煉記憶。清理期間任務將被暫停。原始資料來源不受影響。",
       "failed": "文件清理失敗",

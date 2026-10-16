@@ -41,6 +41,9 @@ func (s *Server) deleteTaskDocuments(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) clearDocuments(ctx context.Context, task *models.Task) (int, error) {
+	progress := &documentCleanupProgress{state: documentCleanupProgressDTO{Phase: "preparing"}}
+	s.documentCleanups.Store(task.ID, progress)
+	defer s.documentCleanups.Delete(task.ID)
 	if err := s.pauseForCleanup(ctx, task); err != nil {
 		return 0, err
 	}
@@ -49,7 +52,7 @@ func (s *Server) clearDocuments(ctx context.Context, task *models.Task) (int, er
 		if err != nil {
 			return 0, err
 		}
-		return s.clearSharedDocuments(ctx, task, client)
+		return s.clearSharedDocuments(ctx, task, client, progress)
 	}
 	if err := s.checkPendingRetains(ctx, task); err != nil {
 		return 0, err
@@ -63,11 +66,13 @@ func (s *Server) clearDocuments(ctx context.Context, task *models.Task) (int, er
 		return 0, err
 	}
 	deleted := 0
+	progress.setTotal(len(ids))
 	for _, id := range ids {
 		if err := client.DeleteDocument(ctx, task.DestinationBankID, id); err != nil {
 			return deleted, err
 		}
 		deleted++
+		progress.advance(true)
 		if err := s.recordDocumentDeleted(ctx, task.ID, id); err != nil {
 			return deleted, err
 		}

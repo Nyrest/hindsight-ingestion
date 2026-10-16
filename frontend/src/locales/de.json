@@ -451,6 +451,16 @@
       "description": "Alle passenden Inhalte werden erneut an Hindsight übertragen, auch unveränderte. Das kann lange dauern und zusätzliche Verarbeitungsressourcen beanspruchen."
     },
     "clearDocuments": {
+      "progress": {
+        "label": "Fortschritt der Dokumentlöschung",
+        "preparing": "Löschung wird vorbereitet…",
+        "deleting": "Dokumente werden gelöscht…",
+        "finalizing": "Bereinigung wird abgeschlossen…",
+        "count": "{{completed}} / {{total}} verarbeitet · {{deleted}} gelöscht",
+        "eta": "Geschätzte Restzeit: {{time}}",
+        "estimating": "Wird geschätzt…",
+        "unavailable": "Der Fortschritt ist vorübergehend nicht verfügbar. Die Löschung läuft weiter."
+      },
       "title": "Dokumente für „{{name}}“ löschen?",
       "description": "Löscht die mit dieser Aufgabe markierten Dokumente und die zugehörigen Erinnerungen aus Hindsight. Die Aufgabe wird pausiert. Die Quelldaten bleiben erhalten.",
       "failed": "Dokumente konnten nicht gelöscht werden",

@@ -610,6 +610,16 @@
       "description": "将重新向 Hindsight 传输所有匹配的内容（包括未变更项）。此操作可能耗时较长并占用较多计算资源。"
     },
     "clearDocuments": {
+      "progress": {
+        "label": "文档删除进度",
+        "preparing": "正在准备删除…",
+        "deleting": "正在删除文档…",
+        "finalizing": "正在完成清理…",
+        "count": "已处理 {{completed}} / {{total}}，已删除 {{deleted}}",
+        "eta": "预计剩余：{{time}}",
+        "estimating": "正在估算…",
+        "unavailable": "暂时无法获取进度，删除仍在进行。"
+      },
       "title": "确认清除“{{name}}”在 Hindsight 中的文档？",
       "description": "将从 Hindsight 中清理带有该任务标识的全部文档及提炼记忆。清理期间任务将被暂停。原始数据源不受影响。",
       "failed": "文档清理失败",

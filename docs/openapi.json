@@ -1017,6 +1017,53 @@
         ],
         "type": "object"
       },
+      "documentCleanupProgressDTO": {
+        "properties": {
+          "completedCount": {
+            "type": "integer"
+          },
+          "deletedCount": {
+            "type": "integer"
+          },
+          "estimatedRemainingSeconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phase": {
+            "enum": [
+              "idle",
+              "preparing",
+              "deleting",
+              "finalizing"
+            ],
+            "type": "string"
+          },
+          "totalCount": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "phase",
+          "totalCount",
+          "completedCount",
+          "deletedCount",
+          "estimatedRemainingSeconds"
+        ],
+        "type": "object"
+      },
       "healthDTO": {
         "properties": {
           "authEnabled": {
@@ -3389,6 +3436,53 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/deleteDocumentsDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/api/tasks/{id}/documents/progress": {
+      "get": {
+        "operationId": "get_api_tasks_id_documents_progress",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/documentCleanupProgressDTO"
                 }
               }
             },

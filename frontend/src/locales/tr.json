@@ -451,6 +451,16 @@
       "description": "Kriterlere uyan tüm içerikler, değişmemiş olanlar da dahil, Hindsight’a yeniden gönderilir. Bu işlem uzun sürebilir ve ek işleme kaynakları kullanabilir."
     },
     "clearDocuments": {
+      "progress": {
+        "label": "Belge silme ilerlemesi",
+        "preparing": "Silme hazırlanıyor…",
+        "deleting": "Belgeler siliniyor…",
+        "finalizing": "Temizleme tamamlanıyor…",
+        "count": "{{completed}} / {{total}} işlendi · {{deleted}} silindi",
+        "eta": "Tahmini kalan süre: {{time}}",
+        "estimating": "Hesaplanıyor…",
+        "unavailable": "İlerleme geçici olarak kullanılamıyor. Silme işlemi devam ediyor."
+      },
       "title": "“{{name}}” görevinin belgeleri silinsin mi?",
       "description": "Bu görevin etiketiyle işaretlenmiş belgeleri ve ilişkili anıları Hindsight’tan siler. Görev duraklatılır. Kaynak içerik etkilenmez.",
       "success": "{{count}} belge silindi",

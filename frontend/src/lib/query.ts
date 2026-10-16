@@ -29,6 +29,7 @@ export const qk = {
   strategies: (id: string, bankId: string) => ["credentials", id, "strategies", bankId] as const,
   tasks: ["tasks"] as const,
   task: (id: string) => ["tasks", id] as const,
+  documentCleanupProgress: (id: string) => ["tasks", id, "documentCleanupProgress"] as const,
   taskRuns: (id: string, limit: number, offset: number) => ["tasks", id, "runs", limit, offset] as const,
   cron: (expr: string, tz: string) => ["cron", expr, tz] as const,
   runs: ["runs"] as const,

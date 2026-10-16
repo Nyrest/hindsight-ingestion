@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"net/http"
 	"strconv"
+	"sync"
 	"time"
 
 	"gorm.io/gorm"
@@ -31,6 +32,8 @@ type Server struct {
 	Runs     *runner.Manager
 	Sched    *scheduler.Scheduler
 	Log      *slog.Logger
+
+	documentCleanups sync.Map // task ID -> *documentCleanupProgress; active requests only
 }
 
 // Routes registers all API routes on mux.

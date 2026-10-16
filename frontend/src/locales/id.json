@@ -451,6 +451,16 @@
       "description": "Semua konten yang memenuhi kriteria akan dikirim ulang ke Hindsight, termasuk konten yang tidak berubah. Proses ini bisa memakan waktu lama dan menggunakan sumber daya pemrosesan tambahan."
     },
     "clearDocuments": {
+      "progress": {
+        "label": "Progres penghapusan dokumen",
+        "preparing": "Menyiapkan penghapusan…",
+        "deleting": "Menghapus dokumen…",
+        "finalizing": "Menyelesaikan pembersihan…",
+        "count": "{{completed}} / {{total}} diproses · {{deleted}} dihapus",
+        "eta": "Perkiraan waktu tersisa: {{time}}",
+        "estimating": "Menghitung perkiraan…",
+        "unavailable": "Progres sementara tidak tersedia. Penghapusan masih berlangsung."
+      },
       "title": "Hapus dokumen untuk “{{name}}”?",
       "description": "Menghapus dokumen berlabel tugas ini beserta memori terkait dari Hindsight. Tugas akan dijeda. Konten sumber tidak terpengaruh.",
       "success": "{{count}} dokumen dihapus",

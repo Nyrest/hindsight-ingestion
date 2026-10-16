@@ -70,6 +70,7 @@ export const api = {
   strategies: (id: string, bankId: string) => unwrap(client.GET("/api/credentials/{id}/strategies", { params: { ...pathParams(id), query: { bankId } } })),
   tags: (id: string, bankId: string, q = "") => unwrap(client.GET("/api/credentials/{id}/tags", { params: { ...pathParams(id), query: { bankId, q, limit: 100, offset: 0 } } })),
   deleteTaskDocuments: (id: string) => unwrap(client.DELETE("/api/tasks/{id}/documents", { params: pathParams(id) })),
+  taskDocumentCleanupProgress: (id: string, signal?: AbortSignal) => unwrap(client.GET("/api/tasks/{id}/documents/progress", { params: pathParams(id), signal })),
   listTasks: () => unwrap(client.GET("/api/tasks")),
   getTask: (id: string) => unwrap(client.GET("/api/tasks/{id}", { params: pathParams(id) })),
   createTask: (body: TaskInput) => unwrap(client.POST("/api/tasks", { body })),

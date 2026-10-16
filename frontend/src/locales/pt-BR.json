@@ -451,6 +451,16 @@
       "description": "Todo o conteúdo que atender aos critérios será enviado novamente ao Hindsight, mesmo sem alterações. Isso pode demorar e consumir recursos adicionais de processamento."
     },
     "clearDocuments": {
+      "progress": {
+        "label": "Progresso da exclusão de documentos",
+        "preparing": "Preparando a exclusão…",
+        "deleting": "Excluindo documentos…",
+        "finalizing": "Finalizando a limpeza…",
+        "count": "{{completed}} / {{total}} processados · {{deleted}} excluídos",
+        "eta": "Tempo restante estimado: {{time}}",
+        "estimating": "Calculando…",
+        "unavailable": "O progresso está temporariamente indisponível. A exclusão continua em andamento."
+      },
       "title": "Excluir os documentos de “{{name}}”?",
       "description": "Exclui do Hindsight os documentos marcados para esta tarefa e as memórias associadas. A tarefa será pausada. O conteúdo da origem não será afetado.",
       "failed": "Não foi possível excluir os documentos",

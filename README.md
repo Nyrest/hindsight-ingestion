@@ -103,7 +103,7 @@ Task actions are available from the **Tasks** menu:
 | **Full reconcile** | Scan the whole source to check for changes and deletions. Unchanged content is still skipped. |
 | **Full re-ingest** | Upload every matching item again, including unchanged content. |
 | **Cancel run** | Stop the current run. Changes already made in Hindsight are not rolled back. |
-| **Delete documents** | Pause the task and delete its tagged Hindsight documents and associated memories. Source content stays intact; retry if cleanup fails. |
+| **Delete documents** | Pause the task and delete its tagged Hindsight documents and associated memories, with live progress and an estimated remaining time. Source content stays intact; retry if cleanup fails. |
 | **Disable** | Pause scheduled syncs while keeping the task's configuration and progress. |
 
 ## ⚙️ Configuration

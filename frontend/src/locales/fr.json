@@ -451,6 +451,16 @@
       "description": "Tout le contenu correspondant sera envoyé à nouveau à Hindsight, même sans modification. Cela peut prendre du temps et mobiliser des ressources de traitement supplémentaires."
     },
     "clearDocuments": {
+      "progress": {
+        "label": "Progression de la suppression des documents",
+        "preparing": "Préparation de la suppression…",
+        "deleting": "Suppression des documents…",
+        "finalizing": "Finalisation du nettoyage…",
+        "count": "{{completed}} / {{total}} traités · {{deleted}} supprimés",
+        "eta": "Temps restant estimé : {{time}}",
+        "estimating": "Estimation en cours…",
+        "unavailable": "La progression est temporairement indisponible. La suppression se poursuit."
+      },
       "title": "Supprimer les documents de « {{name}} » ?",
       "description": "Supprime de Hindsight les documents portant l’étiquette de cette tâche et les souvenirs associés. La tâche sera mise en pause. Le contenu source ne sera pas modifié.",
       "failed": "Impossible de supprimer les documents",

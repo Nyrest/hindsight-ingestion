@@ -451,6 +451,16 @@
       "description": "Tutti i contenuti che corrispondono ai criteri verranno inviati di nuovo a Hindsight, anche se invariati. L’operazione può richiedere tempo e risorse di elaborazione aggiuntive."
     },
     "clearDocuments": {
+      "progress": {
+        "label": "Avanzamento eliminazione documenti",
+        "preparing": "Preparazione dell’eliminazione…",
+        "deleting": "Eliminazione dei documenti…",
+        "finalizing": "Completamento della pulizia…",
+        "count": "{{completed}} / {{total}} elaborati · {{deleted}} eliminati",
+        "eta": "Tempo rimanente stimato: {{time}}",
+        "estimating": "Stima in corso…",
+        "unavailable": "L’avanzamento non è temporaneamente disponibile. L’eliminazione prosegue."
+      },
       "title": "Eliminare i documenti di “{{name}}”?",
       "description": "Elimina da Hindsight i documenti contrassegnati per questa attività e i ricordi associati. L’attività verrà sospesa. Il contenuto di origine non verrà modificato.",
       "failed": "Impossibile eliminare i documenti",

@@ -340,6 +340,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/tasks/{id}/documents/progress": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_api_tasks_id_documents_progress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/tasks/{id}/dry-run": {
         parameters: {
             query?: never;
@@ -654,6 +670,14 @@ export interface components {
         };
         deleteDocumentsDTO: {
             deletedCount: number;
+        };
+        documentCleanupProgressDTO: {
+            completedCount: number;
+            deletedCount: number;
+            estimatedRemainingSeconds: number | null;
+            /** @enum {string} */
+            phase: "idle" | "preparing" | "deleting" | "finalizing";
+            totalCount: number | null;
         };
         healthDTO: {
             authEnabled: boolean;
@@ -2038,6 +2062,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["deleteDocumentsDTO"];
+                };
+            };
+            /** @description Basic Auth required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description API error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["apiError"];
+                };
+            };
+        };
+    };
+    get_api_tasks_id_documents_progress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["documentCleanupProgressDTO"];
                 };
             };
             /** @description Basic Auth required */

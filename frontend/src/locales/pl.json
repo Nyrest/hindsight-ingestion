@@ -457,6 +457,16 @@
     "itemCount_few": "{{count}} elementy",
     "itemCount_many": "{{count}} elementów",
     "clearDocuments": {
+      "progress": {
+        "label": "Postęp usuwania dokumentów",
+        "preparing": "Przygotowywanie usuwania…",
+        "deleting": "Usuwanie dokumentów…",
+        "finalizing": "Kończenie czyszczenia…",
+        "count": "Przetworzono {{completed}} / {{total}} · Usunięto {{deleted}}",
+        "eta": "Szacowany pozostały czas: {{time}}",
+        "estimating": "Szacowanie…",
+        "unavailable": "Postęp jest chwilowo niedostępny. Usuwanie nadal trwa."
+      },
       "title": "Usunąć dokumenty zadania „{{name}}”?",
       "description": "Usuwa z Hindsight dokumenty oznaczone dla tego zadania oraz powiązane wspomnienia. Zadanie zostanie wstrzymane. Treść źródłowa pozostanie bez zmian.",
       "success": "Usunięto {{count}} dokumentów",

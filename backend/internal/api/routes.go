@@ -46,6 +46,7 @@ func (s *Server) endpoints() []endpoint {
 		{"GET", "/api/tasks/{id}", s.getTask, nil, taskDTO{}, 200},
 		{"PATCH", "/api/tasks/{id}", s.patchTask, taskBody{}, taskDTO{}, 200},
 		{"DELETE", "/api/tasks/{id}/documents", s.deleteTaskDocuments, nil, deleteDocumentsDTO{}, 200},
+		{"GET", "/api/tasks/{id}/documents/progress", s.taskDocumentCleanupProgress, nil, documentCleanupProgressDTO{}, 200},
 		{"DELETE", "/api/tasks/{id}", s.deleteTask, nil, nil, 204},
 		{"POST", "/api/tasks/{id}/run", s.runTask(""), nil, runTriggeredDTO{}, 202},
 		{"POST", "/api/tasks/{id}/dry-run", s.dryRunTask, nil, sync.DryRunResult{}, 200},

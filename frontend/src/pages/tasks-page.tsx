@@ -55,6 +55,7 @@ import type { Task } from "@/lib/types";
 import { ToneBadge } from "@/components/status-badge";
 
 import { DryRunDialog } from "@/features/tasks/dry-run-dialog";
+import { DocumentCleanupProgress } from "@/features/tasks/document-cleanup-progress";
 
 export default function TasksPage() {
   const timezone = useTimezone();
@@ -381,12 +382,15 @@ export default function TasksPage() {
             {t("tasks.delete.alsoDeleteDocuments")}
           </label>
           {deleteDocuments && <p className="text-sm text-muted-foreground">{t("tasks.delete.documentsHelp")}</p>}
+          {deleteDocuments && del.isPending && toDelete && <DocumentCleanupProgress taskId={toDelete.id} />}
         </div>
       </ConfirmDialog>
       <ConfirmDialog open={!!toClear} onOpenChange={(o) => !o && setToClear(null)}
         title={t("tasks.clearDocuments.title", { name: toClear?.name ?? "" })}
         description={t("tasks.clearDocuments.description")}
-        confirmLabel={t("tasks.actions.deleteDocuments")} destructive onConfirm={onClearDocuments} />
+        confirmLabel={t("tasks.actions.deleteDocuments")} destructive onConfirm={onClearDocuments}>
+        {clear.isPending && toClear && <DocumentCleanupProgress taskId={toClear.id} />}
+      </ConfirmDialog>
       <ConfirmDialog
         open={!!toReingest}
         onOpenChange={(o) => !o && setToReingest(null)}

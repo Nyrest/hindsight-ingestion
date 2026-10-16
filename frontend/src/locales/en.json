@@ -607,6 +607,16 @@
       "description": "Send every matching item to Hindsight again, including unchanged content. This may take a long time and use additional processing resources."
     },
     "clearDocuments": {
+      "progress": {
+        "label": "Document deletion progress",
+        "preparing": "Preparing deletion…",
+        "deleting": "Deleting documents…",
+        "finalizing": "Finalizing cleanup…",
+        "count": "{{completed}} / {{total}} processed · {{deleted}} deleted",
+        "eta": "Estimated remaining: {{time}}",
+        "estimating": "Estimating…",
+        "unavailable": "Progress is temporarily unavailable. Deletion is still running."
+      },
       "title": "Delete documents for “{{name}}”?",
       "description": "Delete documents tagged for this task and their associated memories from Hindsight. The task will be paused. Source content will not be affected.",
       "failed": "Could not delete documents",
