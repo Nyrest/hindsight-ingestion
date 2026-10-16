@@ -66,7 +66,7 @@ func renderProfile(data profileData) string {
 	return b.String()
 }
 
-func renderGame(p player, g game, a achievements) string {
+func renderGame(p player, g game, a achievements, includeAchievements bool) string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "# %s\n\n## Player\n\n- Steam ID: %s\n- Username: %s\n- Profile: %s\n\n## Game Information\n\n- App ID: %d\n- Game: %s\n- Store URL: https://store.steampowered.com/app/%d/\n", gameName(g), p.SteamID, md(p.Username), md(p.ProfileURL), g.AppID, gameName(g), g.AppID)
 	if g.Icon != "" {
@@ -108,6 +108,9 @@ func renderGame(p player, g game, a achievements) string {
 		}
 	} else {
 		fmt.Fprintf(&b, "- Known Unlocked: %d\n- Known Locked: %d\n- Unknown: %d\n- Completion: Unavailable\n", unlocked, locked, unknown)
+	}
+	if !includeAchievements {
+		return b.String()
 	}
 	for _, state := range []string{"Unlocked", "Locked"} {
 		entries := 0

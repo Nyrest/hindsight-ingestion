@@ -56,6 +56,8 @@ func (*Connector) Info() connectors.SourceInfo {
 				Placeholder: "76561198188596121", Help: "Numeric Steam account ID. Syncs one profile and one document per game; successful empty libraries remove existing game documents."},
 			{Key: "language", Label: "Achievement language", Type: connectors.FieldSelect, Default: "english", Options: languages, Effect: connectors.EffectRebaseline,
 				Help: "Normal sync refreshes active and new games. Full reconciliation refreshes all games, including inactive games."},
+			{Key: "includeAchievements", Label: "Include achievement details", Type: connectors.FieldBoolean, Default: false, Effect: connectors.EffectReconcile,
+				Help: "When off, only achievement counts and progress are included."},
 		}, FilterFields: []connectors.FilterFieldSpec{},
 	}
 }

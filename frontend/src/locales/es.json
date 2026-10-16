@@ -747,6 +747,8 @@
     }
   },
   "providerCopy": {
+    "steamIncludeAchievements": "Incluir detalles de logros",
+    "steamIncludeAchievementsHelp": "Si se desactiva, solo se incluyen el número de logros y el progreso.",
     "steamDescription": "Clave de la API web de Steam para perfiles, juegos y logros",
     "steamApiKey": "Clave de la API web de Steam",
     "steamApiKeyHelp": "Crea una clave de API de usuario en steamcommunity.com/dev/apikey. Las listas de amigos y los logros privados pueden no estar disponibles.",

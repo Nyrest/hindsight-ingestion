@@ -747,6 +747,8 @@
     }
   },
   "providerCopy": {
+    "steamIncludeAchievements": "도전 과제 세부 정보 포함",
+    "steamIncludeAchievementsHelp": "끄면 도전 과제 수와 진행률만 포함됩니다.",
     "steamDescription": "프로필, 게임 및 도전 과제용 Steam Web API 키",
     "steamApiKey": "Steam Web API 키",
     "steamApiKeyHelp": "steamcommunity.com/dev/apikey에서 사용자 API 키를 만드세요. 비공개 친구 목록과 도전 과제는 가져오지 못할 수 있습니다.",

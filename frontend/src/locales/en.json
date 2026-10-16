@@ -17,6 +17,8 @@
     "label": "Language"
   },
   "providerCopy": {
+    "steamIncludeAchievements": "Include achievement details",
+    "steamIncludeAchievementsHelp": "When off, only achievement counts and progress are included.",
     "steamDescription": "Steam Web API key for profiles, games and achievements",
     "steamApiKey": "Steam Web API key",
     "steamApiKeyHelp": "Create a user API key at steamcommunity.com/dev/apikey. Private friends and achievements may be unavailable.",

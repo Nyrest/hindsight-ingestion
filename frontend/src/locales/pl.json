@@ -765,6 +765,8 @@
     "incomplete_many": "Niepełne skanowanie ({{count}} elementów). Brakujące elementy nie zostaną oznaczone do usunięcia."
   },
   "providerCopy": {
+    "steamIncludeAchievements": "Uwzględnij szczegóły osiągnięć",
+    "steamIncludeAchievementsHelp": "Po wyłączeniu uwzględniane są tylko liczba osiągnięć i postęp.",
     "steamDescription": "Klucz Steam Web API do profili, gier i osiągnięć",
     "steamApiKey": "Klucz Steam Web API",
     "steamApiKeyHelp": "Utwórz klucz API użytkownika na steamcommunity.com/dev/apikey. Prywatne listy znajomych i osiągnięcia mogą być niedostępne.",

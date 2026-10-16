@@ -17,6 +17,8 @@
     "label": "語言"
   },
   "providerCopy": {
+    "steamIncludeAchievements": "包含成就詳細資訊",
+    "steamIncludeAchievementsHelp": "關閉時僅保留成就數量和進度。",
     "steamDescription": "用於同步個人資料、遊戲和成就的 Steam Web API 金鑰",
     "steamApiKey": "Steam Web API 金鑰",
     "steamApiKeyHelp": "在 steamcommunity.com/dev/apikey 建立使用者 API 金鑰。好友清單和成就可能因隱私設定無法存取。",

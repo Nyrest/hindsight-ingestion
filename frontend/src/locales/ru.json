@@ -765,6 +765,8 @@
     "incomplete_many": "Сканирование не завершено ({{count}} элементов). Отсутствующие элементы не помечены для удаления."
   },
   "providerCopy": {
+    "steamIncludeAchievements": "Включать подробности достижений",
+    "steamIncludeAchievementsHelp": "Если выключено, включаются только количество достижений и прогресс.",
     "steamDescription": "Ключ Steam Web API для профилей, игр и достижений",
     "steamApiKey": "Ключ Steam Web API",
     "steamApiKeyHelp": "Создайте пользовательский ключ API на steamcommunity.com/dev/apikey. Закрытые списки друзей и достижения могут быть недоступны.",

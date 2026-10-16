@@ -747,6 +747,8 @@
     }
   },
   "providerCopy": {
+    "steamIncludeAchievements": "Sertakan detail pencapaian",
+    "steamIncludeAchievementsHelp": "Jika nonaktif, hanya jumlah dan progres pencapaian yang disertakan.",
     "steamDescription": "Kunci Steam Web API untuk profil, game, dan pencapaian",
     "steamApiKey": "Kunci Steam Web API",
     "steamApiKeyHelp": "Buat kunci API pengguna di steamcommunity.com/dev/apikey. Daftar teman dan pencapaian privat mungkin tidak dapat diakses.",

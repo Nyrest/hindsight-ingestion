@@ -747,6 +747,8 @@
     }
   },
   "providerCopy": {
+    "steamIncludeAchievements": "Includi dettagli degli obiettivi",
+    "steamIncludeAchievementsHelp": "Se disattivato, vengono inclusi solo il numero di obiettivi e i progressi.",
     "steamDescription": "Chiave Steam Web API per profili, giochi e achievement",
     "steamApiKey": "Chiave Steam Web API",
     "steamApiKeyHelp": "Crea una chiave API utente su steamcommunity.com/dev/apikey. Le liste amici e gli achievement privati potrebbero non essere disponibili.",

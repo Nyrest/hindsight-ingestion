@@ -97,7 +97,7 @@ func (c *Connector) Scan(ctx context.Context, req connectors.ScanRequest) (conne
 		if name == "" {
 			name = "Steam App " + appString(g.AppID)
 		}
-		gameItem := item("steam_game:"+sid+":"+appString(g.AppID), name, sid, g.AppID, language, renderGame(p, g, cached.Achievements))
+		gameItem := item("steam_game:"+sid+":"+appString(g.AppID), name, sid, g.AppID, language, renderGame(p, g, cached.Achievements, connectors.AsBool(req.Config["includeAchievements"])))
 		if fetchErr != nil {
 			gameItem.ContentError = fetchErr.Error()
 			failures = append(failures, fmt.Errorf("app %d: %w", g.AppID, fetchErr))

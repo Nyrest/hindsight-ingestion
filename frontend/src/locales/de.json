@@ -747,6 +747,8 @@
     }
   },
   "providerCopy": {
+    "steamIncludeAchievements": "Erfolgsdetails einschließen",
+    "steamIncludeAchievementsHelp": "Wenn deaktiviert, werden nur Anzahl und Fortschritt der Erfolge übernommen.",
     "steamDescription": "Steam-Web-API-Schlüssel für Profile, Spiele und Errungenschaften",
     "steamApiKey": "Steam-Web-API-Schlüssel",
     "steamApiKeyHelp": "Erstellen Sie einen Benutzer-API-Schlüssel unter steamcommunity.com/dev/apikey. Private Freundeslisten und Errungenschaften sind möglicherweise nicht verfügbar.",

@@ -111,7 +111,7 @@ func setup(t *testing.T) (*Connector, *fixture) {
 func scan(t *testing.T, c *Connector, cur json.RawMessage, full, preview bool) (connectors.ScanResult, []connectors.SourceItem) {
 	t.Helper()
 	var items []connectors.SourceItem
-	res, err := c.Scan(t.Context(), connectors.ScanRequest{TaskID: "test-task", Credential: testCredential, Config: map[string]any{"steamId": testSteamID, "language": "schinese"}, Cursor: cur, Full: full, Preview: preview, Emit: func(item connectors.SourceItem) error { items = append(items, item); return nil }})
+	res, err := c.Scan(t.Context(), connectors.ScanRequest{TaskID: "test-task", Credential: testCredential, Config: map[string]any{"steamId": testSteamID, "language": "schinese", "includeAchievements": true}, Cursor: cur, Full: full, Preview: preview, Emit: func(item connectors.SourceItem) error { items = append(items, item); return nil }})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -166,6 +166,51 @@ func TestScanIncrementalFullAndRestart(t *testing.T) {
 	full, _ := scan(t, c, active.Cursor, true, false)
 	if full.Error != nil || f.calls["/ISteamUserStats/GetPlayerAchievements/v1/"] != beforeAchievements+4 || f.calls["/ISteamUserStats/GetSchemaForGame/v2/"] != beforeSchema+2 {
 		t.Fatal("full reconciliation did not refresh all games")
+	}
+}
+
+func TestAchievementDetailsDefaultAndToggle(t *testing.T) {
+	c, f := setup(t)
+	found := false
+	for _, field := range c.Info().Fields {
+		if field.Key == "includeAchievements" {
+			found = true
+			if field.Default != false || field.Type != connectors.FieldBoolean || field.Effect != connectors.EffectReconcile {
+				t.Fatal("incorrect achievement details field", field)
+			}
+		}
+	}
+	if !found {
+		t.Fatal("missing achievement details field")
+	}
+	cfg := map[string]any{"steamId": testSteamID, "language": "schinese"}
+	var cur json.RawMessage
+	var previous []connectors.SourceItem
+	for _, mode := range []string{"default", "enabled", "disabled"} {
+		if mode != "default" {
+			cfg["includeAchievements"] = mode == "enabled"
+		}
+		var items []connectors.SourceItem
+		res, err := c.Scan(t.Context(), connectors.ScanRequest{TaskID: "test-task", Credential: testCredential, Config: cfg, Cursor: cur, Emit: func(item connectors.SourceItem) error { items = append(items, item); return nil }})
+		if err != nil || res.Error != nil || !res.Complete || len(items) != 3 {
+			t.Fatal(mode, res, err)
+		}
+		cur = res.Cursor
+		content, err := c.OpenContent(t.Context(), connectors.ContentRequest{Item: items[1]})
+		if err != nil || !strings.Contains(content.Text, "- Total: 2\n- Unlocked: 1\n- Locked: 1\n- Completion: 50.00%") {
+			t.Fatal("achievement summary was lost", mode, content.Text, err)
+		}
+		hasDetails := strings.Contains(content.Text, "## Unlocked Achievements") && strings.Contains(content.Text, "## Locked Achievements")
+		if hasDetails != (mode == "enabled") || mode != "enabled" && strings.Contains(content.Text, "- API Name:") {
+			t.Fatal("incorrect achievement detail visibility", mode, content.Text)
+		}
+		if previous != nil && (previous[0].Revision != items[0].Revision || previous[1].Revision == items[1].Revision || previous[2].Revision == items[2].Revision) {
+			t.Fatal("toggle did not revise only game documents", mode)
+		}
+		previous = items
+		if f.calls["/ISteamUserStats/GetPlayerAchievements/v1/"] != 2 || f.calls["/ISteamUserStats/GetSchemaForGame/v2/"] != 2 {
+			t.Fatal("rendering toggle did not reuse complete snapshots", mode)
+		}
 	}
 }
 
@@ -386,7 +431,7 @@ func TestSchemaAccessDenialAndTransientFailures(t *testing.T) {
 	f.achievementStatus = 403
 	f.achievements = `{"playerstats":{"success":false,"error":"Profile is not public"}}`
 	data, err := fetchAchievements(t.Context(), client, testSteamID, 2385180, "schinese", schema)
-	text := renderGame(player{SteamID: testSteamID}, game{AppID: 2385180, Name: "TEVI Playtest"}, data)
+	text := renderGame(player{SteamID: testSteamID}, game{AppID: 2385180, Name: "TEVI Playtest"}, data, true)
 	if err != nil || data.Status != "Unavailable" || !strings.Contains(text, "Total: Unavailable") || strings.Contains(text, "Completion: 0.00%") {
 		t.Fatal("inaccessible schema invented zero progress", err, text)
 	}

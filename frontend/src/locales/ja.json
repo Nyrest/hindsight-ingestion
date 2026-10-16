@@ -747,6 +747,8 @@
     }
   },
   "providerCopy": {
+    "steamIncludeAchievements": "実績の詳細を含める",
+    "steamIncludeAchievementsHelp": "オフの場合、実績数と進捗のみを含めます。",
     "steamDescription": "プロフィール、ゲーム、実績用の Steam Web API キー",
     "steamApiKey": "Steam Web API キー",
     "steamApiKeyHelp": "steamcommunity.com/dev/apikey でユーザー API キーを作成してください。非公開のフレンドリストや実績は取得できない場合があります。",

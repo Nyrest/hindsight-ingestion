@@ -72,6 +72,20 @@ func TestSteamCredentialTaskAndCacheLifecycle(t *testing.T) {
 			t.Fatal("source change did not rebaseline")
 		}
 	}
+	for _, enabled := range []bool{true, false} {
+		seed()
+		cfg := map[string]any{"steamId": "76561197960434622", "language": "schinese", "includeAchievements": enabled}
+		if code := e.do("PATCH", "/api/tasks/"+taskID, map[string]any{"sourceConfig": cfg}, &out); code != 200 {
+			t.Fatal(code, out)
+		}
+		state = models.TaskState{}
+		e.db.First(&state, "task_id = ?", taskID)
+		var changed models.Task
+		e.db.First(&changed, "id = ?", taskID)
+		if state.CommittedCursorJSON == "" || state.LastFullReconcileAt == nil || !changed.ReconcileRequired || out["sourceConfig"].(map[string]any)["includeAchievements"] != enabled {
+			t.Fatal("achievement toggle was not saved or reset the cursor", enabled, state, changed)
+		}
+	}
 	if code := e.do("PATCH", "/api/tasks/"+taskID, map[string]any{"sourceConfig": map[string]any{"steamId": 76561198188596121.0}}, nil); code != 422 {
 		t.Fatal("numeric SteamID accepted", code)
 	}

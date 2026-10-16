@@ -747,6 +747,8 @@
     }
   },
   "providerCopy": {
+    "steamIncludeAchievements": "Inclure les détails des succès",
+    "steamIncludeAchievementsHelp": "Si désactivé, seuls le nombre de succès et la progression sont inclus.",
     "steamDescription": "Clé API Web Steam pour les profils, jeux et succès",
     "steamApiKey": "Clé API Web Steam",
     "steamApiKeyHelp": "Créez une clé API utilisateur sur steamcommunity.com/dev/apikey. Les listes d’amis et les succès privés peuvent être indisponibles.",

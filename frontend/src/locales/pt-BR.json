@@ -747,6 +747,8 @@
     }
   },
   "providerCopy": {
+    "steamIncludeAchievements": "Incluir detalhes das conquistas",
+    "steamIncludeAchievementsHelp": "Quando desativado, inclui apenas a quantidade de conquistas e o progresso.",
     "steamDescription": "Chave da Steam Web API para perfis, jogos e conquistas",
     "steamApiKey": "Chave da Steam Web API",
     "steamApiKeyHelp": "Crie uma chave de API de usuário em steamcommunity.com/dev/apikey. Listas de amigos e conquistas privadas podem estar indisponíveis.",
