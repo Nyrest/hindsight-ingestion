@@ -1,4 +1,10 @@
 const COPY_KEYS: Record<string, string> = {
+  "Steam Web API key for profiles, games and achievements": "steamDescription",
+  "Steam Web API key": "steamApiKey",
+  "Create a user API key at steamcommunity.com/dev/apikey. Private friends and achievements may be unavailable.": "steamApiKeyHelp",
+  "Numeric Steam account ID. Syncs one profile and one document per game; successful empty libraries remove existing game documents.": "steamIdHelp",
+  "Achievement language": "steamLanguage",
+  "Normal sync refreshes active and new games. Full reconciliation refreshes all games, including inactive games.": "steamSyncHelp",
   "Email": "emailName",
   "Email account using a password or app password": "imapDescription",
   "Connection security": "imapSecurity",

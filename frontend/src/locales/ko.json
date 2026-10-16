@@ -160,6 +160,7 @@
   },
   "capabilities": {
     "incremental": {
+      "polling_inventory": "게임 목록 및 활동 중인 게임 갱신",
       "conditional_inventory": "조건부 목록 조회",
       "high_water_mark": "변경 시각 기준",
       "delta_token": "델타 토큰",
@@ -746,6 +747,12 @@
     }
   },
   "providerCopy": {
+    "steamDescription": "프로필, 게임 및 도전 과제용 Steam Web API 키",
+    "steamApiKey": "Steam Web API 키",
+    "steamApiKeyHelp": "steamcommunity.com/dev/apikey에서 사용자 API 키를 만드세요. 비공개 친구 목록과 도전 과제는 가져오지 못할 수 있습니다.",
+    "steamIdHelp": "Steam 계정의 숫자 ID입니다. 프로필 문서 하나와 게임별 문서를 동기화합니다. 빈 라이브러리가 정상적으로 반환되면 기존 게임 문서를 삭제합니다.",
+    "steamLanguage": "도전 과제 언어",
+    "steamSyncHelp": "일반 동기화는 활동 중인 게임과 새 게임을 갱신합니다. 전체 대조는 비활성 게임을 포함한 모든 게임을 갱신합니다.",
     "webcalDescription": "일정과 할 일의 iCalendar 구독",
     "webcalURL": "캘린더 구독 URL",
     "webcalURLHelp": "구독 URL은 암호화하여 저장합니다. HTTP, HTTPS, webcal 주소를 지원합니다.",

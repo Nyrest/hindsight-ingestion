@@ -160,6 +160,7 @@
   },
   "capabilities": {
     "incremental": {
+      "polling_inventory": "Spis gier z aktualizacją aktywnych gier",
       "conditional_inventory": "Warunkowa synchronizacja migawki",
       "high_water_mark": "Kursor czasu modyfikacji",
       "delta_token": "Token delta",
@@ -764,6 +765,12 @@
     "incomplete_many": "Niepełne skanowanie ({{count}} elementów). Brakujące elementy nie zostaną oznaczone do usunięcia."
   },
   "providerCopy": {
+    "steamDescription": "Klucz Steam Web API do profili, gier i osiągnięć",
+    "steamApiKey": "Klucz Steam Web API",
+    "steamApiKeyHelp": "Utwórz klucz API użytkownika na steamcommunity.com/dev/apikey. Prywatne listy znajomych i osiągnięcia mogą być niedostępne.",
+    "steamIdHelp": "Numeryczny identyfikator konta Steam. Synchronizuje profil i jeden dokument na grę; poprawnie zwrócona pusta biblioteka usuwa istniejące dokumenty gier.",
+    "steamLanguage": "Język osiągnięć",
+    "steamSyncHelp": "Zwykła synchronizacja aktualizuje aktywne i nowe gry. Pełne uzgodnienie aktualizuje wszystkie gry, także nieaktywne.",
     "webcalDescription": "Subskrypcja iCalendar dla wydarzeń i zadań",
     "webcalURL": "URL subskrypcji kalendarza",
     "webcalURLHelp": "URL subskrypcji jest przechowywany w postaci zaszyfrowanej. Obsługiwane są adresy HTTP, HTTPS i webcal.",

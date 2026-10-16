@@ -17,6 +17,12 @@
     "label": "语言"
   },
   "providerCopy": {
+    "steamDescription": "用于同步个人资料、游戏和成就的 Steam Web API 密钥",
+    "steamApiKey": "Steam Web API 密钥",
+    "steamApiKeyHelp": "在 steamcommunity.com/dev/apikey 创建用户 API 密钥。好友列表和成就可能因隐私设置无法访问。",
+    "steamIdHelp": "Steam 账号的数字 ID。同步一份个人文档及每款游戏一份文档；成功返回空游戏库时会删除已有游戏文档。",
+    "steamLanguage": "成就语言",
+    "steamSyncHelp": "普通同步刷新活跃和新增游戏；全量校准刷新全部游戏，包括非活跃游戏。",
     "webcalDescription": "日程与待办事项的 iCalendar 日历订阅",
     "webcalURL": "日历订阅地址 (URL)",
     "webcalURLHelp": "订阅地址将加密存储。支持 HTTP、HTTPS 以及 webcal:// 协议。",
@@ -308,6 +314,7 @@
   },
   "capabilities": {
     "incremental": {
+      "polling_inventory": "游戏清单与活跃游戏更新",
       "conditional_inventory": "条件请求与清单比对",
       "high_water_mark": "时间戳位点跟踪",
       "delta_token": "增量变动令牌 (Delta Token)",

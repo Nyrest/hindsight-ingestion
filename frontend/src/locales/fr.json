@@ -160,6 +160,7 @@
   },
   "capabilities": {
     "incremental": {
+      "polling_inventory": "Inventaire avec actualisation des jeux actifs",
       "conditional_inventory": "Inventaire conditionnel",
       "high_water_mark": "Curseur horodaté",
       "delta_token": "Jeton delta",
@@ -746,6 +747,12 @@
     }
   },
   "providerCopy": {
+    "steamDescription": "Clé API Web Steam pour les profils, jeux et succès",
+    "steamApiKey": "Clé API Web Steam",
+    "steamApiKeyHelp": "Créez une clé API utilisateur sur steamcommunity.com/dev/apikey. Les listes d’amis et les succès privés peuvent être indisponibles.",
+    "steamIdHelp": "Identifiant numérique du compte Steam. Synchronise un profil et un document par jeu ; une bibliothèque vide renvoyée avec succès supprime les documents de jeux existants.",
+    "steamLanguage": "Langue des succès",
+    "steamSyncHelp": "La synchronisation normale actualise les jeux actifs et nouveaux. La réconciliation complète actualise tous les jeux, y compris les jeux inactifs.",
     "webcalDescription": "Abonnement iCalendar pour les événements et les tâches",
     "webcalURL": "URL d’abonnement au calendrier",
     "webcalURLHelp": "L’URL d’abonnement est chiffrée. Les adresses HTTP, HTTPS et webcal sont prises en charge.",

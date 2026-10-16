@@ -17,6 +17,12 @@
     "label": "Language"
   },
   "providerCopy": {
+    "steamDescription": "Steam Web API key for profiles, games and achievements",
+    "steamApiKey": "Steam Web API key",
+    "steamApiKeyHelp": "Create a user API key at steamcommunity.com/dev/apikey. Private friends and achievements may be unavailable.",
+    "steamIdHelp": "Numeric Steam account ID. Syncs one profile and one document per game; successful empty libraries remove existing game documents.",
+    "steamLanguage": "Achievement language",
+    "steamSyncHelp": "Normal sync refreshes active and new games. Full reconciliation refreshes all games, including inactive games.",
     "webcalDescription": "iCalendar subscription for events and to-dos",
     "webcalURL": "Calendar subscription URL",
     "webcalURLHelp": "The subscription URL is encrypted. HTTP, HTTPS, and webcal protocols are supported.",
@@ -308,6 +314,7 @@
   },
   "capabilities": {
     "incremental": {
+      "polling_inventory": "Inventory with active game updates",
       "conditional_inventory": "Conditional inventory",
       "high_water_mark": "Timestamp cursor",
       "delta_token": "Delta token",

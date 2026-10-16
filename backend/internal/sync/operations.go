@@ -54,10 +54,10 @@ func (r *runner) flushText() error {
 			return err
 		}
 	}
-	var emailIntent string
-	if r.task.SourceType == "email" {
-		emailIntent = uuid.NewString()
-		if err := r.e.DB.WithContext(r.ctx).Create(&models.HindsightOperation{ID: emailIntent, RunID: r.run.ID, RemoteOperationID: operationID, Type: "retain_intent", Status: "submitted"}).Error; err != nil {
+	var retainIntent string
+	if r.task.SourceType == "email" || r.task.SourceType == "steam" {
+		retainIntent = uuid.NewString()
+		if err := r.e.DB.WithContext(r.ctx).Create(&models.HindsightOperation{ID: retainIntent, RunID: r.run.ID, RemoteOperationID: operationID, Type: "retain_intent", Status: "submitted"}).Error; err != nil {
 			return err
 		}
 	}
@@ -71,7 +71,7 @@ func (r *runner) flushText() error {
 	}
 	if r.sharedDocs != nil {
 		err = r.recordSharedOperations(ops, operationID)
-	} else if emailIntent != "" {
+	} else if retainIntent != "" {
 		err = r.e.DB.WithContext(r.ctx).Transaction(func(tx *gorm.DB) error {
 			rows := r.operationRows(ops, "retain")
 			if len(rows) > 0 {
@@ -79,7 +79,7 @@ func (r *runner) flushText() error {
 					return err
 				}
 			}
-			return tx.Model(&models.HindsightOperation{}).Where("id = ?", emailIntent).Update("status", "completed").Error
+			return tx.Model(&models.HindsightOperation{}).Where("id = ?", retainIntent).Update("status", "completed").Error
 		})
 	} else {
 		err = r.recordOps(ops, "retain")

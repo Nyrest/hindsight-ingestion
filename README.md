@@ -3,7 +3,7 @@
   <p>Keep your notes and files in sync with Hindsight, automatically.</p>
 </div>
 
-Sync **Notion, SiYuan, S3, WebDAV, WebCAL, Email (IMAP), Google Drive, OneDrive and local files** into [Hindsight](https://github.com/vectorize-io/hindsight) memory banks. Self-host with Docker and manage everything from the WebUI.
+Sync **Notion, SiYuan, S3, WebDAV, WebCAL, Email (IMAP), Steam, Google Drive, OneDrive and local files** into [Hindsight](https://github.com/vectorize-io/hindsight) memory banks. Self-host with Docker and manage everything from the WebUI.
 
 <p align="center">
   <a href="#-features">Features</a> · <a href="#-supported-sources">Sources</a> · <a href="#-quick-start">Quick start</a> · <a href="#-usage">Usage</a> · <a href="#-configuration">Configuration</a> · <a href="#-development">Development</a>
@@ -35,6 +35,7 @@ Sync **Notion, SiYuan, S3, WebDAV, WebCAL, Email (IMAP), Google Drive, OneDrive 
 | **S3 / S3-compatible storage** | ✅ | ✅ | ✅ | Enterprise document archives, data lakes, multimodal buckets, pipeline artifacts |
 | **WebDAV** | ✅ | ✅ | ✅ | NAS storage (Synology/QNAP/Nextcloud), Obsidian & Zotero vaults |
 | **WebCAL** | ✅ | — | ✅ | iCalendar events and exported VTODO; one document per series; snapshot deletion; custom timezones preserved without conversion |
+| **Steam** | ✅ | — | ✅ | One profile and one document per game; playtime and all accessible achievements; normal sync refreshes active/new games, full reconciliation includes inactive games |
 | **Email (IMAP)** | ✅ | — | ✅ | Email conversations; Inbox indexing |
 | **Google Drive** | ✅ | ✅ | ✅ | Google Workspace collaboration (Docs, Sheets, Slides), shared team drives |
 | **OneDrive** | ✅ | ✅ | ✅ | Microsoft 365 workspaces, Office files (Word, Excel, PPT), SharePoint folders |
@@ -87,7 +88,7 @@ Open [http://localhost:8080](http://localhost:8080) and sign in with `admin` and
 
 1. In **Credentials**, add a **Hindsight** connection with its URL and optional API key, then a source connection. Use **Test** to check them. Google Drive and OneDrive also require OAuth setup and **Connect**.
 2. In **Tasks**, choose the source, content to sync and destination bank. Leave the retain strategy empty to use the bank's default.
-3. Choose a schedule in the application timezone. WebCAL and Email default to **Every hour**; a blank schedule runs manually. Save the task disabled if you want to preview first.
+3. Choose a schedule in the application timezone. WebCAL, Email and Steam default to **Every hour**; a blank schedule runs manually. Save the task disabled if you want to preview first.
 4. Use **Dry-run** to preview, then **Run now** to sync. Check **Runs** for results and enable the task for scheduled syncs.
 
 ## 📖 Usage
@@ -103,6 +104,10 @@ Task actions are available from the **Tasks** menu:
 | **Cancel run** | Stop the current run. Changes already made in Hindsight are not rolled back. |
 | **Delete documents** | Pause the task and delete its tagged Hindsight documents and associated memories. Source content stays intact; retry if cleanup fails. |
 | **Disable** | Pause scheduled syncs while keeping the task's configuration and progress. |
+
+### Steam
+
+Create a **Steam** credential with a [user Web API key](https://steamcommunity.com/dev/apikey), then enter the account's numeric **SteamID64** and achievement language in the task. Each task syncs one profile and one document per API-reported game. Normal runs refresh new and active games; **Full reconcile** also refreshes inactive games and achievement schemas. Private friends and achievement progress are marked unavailable; accessible achievement definitions are still included. Successful empty libraries delete existing game documents. Steam requests share a per-key rate of one per second and a persistent UTC daily budget of 80,000 attempts, including retries and Dry-run requests.
 
 ## ⚙️ Configuration
 

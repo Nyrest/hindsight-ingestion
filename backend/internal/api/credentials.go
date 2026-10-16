@@ -15,6 +15,7 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors/email"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors/sqlsource"
+	"github.com/Nyrest/hindsight-ingestion/internal/connectors/steam"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors/webcal"
 	"github.com/Nyrest/hindsight-ingestion/internal/credentials"
 	"github.com/Nyrest/hindsight-ingestion/internal/hindsight"
@@ -158,6 +159,14 @@ func (s *Server) patchCredential(w http.ResponseWriter, r *http.Request) {
 		_ = json.Unmarshal([]byte(m.ConfigJSON), &oldConfig)
 		oldTarget := sqlsource.ConnectionTarget(m.Type, oldConfig)
 		oldCalendarTarget := ""
+		oldSteamKey := ""
+		if m.Type == steam.SourceType {
+			oldCredential, err := s.Creds.Decrypt(&m)
+			if err != nil {
+				return err
+			}
+			oldSteamKey = steam.CredentialKey(oldCredential)
+		}
 		if m.Type == "webcal" {
 			oldCredential, _ := s.Creds.Decrypt(&m)
 			oldCalendarTarget = webcal.CredentialTarget(oldCredential)
@@ -174,6 +183,15 @@ func (s *Server) patchCredential(w http.ResponseWriter, r *http.Request) {
 		var newConfig map[string]any
 		_ = json.Unmarshal([]byte(m.ConfigJSON), &newConfig)
 		changedSource := ""
+		if m.Type == steam.SourceType {
+			newCredential, err := s.Creds.Decrypt(&m)
+			if err != nil {
+				return err
+			}
+			if oldSteamKey != steam.CredentialKey(newCredential) {
+				changedSource = steam.SourceType
+			}
+		}
 		if m.Type == email.CredentialType && email.AccountKey(connectors.Credential{Config: oldConfig}) != email.AccountKey(connectors.Credential{Config: newConfig}) {
 			changedSource = email.SourceType
 		}

@@ -92,8 +92,8 @@ type TaskState struct {
 	PendingScanRunID string `gorm:"size:36"`
 	TaskID           string `gorm:"primaryKey;size:36"`
 
-	CommittedCursorJSON string `gorm:"type:text"`
-	ScanGeneration      int64  `gorm:"not null;default:0"`
+	CommittedCursorJSON string
+	ScanGeneration      int64 `gorm:"not null;default:0"`
 
 	LastStartedAt       *time.Time
 	LastSuccessAt       *time.Time
@@ -171,8 +171,8 @@ type TaskRun struct {
 	SkippedCount    int `gorm:"not null;default:0"`
 	FailedCount     int `gorm:"not null;default:0"`
 
-	CursorBefore string `gorm:"type:text"`
-	CursorAfter  string `gorm:"type:text"`
+	CursorBefore string
+	CursorAfter  string
 
 	ErrorMessage string `gorm:"type:text"`
 	LogJSON      string `gorm:"type:text"`
@@ -224,5 +224,6 @@ func All() []any {
 		&Credential{}, &Task{}, &TaskState{}, &TaskItem{},
 		&TaskRun{}, &HindsightOperation{}, &Setting{}, &SourceJob{}, &SharedDocument{},
 		&EmailIdentity{}, &EmailOccurrence{}, &EmailScanIdentity{}, &EmailScanOccurrence{},
+		&SteamSchema{}, &SteamPlayerSnapshot{}, &SteamAPIUsage{},
 	}
 }

@@ -160,6 +160,7 @@
   },
   "capabilities": {
     "incremental": {
+      "polling_inventory": "Inventar mit Aktualisierung aktiver Spiele",
       "conditional_inventory": "Bedingter Bestandsabgleich",
       "high_water_mark": "Zeitstempel-Cursor",
       "delta_token": "Delta-Token",
@@ -746,6 +747,12 @@
     }
   },
   "providerCopy": {
+    "steamDescription": "Steam-Web-API-Schlüssel für Profile, Spiele und Errungenschaften",
+    "steamApiKey": "Steam-Web-API-Schlüssel",
+    "steamApiKeyHelp": "Erstellen Sie einen Benutzer-API-Schlüssel unter steamcommunity.com/dev/apikey. Private Freundeslisten und Errungenschaften sind möglicherweise nicht verfügbar.",
+    "steamIdHelp": "Numerische Steam-Konto-ID. Synchronisiert ein Profil und ein Dokument pro Spiel; erfolgreich zurückgegebene leere Bibliotheken entfernen vorhandene Spieldokumente.",
+    "steamLanguage": "Sprache der Errungenschaften",
+    "steamSyncHelp": "Die normale Synchronisierung aktualisiert aktive und neue Spiele. Der vollständige Abgleich aktualisiert alle Spiele, auch inaktive.",
     "webcalDescription": "iCalendar-Abonnement für Termine und Aufgaben",
     "webcalURL": "Kalender-Abonnement-URL",
     "webcalURLHelp": "Die Abonnement-URL wird verschlüsselt gespeichert. HTTP, HTTPS und webcal werden unterstützt.",

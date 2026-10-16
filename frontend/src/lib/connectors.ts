@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   Brain,
   Calendar,
+  Gamepad2,
   Mail,
   Cloud,
   Database,
@@ -19,6 +20,7 @@ import type { Connectors, CredentialTypeSpec, SourceSpec } from "./types";
 const TYPE_ICONS: Record<string, LucideIcon> = {
   cloudflare_crawl: Cloud,
   webcal: Calendar,
+  steam: Gamepad2,
   email: Mail,
   imap: Mail,
   notion: FileText,
@@ -42,6 +44,7 @@ export function typeIcon(type: string | undefined | null): LucideIcon {
 const FALLBACK_NAMES: Record<string, string> = {
   cloudflare_crawl: "Cloudflare Browser Run",
   webcal: "WebCAL",
+  steam: "Steam",
   email: "Email",
   imap: "IMAP",
   notion: "Notion",

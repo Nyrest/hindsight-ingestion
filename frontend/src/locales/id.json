@@ -160,6 +160,7 @@
   },
   "capabilities": {
     "incremental": {
+      "polling_inventory": "Inventaris dengan pembaruan game aktif",
       "conditional_inventory": "Inventaris bersyarat",
       "high_water_mark": "Kursor waktu perubahan",
       "delta_token": "Token delta",
@@ -746,6 +747,12 @@
     }
   },
   "providerCopy": {
+    "steamDescription": "Kunci Steam Web API untuk profil, game, dan pencapaian",
+    "steamApiKey": "Kunci Steam Web API",
+    "steamApiKeyHelp": "Buat kunci API pengguna di steamcommunity.com/dev/apikey. Daftar teman dan pencapaian privat mungkin tidak dapat diakses.",
+    "steamIdHelp": "ID numerik akun Steam. Menyinkronkan satu profil dan satu dokumen per game; pustaka kosong yang berhasil dikembalikan menghapus dokumen game yang ada.",
+    "steamLanguage": "Bahasa pencapaian",
+    "steamSyncHelp": "Sinkronisasi biasa memperbarui game aktif dan baru. Rekonsiliasi penuh memperbarui semua game, termasuk yang tidak aktif.",
     "webcalDescription": "Langganan iCalendar untuk acara dan tugas",
     "webcalURL": "URL langganan kalender",
     "webcalURLHelp": "URL langganan disimpan terenkripsi. Alamat HTTP, HTTPS, dan webcal didukung.",

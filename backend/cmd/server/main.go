@@ -18,6 +18,7 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors/email"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors/sqlsource"
+	"github.com/Nyrest/hindsight-ingestion/internal/connectors/steam"
 	"github.com/Nyrest/hindsight-ingestion/internal/credentials"
 	"github.com/Nyrest/hindsight-ingestion/internal/crypto"
 	"github.com/Nyrest/hindsight-ingestion/internal/database"
@@ -77,6 +78,7 @@ func run() error {
 	}
 	connectors.RegisterSource(sqlConnector)
 	connectors.RegisterSource(&email.Connector{DB: db})
+	connectors.RegisterSource(&steam.Connector{DB: db})
 
 	creds := credentials.NewService(db, cipher)
 	store := settings.NewStore(db, cipher)

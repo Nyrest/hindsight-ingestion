@@ -160,6 +160,7 @@
   },
   "capabilities": {
     "incremental": {
+      "polling_inventory": "ゲーム一覧とアクティブなゲームの更新",
       "conditional_inventory": "条件付き一覧取得",
       "high_water_mark": "更新日時による追跡",
       "delta_token": "差分トークン",
@@ -746,6 +747,12 @@
     }
   },
   "providerCopy": {
+    "steamDescription": "プロフィール、ゲーム、実績用の Steam Web API キー",
+    "steamApiKey": "Steam Web API キー",
+    "steamApiKeyHelp": "steamcommunity.com/dev/apikey でユーザー API キーを作成してください。非公開のフレンドリストや実績は取得できない場合があります。",
+    "steamIdHelp": "Steam アカウントの数値 ID。プロフィールとゲームごとのドキュメントを同期します。API が正常に空のライブラリを返した場合、既存のゲームドキュメントを削除します。",
+    "steamLanguage": "実績の言語",
+    "steamSyncHelp": "通常の同期ではプレイ中・新規のゲームを更新します。完全な照合では、最近プレイしていないゲームも含めてすべて更新します。",
     "webcalDescription": "予定とタスクの iCalendar 購読",
     "webcalURL": "カレンダー購読 URL",
     "webcalURLHelp": "購読 URL は暗号化して保存します。HTTP、HTTPS、webcal の URL に対応しています。",

@@ -187,8 +187,8 @@ func (r *runner) execute(opts RunOptions) error {
 	if r.dest, err = r.e.NewDestination(destCred); err != nil {
 		return err
 	}
-	if r.task.SourceType == "email" {
-		if err := r.fenceEmailOperations(); err != nil {
+	if r.task.SourceType == "email" || r.task.SourceType == "steam" {
+		if err := r.fencePriorRetainOperations(); err != nil {
 			return err
 		}
 	}
@@ -218,7 +218,7 @@ func (r *runner) execute(opts RunOptions) error {
 	case r.task.ReconcileRequired:
 		r.full = true
 		r.logf("info", "Configuration changed; performing full reconciliation")
-	case r.src.Info().Capabilities.IncrementalMode == connectors.IncrementalConditionalInventory && r.hasFailedItems():
+	case (r.src.Info().Capabilities.IncrementalMode == connectors.IncrementalConditionalInventory || r.src.Info().Capabilities.IncrementalMode == connectors.IncrementalPollingInventory) && r.hasFailedItems():
 		r.full = true
 		r.logf("info", "Retrying failed inventory writes with a full scan")
 	case !hasCursor:
@@ -267,7 +267,7 @@ func (r *runner) execute(opts RunOptions) error {
 	}
 
 	var cursor json.RawMessage
-	if hasCursor && (!r.full || r.src.Info().Capabilities.IncrementalMode == connectors.IncrementalConditionalInventory) {
+	if hasCursor && (!r.full || r.src.Info().Capabilities.IncrementalMode == connectors.IncrementalConditionalInventory || r.src.Info().Capabilities.IncrementalMode == connectors.IncrementalPollingInventory) {
 		cursor = json.RawMessage(r.state.CommittedCursorJSON)
 	}
 
@@ -284,7 +284,7 @@ func (r *runner) execute(opts RunOptions) error {
 		Log:        func(level, msg string) { r.logf(level, "%s", msg) },
 	}, opts)
 	if err != nil {
-		if r.task.SourceType == "webcal" || r.task.SourceType == "email" {
+		if r.task.SourceType == "webcal" || r.task.SourceType == "email" || r.task.SourceType == "steam" {
 			return errors.Join(fmt.Errorf("scan source: %w", err), r.flushSeen(), r.awaitPending())
 		}
 		return fmt.Errorf("scan source: %w", err)
@@ -305,8 +305,11 @@ func (r *runner) execute(opts RunOptions) error {
 	if r.task.SourceType == "email" && r.full && !res.Complete {
 		return errors.New("Email full inventory was incomplete; deletion and state commit skipped")
 	}
+	if r.task.SourceType == "steam" && !res.Complete {
+		return errors.New("Steam inventory was incomplete; deletion and state commit skipped")
+	}
 
-	if (r.sharedDocs != nil || r.task.SourceType == "sql" || r.task.SourceType == "webcal" || r.task.SourceType == "email") && len(r.failed) > 0 {
+	if (r.sharedDocs != nil || r.task.SourceType == "sql" || r.task.SourceType == "webcal" || r.task.SourceType == "email" || r.task.SourceType == "steam") && len(r.failed) > 0 {
 		return fmt.Errorf("%d item(s) failed; deletion and cursor commit skipped", len(r.failed))
 	}
 
@@ -337,7 +340,7 @@ func (r *runner) execute(opts RunOptions) error {
 	if _, ok := r.src.(connectors.ScanCommitter); ok {
 		updates["pending_scan_run_id"] = ""
 	}
-	if complete {
+	if complete && (r.src.Info().Capabilities.IncrementalMode != connectors.IncrementalPollingInventory || r.full) {
 		updates["last_full_reconcile_at"] = finished
 	}
 	err = r.e.DB.WithContext(r.ctx).Transaction(func(tx *gorm.DB) error {
@@ -478,7 +481,7 @@ func (r *runner) observe(item connectors.SourceItem) error {
 		row.SyncedFingerprint = actual
 	}
 
-	if !r.reing && row.DestinationPresent && row.SyncedFingerprint == target && !((r.task.SourceType == "webcal" || r.task.SourceType == "email") && row.LastError != "") && !(r.full && r.includesImages() && row.NeedsImageRetry) {
+	if !r.reing && row.DestinationPresent && row.SyncedFingerprint == target && !((r.task.SourceType == "webcal" || r.task.SourceType == "email" || r.task.SourceType == "steam") && row.LastError != "") && !(r.full && r.includesImages() && row.NeedsImageRetry) {
 		r.run.UnchangedCount++
 		return r.queueSeen(row)
 	}

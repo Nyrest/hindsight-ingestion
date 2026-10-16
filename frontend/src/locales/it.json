@@ -160,6 +160,7 @@
   },
   "capabilities": {
     "incremental": {
+      "polling_inventory": "Inventario con aggiornamento dei giochi attivi",
       "conditional_inventory": "Inventario condizionale",
       "high_water_mark": "Cursore basato sulla data di modifica",
       "delta_token": "Token delta",
@@ -746,6 +747,12 @@
     }
   },
   "providerCopy": {
+    "steamDescription": "Chiave Steam Web API per profili, giochi e achievement",
+    "steamApiKey": "Chiave Steam Web API",
+    "steamApiKeyHelp": "Crea una chiave API utente su steamcommunity.com/dev/apikey. Le liste amici e gli achievement privati potrebbero non essere disponibili.",
+    "steamIdHelp": "ID numerico dell’account Steam. Sincronizza un profilo e un documento per gioco; una libreria vuota restituita correttamente elimina i documenti dei giochi esistenti.",
+    "steamLanguage": "Lingua degli achievement",
+    "steamSyncHelp": "La sincronizzazione normale aggiorna i giochi attivi e nuovi. La riconciliazione completa aggiorna tutti i giochi, inclusi quelli inattivi.",
     "webcalDescription": "Abbonamento iCalendar per eventi e attività",
     "webcalURL": "URL di abbonamento al calendario",
     "webcalURLHelp": "L’URL di abbonamento viene salvato cifrato. Sono supportati indirizzi HTTP, HTTPS e webcal.",

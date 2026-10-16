@@ -6,11 +6,14 @@ import Cloudflare from "@thesvg/react/cloudflare";
 import MySQL from "@thesvg/react/mysql";
 import PostgreSQL from "@thesvg/react/postgresql";
 import SQLite from "@thesvg/react/sqlite";
+import Steam from "@thesvg/react/steam";
 import { typeIcon } from "@/lib/connectors";
 import { cn } from "@/lib/utils";
 
 function brandIcon(type: string) {
   switch (type) {
+    case "steam":
+      return <Steam aria-hidden="true" className="size-4 shrink-0 text-foreground" variant="mono" />;
     case "cloudflare_crawl":
       return <Cloudflare aria-hidden="true" className="size-4 shrink-0" />;
     case "sql_mysql":

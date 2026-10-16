@@ -348,7 +348,7 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 
 	if b.CronExpression != nil {
 		t.CronExpression = strings.TrimSpace(*b.CronExpression)
-	} else if creating && (t.SourceType == "webcal" || t.SourceType == "email") {
+	} else if creating && (t.SourceType == "webcal" || t.SourceType == "email" || t.SourceType == "steam") {
 		t.CronExpression = "0 * * * *"
 	}
 	if _, err := scheduler.ValidateCron(t.CronExpression, "UTC", 1); err != nil {
@@ -590,7 +590,7 @@ func (s *Server) deleteTask(w http.ResponseWriter, r *http.Request) {
 				return err
 			}
 		}
-		for _, m := range []any{&models.EmailScanOccurrence{}, &models.EmailScanIdentity{}, &models.EmailOccurrence{}, &models.EmailIdentity{}, &models.SourceJob{}, &models.TaskRun{}, &models.TaskItem{}, &models.TaskState{}} {
+		for _, m := range []any{&models.SteamPlayerSnapshot{}, &models.EmailScanOccurrence{}, &models.EmailScanIdentity{}, &models.EmailOccurrence{}, &models.EmailIdentity{}, &models.SourceJob{}, &models.TaskRun{}, &models.TaskItem{}, &models.TaskState{}} {
 			if err := tx.Where("task_id = ?", id).Delete(m).Error; err != nil {
 				return err
 			}

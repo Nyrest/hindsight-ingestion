@@ -160,6 +160,7 @@
   },
   "capabilities": {
     "incremental": {
+      "polling_inventory": "Etkin oyun güncellemeleriyle oyun envanteri",
       "conditional_inventory": "Koşullu envanter",
       "high_water_mark": "Değişiklik zamanı imleci",
       "delta_token": "Delta belirteci",
@@ -746,6 +747,12 @@
     }
   },
   "providerCopy": {
+    "steamDescription": "Profiller, oyunlar ve başarımlar için Steam Web API anahtarı",
+    "steamApiKey": "Steam Web API anahtarı",
+    "steamApiKeyHelp": "steamcommunity.com/dev/apikey adresinde bir kullanıcı API anahtarı oluşturun. Gizli arkadaş listeleri ve başarımlar erişilemez olabilir.",
+    "steamIdHelp": "Steam hesabının sayısal kimliği. Bir profil ve oyun başına bir belge eşitler; başarıyla dönen boş bir kütüphane mevcut oyun belgelerini siler.",
+    "steamLanguage": "Başarım dili",
+    "steamSyncHelp": "Normal eşitleme etkin ve yeni oyunları günceller. Tam uzlaştırma, etkin olmayanlar dahil tüm oyunları günceller.",
     "webcalDescription": "Etkinlikler ve yapılacaklar için iCalendar aboneliği",
     "webcalURL": "Takvim aboneliği URL’si",
     "webcalURLHelp": "Abonelik URL’si şifrelenerek saklanır. HTTP, HTTPS ve webcal adresleri desteklenir.",
