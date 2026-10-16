@@ -55,7 +55,7 @@ clears it.
 
 ## Health
 
-`GET /api/health` → `{ "status": "ok", "version": "0.2.0", "authEnabled": true, "dbType": "sqlite" }`
+`GET /api/health` → `{ "status": "ok", "version": "0.3.0", "authEnabled": true, "dbType": "sqlite" }`
 
 ## Settings
 

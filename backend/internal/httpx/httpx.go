@@ -21,7 +21,7 @@ import (
 )
 
 // Version is reported in the User-Agent header.
-const Version = "0.2.0"
+const Version = "0.3.0"
 
 // UserAgent identifies the service to upstream APIs.
 var UserAgent = "hindsight-ingestion/" + Version
