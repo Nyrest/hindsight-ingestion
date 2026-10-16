@@ -3,6 +3,11 @@
   <p>Keep your notes and files in sync with Hindsight, automatically.</p>
 </div>
 
+<p align="center">
+<img src="https://ghcr-badge.egpl.dev/Nyrest/hindsight-ingestion/latest_tag" alt="Latest tag"> 
+  <img src="https://ghcr-badge.egpl.dev/Nyrest/hindsight-ingestion/size" alt="Image size"> 
+</p>
+
 Sync **Notion, SiYuan, DeepWiki, S3, WebDAV, WebCAL, Email (IMAP), Steam, Google Drive, OneDrive and local files** into [Hindsight](https://github.com/vectorize-io/hindsight) memory banks. Self-host with Docker and manage everything from the WebUI.
 
 <p align="center">
