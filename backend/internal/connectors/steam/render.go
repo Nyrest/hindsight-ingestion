@@ -109,7 +109,7 @@ func renderGame(p player, g game, a achievements) string {
 	} else {
 		fmt.Fprintf(&b, "- Known Unlocked: %d\n- Known Locked: %d\n- Unknown: %d\n- Completion: Unavailable\n", unlocked, locked, unknown)
 	}
-	for _, state := range []string{"Unlocked", "Locked", "Unknown"} {
+	for _, state := range []string{"Unlocked", "Locked"} {
 		entries := 0
 		for _, entry := range a.Items {
 			if entry.State == state {

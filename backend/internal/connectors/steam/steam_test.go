@@ -241,8 +241,15 @@ func TestPrivacyNoStatsAndUnknownStates(t *testing.T) {
 	}
 	profile, _ := c.OpenContent(t.Context(), connectors.ContentRequest{Item: items[0]})
 	game, _ := c.OpenContent(t.Context(), connectors.ContentRequest{Item: items[1]})
-	if !strings.Contains(profile.Text, "friend list is private") || !strings.Contains(game.Text, "Unknown Achievements") || strings.Contains(game.Text, "Completion: 0.00%") || !strings.Contains(game.Text, "Locked achievement") {
-		t.Fatal("privacy was rendered as locked or empty", game.Text)
+	if !strings.Contains(profile.Text, "friend list is private") || !strings.Contains(game.Text, "Status: Unavailable") || !strings.Contains(game.Text, "Profile is not public") || !strings.Contains(game.Text, "- Unknown: 2\n") || strings.Contains(game.Text, "## Unknown Achievements") || strings.Contains(game.Text, "Completion: 0.00%") || strings.Contains(game.Text, "### ") {
+		t.Fatal("private achievements were listed or privacy status was lost", game.Text)
+	}
+	f.achievementStatus = 200
+	f.achievements = `{"playerstats":{"success":true,"achievements":[{"apiname":"A","achieved":1,"unlocktime":100}]}}`
+	res, items = scan(t, c, res.Cursor, true, false)
+	game, _ = c.OpenContent(t.Context(), connectors.ContentRequest{Item: items[1]})
+	if res.Error != nil || !strings.Contains(game.Text, "## Unlocked Achievements") || !strings.Contains(game.Text, "已完成") || !strings.Contains(game.Text, "Completion: Unavailable") || !strings.Contains(game.Text, "- Unknown: 1\n") || strings.Contains(game.Text, "## Unknown Achievements") || strings.Contains(game.Text, "Locked achievement") {
+		t.Fatal("partial achievements omitted known entries or included unknown entries", game.Text)
 	}
 	f.schema = `{"game":{}}`
 	f.achievementStatus = 400
