@@ -34,9 +34,9 @@ Sync **Notion, SiYuan, S3, WebDAV, WebCAL, Email (IMAP), Steam, Google Drive, On
 | **SiYuan** | ✅ | ✅ | ✅ | Personal notes, academic research, linked Zettelkasten, offline docs |
 | **S3 / S3-compatible storage** | ✅ | ✅ | ✅ | Enterprise document archives, data lakes, multimodal buckets, pipeline artifacts |
 | **WebDAV** | ✅ | ✅ | ✅ | NAS storage (Synology/QNAP/Nextcloud), Obsidian & Zotero vaults |
-| **WebCAL** | ✅ | — | ✅ | iCalendar events and exported VTODO; one document per series; snapshot deletion; custom timezones preserved without conversion |
-| **Steam** | ✅ | — | ✅ | One profile and one document per game; playtime and all accessible achievements; normal sync refreshes active/new games, full reconciliation includes inactive games |
-| **Email (IMAP)** | ✅ | — | ✅ | Email conversations; Inbox indexing |
+| **WebCAL** | ✅ | — | ✅ | iCalendar events, todo tasks |
+| **Steam** | ✅ | — | ✅ | Player profile, game library, playtime and achievements |
+| **Email (IMAP)** | ✅ | — | ✅ | Email conversations, inbox indexing |
 | **Google Drive** | ✅ | ✅ | ✅ | Google Workspace collaboration (Docs, Sheets, Slides), shared team drives |
 | **OneDrive** | ✅ | ✅ | ✅ | Microsoft 365 workspaces, Office files (Word, Excel, PPT), SharePoint folders |
 | **File System** | ✅ | ✅ | ✅ | Local source code repos, developer specs, local Obsidian/Logseq vaults |
