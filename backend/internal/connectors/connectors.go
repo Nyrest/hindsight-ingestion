@@ -462,7 +462,7 @@ func CredentialTypes() []CredentialType {
 }
 
 func order(t string) int {
-	for i, v := range []string{"notion", "siyuan", "cloudflare_crawl", "webcal", "email", "imap", "steam", "s3", "webdav", "google_drive", "onedrive", "filesystem", "sql", "sql_mysql", "sql_postgres", "sql_sqlite"} {
+	for i, v := range []string{"notion", "siyuan", "cloudflare_crawl", "deepwiki", "webcal", "email", "imap", "steam", "s3", "webdav", "google_drive", "onedrive", "filesystem", "sql", "sql_mysql", "sql_postgres", "sql_sqlite"} {
 		if v == t {
 			return i
 		}

@@ -17,6 +17,7 @@
     "label": "Language"
   },
   "providerCopy": {
+    "deepwikiRepoName": "Repository name (case-sensitive)",
     "steamIncludeAchievements": "Include achievement details",
     "steamIncludeAchievementsHelp": "When off, only achievement counts and progress are included.",
     "steamDescription": "Steam Web API key for profiles, games and achievements",

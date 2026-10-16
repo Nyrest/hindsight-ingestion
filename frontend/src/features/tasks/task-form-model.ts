@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { defaultObservationScope, observationScopeSchema } from "@/features/settings/config-model";
 import type { KeyValueRow } from "@/components/key-value-editor";
-import type { FilePolicy, FilterGroup, Task, TaskInput } from "@/lib/types";
+import type { FilePolicy, FilterGroup, SourceSpec, Task, TaskInput } from "@/lib/types";
 
 export const RESERVED_METADATA_PREFIX = "_ingestion_";
 
@@ -13,12 +13,12 @@ const filePolicySchema = z.object({
 });
 
 /** Messages are i18n keys; translated at render time. */
-export const taskFormSchema = z
+export const taskFormSchema = (sources: SourceSpec[]) => z
   .object({
     name: z.string().trim().min(1, "validation.required").max(200, "validation.tooLong"),
     enabled: z.boolean(),
     sourceType: z.string().min(1, "validation.required"),
-    sourceCredentialId: z.string().min(1, "validation.required"),
+    sourceCredentialId: z.string(),
     sourceConfig: z.record(z.string(), z.unknown()),
     filterMode: z.enum(["simple", "advanced"]),
     filterGroup: z.custom<FilterGroup>(),
@@ -37,6 +37,9 @@ export const taskFormSchema = z
     cronExpression: z.string().trim(),
   })
   .superRefine((v, ctx) => {
+    if (sources.find((s) => s.type === v.sourceType)?.credentialTypes.length !== 0 && !v.sourceCredentialId) {
+      ctx.addIssue({ code: "custom", path: ["sourceCredentialId"], message: "validation.required" });
+    }
     metadataRowErrors(v.metadataRows).forEach((msg, i) => {
       if (msg) ctx.addIssue({ code: "custom", path: ["metadataRows", i, "key"], message: msg });
     });
@@ -45,7 +48,7 @@ export const taskFormSchema = z
     }
   });
 
-export type TaskFormValues = z.infer<typeof taskFormSchema>;
+export type TaskFormValues = z.infer<ReturnType<typeof taskFormSchema>>;
 
 /** Per-row metadata key error (i18n key) or "" when valid. */
 export function metadataRowErrors(rows: KeyValueRow[]): string[] {

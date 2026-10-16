@@ -757,6 +757,7 @@
     }
   },
   "providerCopy": {
+    "deepwikiRepoName": "Nom du dépôt (sensible à la casse)",
     "steamIncludeAchievements": "Inclure les détails des succès",
     "steamIncludeAchievementsHelp": "Si désactivé, seuls le nombre de succès et la progression sont inclus.",
     "steamDescription": "Clé API Web Steam pour les profils, jeux et succès",

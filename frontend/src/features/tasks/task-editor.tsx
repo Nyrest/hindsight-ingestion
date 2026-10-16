@@ -131,7 +131,7 @@ export function TaskEditor({ task }: { task?: Task }) {
   const runs = useTaskRuns(task?.id, 5, 0, !!task?.running);
 
   const form = useForm<TaskFormValues>({
-    resolver: zodResolver(taskFormSchema),
+    resolver: zodResolver(taskFormSchema(connectors.data?.sources ?? [])),
     defaultValues: task ? taskToForm(task) : emptyTaskForm(),
     mode: "onSubmit",
   });

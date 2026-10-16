@@ -757,6 +757,7 @@
     }
   },
   "providerCopy": {
+    "deepwikiRepoName": "Depo adı (büyük/küçük harfe duyarlı)",
     "steamIncludeAchievements": "Başarım ayrıntılarını dahil et",
     "steamIncludeAchievementsHelp": "Kapalıyken yalnızca başarım sayıları ve ilerleme dahil edilir.",
     "steamDescription": "Profiller, oyunlar ve başarımlar için Steam Web API anahtarı",

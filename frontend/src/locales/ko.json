@@ -757,6 +757,7 @@
     }
   },
   "providerCopy": {
+    "deepwikiRepoName": "저장소 이름(대소문자 구분)",
     "steamIncludeAchievements": "도전 과제 세부 정보 포함",
     "steamIncludeAchievementsHelp": "끄면 도전 과제 수와 진행률만 포함됩니다.",
     "steamDescription": "프로필, 게임 및 도전 과제용 Steam Web API 키",

@@ -13,7 +13,10 @@ import (
 var errTaskCredentialsChanged = errors.New("task credentials changed; reload credentials")
 
 func lockTaskCredentials(tx *gorm.DB, task *models.Task) error {
-	ids := []string{task.SourceCredentialID, task.DestinationCredentialID}
+	ids := []string{task.DestinationCredentialID}
+	if task.SourceCredentialID != "" {
+		ids = append(ids, task.SourceCredentialID)
+	}
 	slices.Sort(ids)
 	ids = slices.Compact(ids)
 	var rows []models.Credential

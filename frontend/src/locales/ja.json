@@ -757,6 +757,7 @@
     }
   },
   "providerCopy": {
+    "deepwikiRepoName": "リポジトリ名（大文字・小文字を区別）",
     "steamIncludeAchievements": "実績の詳細を含める",
     "steamIncludeAchievementsHelp": "オフの場合、実績数と進捗のみを含めます。",
     "steamDescription": "プロフィール、ゲーム、実績用の Steam Web API キー",

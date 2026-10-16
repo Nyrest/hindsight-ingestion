@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import {
   Brain,
+  BookOpen,
   Calendar,
   Gamepad2,
   Mail,
@@ -18,6 +19,7 @@ import { qk } from "./query";
 import type { Connectors, CredentialTypeSpec, SourceSpec } from "./types";
 
 const TYPE_ICONS: Record<string, LucideIcon> = {
+  deepwiki: BookOpen,
   cloudflare_crawl: Cloud,
   webcal: Calendar,
   steam: Gamepad2,
@@ -42,6 +44,7 @@ export function typeIcon(type: string | undefined | null): LucideIcon {
 }
 
 const FALLBACK_NAMES: Record<string, string> = {
+  deepwiki: "DeepWiki",
   cloudflare_crawl: "Cloudflare Browser Run",
   webcal: "WebCAL",
   steam: "Steam",

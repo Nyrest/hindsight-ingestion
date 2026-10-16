@@ -33,6 +33,7 @@ import (
 
 	// Source connectors register themselves.
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/cloudflare"
+	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/deepwiki"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/filesystem"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/googledrive"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/notion"

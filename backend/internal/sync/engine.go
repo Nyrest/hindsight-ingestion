@@ -720,17 +720,20 @@ func (r *runner) prepareSource() (settings.Settings, error) {
 		r.inlineEnabled = r.task.InlineMultimodalEnabled
 	}
 
-	srcCred, err := r.e.Creds.Load(r.ctx, r.task.SourceCredentialID)
-	if err != nil {
-		return cfg, fmt.Errorf("load source credential: %w", err)
+	r.cred = connectors.Credential{Proxy: cfg.Proxy}
+	if len(src.Info().CredentialTypes) > 0 {
+		srcCred, err := r.e.Creds.Load(r.ctx, r.task.SourceCredentialID)
+		if err != nil {
+			return cfg, fmt.Errorf("load source credential: %w", err)
+		}
+		if srcCred, err = r.e.OAuth.EnsureFresh(r.ctx, srcCred); err != nil {
+			return cfg, err
+		}
+		if srcCred.OAuth != nil {
+			srcCred.AccessToken = r.e.tokenSource(srcCred)
+		}
+		r.cred = srcCred
 	}
-	if srcCred, err = r.e.OAuth.EnsureFresh(r.ctx, srcCred); err != nil {
-		return cfg, err
-	}
-	if srcCred.OAuth != nil {
-		srcCred.AccessToken = r.e.tokenSource(srcCred)
-	}
-	r.cred = srcCred
 
 	r.baseTags = []string{"ingestion", "source:" + r.task.SourceType, "ingestion_task:" + r.task.ID}
 	var custom []string

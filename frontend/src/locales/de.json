@@ -757,6 +757,7 @@
     }
   },
   "providerCopy": {
+    "deepwikiRepoName": "Repository-Name (Groß-/Kleinschreibung beachten)",
     "steamIncludeAchievements": "Erfolgsdetails einschließen",
     "steamIncludeAchievementsHelp": "Wenn deaktiviert, werden nur Anzahl und Fortschritt der Erfolge übernommen.",
     "steamDescription": "Steam-Web-API-Schlüssel für Profile, Spiele und Errungenschaften",

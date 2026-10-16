@@ -1,4 +1,5 @@
 const COPY_KEYS: Record<string, string> = {
+  "Repository name (case-sensitive)": "deepwikiRepoName",
   "Steam Web API key for profiles, games and achievements": "steamDescription",
   "Steam Web API key": "steamApiKey",
   "Create a user API key at steamcommunity.com/dev/apikey. Private friends and achievements may be unavailable.": "steamApiKeyHelp",

@@ -17,6 +17,7 @@
     "label": "语言"
   },
   "providerCopy": {
+    "deepwikiRepoName": "仓库名称（区分大小写）",
     "steamIncludeAchievements": "包含成就详情",
     "steamIncludeAchievementsHelp": "关闭时仅保留成就数量和进度。",
     "steamDescription": "用于同步个人资料、游戏和成就的 Steam Web API 密钥",

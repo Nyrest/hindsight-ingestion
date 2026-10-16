@@ -157,7 +157,7 @@ func TestSQLTaskConfigAndCredentialContract(t *testing.T) {
 		if _, old := s["credentialType"]; old {
 			t.Fatal("legacy credentialType exposed")
 		}
-		if len(s["credentialTypes"].([]any)) == 0 {
+		if types, ok := s["credentialTypes"].([]any); !ok || (len(types) == 0 && s["type"] != "deepwiki") {
 			t.Fatal(s)
 		}
 	}

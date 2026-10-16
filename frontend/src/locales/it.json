@@ -757,6 +757,7 @@
     }
   },
   "providerCopy": {
+    "deepwikiRepoName": "Nome del repository (distingue maiuscole e minuscole)",
     "steamIncludeAchievements": "Includi dettagli degli obiettivi",
     "steamIncludeAchievementsHelp": "Se disattivato, vengono inclusi solo il numero di obiettivi e i progressi.",
     "steamDescription": "Chiave Steam Web API per profili, giochi e achievement",

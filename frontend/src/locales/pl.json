@@ -775,6 +775,7 @@
     "incomplete_many": "Niepełne skanowanie ({{count}} elementów). Brakujące elementy nie zostaną oznaczone do usunięcia."
   },
   "providerCopy": {
+    "deepwikiRepoName": "Nazwa repozytorium (wielkość liter ma znaczenie)",
     "steamIncludeAchievements": "Uwzględnij szczegóły osiągnięć",
     "steamIncludeAchievementsHelp": "Po wyłączeniu uwzględniane są tylko liczba osiągnięć i postęp.",
     "steamDescription": "Klucz Steam Web API do profili, gier i osiągnięć",

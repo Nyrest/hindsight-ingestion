@@ -199,7 +199,9 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 	if b.SourceCredentialID != nil {
 		t.SourceCredentialID = *b.SourceCredentialID
 	}
-	if cred, err := s.Creds.Get(ctx, t.SourceCredentialID); err != nil {
+	if len(info.CredentialTypes) == 0 {
+		t.SourceCredentialID = ""
+	} else if cred, err := s.Creds.Get(ctx, t.SourceCredentialID); err != nil {
 		errs.add("sourceCredentialId", "Select a source credential")
 	} else if !info.AcceptsCredential(cred.Type) {
 		errs.add("sourceCredentialId", "Credential type does not match the source")

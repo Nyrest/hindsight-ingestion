@@ -103,24 +103,26 @@ export function SourceConfigFields({
 
   return (
     <>
-      <FieldRow label={t("source.credential")} htmlFor="task-source-cred" required error={credentialError}>
-        <CredentialPicker
-          id="task-source-cred"
-          credentials={credentials}
-          types={source.credentialTypes}
-          typeLabel={credTypeName}
-          value={credentialId}
-          onChange={(id) => {
-            if (source.type === "email" && id !== credentialId) {
-              defaultsFor.current = "";
-              onConfigChange("folders", []);
-              onConfigChange("excludeFolders", []);
-            }
-            onCredentialChange(id);
-          }}
-          invalid={!!credentialError}
-        />
-      </FieldRow>
+      {source.credentialTypes.length > 0 && (
+        <FieldRow label={t("source.credential")} htmlFor="task-source-cred" required error={credentialError}>
+          <CredentialPicker
+            id="task-source-cred"
+            credentials={credentials}
+            types={source.credentialTypes}
+            typeLabel={credTypeName}
+            value={credentialId}
+            onChange={(id) => {
+              if (source.type === "email" && id !== credentialId) {
+                defaultsFor.current = "";
+                onConfigChange("folders", []);
+                onConfigChange("excludeFolders", []);
+              }
+              onCredentialChange(id);
+            }}
+            invalid={!!credentialError}
+          />
+        </FieldRow>
+      )}
 
       {source.type === "sql" ? (
         <SQLSourceFields key={credentialId} credentialId={credentialId} config={config} onChange={onConfigChange} errors={configErrors} />

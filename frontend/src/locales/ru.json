@@ -775,6 +775,7 @@
     "incomplete_many": "Сканирование не завершено ({{count}} элементов). Отсутствующие элементы не помечены для удаления."
   },
   "providerCopy": {
+    "deepwikiRepoName": "Название репозитория (с учётом регистра)",
     "steamIncludeAchievements": "Включать подробности достижений",
     "steamIncludeAchievementsHelp": "Если выключено, включаются только количество достижений и прогресс.",
     "steamDescription": "Ключ Steam Web API для профилей, игр и достижений",

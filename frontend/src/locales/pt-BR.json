@@ -757,6 +757,7 @@
     }
   },
   "providerCopy": {
+    "deepwikiRepoName": "Nome do repositório (diferencia maiúsculas e minúsculas)",
     "steamIncludeAchievements": "Incluir detalhes das conquistas",
     "steamIncludeAchievementsHelp": "Quando desativado, inclui apenas a quantidade de conquistas e o progresso.",
     "steamDescription": "Chave da Steam Web API para perfis, jogos e conquistas",
