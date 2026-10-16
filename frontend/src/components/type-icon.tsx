@@ -23,7 +23,7 @@ function brandIcon(type: string) {
     case "sql_sqlite":
       return <SQLite aria-hidden="true" className="size-4 shrink-0" />;
     case "notion":
-      return <Notion aria-hidden="true" className="size-4 shrink-0" />;
+      return <Notion aria-hidden="true" className="size-4 shrink-0 text-foreground" variant="mono" />;
     case "siyuan":
       return <Siyuan aria-hidden="true" className="size-4 shrink-0" />;
     case "google_drive":

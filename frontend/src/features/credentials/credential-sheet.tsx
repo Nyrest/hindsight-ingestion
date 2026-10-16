@@ -277,15 +277,15 @@ export function CredentialSheet({
               )}
 
               {!isSQL && <>
-              <Separator />
-
-              <ProxyEditor value={proxy} mode={proxyMode} onModeChange={(mode) => { setProxyMode(mode); setProxyError(undefined); }} onChange={(next) => { setProxy(next); setProxyError(undefined); }} error={proxyError} />
               {supportsHeaders && <><Separator />
               <CustomHeadersEditor
                 key={headersKey}
                 initial={credential?.customHeaders ?? {}}
                 onChange={setHeaders}
               /></>}
+              <Separator />
+
+              <ProxyEditor value={proxy} mode={proxyMode} onModeChange={(mode) => { setProxyMode(mode); setProxyError(undefined); }} onChange={(next) => { setProxy(next); setProxyError(undefined); }} error={proxyError} />
               </>}
             </>
           )}
