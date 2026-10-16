@@ -40,6 +40,7 @@ Sync **Notion, SiYuan, S3, WebDAV, WebCAL, Email (IMAP), Steam, Google Drive, On
 | **Google Drive** | ✅ | ✅ | ✅ | Google Workspace collaboration (Docs, Sheets, Slides), shared team drives |
 | **OneDrive** | ✅ | ✅ | ✅ | Microsoft 365 workspaces, Office files (Word, Excel, PPT), SharePoint folders |
 | **File System** | ✅ | ✅ | ✅ | Local source code repos, developer specs, local Obsidian/Logseq vaults |
+| **SQL** | ✅ | — | ✅ | Data analysis, reporting from query results |
 | **Cloudflare Browser Run** | ✅ | — | ✅ | Online documentation, API references, blogs, public help centers & FAQs |
 
 ### Local files in Docker
