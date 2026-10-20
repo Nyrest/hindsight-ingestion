@@ -47,7 +47,7 @@ Sync **Notion, SiYuan, DeepWiki, S3, WebDAV, WebCAL, Email (IMAP), Steam, Google
 | **File System** | ✅ | ✅ | ✅ | Local source code repos, developer specs, local Obsidian/Logseq vaults |
 | **SQL** | ✅ | — | ✅ | Data analysis, reporting from query results |
 | **DeepWiki** | ✅ | — | — | Public repository documentation |
-| **Cloudflare Browser Run** | ✅ | — | ✅ | Online documentation, API references, blogs, public help centers & FAQs |
+| **Cloudflare Browser Run (Web scraping)** | ✅ | — | ✅ | Online documentation, API references, blogs, public help centers & FAQs |
 
 ### Local files in Docker
 
