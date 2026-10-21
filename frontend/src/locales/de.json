@@ -757,6 +757,11 @@
     }
   },
   "providerCopy": {
+    "caldavDescription": "CalDAV-Kalender für Termine und Aufgaben",
+    "caldavServerHelp": "Verwenden Sie die URL des CalDAV-Dienstes, des Kalenderverzeichnisses oder eines Kalenders auf dem endgültigen Server.",
+    "caldavURL": "Kalender-URL",
+    "caldavCalendarHelp": "Wählen Sie einen Kalender. Alle verfügbaren Termine und Aufgaben werden gelesen; vollständige Scans entfernen nicht mehr vorhandene Dokumente.",
+    "caldavResponseSize": "Maximale CalDAV-Antwortgröße (MiB)",
     "deepwikiRepoName": "Repository-Name (Groß-/Kleinschreibung beachten)",
     "steamIncludeAchievements": "Erfolgsdetails einschließen",
     "steamIncludeAchievementsHelp": "Wenn deaktiviert, werden nur Anzahl und Fortschritt der Erfolge übernommen.",

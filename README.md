@@ -8,7 +8,7 @@
   <img src="https://ghcr-badge.egpl.dev/Nyrest/hindsight-ingestion/size" alt="Image size"> 
 </p>
 
-Sync **Notion, SiYuan, DeepWiki, S3, WebDAV, WebCAL, Email (IMAP), Steam, Google Drive, OneDrive and local files** into [Hindsight](https://github.com/vectorize-io/hindsight) memory banks. Self-host with Docker and manage everything from the WebUI.
+Sync **Notion, SiYuan, DeepWiki, S3, WebDAV, WebCAL, CalDAV, Email (IMAP), Steam, Google Drive, OneDrive and local files** into [Hindsight](https://github.com/vectorize-io/hindsight) memory banks. Self-host with Docker and manage everything from the WebUI.
 
 <p align="center">
   <a href="#-features">Features</a> · <a href="#-supported-sources">Sources</a> · <a href="#-quick-start">Quick start</a> · <a href="#-usage">Usage</a> · <a href="#-configuration">Configuration</a> · <a href="#-development">Development</a>
@@ -40,6 +40,7 @@ Sync **Notion, SiYuan, DeepWiki, S3, WebDAV, WebCAL, Email (IMAP), Steam, Google
 | **S3 / S3-compatible storage** | ✅ | ✅ | ✅ | Enterprise document archives, data lakes, multimodal buckets, pipeline artifacts |
 | **WebDAV** | ✅ | ✅ | ✅ | NAS storage (Synology/QNAP/Nextcloud), Obsidian & Zotero vaults |
 | **WebCAL** | ✅ | — | ✅ | iCalendar events, todo tasks |
+| **CalDAV** | ✅ | — | ✅ | Calendar collections, events and to-dos |
 | **Steam** | ✅ | — | ✅ | Player profile, game library, playtime and achievements |
 | **Email (IMAP)** | ✅ | — | ✅ | Email conversations, inbox indexing |
 | **Google Drive** | ✅ | ✅ | ✅ | Google Workspace collaboration (Docs, Sheets, Slides), shared team drives |
@@ -95,7 +96,7 @@ Open [http://localhost:8080](http://localhost:8080) and sign in with `admin` and
 
 1. In **Credentials**, add a **Hindsight** connection with its URL and optional API key, then a source connection if required. Use **Test** to check them. Google Drive and OneDrive also require OAuth setup and **Connect**.
 2. In **Tasks**, choose the source, content to sync and destination bank. Leave the retain strategy empty to use the bank's default.
-3. Choose a schedule in the application timezone. WebCAL, Email and Steam default to **Every hour**; a blank schedule runs manually. Save the task disabled if you want to preview first.
+3. Choose a schedule in the application timezone. WebCAL, CalDAV, Email and Steam default to **Every hour**; a blank schedule runs manually. Save the task disabled if you want to preview first.
 4. Use **Dry-run** to preview, then **Run now** to sync. Check **Runs** for results and enable the task for scheduled syncs.
 
 ## 📖 Usage

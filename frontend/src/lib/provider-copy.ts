@@ -1,4 +1,9 @@
 const COPY_KEYS: Record<string, string> = {
+  "CalDAV calendars for events and to-dos": "caldavDescription",
+  "Use a CalDAV service, calendar home or calendar URL on the final server host.": "caldavServerHelp",
+  "Calendar URL": "caldavURL",
+  "Select one calendar. Reads all available events and to-dos; complete scans remove missing documents.": "caldavCalendarHelp",
+  "Maximum CalDAV response size (MiB)": "caldavResponseSize",
   "Repository name (case-sensitive)": "deepwikiRepoName",
   "Steam Web API key for profiles, games and achievements": "steamDescription",
   "Steam Web API key": "steamApiKey",

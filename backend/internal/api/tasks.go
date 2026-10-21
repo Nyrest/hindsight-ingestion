@@ -350,7 +350,7 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 
 	if b.CronExpression != nil {
 		t.CronExpression = strings.TrimSpace(*b.CronExpression)
-	} else if creating && (t.SourceType == "webcal" || t.SourceType == "email" || t.SourceType == "steam") {
+	} else if creating && (t.SourceType == "webcal" || t.SourceType == "caldav" || t.SourceType == "email" || t.SourceType == "steam") {
 		t.CronExpression = "0 * * * *"
 	}
 	if _, err := scheduler.ValidateCron(t.CronExpression, "UTC", 1); err != nil {

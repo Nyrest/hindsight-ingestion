@@ -284,7 +284,7 @@ func (r *runner) execute(opts RunOptions) error {
 		Log:        func(level, msg string) { r.logf(level, "%s", msg) },
 	}, opts)
 	if err != nil {
-		if r.task.SourceType == "webcal" || r.task.SourceType == "email" || r.task.SourceType == "steam" {
+		if r.task.SourceType == "webcal" || r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam" {
 			return errors.Join(fmt.Errorf("scan source: %w", err), r.flushSeen(), r.awaitPending())
 		}
 		return fmt.Errorf("scan source: %w", err)
@@ -309,7 +309,7 @@ func (r *runner) execute(opts RunOptions) error {
 		return errors.New("Steam inventory was incomplete; deletion and state commit skipped")
 	}
 
-	if (r.sharedDocs != nil || r.task.SourceType == "sql" || r.task.SourceType == "webcal" || r.task.SourceType == "email" || r.task.SourceType == "steam") && len(r.failed) > 0 {
+	if (r.sharedDocs != nil || r.task.SourceType == "sql" || r.task.SourceType == "webcal" || r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam") && len(r.failed) > 0 {
 		return fmt.Errorf("%d item(s) failed; deletion and cursor commit skipped", len(r.failed))
 	}
 
@@ -481,7 +481,7 @@ func (r *runner) observe(item connectors.SourceItem) error {
 		row.SyncedFingerprint = actual
 	}
 
-	if !r.reing && row.DestinationPresent && row.SyncedFingerprint == target && !((r.task.SourceType == "webcal" || r.task.SourceType == "email" || r.task.SourceType == "steam") && row.LastError != "") && !(r.full && r.includesImages() && row.NeedsImageRetry) {
+	if !r.reing && row.DestinationPresent && row.SyncedFingerprint == target && !((r.task.SourceType == "webcal" || r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam") && row.LastError != "") && !(r.full && r.includesImages() && row.NeedsImageRetry) {
 		r.run.UnchangedCount++
 		return r.queueSeen(row)
 	}

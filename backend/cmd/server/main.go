@@ -32,6 +32,7 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/web"
 
 	// Source connectors register themselves.
+	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/caldav"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/cloudflare"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/deepwiki"
 	_ "github.com/Nyrest/hindsight-ingestion/internal/connectors/filesystem"

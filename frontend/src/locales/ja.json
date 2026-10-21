@@ -757,6 +757,11 @@
     }
   },
   "providerCopy": {
+    "caldavDescription": "予定と ToDo を同期する CalDAV カレンダー",
+    "caldavServerHelp": "最終接続先サーバーの CalDAV サービス、カレンダーホーム、またはカレンダーの URL を入力します。",
+    "caldavURL": "カレンダー URL",
+    "caldavCalendarHelp": "カレンダーを1つ選択します。利用可能なすべての予定と ToDo を読み取り、完全なスキャン後に存在しなくなった文書を削除します。",
+    "caldavResponseSize": "CalDAV 応答サイズの上限 (MiB)",
     "deepwikiRepoName": "リポジトリ名（大文字・小文字を区別）",
     "steamIncludeAchievements": "実績の詳細を含める",
     "steamIncludeAchievementsHelp": "オフの場合、実績数と進捗のみを含めます。",

@@ -92,7 +92,7 @@ func (e *Engine) DryRunWithOptions(ctx context.Context, taskID string, opts RunO
 	if r.task.SourceType == "steam" && !res.Complete && err == nil {
 		err = errors.New("Steam inventory was incomplete; deletion preview skipped")
 	}
-	if r.task.SourceType == "webcal" || r.task.SourceType == "email" || r.task.SourceType == "steam" {
+	if r.task.SourceType == "webcal" || r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam" {
 		err = errors.Join(err, r.checkTaskRevision(e.DB.WithContext(ctx)))
 		for _, preview := range observed {
 			if preview.Action == "fail" {
@@ -105,7 +105,7 @@ func (e *Engine) DryRunWithOptions(ctx context.Context, taskID string, opts RunO
 		result.Error = err.Error()
 	}
 	result.DiscoveredCount = len(observed)
-	if !result.Complete && (r.sharedDocs != nil || r.task.SourceType == "webcal" || r.task.SourceType == "email" || r.task.SourceType == "steam") {
+	if !result.Complete && (r.sharedDocs != nil || r.task.SourceType == "webcal" || r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam") {
 		for id, preview := range observed {
 			if preview.Action == "delete" {
 				preview.Action, preview.Reason = "skip", "incomplete source inventory; document unchanged"
@@ -190,7 +190,7 @@ func (r *runner) previewItem(item connectors.SourceItem) DryRunItem {
 	}
 	if row.DestinationPresent &&
 		row.DestinationDocumentID == documentID &&
-		!((r.task.SourceType == "webcal" || r.task.SourceType == "email" || r.task.SourceType == "steam") && row.LastError != "") &&
+		!((r.task.SourceType == "webcal" || r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam") && row.LastError != "") &&
 		row.SyncedFingerprint == r.itemFingerprint(item, tags, md) && !(r.includesImages() && row.NeedsImageRetry) {
 		preview.Action = "unchanged"
 		return preview

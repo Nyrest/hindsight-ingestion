@@ -17,6 +17,11 @@
     "label": "Language"
   },
   "providerCopy": {
+    "caldavDescription": "CalDAV calendars for events and to-dos",
+    "caldavServerHelp": "Use a CalDAV service, calendar home or calendar URL on the final server host.",
+    "caldavURL": "Calendar URL",
+    "caldavCalendarHelp": "Select one calendar. Reads all available events and to-dos; complete scans remove missing documents.",
+    "caldavResponseSize": "Maximum CalDAV response size (MiB)",
     "deepwikiRepoName": "Repository name (case-sensitive)",
     "steamIncludeAchievements": "Include achievement details",
     "steamIncludeAchievementsHelp": "When off, only achievement counts and progress are included.",

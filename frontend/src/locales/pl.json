@@ -775,6 +775,11 @@
     "incomplete_many": "Niepełne skanowanie ({{count}} elementów). Brakujące elementy nie zostaną oznaczone do usunięcia."
   },
   "providerCopy": {
+    "caldavDescription": "Kalendarze CalDAV z wydarzeniami i zadaniami",
+    "caldavServerHelp": "Użyj adresu URL usługi CalDAV, katalogu kalendarzy lub kalendarza na docelowym serwerze.",
+    "caldavURL": "Adres URL kalendarza",
+    "caldavCalendarHelp": "Wybierz jeden kalendarz. Odczytywane są wszystkie dostępne wydarzenia i zadania; pełne skanowanie usuwa dokumenty, które już nie istnieją.",
+    "caldavResponseSize": "Maksymalny rozmiar odpowiedzi CalDAV (MiB)",
     "deepwikiRepoName": "Nazwa repozytorium (wielkość liter ma znaczenie)",
     "steamIncludeAchievements": "Uwzględnij szczegóły osiągnięć",
     "steamIncludeAchievementsHelp": "Po wyłączeniu uwzględniane są tylko liczba osiągnięć i postęp.",

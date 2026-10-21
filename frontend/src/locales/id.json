@@ -757,6 +757,11 @@
     }
   },
   "providerCopy": {
+    "caldavDescription": "Kalender CalDAV untuk acara dan tugas",
+    "caldavServerHelp": "Gunakan URL layanan CalDAV, direktori kalender, atau kalender pada server tujuan akhir.",
+    "caldavURL": "URL kalender",
+    "caldavCalendarHelp": "Pilih satu kalender. Semua acara dan tugas yang tersedia dibaca; pemindaian lengkap menghapus dokumen yang sudah tidak ada.",
+    "caldavResponseSize": "Ukuran respons CalDAV maksimum (MiB)",
     "deepwikiRepoName": "Nama repositori (peka huruf besar/kecil)",
     "steamIncludeAchievements": "Sertakan detail pencapaian",
     "steamIncludeAchievementsHelp": "Jika nonaktif, hanya jumlah dan progres pencapaian yang disertakan.",

@@ -13,6 +13,7 @@ import (
 	"gorm.io/gorm/clause"
 
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
+	"github.com/Nyrest/hindsight-ingestion/internal/connectors/caldav"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors/email"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors/sqlsource"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors/steam"
@@ -159,6 +160,7 @@ func (s *Server) patchCredential(w http.ResponseWriter, r *http.Request) {
 		_ = json.Unmarshal([]byte(m.ConfigJSON), &oldConfig)
 		oldTarget := sqlsource.ConnectionTarget(m.Type, oldConfig)
 		oldCalendarTarget := ""
+		oldCalDAVTarget := ""
 		oldSteamKey := ""
 		if m.Type == steam.SourceType {
 			oldCredential, err := s.Creds.Decrypt(&m)
@@ -170,6 +172,13 @@ func (s *Server) patchCredential(w http.ResponseWriter, r *http.Request) {
 		if m.Type == "webcal" {
 			oldCredential, _ := s.Creds.Decrypt(&m)
 			oldCalendarTarget = webcal.CredentialTarget(oldCredential)
+		}
+		if m.Type == "caldav" {
+			oldCredential, err := s.Creds.Decrypt(&m)
+			if err != nil {
+				return err
+			}
+			oldCalDAVTarget = caldav.CredentialTarget(oldCredential)
 		}
 		if err := s.Creds.Apply(&m, body.input(), false); err != nil {
 			return err
@@ -205,6 +214,15 @@ func (s *Server) patchCredential(w http.ResponseWriter, r *http.Request) {
 			}
 			if oldCalendarTarget != webcal.CredentialTarget(newCredential) {
 				changedSource = "webcal"
+			}
+		}
+		if m.Type == "caldav" {
+			newCredential, err := s.Creds.Decrypt(&m)
+			if err != nil {
+				return err
+			}
+			if oldCalDAVTarget != caldav.CredentialTarget(newCredential) {
+				changedSource = "caldav"
 			}
 		}
 		if changedSource != "" {

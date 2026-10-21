@@ -87,10 +87,10 @@ func (s *Server) saveSettings(ctx context.Context, previous, current settings.Se
 			return query.Updates(map[string]any{"reconcile_required": true, "config_revision": gorm.Expr("config_revision + 1")}).Error
 		}
 		if previous.Timezone != current.Timezone {
-			if err := reconcile(tx.Model(&models.Task{}).Where("source_type = ?", "webcal")); err != nil {
+			if err := reconcile(tx.Model(&models.Task{}).Where("source_type IN ?", []string{"webcal", "caldav"})); err != nil {
 				return err
 			}
-			tasks := tx.Model(&models.Task{}).Select("id").Where("source_type = ?", "webcal")
+			tasks := tx.Model(&models.Task{}).Select("id").Where("source_type IN ?", []string{"webcal", "caldav"})
 			if err := tx.Model(&models.TaskState{}).Where("task_id IN (?)", tasks).Updates(map[string]any{"committed_cursor_json": "", "last_full_reconcile_at": nil}).Error; err != nil {
 				return err
 			}

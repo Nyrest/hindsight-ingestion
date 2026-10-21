@@ -17,6 +17,11 @@
     "label": "語言"
   },
   "providerCopy": {
+    "caldavDescription": "透過 CalDAV 同步行程與待辦事項",
+    "caldavServerHelp": "填寫最終伺服器上的 CalDAV 服務、日曆主目錄或日曆網址。",
+    "caldavURL": "日曆網址",
+    "caldavCalendarHelp": "選擇一個日曆。讀取所有可用的行程與待辦事項；完整掃描後會清理已不存在的文件。",
+    "caldavResponseSize": "CalDAV 回應大小上限 (MiB)",
     "deepwikiRepoName": "儲存庫名稱（區分大小寫）",
     "steamIncludeAchievements": "包含成就詳細資訊",
     "steamIncludeAchievementsHelp": "關閉時僅保留成就數量和進度。",

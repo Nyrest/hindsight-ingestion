@@ -757,6 +757,11 @@
     }
   },
   "providerCopy": {
+    "caldavDescription": "일정과 할 일을 동기화하는 CalDAV 캘린더",
+    "caldavServerHelp": "최종 서버의 CalDAV 서비스, 캘린더 홈 또는 캘린더 URL을 입력하세요.",
+    "caldavURL": "캘린더 URL",
+    "caldavCalendarHelp": "캘린더 하나를 선택하세요. 사용 가능한 모든 일정과 할 일을 읽으며, 전체 스캔 후 더 이상 존재하지 않는 문서를 삭제합니다.",
+    "caldavResponseSize": "최대 CalDAV 응답 크기 (MiB)",
     "deepwikiRepoName": "저장소 이름(대소문자 구분)",
     "steamIncludeAchievements": "도전 과제 세부 정보 포함",
     "steamIncludeAchievementsHelp": "끄면 도전 과제 수와 진행률만 포함됩니다.",

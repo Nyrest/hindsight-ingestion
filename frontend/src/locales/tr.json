@@ -757,6 +757,11 @@
     }
   },
   "providerCopy": {
+    "caldavDescription": "Etkinlikler ve yapılacaklar için CalDAV takvimleri",
+    "caldavServerHelp": "Nihai sunucudaki CalDAV hizmetinin, takvim ana dizininin veya takvimin URL’sini kullanın.",
+    "caldavURL": "Takvim URL’si",
+    "caldavCalendarHelp": "Bir takvim seçin. Mevcut tüm etkinlikler ve yapılacaklar okunur; tam taramalar artık bulunmayan belgeleri kaldırır.",
+    "caldavResponseSize": "En büyük CalDAV yanıt boyutu (MiB)",
     "deepwikiRepoName": "Depo adı (büyük/küçük harfe duyarlı)",
     "steamIncludeAchievements": "Başarım ayrıntılarını dahil et",
     "steamIncludeAchievementsHelp": "Kapalıyken yalnızca başarım sayıları ve ilerleme dahil edilir.",

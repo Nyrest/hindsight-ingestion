@@ -757,6 +757,11 @@
     }
   },
   "providerCopy": {
+    "caldavDescription": "Calendarios CalDAV para eventos y tareas",
+    "caldavServerHelp": "Use la URL del servicio CalDAV, del directorio de calendarios o de un calendario en el servidor final.",
+    "caldavURL": "URL del calendario",
+    "caldavCalendarHelp": "Seleccione un calendario. Se leen todos los eventos y tareas disponibles; los análisis completos eliminan los documentos que ya no existen.",
+    "caldavResponseSize": "Tamaño máximo de respuesta CalDAV (MiB)",
     "deepwikiRepoName": "Nombre del repositorio (distingue mayúsculas y minúsculas)",
     "steamIncludeAchievements": "Incluir detalles de logros",
     "steamIncludeAchievementsHelp": "Si se desactiva, solo se incluyen el número de logros y el progreso.",

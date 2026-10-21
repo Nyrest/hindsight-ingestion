@@ -183,7 +183,7 @@ export function TaskEditor({ task }: { task?: Task }) {
   function changeSourceType(type: string) {
     const spec = findSource(connectors.data, type);
     const schedule = form.getFieldState("cronExpression");
-    if (!editing && (type === "webcal" || type === "email" || type === "steam") && !schedule.isDirty && !schedule.isTouched && !form.getValues("cronExpression")) {
+    if (!editing && (type === "webcal" || type === "caldav" || type === "email" || type === "steam") && !schedule.isDirty && !schedule.isTouched && !form.getValues("cronExpression")) {
       setValue("cronExpression", "0 * * * *", { shouldDirty: true });
     }
     setValue("sourceType", type, { shouldDirty: true, shouldValidate: formState.isSubmitted });

@@ -17,6 +17,11 @@
     "label": "语言"
   },
   "providerCopy": {
+    "caldavDescription": "通过 CalDAV 同步日程与待办事项",
+    "caldavServerHelp": "填写最终服务器上的 CalDAV 服务、日历主目录或日历地址。",
+    "caldavURL": "日历地址",
+    "caldavCalendarHelp": "选择一个日历。读取所有可用的日程与待办事项；完整扫描后会清理已不存在的文档。",
+    "caldavResponseSize": "CalDAV 响应大小上限 (MiB)",
     "deepwikiRepoName": "仓库名称（区分大小写）",
     "steamIncludeAchievements": "包含成就详情",
     "steamIncludeAchievementsHelp": "关闭时仅保留成就数量和进度。",
