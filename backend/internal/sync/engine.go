@@ -187,7 +187,7 @@ func (r *runner) execute(opts RunOptions) error {
 	if r.dest, err = r.e.NewDestination(destCred); err != nil {
 		return err
 	}
-	if r.task.SourceType == "email" || r.task.SourceType == "steam" {
+	if r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam" {
 		if err := r.fencePriorRetainOperations(); err != nil {
 			return err
 		}
