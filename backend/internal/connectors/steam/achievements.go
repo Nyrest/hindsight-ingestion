@@ -12,6 +12,10 @@ import (
 )
 
 func fetchAchievements(ctx context.Context, client *apiClient, sid string, app uint32, language string, schema gameSchema) (achievements, error) {
+	// Steam can return HTTP 500 for player achievements when a game has none.
+	if schema.UnavailableReason == "" && (schema.Available == nil || len(schema.Available.Achievements) == 0) {
+		return achievements{Status: "No Achievements", Items: []achievement{}}, nil
+	}
 	var result achievementResponse
 	err := client.get(ctx, "ISteamUserStats/GetPlayerAchievements/v1/", map[string]string{"steamid": sid, "appid": appString(app), "l": language}, &result)
 	responseOK := err == nil

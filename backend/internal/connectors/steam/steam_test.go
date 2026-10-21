@@ -296,6 +296,7 @@ func TestPrivacyNoStatsAndUnknownStates(t *testing.T) {
 	if res.Error != nil || !strings.Contains(game.Text, "## Unlocked Achievements") || !strings.Contains(game.Text, "已完成") || !strings.Contains(game.Text, "Completion: Unavailable") || !strings.Contains(game.Text, "- Unknown: 1\n") || strings.Contains(game.Text, "## Unknown Achievements") || strings.Contains(game.Text, "Locked achievement") {
 		t.Fatal("partial achievements omitted known entries or included unknown entries", game.Text)
 	}
+	f.schemaStatus = 403
 	f.schema = `{"game":{}}`
 	f.achievementStatus = 400
 	f.achievements = `{"playerstats":{"success":false,"error":"Requested app has no stats"}}`
@@ -304,6 +305,8 @@ func TestPrivacyNoStatsAndUnknownStates(t *testing.T) {
 	if res.Error != nil || !strings.Contains(game.Text, "Status: No Achievements") {
 		t.Fatal("explicit no-stats response failed", res, game.Text)
 	}
+	f.schemaStatus = 0
+	f.schema = `{"game":{"availableGameStats":{"achievements":[{"name":"A","displayName":"Achievement"}]}}}`
 	f.achievementStatus = 403
 	f.achievements = `{"playerstats":{"success":false,"error":"Access denied"}}`
 	res, items = scan(t, c, res.Cursor, true, false)
@@ -447,6 +450,112 @@ func TestSchemaAccessDenialAndTransientFailures(t *testing.T) {
 	f.achievementStatus = 503
 	if _, err := fetchAchievements(t.Context(), client, testSteamID, 2385180, "schinese", schema); err == nil {
 		t.Fatal("503 treated as private player achievements")
+	}
+}
+
+func TestGamesWithoutAchievementsSkipPlayerRequest(t *testing.T) {
+	for _, tc := range []struct {
+		name   string
+		appID  uint32
+		schema string
+	}{
+		{"Hacker Evolution", 70100, `{"game":{"gameName":"Hacker Evolution","availableGameStats":{"achievements":null}}}`},
+		{"Initia Elemental Arena", 463920, `{"game":{"gameName":"Initia Elemental Arena","availableGameStats":{"stats":[{"name":"score"}]}}}`},
+		{"empty game", 400, `{"game":{}}`},
+		{"empty achievement list", 620, `{"game":{"availableGameStats":{"achievements":[]}}}`},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			c, f := setup(t)
+			f.schema = tc.schema
+			f.achievementStatus = 500
+			f.achievements = `{"playerstats":{"error":"Internal server error","success":false}}`
+			client, err := c.client(testCredential)
+			if err != nil {
+				t.Fatal(err)
+			}
+			client.http.MaxRetries = 0
+			schema, err := c.schema(t.Context(), client, tc.appID, "schinese", true, false)
+			if err != nil {
+				t.Fatal(err)
+			}
+			data, err := fetchAchievements(t.Context(), client, testSteamID, tc.appID, "schinese", schema)
+			if err != nil || data.Status != "No Achievements" || len(data.Items) != 0 || f.calls["/ISteamUserStats/GetPlayerAchievements/v1/"] != 0 {
+				t.Fatal("achievement-free schema still queried player achievements", data, err)
+			}
+		})
+	}
+}
+
+func TestPlayerAchievementServerErrorsRemainFatal(t *testing.T) {
+	for _, unavailableSchema := range []bool{false, true} {
+		t.Run(fmt.Sprintf("unavailable_schema_%t", unavailableSchema), func(t *testing.T) {
+			c, f := setup(t)
+			client, err := c.client(testCredential)
+			if err != nil {
+				t.Fatal(err)
+			}
+			client.http.MaxRetries = 0
+			if unavailableSchema {
+				f.schemaStatus = 403
+				f.schema = `{"game":{}}`
+			}
+			schema, err := c.schema(t.Context(), client, 620, "schinese", true, false)
+			if err != nil {
+				t.Fatal(err)
+			}
+			f.achievementStatus = 500
+			f.achievements = `{"playerstats":{"error":"Internal server error","success":false}}`
+			if _, err := fetchAchievements(t.Context(), client, testSteamID, 620, "schinese", schema); !httpx.IsStatus(err, http.StatusInternalServerError) {
+				t.Fatal("real server error was treated as no achievements", err)
+			}
+			if f.calls["/ISteamUserStats/GetPlayerAchievements/v1/"] != 1 {
+				t.Fatal("player achievements were not checked")
+			}
+		})
+	}
+}
+
+func TestAchievementFreeGamesCompleteScanAndReconcile(t *testing.T) {
+	c, f := setup(t)
+	withAchievements := f.schema
+	f.owned = `{"response":{"games":[{"appid":70100,"name":"Hacker Evolution","playtime_forever":60},{"appid":463920,"name":"Initia Elemental Arena","playtime_forever":0}]}}`
+	f.schema = `{"game":{"availableGameStats":{"stats":[{"name":"score"}]}}}`
+	f.achievementStatus = 500
+	f.achievements = `{"playerstats":{"error":"Internal server error","success":false}}`
+	first, items := scan(t, c, nil, true, false)
+	if first.Error != nil || !first.Complete || len(first.Cursor) == 0 || len(items) != 3 {
+		t.Fatal("achievement-free games blocked full scan", first)
+	}
+	for _, item := range items[1:] {
+		content, err := c.OpenContent(t.Context(), connectors.ContentRequest{Item: item})
+		if err != nil || item.ContentError != "" || !strings.Contains(content.Text, "Status: No Achievements\n- Total: 0") || strings.Contains(content.Text, "Completion:") {
+			t.Fatal("incorrect achievement-free game document", content.Text, err)
+		}
+	}
+	// Persisted zero-achievement snapshots survive a restart and ordinary polling.
+	c = &Connector{DB: c.DB}
+	second, unchanged := scan(t, c, first.Cursor, false, false)
+	if second.Error != nil || !second.Complete || f.calls["/ISteamUserStats/GetPlayerAchievements/v1/"] != 0 || f.calls["/ISteamUserStats/GetSchemaForGame/v2/"] != 2 {
+		t.Fatal("ordinary scan queried achievement-free games", second)
+	}
+	for i := range items {
+		if items[i].Revision != unchanged[i].Revision {
+			t.Fatal("cached no-achievement data changed revision")
+		}
+	}
+	// Reconciliation must notice achievements added after an empty schema was cached.
+	f.schema = withAchievements
+	f.achievementStatus = 403
+	f.achievements = `{"playerstats":{"success":false,"error":"Profile is not public"}}`
+	full, changed := scan(t, c, second.Cursor, true, false)
+	if full.Error != nil || !full.Complete || f.calls["/ISteamUserStats/GetPlayerAchievements/v1/"] != 2 || f.calls["/ISteamUserStats/GetSchemaForGame/v2/"] != 4 {
+		t.Fatal("reconcile did not refresh previously empty schemas", full)
+	}
+	for i := 1; i < len(items); i++ {
+		content, err := c.OpenContent(t.Context(), connectors.ContentRequest{Item: changed[i]})
+		if err != nil || items[i].Revision == changed[i].Revision || !strings.Contains(content.Text, "Status: Unavailable") || !strings.Contains(content.Text, "- Unknown: 2") || strings.Contains(content.Text, "Status: No Achievements") {
+			t.Fatal("new achievements or privacy status was lost", content.Text, err)
+		}
 	}
 }
 
