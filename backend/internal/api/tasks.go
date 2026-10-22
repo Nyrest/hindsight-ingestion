@@ -52,7 +52,7 @@ type taskDTO struct {
 	FilePolicy              connectors.FilePolicy `json:"filePolicy"`
 	InlineMultimodalMode    string                `json:"inlineMultimodalMode" enum:"global,override"`
 	InlineMultimodalEnabled bool                  `json:"inlineMultimodalEnabled"`
-	PostProcessing          postprocess.Pipeline    `json:"postProcessing"`
+	PostProcessing          postprocess.Pipeline  `json:"postProcessing"`
 	CronExpression          string                `json:"cronExpression"`
 	ConfigRevision          int64                 `json:"configRevision"`
 	PolicyRevision          int64                 `json:"policyRevision"`
@@ -153,7 +153,7 @@ type taskBody struct {
 	FilePolicy              *connectors.FilePolicy `json:"filePolicy"`
 	InlineMultimodalMode    *string                `json:"inlineMultimodalMode" enum:"global,override"`
 	InlineMultimodalEnabled *bool                  `json:"inlineMultimodalEnabled"`
-	PostProcessing          *postprocess.Pipeline    `json:"postProcessing"`
+	PostProcessing          *postprocess.Pipeline  `json:"postProcessing"`
 	CronExpression          *string                `json:"cronExpression"`
 }
 
@@ -392,7 +392,7 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 	policyChanged := old.RetainStrategy != t.RetainStrategy || old.CustomTagsJSON != t.CustomTagsJSON ||
 		old.CustomMetadataJSON != t.CustomMetadataJSON || old.InlineMultimodalMode != t.InlineMultimodalMode ||
 		old.InlineMultimodalEnabled != t.InlineMultimodalEnabled ||
-		postprocess.Parse(old.PostProcessJSON).Script() != postprocess.Parse(t.PostProcessJSON).Script() ||
+		postprocess.Parse(old.PostProcessJSON).ExecutionKey() != postprocess.Parse(t.PostProcessJSON).ExecutionKey() ||
 		((t.SourceType == "notion" || t.SourceType == "siyuan") && (old.ObservationScopeMode != t.ObservationScopeMode || (t.ObservationScopeMode == "override" && old.ObservationScopeJSON != t.ObservationScopeJSON)))
 	if policyChanged {
 		t.PolicyRevision++

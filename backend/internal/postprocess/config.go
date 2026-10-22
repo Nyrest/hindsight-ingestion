@@ -49,16 +49,60 @@ const (
 	MaxCodeSize = 256 << 10
 )
 
-// DefaultCode is the code mode template.
-const DefaultCode = `/**
+// ProcessDocumentation describes the complete function contract in the editor.
+const ProcessDocumentation = `/**
  * Transforms one document before it is retained to Hindsight.
  * Return a string or binary data to retain, or null to skip the document.
  *
- * @param {ProcessContext} context Task, run and source item information.
- * @param {ProcessInput} input Document text, or an ArrayBuffer for files.
- * @returns {Promise<ProcessOutput>}
+ * @param {{
+ *   task: {
+ *     id: string,
+ *     name: string,
+ *     sourceType: string,
+ *     bankId: string
+ *   },
+ *   run: {
+ *     id?: string,
+ *     mode?: string,
+ *     dryRun: boolean,
+ *     full: boolean,
+ *     generation: number
+ *   },
+ *   item: {
+ *     id: string,
+ *     name: string,
+ *     path: string,
+ *     kind: string,
+ *     revision: string,
+ *     modifiedAt: string,
+ *     mimeType: string,
+ *     size: number,
+ *     tags: string[],
+ *     metadata: Record<string, string>,
+ *     attributes: Record<string, unknown>
+ *   },
+ *   document: {
+ *     contentType: "text" | "binary",
+ *     fileName: string,
+ *     mimeType: string,
+ *     context: string,
+ *     size: number
+ *   }
+ * }} context Task, run, source item and document information.
+ * @param {string | ArrayBuffer} input Document text, or binary file data.
+ * @returns {Promise<
+ *   string | ArrayBuffer | ArrayBufferView | null | undefined | {
+ *     content: string | ArrayBuffer | ArrayBufferView | null,
+ *     fileName?: string,
+ *     mimeType?: string,
+ *     context?: string
+ *   }
+ * >} Content to retain, optional file metadata and context, or null/undefined to skip.
  */
-async function process(context, input) {
+`
+
+// DefaultCode is the code mode template.
+const DefaultCode = ProcessDocumentation + `async function process(context, input) {
   return input;
 }
 `
@@ -107,10 +151,10 @@ type PipelineStep struct {
 
 // Pipeline is a task's post-processing configuration.
 type Pipeline struct {
-	Enabled bool   `json:"enabled"`
-	Mode    string `json:"mode" enum:"ui,code"`
+	Enabled bool           `json:"enabled"`
+	Mode    string         `json:"mode" enum:"ui,code"`
 	Steps   []PipelineStep `json:"steps"`
-	Code    string `json:"code"`
+	Code    string         `json:"code"`
 }
 
 // Default returns the configuration of a task without post-processing.
@@ -244,16 +288,32 @@ func (c Pipeline) Script() string {
 	return Generate(c.Steps)
 }
 
-// Generate compiles UI steps to code mode JavaScript. Disabled steps are omitted.
+// ExecutionKey identifies the active logic, ignoring disabled UI steps.
+func (c Pipeline) ExecutionKey() string {
+	if !c.Enabled || c.Mode == ModeCode {
+		return c.Script()
+	}
+	steps := make([]PipelineStep, 0, len(c.Steps))
+	for _, step := range c.Steps {
+		if step.Enabled {
+			steps = append(steps, step)
+		}
+	}
+	return Generate(steps)
+}
+
+// Generate compiles UI steps to code mode JavaScript. Disabled steps stay commented.
 func Generate(steps []PipelineStep) string {
 	var b strings.Builder
 	b.WriteString("// Generated from post-processing steps.\n")
+	b.WriteString(ProcessDocumentation)
 	b.WriteString("async function process(context, input) {\n")
 	for _, s := range steps {
+		prefix := "  "
 		if !s.Enabled {
-			continue
+			prefix += "// "
 		}
-		fmt.Fprintf(&b, "  input = await steps.%s(context, input, %s);\n", stepFunction(s.Type), stepOptions(s))
+		fmt.Fprintf(&b, "%sinput = await steps.%s(context, input, %s);\n", prefix, stepFunction(s.Type), stepOptions(s))
 	}
 	b.WriteString("  return input;\n}\n")
 	return b.String()

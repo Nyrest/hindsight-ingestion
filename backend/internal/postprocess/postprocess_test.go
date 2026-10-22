@@ -222,10 +222,11 @@ func TestHTTPStep(t *testing.T) {
 }
 
 func TestGenerate(t *testing.T) {
-	code := Generate([]PipelineStep{{ID: "1", Type: StepCollapseWhitespace, Enabled: true}, {ID: "2", Type: StepReplace, Enabled: true, Pattern: "<a>", Replacement: "b"}})
-	want := "// Generated from post-processing steps.\nasync function process(context, input) {\n" +
+	code := Generate([]PipelineStep{{ID: "1", Type: StepCollapseWhitespace, Enabled: true}, {ID: "2", Type: StepReplace, Enabled: true, Pattern: "<a>", Replacement: "b"}, {ID: "3", Type: StepTrim, Side: "both"}})
+	want := "// Generated from post-processing steps.\n" + ProcessDocumentation + "async function process(context, input) {\n" +
 		"  input = await steps.collapseWhitespace(context, input, {});\n" +
 		"  input = await steps.replace(context, input, {\"pattern\":\"<a>\",\"replacement\":\"b\"});\n" +
+		"  // input = await steps.trim(context, input, {\"side\":\"both\"});\n" +
 		"  return input;\n}\n"
 	if code != want {
 		t.Fatalf("got\n%s", code)

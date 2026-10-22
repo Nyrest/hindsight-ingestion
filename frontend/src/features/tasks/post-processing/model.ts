@@ -20,16 +20,60 @@ export const STEP_TYPES: StepType[] = [
   "http",
 ];
 
-/** Mirrors postprocess.DefaultCode in the backend. */
-export const DEFAULT_CODE = `/**
+/** Mirrors postprocess.ProcessDocumentation in the backend. */
+export const PROCESS_DOCUMENTATION = `/**
  * Transforms one document before it is retained to Hindsight.
  * Return a string or binary data to retain, or null to skip the document.
  *
- * @param {ProcessContext} context Task, run and source item information.
- * @param {ProcessInput} input Document text, or an ArrayBuffer for files.
- * @returns {Promise<ProcessOutput>}
+ * @param {{
+ *   task: {
+ *     id: string,
+ *     name: string,
+ *     sourceType: string,
+ *     bankId: string
+ *   },
+ *   run: {
+ *     id?: string,
+ *     mode?: string,
+ *     dryRun: boolean,
+ *     full: boolean,
+ *     generation: number
+ *   },
+ *   item: {
+ *     id: string,
+ *     name: string,
+ *     path: string,
+ *     kind: string,
+ *     revision: string,
+ *     modifiedAt: string,
+ *     mimeType: string,
+ *     size: number,
+ *     tags: string[],
+ *     metadata: Record<string, string>,
+ *     attributes: Record<string, unknown>
+ *   },
+ *   document: {
+ *     contentType: "text" | "binary",
+ *     fileName: string,
+ *     mimeType: string,
+ *     context: string,
+ *     size: number
+ *   }
+ * }} context Task, run, source item and document information.
+ * @param {string | ArrayBuffer} input Document text, or binary file data.
+ * @returns {Promise<
+ *   string | ArrayBuffer | ArrayBufferView | null | undefined | {
+ *     content: string | ArrayBuffer | ArrayBufferView | null,
+ *     fileName?: string,
+ *     mimeType?: string,
+ *     context?: string
+ *   }
+ * >} Content to retain, optional file metadata and context, or null/undefined to skip.
  */
-async function process(context, input) {
+`;
+
+/** Mirrors postprocess.DefaultCode in the backend. */
+export const DEFAULT_CODE = PROCESS_DOCUMENTATION + `async function process(context, input) {
   return input;
 }
 `;
@@ -93,10 +137,10 @@ function functionName(type: StepType): string {
 
 /** Compiles UI steps to code mode JavaScript, like postprocess.Generate. */
 export function generateCode(steps: PipelineStep[]): string {
-  const lines = ["// Generated from post-processing steps.", "async function process(context, input) {"];
+  const lines = ["// Generated from post-processing steps.", PROCESS_DOCUMENTATION + "async function process(context, input) {"];
   for (const step of steps) {
-    if (!step.enabled) continue;
-    lines.push(`  input = await steps.${functionName(step.type)}(context, input, ${JSON.stringify(stepOptions(step))});`);
+    const options = JSON.stringify(stepOptions(step)).replaceAll("\u2028", "\\u2028").replaceAll("\u2029", "\\u2029");
+    lines.push(`  ${step.enabled ? "" : "// "}input = await steps.${functionName(step.type)}(context, input, ${options});`);
   }
   lines.push("  return input;", "}", "");
   return lines.join("\n");
