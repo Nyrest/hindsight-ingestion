@@ -31,17 +31,16 @@ test("editor comments describe complete parameter and return types", () => {
     const checker = program.getTypeChecker();
     const process = source.statements.find(ts.isFunctionDeclaration)!;
     const contextType = checker.getTypeAtLocation(process.parameters[0]);
+    expect(checker.typeToString(contextType)).toBe("ProcessContext");
     const contextDeclaration = program.getSourceFiles().flatMap((file) => [...file.statements])
       .find((statement) => ts.isInterfaceDeclaration(statement) && statement.name.text === "ProcessContext")!;
     const declaredContext = checker.getTypeAtLocation(contextDeclaration);
     expect(checker.isTypeAssignableTo(contextType, declaredContext)).toBe(true);
     expect(checker.getPropertiesOfType(contextType).map((p) => p.name).sort()).toEqual(["document", "item", "run", "task"]);
-    expect(checker.typeToString(checker.getTypeAtLocation(process.parameters[1]))).toBe("string | ArrayBuffer");
+    expect(checker.typeToString(checker.getTypeAtLocation(process.parameters[1]))).toBe("ProcessInput");
     const signature = checker.getSignatureFromDeclaration(process)!;
     const returned = checker.typeToString(checker.getReturnTypeOfSignature(signature));
-    expect(returned).toContain("Promise<");
-    expect(returned).toContain("ArrayBufferView");
-    expect(returned).toContain("fileName?: string");
+    expect(returned).toBe("Promise<ProcessOutput>");
   }
 });
 

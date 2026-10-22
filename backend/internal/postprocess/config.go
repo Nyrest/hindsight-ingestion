@@ -54,50 +54,9 @@ const ProcessDocumentation = `/**
  * Transforms one document before it is retained to Hindsight.
  * Return a string or binary data to retain, or null to skip the document.
  *
- * @param {{
- *   task: {
- *     id: string,
- *     name: string,
- *     sourceType: string,
- *     bankId: string
- *   },
- *   run: {
- *     id?: string,
- *     mode?: string,
- *     dryRun: boolean,
- *     full: boolean,
- *     generation: number
- *   },
- *   item: {
- *     id: string,
- *     name: string,
- *     path: string,
- *     kind: string,
- *     revision: string,
- *     modifiedAt: string,
- *     mimeType: string,
- *     size: number,
- *     tags: string[],
- *     metadata: Record<string, string>,
- *     attributes: Record<string, unknown>
- *   },
- *   document: {
- *     contentType: "text" | "binary",
- *     fileName: string,
- *     mimeType: string,
- *     context: string,
- *     size: number
- *   }
- * }} context Task, run, source item and document information.
- * @param {string | ArrayBuffer} input Document text, or binary file data.
- * @returns {Promise<
- *   string | ArrayBuffer | ArrayBufferView | null | undefined | {
- *     content: string | ArrayBuffer | ArrayBufferView | null,
- *     fileName?: string,
- *     mimeType?: string,
- *     context?: string
- *   }
- * >} Content to retain, optional file metadata and context, or null/undefined to skip.
+ * @param {ProcessContext} context Task, run, source item and document information.
+ * @param {ProcessInput} input Document text, or binary file data.
+ * @returns {Promise<ProcessOutput>} Content to retain, optional file metadata and context, or null/undefined to skip.
  */
 `
 

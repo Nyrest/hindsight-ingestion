@@ -10,7 +10,7 @@ COPY frontend/ ./
 RUN mkdir -p ../backend/internal/web && bun run build
 
 # Stage 2: build the Go backend with the frontend embedded.
-FROM golang:1.26-alpine AS backend
+FROM golang:1.26.10-alpine AS backend
 RUN apk add --no-cache gcc musl-dev
 WORKDIR /src/backend
 ARG GOPROXY=https://proxy.golang.org,direct
@@ -25,7 +25,8 @@ RUN CGO_ENABLED=1 go build -trimpath -ldflags="-s -w" -o /out/hindsight-ingestio
 # Stage 3: minimal runtime.
 FROM alpine:3.23
 # BusyBox supplies wget for the health check.
-RUN apk add --no-cache ca-certificates tzdata \
+# Require the eMudhra trust-store fix (CVE-2026-111943) or a newer bundle.
+RUN apk add --no-cache 'ca-certificates>=20261020-r0' tzdata \
     && adduser -S -D -u 10001 -h /data app \
     && mkdir -p /data && chown app /data
 COPY --from=backend /out/hindsight-ingestion /usr/local/bin/hindsight-ingestion

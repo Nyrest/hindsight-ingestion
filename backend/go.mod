@@ -1,6 +1,6 @@
 module github.com/Nyrest/hindsight-ingestion
 
-go 1.26.6
+go 1.26.10
 
 require (
 	github.com/JohannesKaufmann/html-to-markdown/v2 v2.5.2

@@ -140,7 +140,7 @@ For these additional variables, edit the Compose service's `environment` section
 <details>
 <summary>Build, run and check the project locally</summary>
 
-Requires **Go 1.26.6+**, a C compiler for SQLite, and **Bun 1.3+**. From the repository root, in Bash:
+Requires **Go 1.26.10+** (or **1.27.3+** on Go 1.27), a C compiler for SQLite, and **Bun 1.3+**. From the repository root, in Bash:
 
 ```bash
 cd frontend

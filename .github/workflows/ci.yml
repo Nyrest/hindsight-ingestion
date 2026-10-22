@@ -137,6 +137,7 @@ jobs:
           file: ./Dockerfile
           platforms: linux/${{ matrix.arch }}
           push: false
+          pull: true
           outputs: type=oci,dest=${{ runner.temp }}/hindsight-ingestion.tar
           cache-from: type=gha,scope=ci-${{ matrix.arch }}
           cache-to: type=gha,mode=max,scope=ci-${{ matrix.arch }}
