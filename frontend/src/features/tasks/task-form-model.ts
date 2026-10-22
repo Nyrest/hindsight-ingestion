@@ -2,6 +2,7 @@ import { z } from "zod";
 import { defaultObservationScope, observationScopeSchema } from "@/features/settings/config-model";
 import type { KeyValueRow } from "@/components/key-value-editor";
 import type { FilePolicy, FilterGroup, SourceSpec, Task, TaskInput } from "@/lib/types";
+import { emptyPipeline, firstInvalidStep, normalizePipeline, type Pipeline } from "./post-processing/model";
 
 export const RESERVED_METADATA_PREFIX = "_ingestion_";
 
@@ -34,6 +35,7 @@ export const taskFormSchema = (sources: SourceSpec[]) => z
     inlineMultimodalMode: z.enum(["global", "override"]),
     inlineMultimodalEnabled: z.boolean(),
     filePolicy: filePolicySchema,
+    postProcessing: z.custom<Pipeline>(),
     cronExpression: z.string().trim(),
   })
   .superRefine((v, ctx) => {
@@ -45,6 +47,10 @@ export const taskFormSchema = (sources: SourceSpec[]) => z
     });
     if (v.filterMode === "advanced" && !v.advancedQuery.trim()) {
       ctx.addIssue({ code: "custom", path: ["advancedQuery"], message: "validation.required" });
+    }
+    const pp = v.postProcessing;
+    if (firstInvalidStep(pp) >= 0 || (pp.enabled && pp.mode === "code" && !pp.code.trim())) {
+      ctx.addIssue({ code: "custom", path: ["postProcessing"], message: "postProcessing.errors.invalid" });
     }
   });
 
@@ -86,6 +92,7 @@ export function emptyTaskForm(): TaskFormValues {
     inlineMultimodalMode: "global",
     inlineMultimodalEnabled: false,
     filePolicy: { ...DEFAULT_POLICY },
+    postProcessing: emptyPipeline(),
     cronExpression: "",
   };
 }
@@ -112,6 +119,7 @@ export function taskToForm(t: Task): TaskFormValues {
     inlineMultimodalMode: t.inlineMultimodalMode === "override" ? "override" : "global",
     inlineMultimodalEnabled: t.inlineMultimodalEnabled ?? false,
     filePolicy: { ...DEFAULT_POLICY, ...(t.filePolicy ?? {}) },
+    postProcessing: normalizePipeline(t.postProcessing),
     cronExpression: t.cronExpression,
   };
 }
@@ -144,6 +152,7 @@ export function formToInput(v: TaskFormValues, normalizedConfig: Record<string, 
     inlineMultimodalMode: v.inlineMultimodalMode,
     inlineMultimodalEnabled: v.inlineMultimodalEnabled,
     filePolicy: v.filePolicy,
+    postProcessing: v.postProcessing,
     cronExpression: v.cronExpression.trim(),
   } satisfies TaskInput;
 }
@@ -160,6 +169,7 @@ export function sectionForField(key: string): string {
   if (key.startsWith("inlineMultimodal")) return "inline";
   if (key.startsWith("customTags")) return "tags";
   if (key.startsWith("customMetadata")) return "metadata";
+  if (key.startsWith("postProcessing")) return "postprocess";
   if (key.startsWith("cron")) return "schedule";
   return "general";
 }

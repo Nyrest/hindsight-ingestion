@@ -55,7 +55,7 @@ func TestRedirectRejectsDowngradeAndComparesEffectivePorts(t *testing.T) {
 	for _, address := range []string{"http://source.test", "ftp://source.test"} {
 		initial, _ := http.NewRequest("GET", "https://source.test", nil)
 		redirect, _ := http.NewRequest("GET", address, nil)
-		if client.checkRedirect(redirect, []*http.Request{initial}) == nil {
+		if client.CheckRedirect(redirect, []*http.Request{initial}) == nil {
 			t.Fatalf("accepted redirect to %s", address)
 		}
 	}

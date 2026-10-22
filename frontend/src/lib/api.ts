@@ -1,6 +1,6 @@
 import createClient from "openapi-fetch";
 import type { paths } from "./openapi";
-import type { SQLPreviewRequest, BrowseRequest, CredentialCreate, CredentialPatch, ErrorEnvelope, RunsQuery, SettingsPatch, TaskInput, TaskPatch } from "./types";
+import type { SQLPreviewRequest, BrowseRequest, CredentialCreate, CredentialPatch, ErrorEnvelope, RunsQuery, SettingsPatch, PostProcessTestRequest, TaskInput, TaskPatch } from "./types";
 
 export class ApiError extends Error {
   readonly status: number;
@@ -82,6 +82,7 @@ export const api = {
   fullReingestTask: (id: string) => unwrap(client.POST("/api/tasks/{id}/full-reingest", { params: pathParams(id) })),
   cancelTask: (id: string) => unwrap(client.POST("/api/tasks/{id}/cancel", { params: pathParams(id) })),
   taskRuns: (id: string, limit = 50, offset = 0) => unwrap(client.GET("/api/tasks/{id}/runs", { params: { ...pathParams(id), query: { limit, offset } } })),
+  testPostProcessing: (body: PostProcessTestRequest) => unwrap(client.POST("/api/post-processing/test", { body })),
   validateCron: (cronExpression: string) => unwrap(client.POST("/api/tasks/validate-cron", { body: { cronExpression } })),
   listRuns: (query: RunsQuery) => unwrap(client.GET("/api/runs", { params: { query } })),
   getRun: (id: string) => unwrap(client.GET("/api/runs/{id}", { params: pathParams(id) })),

@@ -546,6 +546,10 @@
       "schedule": {
         "title": "Harmonogram",
         "description": "Ustaw, kiedy zadanie ma być wykonywane automatycznie."
+      },
+      "postprocess": {
+        "title": "Przetwarzanie końcowe",
+        "description": "Przekształcaj treść dokumentów przed zapisaniem w Hindsight."
       }
     },
     "toast": {
@@ -984,5 +988,162 @@
     "truncated": "Próbka została przycięta do limitu podglądu.",
     "empty": "Brak wierszy w próbce.",
     "context": "Kontekst"
+  },
+  "postProcessing": {
+    "enabled": "Włącz przetwarzanie końcowe",
+    "enabledHelp": "Każdy nowy lub zmieniony dokument przechodzi przez ten potok przed zapisaniem.",
+    "disabledHelp": "Dokumenty są zapisywane bez zmian.",
+    "reretainHint": "Zmiana wykonywanego przetwarzania spowoduje ponowne wysłanie wszystkich pasujących dokumentów do Hindsight przy następnym uruchomieniu.",
+    "codeNotUsed": "Tryb UI wykonuje poniższe kroki. Kodu nie można przekształcić z powrotem w kroki; kod jest zachowany, ale działa tylko w trybie kodu.",
+    "empty": "Brak kroków. Dodaj krok, aby przekształcić treść dokumentu.",
+    "stepsLabel": "Kroki przetwarzania końcowego",
+    "addStep": "Dodaj krok",
+    "convertToCode": "Przekształć w kod",
+    "convertTitle": "Zastąpić kod wygenerowanym kodem?",
+    "convertDescription": "Bieżący kod zostanie zastąpiony kodem wygenerowanym z tych kroków. Kodu nie można przekształcić z powrotem w kroki.",
+    "codeHelp": "Zdefiniuj process(context, input). input to tekst dokumentu lub ArrayBuffer dla plików. Zwróć tekst lub dane binarne do zapisania albo null, aby pominąć dokument. Dostępna jest funkcja fetch().",
+    "codeLabel": "Kod przetwarzania końcowego",
+    "shortcuts": "{{format}} formatuje kod · {{suggest}} pokazuje podpowiedzi",
+    "stepEnabled": "Krok włączony",
+    "moveUp": "Przenieś w górę",
+    "moveDown": "Przenieś w dół",
+    "removeStep": "Usuń krok",
+    "addParam": "Dodaj parametr",
+    "addHeader": "Dodaj nagłówek",
+    "addField": "Dodaj pole",
+    "mode": {
+      "label": "Tryb edytora",
+      "ui": "UI",
+      "code": "Kod"
+    },
+    "errors": {
+      "positive": "Musi być liczbą dodatnią",
+      "regex": "Nieprawidłowe wyrażenie regularne",
+      "invalid": "Popraw zaznaczone ustawienia przetwarzania końcowego"
+    },
+    "side": {
+      "both": "Oba końce",
+      "start": "Początek",
+      "end": "Koniec"
+    },
+    "case": {
+      "lower": "małe litery",
+      "upper": "WIELKIE LITERY"
+    },
+    "separator": {
+      "none": "Brak",
+      "space": "Spacja",
+      "newline": "Nowa linia",
+      "blank": "Pusta linia"
+    },
+    "bodyType": {
+      "none": "Brak",
+      "input": "Dokument",
+      "json": "JSON",
+      "form": "Formularz",
+      "text": "Tekst"
+    },
+    "responseMode": {
+      "text": "Użyj tekstu odpowiedzi",
+      "json": "Użyj wartości JSON",
+      "binary": "Użyj odpowiedzi jako pliku",
+      "ignore": "Zignoruj odpowiedź (zachowaj dokument)"
+    },
+    "fields": {
+      "pattern": "Wzorzec",
+      "replacement": "Zamień na",
+      "regex": "Wyrażenie regularne",
+      "ignoreCase": "Ignoruj wielkość liter",
+      "invert_remove_lines": "Zachowaj tylko pasujące wiersze",
+      "invert_skip": "Pomiń, jeśli nie pasuje",
+      "side": "Strona",
+      "characters": "Znaki",
+      "text": "Tekst",
+      "separator": "Separator",
+      "maxLength": "Maksymalna długość",
+      "suffix": "Przyrostek",
+      "url": "URL",
+      "method": "Metoda",
+      "query": "Parametry zapytania",
+      "headers": "Nagłówki",
+      "body": "Treść",
+      "response": "Odpowiedź",
+      "responsePath": "Ścieżka JSON"
+    },
+    "placeholders": {
+      "pattern": "Szukany tekst"
+    },
+    "help": {
+      "replacementRegex": "Użyj $1, $2…, aby wstawić przechwycone grupy.",
+      "characters": "Pozostaw puste, aby usunąć białe znaki.",
+      "template": "Symbole zastępcze: {{list}}",
+      "bodyInput": "Wysyła dokument jako treść żądania (surowe bajty dla plików).",
+      "bodyJson": "Symbole zastępcze są zabezpieczane dla ciągów JSON, np. {{example}}",
+      "responsePath": "Ścieżka z kropkami w odpowiedzi, np. choices.0.message.content. Pozostaw puste dla całej odpowiedzi."
+    },
+    "steps": {
+      "replace": {
+        "title": "Zamień",
+        "description": "Znajdź i zamień tekst, opcjonalnie wyrażeniem regularnym."
+      },
+      "trim": {
+        "title": "Przytnij",
+        "description": "Usuwa białe znaki lub znaki z początku i końca."
+      },
+      "collapse_whitespace": {
+        "title": "Scal białe znaki",
+        "description": "Scala powtarzające się spacje i puste wiersze."
+      },
+      "strip_html": {
+        "title": "Usuń HTML",
+        "description": "Usuwa znaczniki HTML i dekoduje popularne encje."
+      },
+      "remove_lines": {
+        "title": "Usuń wiersze",
+        "description": "Usuwa wiersze pasujące do wzorca."
+      },
+      "prepend": {
+        "title": "Dodaj na początku",
+        "description": "Dodaje tekst przed dokumentem."
+      },
+      "append": {
+        "title": "Dodaj na końcu",
+        "description": "Dodaje tekst po dokumencie."
+      },
+      "truncate": {
+        "title": "Skróć",
+        "description": "Ogranicza dokument do maksymalnej liczby znaków."
+      },
+      "case": {
+        "title": "Zmień wielkość liter",
+        "description": "Zamienia tekst na małe lub wielkie litery."
+      },
+      "skip": {
+        "title": "Pomiń dokument",
+        "description": "Nie zapisuje dokumentów pasujących do wzorca."
+      },
+      "http": {
+        "title": "Żądanie HTTP",
+        "description": "Wysyła dokument do punktu końcowego HTTP i używa odpowiedzi."
+      }
+    },
+    "test": {
+      "open": "Testuj potok",
+      "title": "Test",
+      "description": "Uruchamia bieżący, niezapisany potok na przykładowym tekście. Kroki HTTP i fetch() wysyłają prawdziwe żądania.",
+      "input": "Przykładowe dane",
+      "itemName": "Nazwa elementu",
+      "run": "Uruchom",
+      "binaryOutput": "Wynik binarny ({{bytes}} B)",
+      "skipped": "Dokument zostałby pominięty.",
+      "context": "Kontekst",
+      "logs": "Konsola",
+      "outputType": {
+        "text": "Tekst",
+        "binary": "Binarny",
+        "skip": "Pominięty",
+        "error": "Błąd"
+      }
+    }
   }
 }

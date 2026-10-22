@@ -21,9 +21,10 @@ type AttachmentSource struct {
 }
 
 type ContentBlock struct {
-	Type   string            `json:"type"`
-	Text   string            `json:"text,omitempty"`
-	Source *AttachmentSource `json:"source,omitempty"`
+	Type     string            `json:"type"`
+	Text     string            `json:"text,omitempty"`
+	Source   *AttachmentSource `json:"source,omitempty"`
+	FileName string            `json:"filename,omitempty"`
 }
 
 func TextBlock(text string) ContentBlock { return ContentBlock{Type: "text", Text: text} }

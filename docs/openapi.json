@@ -536,6 +536,21 @@
         ],
         "type": "object"
       },
+      "KeyValue": {
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object"
+      },
       "Option": {
         "properties": {
           "label": {
@@ -548,6 +563,169 @@
         "required": [
           "value",
           "label"
+        ],
+        "type": "object"
+      },
+      "Pipeline": {
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "mode": {
+            "enum": [
+              "ui",
+              "code"
+            ],
+            "type": "string"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/PipelineStep"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "enabled",
+          "mode",
+          "steps",
+          "code"
+        ],
+        "type": "object"
+      },
+      "PipelineStep": {
+        "properties": {
+          "body": {
+            "type": "string"
+          },
+          "bodyType": {
+            "enum": [
+              "none",
+              "input",
+              "text",
+              "json",
+              "form"
+            ],
+            "type": "string"
+          },
+          "case": {
+            "enum": [
+              "lower",
+              "upper"
+            ],
+            "type": "string"
+          },
+          "characters": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "form": {
+            "items": {
+              "$ref": "#/components/schemas/KeyValue"
+            },
+            "type": "array"
+          },
+          "headers": {
+            "items": {
+              "$ref": "#/components/schemas/KeyValue"
+            },
+            "type": "array"
+          },
+          "id": {
+            "type": "string"
+          },
+          "ignoreCase": {
+            "type": "boolean"
+          },
+          "invert": {
+            "type": "boolean"
+          },
+          "maxLength": {
+            "type": "integer"
+          },
+          "method": {
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ],
+            "type": "string"
+          },
+          "pattern": {
+            "type": "string"
+          },
+          "query": {
+            "items": {
+              "$ref": "#/components/schemas/KeyValue"
+            },
+            "type": "array"
+          },
+          "regex": {
+            "type": "boolean"
+          },
+          "replacement": {
+            "type": "string"
+          },
+          "responseMode": {
+            "enum": [
+              "text",
+              "json",
+              "binary",
+              "ignore"
+            ],
+            "type": "string"
+          },
+          "responsePath": {
+            "type": "string"
+          },
+          "separator": {
+            "type": "string"
+          },
+          "side": {
+            "enum": [
+              "both",
+              "start",
+              "end"
+            ],
+            "type": "string"
+          },
+          "suffix": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "replace",
+              "trim",
+              "prepend",
+              "append",
+              "truncate",
+              "case",
+              "collapse_whitespace",
+              "strip_html",
+              "remove_lines",
+              "skip",
+              "http"
+            ],
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "enabled"
         ],
         "type": "object"
       },
@@ -1175,6 +1353,62 @@
         ],
         "type": "object"
       },
+      "postProcessTestDTO": {
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string"
+          },
+          "durationMs": {
+            "type": "integer"
+          },
+          "error": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "logs": {
+            "items": {
+              "$ref": "#/components/schemas/logDTO"
+            },
+            "type": "array"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "ok": {
+            "type": "boolean"
+          },
+          "output": {
+            "type": "string"
+          },
+          "outputType": {
+            "enum": [
+              "text",
+              "binary",
+              "skip",
+              "error"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "ok",
+          "outputType",
+          "output",
+          "fileName",
+          "mimeType",
+          "context",
+          "error",
+          "code",
+          "logs",
+          "durationMs"
+        ],
+        "type": "object"
+      },
       "runDTO": {
         "properties": {
           "createdCount": {
@@ -1693,6 +1927,9 @@
           "policyRevision": {
             "type": "integer"
           },
+          "postProcessing": {
+            "$ref": "#/components/schemas/Pipeline"
+          },
           "reconcileRequired": {
             "type": "boolean"
           },
@@ -1741,6 +1978,7 @@
           "filePolicy",
           "inlineMultimodalMode",
           "inlineMultimodalEnabled",
+          "postProcessing",
           "cronExpression",
           "configRevision",
           "policyRevision",
@@ -2690,6 +2928,76 @@
         "security": []
       }
     },
+    "/api/post-processing/test": {
+      "post": {
+        "operationId": "post_api_post_processing_test",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "base64": {
+                    "type": "boolean"
+                  },
+                  "input": {
+                    "type": "string"
+                  },
+                  "itemName": {
+                    "type": "string"
+                  },
+                  "postProcessing": {
+                    "$ref": "#/components/schemas/Pipeline"
+                  },
+                  "sourceType": {
+                    "type": "string"
+                  },
+                  "taskId": {
+                    "type": "string"
+                  },
+                  "taskName": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/postProcessTestDTO"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Basic Auth required"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiError"
+                }
+              }
+            },
+            "description": "API error"
+          }
+        }
+      }
+    },
     "/api/runs": {
       "get": {
         "operationId": "get_api_runs",
@@ -3025,6 +3333,9 @@
                     ],
                     "type": "string"
                   },
+                  "postProcessing": {
+                    "$ref": "#/components/schemas/Pipeline"
+                  },
                   "retainStrategy": {
                     "type": "string"
                   },
@@ -3312,6 +3623,9 @@
                       "override"
                     ],
                     "type": "string"
+                  },
+                  "postProcessing": {
+                    "$ref": "#/components/schemas/Pipeline"
                   },
                   "retainStrategy": {
                     "type": "string"

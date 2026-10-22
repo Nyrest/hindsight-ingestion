@@ -121,3 +121,26 @@ func TestClient(t *testing.T) {
 	}
 	_ = multipart.ErrMessageTooLarge
 }
+
+func TestFileAttachmentContentJSON(t *testing.T) {
+	item := MemoryItem{DocumentID: "doc", Blocks: []connectors.ContentBlock{{Type: "file", FileName: "report.pdf",
+		Source: &connectors.AttachmentSource{Type: "base64", MediaType: "application/pdf", Data: "AP8B"}}}}
+	raw, err := json.Marshal(item)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var body struct {
+		Content []struct {
+			Type     string                      `json:"type"`
+			FileName string                      `json:"filename"`
+			Source   connectors.AttachmentSource `json:"source"`
+		} `json:"content"`
+	}
+	if err := json.Unmarshal(raw, &body); err != nil || len(body.Content) != 1 {
+		t.Fatalf("attachment wire content: %s %v", raw, err)
+	}
+	block := body.Content[0]
+	if block.Type != "file" || block.FileName != "report.pdf" || block.Source.MediaType != "application/pdf" || block.Source.Data != "AP8B" {
+		t.Fatalf("file attachment wire contract: %s", raw)
+	}
+}

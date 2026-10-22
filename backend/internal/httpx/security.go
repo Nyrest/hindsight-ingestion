@@ -19,7 +19,8 @@ func origin(endpoint *url.URL) string {
 	return strings.ToLower(endpoint.Scheme + "://" + endpoint.Hostname() + ":" + port)
 }
 
-func (c *Client) checkRedirect(req *http.Request, via []*http.Request) error {
+// CheckRedirect protects configured credentials when following redirects.
+func (c *Client) CheckRedirect(req *http.Request, via []*http.Request) error {
 	if len(via) >= 10 {
 		return errors.New("redirect limit exceeded")
 	}

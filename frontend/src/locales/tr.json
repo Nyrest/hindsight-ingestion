@@ -538,6 +538,10 @@
       "schedule": {
         "title": "Zamanlama",
         "description": "Görevin otomatik olarak ne zaman çalışacağını ayarlayın."
+      },
+      "postprocess": {
+        "title": "Son işleme",
+        "description": "Belge içeriğini Hindsight'a kaydedilmeden önce dönüştürün."
       }
     },
     "toast": {
@@ -966,5 +970,162 @@
     "truncated": "Örnek, önizleme sınırında kesildi.",
     "empty": "Örnekte satır yok.",
     "context": "Bağlam"
+  },
+  "postProcessing": {
+    "enabled": "Son işlemeyi etkinleştir",
+    "enabledHelp": "Her yeni veya değişen belge kaydedilmeden önce bu işlem hattından geçer.",
+    "disabledHelp": "Belgeler olduğu gibi kaydedilir.",
+    "reretainHint": "Çalışan işlemeyi değiştirmek, bir sonraki çalıştırmada eşleşen tüm belgeleri Hindsight'a yeniden gönderir.",
+    "codeNotUsed": "UI modu aşağıdaki adımları çalıştırır. Kod tekrar adımlara dönüştürülemez; kodunuz korunur ancak yalnızca Kod modunda çalışır.",
+    "empty": "Henüz adım yok. Belge içeriğini dönüştürmek için bir adım ekleyin.",
+    "stepsLabel": "Son işleme adımları",
+    "addStep": "Adım ekle",
+    "convertToCode": "Koda dönüştür",
+    "convertTitle": "Kod, oluşturulan kodla değiştirilsin mi?",
+    "convertDescription": "Mevcut kodunuz bu adımlardan oluşturulan kodla değiştirilecek. Kod tekrar adımlara dönüştürülemez.",
+    "codeHelp": "process(context, input) tanımlayın. input belge metnidir, dosyalar için ArrayBuffer'dır. Kaydetmek için metin veya ikili veri döndürün ya da belgeyi atlamak için null döndürün. fetch() kullanılabilir.",
+    "codeLabel": "Son işleme kodu",
+    "shortcuts": "{{format}} kodu biçimlendirir · {{suggest}} önerileri gösterir",
+    "stepEnabled": "Adım etkin",
+    "moveUp": "Yukarı taşı",
+    "moveDown": "Aşağı taşı",
+    "removeStep": "Adımı kaldır",
+    "addParam": "Parametre ekle",
+    "addHeader": "Başlık ekle",
+    "addField": "Alan ekle",
+    "mode": {
+      "label": "Düzenleyici modu",
+      "ui": "UI",
+      "code": "Kod"
+    },
+    "errors": {
+      "positive": "Pozitif bir sayı olmalıdır",
+      "regex": "Geçersiz düzenli ifade",
+      "invalid": "İşaretli son işleme ayarlarını düzeltin"
+    },
+    "side": {
+      "both": "İki uç",
+      "start": "Baş",
+      "end": "Son"
+    },
+    "case": {
+      "lower": "küçük harf",
+      "upper": "BÜYÜK HARF"
+    },
+    "separator": {
+      "none": "Yok",
+      "space": "Boşluk",
+      "newline": "Yeni satır",
+      "blank": "Boş satır"
+    },
+    "bodyType": {
+      "none": "Yok",
+      "input": "Belge",
+      "json": "JSON",
+      "form": "Form",
+      "text": "Metin"
+    },
+    "responseMode": {
+      "text": "Yanıt metnini kullan",
+      "json": "Bir JSON değeri kullan",
+      "binary": "Yanıtı dosya olarak kullan",
+      "ignore": "Yanıtı yok say (belgeyi koru)"
+    },
+    "fields": {
+      "pattern": "Desen",
+      "replacement": "Şununla değiştir",
+      "regex": "Düzenli ifade",
+      "ignoreCase": "Büyük/küçük harf yok say",
+      "invert_remove_lines": "Yalnızca eşleşen satırları tut",
+      "invert_skip": "Eşleşmiyorsa atla",
+      "side": "Taraf",
+      "characters": "Karakterler",
+      "text": "Metin",
+      "separator": "Ayırıcı",
+      "maxLength": "Azami uzunluk",
+      "suffix": "Sonek",
+      "url": "URL",
+      "method": "Yöntem",
+      "query": "Sorgu parametreleri",
+      "headers": "Başlıklar",
+      "body": "Gövde",
+      "response": "Yanıt",
+      "responsePath": "JSON yolu"
+    },
+    "placeholders": {
+      "pattern": "Aranacak metin"
+    },
+    "help": {
+      "replacementRegex": "Yakalanan grupları eklemek için $1, $2… kullanın.",
+      "characters": "Boşlukları kırpmak için boş bırakın.",
+      "template": "Yer tutucular: {{list}}",
+      "bodyInput": "Belgeyi istek gövdesi olarak gönderir (dosyalar için ham baytlar).",
+      "bodyJson": "Yer tutucular JSON dizeleri için kaçışlanır, ör. {{example}}",
+      "responsePath": "Yanıt içindeki noktalı yol, ör. choices.0.message.content. Tüm yanıt için boş bırakın."
+    },
+    "steps": {
+      "replace": {
+        "title": "Değiştir",
+        "description": "Metni bulup değiştirin; isteğe bağlı olarak düzenli ifadeyle."
+      },
+      "trim": {
+        "title": "Kırp",
+        "description": "Baştaki ve sondaki boşlukları veya karakterleri kaldırır."
+      },
+      "collapse_whitespace": {
+        "title": "Boşlukları daralt",
+        "description": "Tekrarlanan boşlukları ve boş satırları birleştirir."
+      },
+      "strip_html": {
+        "title": "HTML'i temizle",
+        "description": "HTML etiketlerini kaldırır ve yaygın varlıkları çözer."
+      },
+      "remove_lines": {
+        "title": "Satırları kaldır",
+        "description": "Bir desenle eşleşen satırları çıkarır."
+      },
+      "prepend": {
+        "title": "Başa ekle",
+        "description": "Belgenin önüne metin ekler."
+      },
+      "append": {
+        "title": "Sona ekle",
+        "description": "Belgenin sonuna metin ekler."
+      },
+      "truncate": {
+        "title": "Kısalt",
+        "description": "Belgeyi azami karakter sayısıyla sınırlar."
+      },
+      "case": {
+        "title": "Harf durumunu değiştir",
+        "description": "Metni küçük veya büyük harfe dönüştürür."
+      },
+      "skip": {
+        "title": "Belgeyi atla",
+        "description": "Bir desenle eşleşen belgeleri kaydetmez."
+      },
+      "http": {
+        "title": "HTTP isteği",
+        "description": "Belgeyi bir HTTP uç noktasına gönderir ve yanıtı kullanır."
+      }
+    },
+    "test": {
+      "open": "İşlem hattını test et",
+      "title": "Test",
+      "description": "Kaydedilmemiş mevcut işlem hattını örnek metin üzerinde çalıştırır. HTTP adımları ve fetch() gerçek istek gönderir.",
+      "input": "Örnek girdi",
+      "itemName": "Öğe adı",
+      "run": "Çalıştır",
+      "binaryOutput": "İkili çıktı ({{bytes}} bayt)",
+      "skipped": "Belge atlanırdı.",
+      "context": "Bağlam",
+      "logs": "Konsol",
+      "outputType": {
+        "text": "Metin",
+        "binary": "İkili",
+        "skip": "Atlandı",
+        "error": "Hata"
+      }
+    }
   }
 }

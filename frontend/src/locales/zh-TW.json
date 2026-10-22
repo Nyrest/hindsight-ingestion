@@ -704,6 +704,10 @@
       "observations": {
         "title": "記憶整合範圍",
         "description": "設定 Hindsight 提煉記憶與觀察結論的範圍規則。"
+      },
+      "postprocess": {
+        "title": "後處理",
+        "description": "在文件儲存到 Hindsight 之前轉換其內容。"
       }
     },
     "toast": {
@@ -973,5 +977,162 @@
     "truncated": "已達預覽採樣上限，結果已被截斷。",
     "empty": "查詢採樣結果為空。",
     "context": "上下文資訊"
+  },
+  "postProcessing": {
+    "enabled": "啟用後處理",
+    "enabledHelp": "每個新增或變更的文件在儲存前都會經過此流程。",
+    "disabledHelp": "文件將按原樣儲存。",
+    "reretainHint": "變更實際執行的處理邏輯後，下次執行時會將所有符合的文件重新傳送到 Hindsight。",
+    "codeNotUsed": "UI 模式執行下方的步驟。程式碼無法轉換回步驟；您的程式碼會被保留，但僅在程式碼模式下執行。",
+    "empty": "尚無步驟。新增步驟以轉換文件內容。",
+    "stepsLabel": "後處理步驟",
+    "addStep": "新增步驟",
+    "convertToCode": "轉換為程式碼",
+    "convertTitle": "以產生的程式碼取代現有程式碼？",
+    "convertDescription": "目前的程式碼將被這些步驟產生的程式碼取代。程式碼無法轉換回步驟。",
+    "codeHelp": "定義 process(context, input)。input 為文件文字，檔案則為 ArrayBuffer。回傳字串或二進位資料以儲存，回傳 null 則略過該文件。可使用 fetch()。",
+    "codeLabel": "後處理程式碼",
+    "shortcuts": "{{format}} 格式化程式碼 · {{suggest}} 顯示建議",
+    "stepEnabled": "啟用步驟",
+    "moveUp": "上移",
+    "moveDown": "下移",
+    "removeStep": "移除步驟",
+    "addParam": "新增參數",
+    "addHeader": "新增標頭",
+    "addField": "新增欄位",
+    "mode": {
+      "label": "編輯模式",
+      "ui": "介面",
+      "code": "程式碼"
+    },
+    "errors": {
+      "positive": "必須是正數",
+      "regex": "無效的正規表示式",
+      "invalid": "請修正標示的後處理設定"
+    },
+    "side": {
+      "both": "兩端",
+      "start": "開頭",
+      "end": "結尾"
+    },
+    "case": {
+      "lower": "小寫",
+      "upper": "大寫"
+    },
+    "separator": {
+      "none": "無",
+      "space": "空格",
+      "newline": "換行",
+      "blank": "空行"
+    },
+    "bodyType": {
+      "none": "無",
+      "input": "文件",
+      "json": "JSON",
+      "form": "表單",
+      "text": "文字"
+    },
+    "responseMode": {
+      "text": "使用回應文字",
+      "json": "使用 JSON 值",
+      "binary": "將回應作為檔案",
+      "ignore": "忽略回應（保留文件）"
+    },
+    "fields": {
+      "pattern": "比對模式",
+      "replacement": "取代為",
+      "regex": "正規表示式",
+      "ignoreCase": "忽略大小寫",
+      "invert_remove_lines": "僅保留符合的行",
+      "invert_skip": "不符合時略過",
+      "side": "位置",
+      "characters": "字元",
+      "text": "文字",
+      "separator": "分隔符",
+      "maxLength": "最大長度",
+      "suffix": "後綴",
+      "url": "URL",
+      "method": "方法",
+      "query": "查詢參數",
+      "headers": "標頭",
+      "body": "主體",
+      "response": "回應",
+      "responsePath": "JSON 路徑"
+    },
+    "placeholders": {
+      "pattern": "要尋找的文字"
+    },
+    "help": {
+      "replacementRegex": "使用 $1、$2… 插入擷取群組。",
+      "characters": "留空則移除空白字元。",
+      "template": "預留位置：{{list}}",
+      "bodyInput": "將文件作為請求主體傳送（檔案為原始位元組）。",
+      "bodyJson": "預留位置會依 JSON 字串跳脫，例如 {{example}}",
+      "responsePath": "回應中的點路徑，例如 choices.0.message.content。留空則使用完整回應。"
+    },
+    "steps": {
+      "replace": {
+        "title": "取代",
+        "description": "尋找並取代文字，可使用正規表示式。"
+      },
+      "trim": {
+        "title": "去除首尾",
+        "description": "移除開頭和結尾的空白或指定字元。"
+      },
+      "collapse_whitespace": {
+        "title": "合併空白",
+        "description": "合併連續的空格和空行。"
+      },
+      "strip_html": {
+        "title": "移除 HTML",
+        "description": "移除 HTML 標籤並解碼常見實體。"
+      },
+      "remove_lines": {
+        "title": "刪除行",
+        "description": "刪除符合模式的行。"
+      },
+      "prepend": {
+        "title": "前置文字",
+        "description": "在文件前加入文字。"
+      },
+      "append": {
+        "title": "附加文字",
+        "description": "在文件後加入文字。"
+      },
+      "truncate": {
+        "title": "截斷",
+        "description": "將文件限制為最大字元數。"
+      },
+      "case": {
+        "title": "轉換大小寫",
+        "description": "將文字轉換為小寫或大寫。"
+      },
+      "skip": {
+        "title": "略過文件",
+        "description": "不儲存符合模式的文件。"
+      },
+      "http": {
+        "title": "HTTP 請求",
+        "description": "將文件傳送到 HTTP 端點並使用其回應。"
+      }
+    },
+    "test": {
+      "open": "測試流程",
+      "title": "測試",
+      "description": "使用範例文字執行目前未儲存的流程。HTTP 步驟和 fetch() 會傳送真實請求。",
+      "input": "範例輸入",
+      "itemName": "項目名稱",
+      "run": "執行",
+      "binaryOutput": "二進位輸出（{{bytes}} 位元組）",
+      "skipped": "該文件將被略過。",
+      "context": "上下文",
+      "logs": "主控台",
+      "outputType": {
+        "text": "文字",
+        "binary": "二進位",
+        "skip": "已略過",
+        "error": "錯誤"
+      }
+    }
   }
 }

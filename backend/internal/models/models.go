@@ -75,6 +75,7 @@ type Task struct {
 	FilePolicyJSON          string `gorm:"type:text"`
 	InlineMultimodalMode    string `gorm:"size:16;not null;default:global"`
 	InlineMultimodalEnabled bool   `gorm:"not null;default:false"`
+	PostProcessJSON         string
 
 	CronExpression string `gorm:"size:128;not null"`
 

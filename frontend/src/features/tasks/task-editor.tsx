@@ -17,6 +17,7 @@ import {
   Tags,
   Braces,
   Sparkles,
+  Workflow,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -69,6 +70,7 @@ import {
 } from "./task-form-model";
 
 import { DryRunDialog } from "./dry-run-dialog";
+import { PostProcessingModeTabs, PostProcessingSection } from "./post-processing/post-processing-section";
 
 const SECTIONS = [
   { id: "general", icon: Settings2 },
@@ -81,6 +83,7 @@ const SECTIONS = [
   { id: "inline", icon: Sparkles },
   { id: "tags", icon: Tags },
   { id: "metadata", icon: Braces },
+  { id: "postprocess", icon: Workflow },
   { id: "schedule", icon: CalendarClock },
 ] as const;
 
@@ -141,6 +144,7 @@ export function TaskEditor({ task }: { task?: Task }) {
   const [configErrors, setConfigErrors] = useState<Record<string, string>>({});
   const [ruleErrors, setRuleErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState<string | null>(null);
+  const [postErrors, setPostErrors] = useState<Record<string, string>>({});
 
   const sourceType = watch("sourceType");
   const sourceConfig = watch("sourceConfig");
@@ -204,6 +208,7 @@ export function TaskEditor({ task }: { task?: Task }) {
 
   async function onValid(values: TaskFormValues) {
     setServerError(null);
+    setPostErrors({});
     const spec = findSource(connectors.data, values.sourceType);
     const cfgErrs = spec ? validateConfig(spec.fields, values.sourceConfig, tr) : {};
     const rErrs = spec ? validateFilterGroup(values.filterGroup, spec.filterFields, spec.filterCapabilities.maxDepth) : {};
@@ -235,15 +240,18 @@ export function TaskEditor({ task }: { task?: Task }) {
     } catch (e) {
       if (isApiError(e) && Object.keys(e.fields).length) {
         const cfg: Record<string, string> = {};
+        const post: Record<string, string> = {};
         const unknown: string[] = [];
         for (const [k, msg] of Object.entries(e.fields)) {
           if (k.startsWith("sourceConfig.")) cfg[k.slice("sourceConfig.".length)] = msg;
+          else if (k.startsWith("postProcessing")) post[k.slice("postProcessing.".length)] = msg;
           else if (k.startsWith("sourceFilter")) setRuleErrorsFromServer(k, msg);
           else if (k.startsWith("customMetadata")) form.setError("metadataRows", { message: msg });
           else if (k in values) form.setError(k as keyof TaskFormValues, { message: k === "cronExpression" ? "schedule.invalid" : msg });
           else unknown.push(`${k}: ${msg}`);
         }
         setConfigErrors(cfg);
+        setPostErrors(post);
         setServerError(unknown.length ? `${e.message} — ${unknown.join("; ")}` : e.message);
         focusFirstError(Object.keys(e.fields));
       } else if (isApiError(e) && e.status === 409) {
@@ -731,6 +739,29 @@ export function TaskEditor({ task }: { task?: Task }) {
               <p className="text-xs text-destructive">{errText(errors.metadataRows.message)}</p>
             )}
             <p className="text-xs text-muted-foreground">{t("metadata.reservedHint")}</p>
+          </EditorSection>
+
+          {/* Post-processing */}
+          <EditorSection
+            id="postprocess"
+            icon={Workflow}
+            title={t("taskEditor.sections.postprocess.title")}
+            description={t("taskEditor.sections.postprocess.description")}
+            actions={<PostProcessingModeTabs value={watch("postProcessing")} onChange={(v) => setValue("postProcessing", v, { shouldDirty: true })} />}
+          >
+            <PostProcessingSection
+              value={watch("postProcessing")}
+              onChange={(v) => {
+                setValue("postProcessing", v, { shouldDirty: true, shouldValidate: formState.isSubmitted });
+                if (Object.keys(postErrors).length) setPostErrors({});
+              }}
+              errors={postErrors}
+              showErrors={formState.isSubmitted}
+              editing={editing}
+              taskId={task?.id}
+              taskName={watch("name")}
+              sourceType={sourceType}
+            />
           </EditorSection>
 
           {/* Schedule */}

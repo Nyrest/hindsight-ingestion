@@ -538,6 +538,10 @@
       "schedule": {
         "title": "Pianificazione",
         "description": "Quando l'attività viene eseguita automaticamente."
+      },
+      "postprocess": {
+        "title": "Post-elaborazione",
+        "description": "Trasforma il contenuto dei documenti prima di salvarli in Hindsight."
       }
     },
     "toast": {
@@ -966,5 +970,162 @@
     "truncated": "Campione troncato al limite dell’anteprima.",
     "empty": "Nessuna riga nel campione.",
     "context": "Contesto"
+  },
+  "postProcessing": {
+    "enabled": "Abilita post-elaborazione",
+    "enabledHelp": "Ogni documento nuovo o modificato passa per questa pipeline prima di essere salvato.",
+    "disabledHelp": "I documenti vengono salvati così come sono.",
+    "reretainHint": "Modificare ciò che viene eseguito reinvia tutti i documenti corrispondenti a Hindsight alla prossima esecuzione.",
+    "codeNotUsed": "La modalità UI esegue i passaggi seguenti. Il codice non può essere riconvertito in passaggi; viene conservato ma eseguito solo in modalità Codice.",
+    "empty": "Nessun passaggio. Aggiungi un passaggio per trasformare il contenuto.",
+    "stepsLabel": "Passaggi di post-elaborazione",
+    "addStep": "Aggiungi passaggio",
+    "convertToCode": "Converti in codice",
+    "convertTitle": "Sostituire il codice con quello generato?",
+    "convertDescription": "Il codice attuale sarà sostituito da quello generato da questi passaggi. Il codice non può essere riconvertito in passaggi.",
+    "codeHelp": "Definisci process(context, input). input è il testo del documento, oppure un ArrayBuffer per i file. Restituisci un testo o dati binari da salvare, oppure null per saltare il documento. fetch() è disponibile.",
+    "codeLabel": "Codice di post-elaborazione",
+    "shortcuts": "{{format}} formatta il codice · {{suggest}} mostra i suggerimenti",
+    "stepEnabled": "Passaggio abilitato",
+    "moveUp": "Sposta su",
+    "moveDown": "Sposta giù",
+    "removeStep": "Rimuovi passaggio",
+    "addParam": "Aggiungi parametro",
+    "addHeader": "Aggiungi intestazione",
+    "addField": "Aggiungi campo",
+    "mode": {
+      "label": "Modalità editor",
+      "ui": "UI",
+      "code": "Codice"
+    },
+    "errors": {
+      "positive": "Deve essere un numero positivo",
+      "regex": "Espressione regolare non valida",
+      "invalid": "Correggi le impostazioni di post-elaborazione evidenziate"
+    },
+    "side": {
+      "both": "Entrambe le estremità",
+      "start": "Inizio",
+      "end": "Fine"
+    },
+    "case": {
+      "lower": "minuscolo",
+      "upper": "MAIUSCOLO"
+    },
+    "separator": {
+      "none": "Nessuno",
+      "space": "Spazio",
+      "newline": "Nuova riga",
+      "blank": "Riga vuota"
+    },
+    "bodyType": {
+      "none": "Nessuno",
+      "input": "Documento",
+      "json": "JSON",
+      "form": "Modulo",
+      "text": "Testo"
+    },
+    "responseMode": {
+      "text": "Usa il testo della risposta",
+      "json": "Usa un valore JSON",
+      "binary": "Usa la risposta come file",
+      "ignore": "Ignora la risposta (mantieni il documento)"
+    },
+    "fields": {
+      "pattern": "Modello",
+      "replacement": "Sostituisci con",
+      "regex": "Espressione regolare",
+      "ignoreCase": "Ignora maiuscole",
+      "invert_remove_lines": "Mantieni solo le righe corrispondenti",
+      "invert_skip": "Salta se non corrisponde",
+      "side": "Lato",
+      "characters": "Caratteri",
+      "text": "Testo",
+      "separator": "Separatore",
+      "maxLength": "Lunghezza massima",
+      "suffix": "Suffisso",
+      "url": "URL",
+      "method": "Metodo",
+      "query": "Parametri di query",
+      "headers": "Intestazioni",
+      "body": "Corpo",
+      "response": "Risposta",
+      "responsePath": "Percorso JSON"
+    },
+    "placeholders": {
+      "pattern": "Testo da cercare"
+    },
+    "help": {
+      "replacementRegex": "Usa $1, $2… per inserire i gruppi catturati.",
+      "characters": "Lascia vuoto per rimuovere gli spazi.",
+      "template": "Segnaposto: {{list}}",
+      "bodyInput": "Invia il documento come corpo della richiesta (byte grezzi per i file).",
+      "bodyJson": "I segnaposto vengono sottoposti a escape per le stringhe JSON, ad es. {{example}}",
+      "responsePath": "Percorso puntato nella risposta, ad es. choices.0.message.content. Lascia vuoto per l'intera risposta."
+    },
+    "steps": {
+      "replace": {
+        "title": "Sostituisci",
+        "description": "Trova e sostituisci testo, anche con un'espressione regolare."
+      },
+      "trim": {
+        "title": "Rifila",
+        "description": "Rimuove spazi o caratteri all'inizio e alla fine."
+      },
+      "collapse_whitespace": {
+        "title": "Comprimi spazi",
+        "description": "Unisce spazi ripetuti e righe vuote."
+      },
+      "strip_html": {
+        "title": "Rimuovi HTML",
+        "description": "Rimuove i tag HTML e decodifica le entità comuni."
+      },
+      "remove_lines": {
+        "title": "Rimuovi righe",
+        "description": "Elimina le righe che corrispondono a un modello."
+      },
+      "prepend": {
+        "title": "Anteponi",
+        "description": "Aggiunge testo prima del documento."
+      },
+      "append": {
+        "title": "Accoda",
+        "description": "Aggiunge testo dopo il documento."
+      },
+      "truncate": {
+        "title": "Tronca",
+        "description": "Limita il documento a un numero massimo di caratteri."
+      },
+      "case": {
+        "title": "Cambia maiuscole",
+        "description": "Converte il testo in minuscolo o maiuscolo."
+      },
+      "skip": {
+        "title": "Salta documento",
+        "description": "Non salva i documenti che corrispondono a un modello."
+      },
+      "http": {
+        "title": "Richiesta HTTP",
+        "description": "Invia il documento a un endpoint HTTP e usa la risposta."
+      }
+    },
+    "test": {
+      "open": "Prova pipeline",
+      "title": "Prova",
+      "description": "Esegue la pipeline attuale, non salvata, su un testo di esempio. I passaggi HTTP e fetch() inviano richieste reali.",
+      "input": "Input di esempio",
+      "itemName": "Nome elemento",
+      "run": "Esegui",
+      "binaryOutput": "Output binario ({{bytes}} byte)",
+      "skipped": "Il documento verrebbe saltato.",
+      "context": "Contesto",
+      "logs": "Console",
+      "outputType": {
+        "text": "Testo",
+        "binary": "Binario",
+        "skip": "Saltato",
+        "error": "Errore"
+      }
+    }
   }
 }

@@ -212,6 +212,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/post-processing/test": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["post_api_post_processing_test"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/runs": {
         parameters: {
             query?: never;
@@ -560,9 +576,52 @@ export interface components {
             operator: "equals" | "notEquals" | "contains" | "notContains" | "startsWith" | "endsWith" | "regex" | "exists" | "notExists" | "containsAny" | "containsAll" | "in" | "notIn" | "greaterThan" | "lessThan" | "geq" | "leq";
             value?: unknown;
         };
+        KeyValue: {
+            key: string;
+            value: string;
+        };
         Option: {
             label: string;
             value: string;
+        };
+        Pipeline: {
+            code: string;
+            enabled: boolean;
+            /** @enum {string} */
+            mode: "ui" | "code";
+            steps: components["schemas"]["PipelineStep"][];
+        };
+        PipelineStep: {
+            body?: string;
+            /** @enum {string} */
+            bodyType?: "none" | "input" | "text" | "json" | "form";
+            /** @enum {string} */
+            case?: "lower" | "upper";
+            characters?: string;
+            enabled: boolean;
+            form?: components["schemas"]["KeyValue"][];
+            headers?: components["schemas"]["KeyValue"][];
+            id: string;
+            ignoreCase?: boolean;
+            invert?: boolean;
+            maxLength?: number;
+            /** @enum {string} */
+            method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+            pattern?: string;
+            query?: components["schemas"]["KeyValue"][];
+            regex?: boolean;
+            replacement?: string;
+            /** @enum {string} */
+            responseMode?: "text" | "json" | "binary" | "ignore";
+            responsePath?: string;
+            separator?: string;
+            /** @enum {string} */
+            side?: "both" | "start" | "end";
+            suffix?: string;
+            text?: string;
+            /** @enum {string} */
+            type: "replace" | "trim" | "prepend" | "append" | "truncate" | "case" | "collapse_whitespace" | "strip_html" | "remove_lines" | "skip" | "http";
+            url?: string;
         };
         PreviewResult: {
             columns: string[];
@@ -708,6 +767,19 @@ export interface components {
             type: string;
             updatedAt: string;
         };
+        postProcessTestDTO: {
+            code: string;
+            context: string;
+            durationMs: number;
+            error: string;
+            fileName: string;
+            logs: components["schemas"]["logDTO"][];
+            mimeType: string;
+            ok: boolean;
+            output: string;
+            /** @enum {string} */
+            outputType: "text" | "binary" | "skip" | "error";
+        };
         runDTO: {
             createdCount: number;
             deletedCount: number;
@@ -821,6 +893,7 @@ export interface components {
             /** @enum {string} */
             observationScopeMode: "global" | "override";
             policyRevision: number;
+            postProcessing: components["schemas"]["Pipeline"];
             reconcileRequired: boolean;
             retainStrategy: string;
             running: boolean;
@@ -1529,6 +1602,56 @@ export interface operations {
             };
         };
     };
+    post_api_post_processing_test: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    base64?: boolean;
+                    input?: string;
+                    itemName?: string;
+                    postProcessing?: components["schemas"]["Pipeline"];
+                    sourceType?: string;
+                    taskId?: string;
+                    taskName?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["postProcessTestDTO"];
+                };
+            };
+            /** @description Basic Auth required */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description API error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["apiError"];
+                };
+            };
+        };
+    };
     get_api_runs: {
         parameters: {
             query?: {
@@ -1769,6 +1892,7 @@ export interface operations {
                     observationScope?: components["schemas"]["Scope"];
                     /** @enum {string} */
                     observationScopeMode?: "global" | "override";
+                    postProcessing?: components["schemas"]["Pipeline"];
                     retainStrategy?: string;
                     sourceConfig?: {
                         [key: string]: unknown;
@@ -1964,6 +2088,7 @@ export interface operations {
                     observationScope?: components["schemas"]["Scope"];
                     /** @enum {string} */
                     observationScopeMode?: "global" | "override";
+                    postProcessing?: components["schemas"]["Pipeline"];
                     retainStrategy?: string;
                     sourceConfig?: {
                         [key: string]: unknown;

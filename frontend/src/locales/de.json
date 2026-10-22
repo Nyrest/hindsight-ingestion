@@ -538,6 +538,10 @@
       "schedule": {
         "title": "Zeitplan",
         "description": "Legen Sie fest, wann die Aufgabe automatisch ausgeführt wird."
+      },
+      "postprocess": {
+        "title": "Nachbearbeitung",
+        "description": "Dokumentinhalte umwandeln, bevor sie in Hindsight gespeichert werden."
       }
     },
     "toast": {
@@ -966,5 +970,162 @@
     "truncated": "Stichprobe an der Vorschaugrenze abgeschnitten.",
     "empty": "Keine Zeilen in dieser Stichprobe.",
     "context": "Kontext"
+  },
+  "postProcessing": {
+    "enabled": "Nachbearbeitung aktivieren",
+    "enabledHelp": "Jedes neue oder geänderte Dokument durchläuft diese Pipeline vor dem Speichern.",
+    "disabledHelp": "Dokumente werden unverändert gespeichert.",
+    "reretainHint": "Wenn sich die ausgeführte Verarbeitung ändert, werden beim nächsten Lauf alle passenden Dokumente erneut an Hindsight gesendet.",
+    "codeNotUsed": "Der UI-Modus führt die folgenden Schritte aus. Code lässt sich nicht in Schritte zurückwandeln; Ihr Code bleibt erhalten, läuft aber nur im Code-Modus.",
+    "empty": "Noch keine Schritte. Fügen Sie einen Schritt hinzu, um Inhalte umzuwandeln.",
+    "stepsLabel": "Nachbearbeitungsschritte",
+    "addStep": "Schritt hinzufügen",
+    "convertToCode": "In Code umwandeln",
+    "convertTitle": "Code durch generierten Code ersetzen?",
+    "convertDescription": "Ihr aktueller Code wird durch Code aus diesen Schritten ersetzt. Code lässt sich nicht in Schritte zurückwandeln.",
+    "codeHelp": "Definieren Sie process(context, input). input ist der Dokumenttext oder bei Dateien ein ArrayBuffer. Geben Sie Text oder Binärdaten zum Speichern zurück oder null, um das Dokument zu überspringen. fetch() ist verfügbar.",
+    "codeLabel": "Nachbearbeitungscode",
+    "shortcuts": "{{format}} formatiert den Code · {{suggest}} zeigt Vorschläge",
+    "stepEnabled": "Schritt aktiviert",
+    "moveUp": "Nach oben",
+    "moveDown": "Nach unten",
+    "removeStep": "Schritt entfernen",
+    "addParam": "Parameter hinzufügen",
+    "addHeader": "Header hinzufügen",
+    "addField": "Feld hinzufügen",
+    "mode": {
+      "label": "Editormodus",
+      "ui": "UI",
+      "code": "Code"
+    },
+    "errors": {
+      "positive": "Muss eine positive Zahl sein",
+      "regex": "Ungültiger regulärer Ausdruck",
+      "invalid": "Korrigieren Sie die markierten Nachbearbeitungseinstellungen"
+    },
+    "side": {
+      "both": "Beide Enden",
+      "start": "Anfang",
+      "end": "Ende"
+    },
+    "case": {
+      "lower": "Kleinbuchstaben",
+      "upper": "GROSSBUCHSTABEN"
+    },
+    "separator": {
+      "none": "Keiner",
+      "space": "Leerzeichen",
+      "newline": "Zeilenumbruch",
+      "blank": "Leerzeile"
+    },
+    "bodyType": {
+      "none": "Keiner",
+      "input": "Dokument",
+      "json": "JSON",
+      "form": "Formular",
+      "text": "Text"
+    },
+    "responseMode": {
+      "text": "Antworttext verwenden",
+      "json": "JSON-Wert verwenden",
+      "binary": "Antwort als Datei verwenden",
+      "ignore": "Antwort ignorieren (Dokument beibehalten)"
+    },
+    "fields": {
+      "pattern": "Muster",
+      "replacement": "Ersetzen durch",
+      "regex": "Regulärer Ausdruck",
+      "ignoreCase": "Groß-/Kleinschreibung ignorieren",
+      "invert_remove_lines": "Nur passende Zeilen behalten",
+      "invert_skip": "Überspringen, wenn nicht passend",
+      "side": "Seite",
+      "characters": "Zeichen",
+      "text": "Text",
+      "separator": "Trennzeichen",
+      "maxLength": "Maximale Länge",
+      "suffix": "Suffix",
+      "url": "URL",
+      "method": "Methode",
+      "query": "Query-Parameter",
+      "headers": "Header",
+      "body": "Body",
+      "response": "Antwort",
+      "responsePath": "JSON-Pfad"
+    },
+    "placeholders": {
+      "pattern": "Zu suchender Text"
+    },
+    "help": {
+      "replacementRegex": "Mit $1, $2… fügen Sie erfasste Gruppen ein.",
+      "characters": "Leer lassen, um Leerraum zu entfernen.",
+      "template": "Platzhalter: {{list}}",
+      "bodyInput": "Sendet das Dokument als Anfrage-Body (Rohbytes bei Dateien).",
+      "bodyJson": "Platzhalter werden für JSON-Zeichenketten maskiert, z. B. {{example}}",
+      "responsePath": "Punktpfad in der Antwort, z. B. choices.0.message.content. Leer lassen für die gesamte Antwort."
+    },
+    "steps": {
+      "replace": {
+        "title": "Ersetzen",
+        "description": "Text suchen und ersetzen, optional mit regulärem Ausdruck."
+      },
+      "trim": {
+        "title": "Kürzen",
+        "description": "Leerraum oder Zeichen am Anfang und Ende entfernen."
+      },
+      "collapse_whitespace": {
+        "title": "Leerraum zusammenfassen",
+        "description": "Mehrfache Leerzeichen und Leerzeilen zusammenfassen."
+      },
+      "strip_html": {
+        "title": "HTML entfernen",
+        "description": "HTML-Tags entfernen und gängige Entitäten dekodieren."
+      },
+      "remove_lines": {
+        "title": "Zeilen entfernen",
+        "description": "Zeilen entfernen, die einem Muster entsprechen."
+      },
+      "prepend": {
+        "title": "Voranstellen",
+        "description": "Text vor dem Dokument einfügen."
+      },
+      "append": {
+        "title": "Anhängen",
+        "description": "Text nach dem Dokument einfügen."
+      },
+      "truncate": {
+        "title": "Kürzen auf Länge",
+        "description": "Das Dokument auf eine Höchstzahl an Zeichen begrenzen."
+      },
+      "case": {
+        "title": "Groß-/Kleinschreibung",
+        "description": "Text in Klein- oder Großbuchstaben umwandeln."
+      },
+      "skip": {
+        "title": "Dokument überspringen",
+        "description": "Dokumente, die einem Muster entsprechen, nicht speichern."
+      },
+      "http": {
+        "title": "HTTP-Anfrage",
+        "description": "Das Dokument an einen HTTP-Endpunkt senden und die Antwort verwenden."
+      }
+    },
+    "test": {
+      "open": "Pipeline testen",
+      "title": "Test",
+      "description": "Führt die aktuelle, ungespeicherte Pipeline mit Beispieltext aus. HTTP-Schritte und fetch() senden echte Anfragen.",
+      "input": "Beispieleingabe",
+      "itemName": "Elementname",
+      "run": "Ausführen",
+      "binaryOutput": "Binäre Ausgabe ({{bytes}} Bytes)",
+      "skipped": "Das Dokument würde übersprungen.",
+      "context": "Kontext",
+      "logs": "Konsole",
+      "outputType": {
+        "text": "Text",
+        "binary": "Binär",
+        "skip": "Übersprungen",
+        "error": "Fehler"
+      }
+    }
   }
 }

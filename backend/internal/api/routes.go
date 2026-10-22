@@ -43,6 +43,7 @@ func (s *Server) endpoints() []endpoint {
 		{"GET", "/api/tasks", s.listTasks, nil, []taskDTO{}, 200},
 		{"POST", "/api/tasks", s.createTask, taskBody{}, taskDTO{}, 201},
 		{"POST", "/api/tasks/validate-cron", s.validateCron, cronBody{}, cronDTO{}, 200},
+		{"POST", "/api/post-processing/test", s.testPostProcessing, postProcessTestBody{}, postProcessTestDTO{}, 200},
 		{"GET", "/api/tasks/{id}", s.getTask, nil, taskDTO{}, 200},
 		{"PATCH", "/api/tasks/{id}", s.patchTask, taskBody{}, taskDTO{}, 200},
 		{"DELETE", "/api/tasks/{id}/documents", s.deleteTaskDocuments, nil, deleteDocumentsDTO{}, 200},

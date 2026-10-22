@@ -81,7 +81,7 @@ func New(custom, auth map[string]string, config proxy.Config) *Client {
 		AuthHeaders:   auth,
 		MaxRetries:    4,
 	}
-	client.HTTP.CheckRedirect = client.checkRedirect
+	client.HTTP.CheckRedirect = client.CheckRedirect
 	return client
 }
 

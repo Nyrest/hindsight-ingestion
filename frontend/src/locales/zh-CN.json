@@ -704,6 +704,10 @@
       "observations": {
         "title": "记忆整合范围",
         "description": "配置 Hindsight 提炼记忆与观察结论的范围规则。"
+      },
+      "postprocess": {
+        "title": "后处理",
+        "description": "在文档保存到 Hindsight 之前转换其内容。"
       }
     },
     "toast": {
@@ -973,5 +977,162 @@
     "truncated": "已达预览采样上限，结果已被截断。",
     "empty": "查询采样结果为空。",
     "context": "上下文信息"
+  },
+  "postProcessing": {
+    "enabled": "启用后处理",
+    "enabledHelp": "每个新增或更改的文档在保存前都会经过此流程。",
+    "disabledHelp": "文档将按原样保存。",
+    "reretainHint": "更改实际运行的处理逻辑后，下次运行时会将所有匹配的文档重新发送到 Hindsight。",
+    "codeNotUsed": "UI 模式运行下方的步骤。代码无法转换回步骤；您的代码会被保留，但仅在代码模式下运行。",
+    "empty": "暂无步骤。添加步骤以转换文档内容。",
+    "stepsLabel": "后处理步骤",
+    "addStep": "添加步骤",
+    "convertToCode": "转换为代码",
+    "convertTitle": "用生成的代码替换现有代码？",
+    "convertDescription": "当前代码将被这些步骤生成的代码替换。代码无法转换回步骤。",
+    "codeHelp": "定义 process(context, input)。input 为文档文本，文件则为 ArrayBuffer。返回字符串或二进制数据以保存，返回 null 则跳过该文档。可使用 fetch()。",
+    "codeLabel": "后处理代码",
+    "shortcuts": "{{format}} 格式化代码 · {{suggest}} 显示建议",
+    "stepEnabled": "启用步骤",
+    "moveUp": "上移",
+    "moveDown": "下移",
+    "removeStep": "删除步骤",
+    "addParam": "添加参数",
+    "addHeader": "添加请求头",
+    "addField": "添加字段",
+    "mode": {
+      "label": "编辑模式",
+      "ui": "界面",
+      "code": "代码"
+    },
+    "errors": {
+      "positive": "必须是正数",
+      "regex": "无效的正则表达式",
+      "invalid": "请修正标出的后处理设置"
+    },
+    "side": {
+      "both": "两端",
+      "start": "开头",
+      "end": "结尾"
+    },
+    "case": {
+      "lower": "小写",
+      "upper": "大写"
+    },
+    "separator": {
+      "none": "无",
+      "space": "空格",
+      "newline": "换行",
+      "blank": "空行"
+    },
+    "bodyType": {
+      "none": "无",
+      "input": "文档",
+      "json": "JSON",
+      "form": "表单",
+      "text": "文本"
+    },
+    "responseMode": {
+      "text": "使用响应文本",
+      "json": "使用 JSON 值",
+      "binary": "将响应作为文件",
+      "ignore": "忽略响应（保留文档）"
+    },
+    "fields": {
+      "pattern": "匹配模式",
+      "replacement": "替换为",
+      "regex": "正则表达式",
+      "ignoreCase": "忽略大小写",
+      "invert_remove_lines": "仅保留匹配的行",
+      "invert_skip": "不匹配时跳过",
+      "side": "位置",
+      "characters": "字符",
+      "text": "文本",
+      "separator": "分隔符",
+      "maxLength": "最大长度",
+      "suffix": "后缀",
+      "url": "URL",
+      "method": "方法",
+      "query": "查询参数",
+      "headers": "请求头",
+      "body": "请求体",
+      "response": "响应",
+      "responsePath": "JSON 路径"
+    },
+    "placeholders": {
+      "pattern": "要查找的文本"
+    },
+    "help": {
+      "replacementRegex": "使用 $1、$2… 插入捕获组。",
+      "characters": "留空则去除空白字符。",
+      "template": "占位符：{{list}}",
+      "bodyInput": "将文档作为请求体发送（文件为原始字节）。",
+      "bodyJson": "占位符会按 JSON 字符串转义，例如 {{example}}",
+      "responsePath": "响应中的点路径，例如 choices.0.message.content。留空则使用完整响应。"
+    },
+    "steps": {
+      "replace": {
+        "title": "替换",
+        "description": "查找并替换文本，可使用正则表达式。"
+      },
+      "trim": {
+        "title": "去除首尾",
+        "description": "去除开头和结尾的空白或指定字符。"
+      },
+      "collapse_whitespace": {
+        "title": "合并空白",
+        "description": "合并连续的空格和空行。"
+      },
+      "strip_html": {
+        "title": "移除 HTML",
+        "description": "移除 HTML 标签并解码常见实体。"
+      },
+      "remove_lines": {
+        "title": "删除行",
+        "description": "删除匹配模式的行。"
+      },
+      "prepend": {
+        "title": "前置文本",
+        "description": "在文档前添加文本。"
+      },
+      "append": {
+        "title": "追加文本",
+        "description": "在文档后添加文本。"
+      },
+      "truncate": {
+        "title": "截断",
+        "description": "将文档限制为最大字符数。"
+      },
+      "case": {
+        "title": "转换大小写",
+        "description": "将文本转换为小写或大写。"
+      },
+      "skip": {
+        "title": "跳过文档",
+        "description": "不保存匹配模式的文档。"
+      },
+      "http": {
+        "title": "HTTP 请求",
+        "description": "将文档发送到 HTTP 端点并使用其响应。"
+      }
+    },
+    "test": {
+      "open": "测试流程",
+      "title": "测试",
+      "description": "使用示例文本运行当前未保存的流程。HTTP 步骤和 fetch() 会发送真实请求。",
+      "input": "示例输入",
+      "itemName": "条目名称",
+      "run": "运行",
+      "binaryOutput": "二进制输出（{{bytes}} 字节）",
+      "skipped": "该文档将被跳过。",
+      "context": "上下文",
+      "logs": "控制台",
+      "outputType": {
+        "text": "文本",
+        "binary": "二进制",
+        "skip": "已跳过",
+        "error": "错误"
+      }
+    }
   }
 }

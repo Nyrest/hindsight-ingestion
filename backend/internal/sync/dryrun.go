@@ -69,6 +69,7 @@ func (e *Engine) DryRunWithOptions(ctx context.Context, taskID string, opts RunO
 		if r.releaseShared != nil {
 			r.releaseShared()
 		}
+		r.post.release()
 	}()
 	if err := r.loadLedger(); err != nil {
 		return result, err
@@ -196,6 +197,9 @@ func (r *runner) previewItem(item connectors.SourceItem) DryRunItem {
 		return preview
 	}
 	content, err := r.src.OpenContent(r.ctx, r.contentRequest(item))
+	if err == nil {
+		content, err = r.postProcess(item, content)
+	}
 	preview.Warnings = content.Warnings
 	if errors.Is(err, connectors.ErrSkip) {
 		return scopePreview(preview, row, err.Error())

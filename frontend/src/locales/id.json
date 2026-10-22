@@ -538,6 +538,10 @@
       "schedule": {
         "title": "Jadwal",
         "description": "Atur waktu eksekusi otomatis tugas."
+      },
+      "postprocess": {
+        "title": "Pascaproses",
+        "description": "Ubah konten dokumen sebelum disimpan ke Hindsight."
       }
     },
     "toast": {
@@ -966,5 +970,162 @@
     "truncated": "Sampel dipotong pada batas pratinjau.",
     "empty": "Tidak ada baris dalam sampel.",
     "context": "Konteks"
+  },
+  "postProcessing": {
+    "enabled": "Aktifkan pascaproses",
+    "enabledHelp": "Setiap dokumen baru atau yang berubah diproses oleh pipeline ini sebelum disimpan.",
+    "disabledHelp": "Dokumen disimpan apa adanya.",
+    "reretainHint": "Mengubah proses yang dijalankan akan mengirim ulang semua dokumen yang cocok ke Hindsight pada eksekusi berikutnya.",
+    "codeNotUsed": "Mode UI menjalankan langkah di bawah. Kode tidak dapat dikonversi kembali menjadi langkah; kode Anda disimpan tetapi hanya berjalan di mode Kode.",
+    "empty": "Belum ada langkah. Tambahkan langkah untuk mengubah konten dokumen.",
+    "stepsLabel": "Langkah pascaproses",
+    "addStep": "Tambah langkah",
+    "convertToCode": "Konversi ke kode",
+    "convertTitle": "Ganti kode dengan kode yang dihasilkan?",
+    "convertDescription": "Kode Anda saat ini akan diganti dengan kode yang dihasilkan dari langkah-langkah ini. Kode tidak dapat dikonversi kembali menjadi langkah.",
+    "codeHelp": "Definisikan process(context, input). input adalah teks dokumen, atau ArrayBuffer untuk file. Kembalikan string atau data biner untuk disimpan, atau null untuk melewati dokumen. fetch() tersedia.",
+    "codeLabel": "Kode pascaproses",
+    "shortcuts": "{{format}} memformat kode · {{suggest}} menampilkan saran",
+    "stepEnabled": "Langkah aktif",
+    "moveUp": "Pindah ke atas",
+    "moveDown": "Pindah ke bawah",
+    "removeStep": "Hapus langkah",
+    "addParam": "Tambah parameter",
+    "addHeader": "Tambah header",
+    "addField": "Tambah kolom",
+    "mode": {
+      "label": "Mode editor",
+      "ui": "UI",
+      "code": "Kode"
+    },
+    "errors": {
+      "positive": "Harus berupa angka positif",
+      "regex": "Ekspresi reguler tidak valid",
+      "invalid": "Perbaiki pengaturan pascaproses yang ditandai"
+    },
+    "side": {
+      "both": "Kedua ujung",
+      "start": "Awal",
+      "end": "Akhir"
+    },
+    "case": {
+      "lower": "huruf kecil",
+      "upper": "HURUF BESAR"
+    },
+    "separator": {
+      "none": "Tidak ada",
+      "space": "Spasi",
+      "newline": "Baris baru",
+      "blank": "Baris kosong"
+    },
+    "bodyType": {
+      "none": "Tidak ada",
+      "input": "Dokumen",
+      "json": "JSON",
+      "form": "Formulir",
+      "text": "Teks"
+    },
+    "responseMode": {
+      "text": "Gunakan teks respons",
+      "json": "Gunakan nilai JSON",
+      "binary": "Gunakan respons sebagai file",
+      "ignore": "Abaikan respons (pertahankan dokumen)"
+    },
+    "fields": {
+      "pattern": "Pola",
+      "replacement": "Ganti dengan",
+      "regex": "Ekspresi reguler",
+      "ignoreCase": "Abaikan huruf besar/kecil",
+      "invert_remove_lines": "Pertahankan hanya baris yang cocok",
+      "invert_skip": "Lewati jika tidak cocok",
+      "side": "Sisi",
+      "characters": "Karakter",
+      "text": "Teks",
+      "separator": "Pemisah",
+      "maxLength": "Panjang maksimum",
+      "suffix": "Akhiran",
+      "url": "URL",
+      "method": "Metode",
+      "query": "Parameter kueri",
+      "headers": "Header",
+      "body": "Body",
+      "response": "Respons",
+      "responsePath": "Jalur JSON"
+    },
+    "placeholders": {
+      "pattern": "Teks yang dicari"
+    },
+    "help": {
+      "replacementRegex": "Gunakan $1, $2… untuk menyisipkan grup tangkapan.",
+      "characters": "Biarkan kosong untuk memangkas spasi.",
+      "template": "Placeholder: {{list}}",
+      "bodyInput": "Mengirim dokumen sebagai body permintaan (byte mentah untuk file).",
+      "bodyJson": "Placeholder di-escape untuk string JSON, mis. {{example}}",
+      "responsePath": "Jalur bertitik di dalam respons, mis. choices.0.message.content. Biarkan kosong untuk seluruh respons."
+    },
+    "steps": {
+      "replace": {
+        "title": "Ganti",
+        "description": "Cari dan ganti teks, opsional dengan ekspresi reguler."
+      },
+      "trim": {
+        "title": "Pangkas",
+        "description": "Hapus spasi atau karakter di awal dan akhir."
+      },
+      "collapse_whitespace": {
+        "title": "Rapikan spasi",
+        "description": "Gabungkan spasi berulang dan baris kosong."
+      },
+      "strip_html": {
+        "title": "Hapus HTML",
+        "description": "Hapus tag HTML dan dekode entitas umum."
+      },
+      "remove_lines": {
+        "title": "Hapus baris",
+        "description": "Hapus baris yang cocok dengan pola."
+      },
+      "prepend": {
+        "title": "Tambah di awal",
+        "description": "Tambahkan teks sebelum dokumen."
+      },
+      "append": {
+        "title": "Tambah di akhir",
+        "description": "Tambahkan teks setelah dokumen."
+      },
+      "truncate": {
+        "title": "Potong",
+        "description": "Batasi dokumen hingga jumlah karakter maksimum."
+      },
+      "case": {
+        "title": "Ubah huruf",
+        "description": "Ubah teks menjadi huruf kecil atau besar."
+      },
+      "skip": {
+        "title": "Lewati dokumen",
+        "description": "Jangan simpan dokumen yang cocok dengan pola."
+      },
+      "http": {
+        "title": "Permintaan HTTP",
+        "description": "Kirim dokumen ke endpoint HTTP dan gunakan responsnya."
+      }
+    },
+    "test": {
+      "open": "Uji pipeline",
+      "title": "Uji",
+      "description": "Menjalankan pipeline saat ini yang belum disimpan pada teks contoh. Langkah HTTP dan fetch() mengirim permintaan sungguhan.",
+      "input": "Input contoh",
+      "itemName": "Nama item",
+      "run": "Jalankan",
+      "binaryOutput": "Output biner ({{bytes}} byte)",
+      "skipped": "Dokumen akan dilewati.",
+      "context": "Konteks",
+      "logs": "Konsol",
+      "outputType": {
+        "text": "Teks",
+        "binary": "Biner",
+        "skip": "Dilewati",
+        "error": "Kesalahan"
+      }
+    }
   }
 }

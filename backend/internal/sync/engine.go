@@ -98,6 +98,7 @@ type runner struct {
 	maxSz            int64
 	observationScope observations.Scope
 	inlineEnabled    bool
+	post             *postProcessor
 
 	baseTags []string
 	customMD map[string]string
@@ -141,6 +142,7 @@ func (e *Engine) Execute(ctx context.Context, runID string, opts RunOptions) err
 		if r.releaseShared != nil {
 			r.releaseShared()
 		}
+		r.post.release()
 	}()
 	err := r.execute(opts)
 	r.finish(err)
@@ -487,6 +489,9 @@ func (r *runner) observe(item connectors.SourceItem) error {
 	}
 
 	content, err := r.src.OpenContent(r.ctx, r.contentRequest(item))
+	if err == nil {
+		content, err = r.postProcess(item, content)
+	}
 	if err != nil {
 		if errors.Is(err, connectors.ErrSkip) {
 			r.logf("info", "Skipped %s: %v", displayName(item), err)
@@ -719,6 +724,7 @@ func (r *runner) prepareSource() (settings.Settings, error) {
 	if r.task.InlineMultimodalMode == models.FilePolicyOverride {
 		r.inlineEnabled = r.task.InlineMultimodalEnabled
 	}
+	r.post = newPostProcessor(r.task.ID, r.task.PostProcessJSON, cfg.Proxy)
 
 	r.cred = connectors.Credential{Proxy: cfg.Proxy}
 	if len(src.Info().CredentialTypes) > 0 {

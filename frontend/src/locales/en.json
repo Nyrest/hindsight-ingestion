@@ -700,6 +700,10 @@
       "observations": {
         "title": "Observation scope",
         "description": "How observations are consolidated across memories."
+      },
+      "postprocess": {
+        "title": "Post-processing",
+        "description": "Transform document content before it is retained to Hindsight."
       }
     },
     "toast": {
@@ -966,5 +970,162 @@
     "truncated": "Sample truncated at the preview limit.",
     "empty": "No rows in this sample.",
     "context": "Context"
+  },
+  "postProcessing": {
+    "enabled": "Enable post-processing",
+    "enabledHelp": "Each new or changed document runs through this pipeline before it is retained.",
+    "disabledHelp": "Documents are retained as-is.",
+    "reretainHint": "Changing what runs sends all matching documents to Hindsight again on the next run.",
+    "codeNotUsed": "UI mode runs the steps below. Code can't be converted back to steps; your code is kept but only runs in Code mode.",
+    "empty": "No steps yet. Add a step to transform document content.",
+    "stepsLabel": "Post-processing steps",
+    "addStep": "Add step",
+    "convertToCode": "Convert to code",
+    "convertTitle": "Replace code with generated code?",
+    "convertDescription": "Your current code will be replaced with code generated from these steps. Code can't be converted back to steps.",
+    "codeHelp": "Define process(context, input). input is the document text, or an ArrayBuffer for files. Return a string or binary data to retain, or null to skip the document. fetch() is available.",
+    "codeLabel": "Post-processing code",
+    "shortcuts": "{{format}} formats the code · {{suggest}} shows suggestions",
+    "stepEnabled": "Step enabled",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "removeStep": "Remove step",
+    "addParam": "Add parameter",
+    "addHeader": "Add header",
+    "addField": "Add field",
+    "mode": {
+      "label": "Editor mode",
+      "ui": "UI",
+      "code": "Code"
+    },
+    "errors": {
+      "positive": "Must be a positive number",
+      "regex": "Invalid regular expression",
+      "invalid": "Fix the highlighted post-processing settings"
+    },
+    "side": {
+      "both": "Both ends",
+      "start": "Start",
+      "end": "End"
+    },
+    "case": {
+      "lower": "lowercase",
+      "upper": "UPPERCASE"
+    },
+    "separator": {
+      "none": "None",
+      "space": "Space",
+      "newline": "New line",
+      "blank": "Blank line"
+    },
+    "bodyType": {
+      "none": "None",
+      "input": "Document",
+      "json": "JSON",
+      "form": "Form",
+      "text": "Text"
+    },
+    "responseMode": {
+      "text": "Use response text",
+      "json": "Use a JSON value",
+      "binary": "Use response as a file",
+      "ignore": "Ignore response (keep document)"
+    },
+    "fields": {
+      "pattern": "Pattern",
+      "replacement": "Replace with",
+      "regex": "Regular expression",
+      "ignoreCase": "Ignore case",
+      "invert_remove_lines": "Keep only matching lines",
+      "invert_skip": "Skip unless matching",
+      "side": "Side",
+      "characters": "Characters",
+      "text": "Text",
+      "separator": "Separator",
+      "maxLength": "Maximum length",
+      "suffix": "Suffix",
+      "url": "URL",
+      "method": "Method",
+      "query": "Query parameters",
+      "headers": "Headers",
+      "body": "Body",
+      "response": "Response",
+      "responsePath": "JSON path"
+    },
+    "placeholders": {
+      "pattern": "Text to find"
+    },
+    "help": {
+      "replacementRegex": "Use $1, $2… to insert captured groups.",
+      "characters": "Leave empty to trim whitespace.",
+      "template": "Placeholders: {{list}}",
+      "bodyInput": "Sends the document as the request body (raw bytes for files).",
+      "bodyJson": "Placeholders are escaped for JSON strings, e.g. {{example}}",
+      "responsePath": "Dot path into the response, e.g. choices.0.message.content. Leave empty for the whole response."
+    },
+    "steps": {
+      "replace": {
+        "title": "Replace",
+        "description": "Find and replace text, optionally with a regular expression."
+      },
+      "trim": {
+        "title": "Trim",
+        "description": "Remove whitespace or characters from the start and end."
+      },
+      "collapse_whitespace": {
+        "title": "Collapse whitespace",
+        "description": "Merge repeated spaces and blank lines."
+      },
+      "strip_html": {
+        "title": "Strip HTML",
+        "description": "Remove HTML tags and decode common entities."
+      },
+      "remove_lines": {
+        "title": "Remove lines",
+        "description": "Drop lines that match a pattern."
+      },
+      "prepend": {
+        "title": "Prepend",
+        "description": "Add text before the document."
+      },
+      "append": {
+        "title": "Append",
+        "description": "Add text after the document."
+      },
+      "truncate": {
+        "title": "Truncate",
+        "description": "Limit the document to a maximum number of characters."
+      },
+      "case": {
+        "title": "Change case",
+        "description": "Convert text to lowercase or uppercase."
+      },
+      "skip": {
+        "title": "Skip document",
+        "description": "Don't retain documents that match a pattern."
+      },
+      "http": {
+        "title": "HTTP request",
+        "description": "Send the document to an HTTP endpoint and use the response."
+      }
+    },
+    "test": {
+      "open": "Test pipeline",
+      "title": "Test",
+      "description": "Runs the current, unsaved pipeline on sample text. HTTP steps and fetch() send real requests.",
+      "input": "Sample input",
+      "itemName": "Item name",
+      "run": "Run",
+      "binaryOutput": "Binary output ({{bytes}} bytes)",
+      "skipped": "The document would be skipped.",
+      "context": "Context",
+      "logs": "Console",
+      "outputType": {
+        "text": "Text",
+        "binary": "Binary",
+        "skip": "Skipped",
+        "error": "Error"
+      }
+    }
   }
 }

@@ -538,6 +538,10 @@
       "schedule": {
         "title": "スケジュール",
         "description": "タスクを自動実行するタイミングを設定します。"
+      },
+      "postprocess": {
+        "title": "後処理",
+        "description": "Hindsight に保存する前にドキュメントの内容を変換します。"
       }
     },
     "toast": {
@@ -966,5 +970,162 @@
     "truncated": "プレビュー上限に達したため、サンプルを切り詰めました。",
     "empty": "サンプルに行がありません。",
     "context": "コンテキスト"
+  },
+  "postProcessing": {
+    "enabled": "後処理を有効にする",
+    "enabledHelp": "新規または変更されたドキュメントは、保存前にこのパイプラインで処理されます。",
+    "disabledHelp": "ドキュメントはそのまま保存されます。",
+    "reretainHint": "実行内容を変更すると、次回の実行で一致するすべてのドキュメントが Hindsight に再送信されます。",
+    "codeNotUsed": "UI モードでは下のステップが実行されます。コードはステップに戻せません。コードは保持されますが、コードモードでのみ実行されます。",
+    "empty": "ステップはまだありません。ステップを追加して内容を変換します。",
+    "stepsLabel": "後処理ステップ",
+    "addStep": "ステップを追加",
+    "convertToCode": "コードに変換",
+    "convertTitle": "コードを生成されたコードで置き換えますか？",
+    "convertDescription": "現在のコードは、これらのステップから生成されたコードに置き換えられます。コードはステップに戻せません。",
+    "codeHelp": "process(context, input) を定義します。input はドキュメントのテキスト、ファイルの場合は ArrayBuffer です。保存する文字列またはバイナリを返すか、null を返してドキュメントをスキップします。fetch() が使えます。",
+    "codeLabel": "後処理コード",
+    "shortcuts": "{{format}} でコードを整形 · {{suggest}} で候補を表示",
+    "stepEnabled": "ステップを有効化",
+    "moveUp": "上へ移動",
+    "moveDown": "下へ移動",
+    "removeStep": "ステップを削除",
+    "addParam": "パラメーターを追加",
+    "addHeader": "ヘッダーを追加",
+    "addField": "フィールドを追加",
+    "mode": {
+      "label": "編集モード",
+      "ui": "UI",
+      "code": "コード"
+    },
+    "errors": {
+      "positive": "正の数を指定してください",
+      "regex": "無効な正規表現です",
+      "invalid": "強調表示された後処理の設定を修正してください"
+    },
+    "side": {
+      "both": "両端",
+      "start": "先頭",
+      "end": "末尾"
+    },
+    "case": {
+      "lower": "小文字",
+      "upper": "大文字"
+    },
+    "separator": {
+      "none": "なし",
+      "space": "スペース",
+      "newline": "改行",
+      "blank": "空行"
+    },
+    "bodyType": {
+      "none": "なし",
+      "input": "ドキュメント",
+      "json": "JSON",
+      "form": "フォーム",
+      "text": "テキスト"
+    },
+    "responseMode": {
+      "text": "レスポンスのテキストを使用",
+      "json": "JSON の値を使用",
+      "binary": "レスポンスをファイルとして使用",
+      "ignore": "レスポンスを無視（ドキュメントを維持）"
+    },
+    "fields": {
+      "pattern": "パターン",
+      "replacement": "置換後",
+      "regex": "正規表現",
+      "ignoreCase": "大文字小文字を区別しない",
+      "invert_remove_lines": "一致する行のみ残す",
+      "invert_skip": "一致しない場合にスキップ",
+      "side": "位置",
+      "characters": "文字",
+      "text": "テキスト",
+      "separator": "区切り",
+      "maxLength": "最大長",
+      "suffix": "接尾辞",
+      "url": "URL",
+      "method": "メソッド",
+      "query": "クエリパラメーター",
+      "headers": "ヘッダー",
+      "body": "ボディ",
+      "response": "レスポンス",
+      "responsePath": "JSON パス"
+    },
+    "placeholders": {
+      "pattern": "検索するテキスト"
+    },
+    "help": {
+      "replacementRegex": "$1、$2… でキャプチャグループを挿入できます。",
+      "characters": "空欄の場合は空白を削除します。",
+      "template": "プレースホルダー：{{list}}",
+      "bodyInput": "ドキュメントをリクエストボディとして送信します（ファイルは生のバイト）。",
+      "bodyJson": "プレースホルダーは JSON 文字列用にエスケープされます。例：{{example}}",
+      "responsePath": "レスポンス内のドット区切りパス（例：choices.0.message.content）。空欄の場合はレスポンス全体を使用します。"
+    },
+    "steps": {
+      "replace": {
+        "title": "置換",
+        "description": "テキストを検索して置換します（正規表現も可）。"
+      },
+      "trim": {
+        "title": "トリム",
+        "description": "先頭と末尾の空白や文字を削除します。"
+      },
+      "collapse_whitespace": {
+        "title": "空白をまとめる",
+        "description": "連続するスペースや空行をまとめます。"
+      },
+      "strip_html": {
+        "title": "HTML を除去",
+        "description": "HTML タグを削除し、一般的なエンティティをデコードします。"
+      },
+      "remove_lines": {
+        "title": "行を削除",
+        "description": "パターンに一致する行を削除します。"
+      },
+      "prepend": {
+        "title": "先頭に追加",
+        "description": "ドキュメントの前にテキストを追加します。"
+      },
+      "append": {
+        "title": "末尾に追加",
+        "description": "ドキュメントの後にテキストを追加します。"
+      },
+      "truncate": {
+        "title": "切り詰め",
+        "description": "ドキュメントを最大文字数に制限します。"
+      },
+      "case": {
+        "title": "大文字・小文字変換",
+        "description": "テキストを小文字または大文字に変換します。"
+      },
+      "skip": {
+        "title": "ドキュメントをスキップ",
+        "description": "パターンに一致するドキュメントは保存しません。"
+      },
+      "http": {
+        "title": "HTTP リクエスト",
+        "description": "ドキュメントを HTTP エンドポイントに送信し、レスポンスを使用します。"
+      }
+    },
+    "test": {
+      "open": "パイプラインをテスト",
+      "title": "テスト",
+      "description": "現在の未保存のパイプラインをサンプルテキストで実行します。HTTP ステップと fetch() は実際にリクエストを送信します。",
+      "input": "サンプル入力",
+      "itemName": "アイテム名",
+      "run": "実行",
+      "binaryOutput": "バイナリ出力（{{bytes}} バイト）",
+      "skipped": "このドキュメントはスキップされます。",
+      "context": "コンテキスト",
+      "logs": "コンソール",
+      "outputType": {
+        "text": "テキスト",
+        "binary": "バイナリ",
+        "skip": "スキップ",
+        "error": "エラー"
+      }
+    }
   }
 }

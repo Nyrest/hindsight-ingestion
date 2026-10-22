@@ -46,6 +46,7 @@ export type SettingsPatch = Partial<Omit<Settings, "oauthRedirectUri">>;
 export type CredentialCreate = paths["/api/credentials"]["post"]["requestBody"]["content"]["application/json"];
 export type CredentialPatch = paths["/api/credentials/{id}"]["patch"]["requestBody"]["content"]["application/json"];
 export type TaskInput = paths["/api/tasks"]["post"]["requestBody"]["content"]["application/json"];
+export type PostProcessTestRequest = paths["/api/post-processing/test"]["post"]["requestBody"]["content"]["application/json"];
 export type TaskPatch = paths["/api/tasks/{id}"]["patch"]["requestBody"]["content"]["application/json"];
 export type RunsQuery = NonNullable<paths["/api/runs"]["get"]["parameters"]["query"]>;
 export type ApiErrorCode = ErrorEnvelope["code"];

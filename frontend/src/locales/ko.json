@@ -538,6 +538,10 @@
       "schedule": {
         "title": "일정",
         "description": "작업이 자동으로 실행될 시간을 설정합니다."
+      },
+      "postprocess": {
+        "title": "후처리",
+        "description": "Hindsight에 저장하기 전에 문서 내용을 변환합니다."
       }
     },
     "toast": {
@@ -966,5 +970,162 @@
     "truncated": "미리보기 한도에 도달하여 샘플이 잘렸습니다.",
     "empty": "샘플에 행이 없습니다.",
     "context": "컨텍스트"
+  },
+  "postProcessing": {
+    "enabled": "후처리 사용",
+    "enabledHelp": "새 문서나 변경된 문서는 저장되기 전에 이 파이프라인을 거칩니다.",
+    "disabledHelp": "문서가 그대로 저장됩니다.",
+    "reretainHint": "실행되는 처리를 변경하면 다음 실행 시 일치하는 모든 문서가 Hindsight로 다시 전송됩니다.",
+    "codeNotUsed": "UI 모드는 아래 단계를 실행합니다. 코드는 단계로 다시 변환할 수 없으며, 코드는 유지되지만 코드 모드에서만 실행됩니다.",
+    "empty": "아직 단계가 없습니다. 단계를 추가해 문서 내용을 변환하세요.",
+    "stepsLabel": "후처리 단계",
+    "addStep": "단계 추가",
+    "convertToCode": "코드로 변환",
+    "convertTitle": "코드를 생성된 코드로 바꿀까요?",
+    "convertDescription": "현재 코드가 이 단계에서 생성된 코드로 바뀝니다. 코드는 단계로 다시 변환할 수 없습니다.",
+    "codeHelp": "process(context, input)를 정의하세요. input은 문서 텍스트이며, 파일은 ArrayBuffer입니다. 저장할 문자열이나 바이너리를 반환하거나 null을 반환해 문서를 건너뜁니다. fetch()를 사용할 수 있습니다.",
+    "codeLabel": "후처리 코드",
+    "shortcuts": "{{format}} 코드 서식 지정 · {{suggest}} 제안 표시",
+    "stepEnabled": "단계 사용",
+    "moveUp": "위로 이동",
+    "moveDown": "아래로 이동",
+    "removeStep": "단계 삭제",
+    "addParam": "매개변수 추가",
+    "addHeader": "헤더 추가",
+    "addField": "필드 추가",
+    "mode": {
+      "label": "편집 모드",
+      "ui": "UI",
+      "code": "코드"
+    },
+    "errors": {
+      "positive": "양수여야 합니다",
+      "regex": "잘못된 정규식입니다",
+      "invalid": "표시된 후처리 설정을 수정하세요"
+    },
+    "side": {
+      "both": "양쪽",
+      "start": "시작",
+      "end": "끝"
+    },
+    "case": {
+      "lower": "소문자",
+      "upper": "대문자"
+    },
+    "separator": {
+      "none": "없음",
+      "space": "공백",
+      "newline": "줄바꿈",
+      "blank": "빈 줄"
+    },
+    "bodyType": {
+      "none": "없음",
+      "input": "문서",
+      "json": "JSON",
+      "form": "폼",
+      "text": "텍스트"
+    },
+    "responseMode": {
+      "text": "응답 텍스트 사용",
+      "json": "JSON 값 사용",
+      "binary": "응답을 파일로 사용",
+      "ignore": "응답 무시(문서 유지)"
+    },
+    "fields": {
+      "pattern": "패턴",
+      "replacement": "바꿀 내용",
+      "regex": "정규식",
+      "ignoreCase": "대소문자 무시",
+      "invert_remove_lines": "일치하는 줄만 유지",
+      "invert_skip": "일치하지 않으면 건너뛰기",
+      "side": "위치",
+      "characters": "문자",
+      "text": "텍스트",
+      "separator": "구분자",
+      "maxLength": "최대 길이",
+      "suffix": "접미사",
+      "url": "URL",
+      "method": "메서드",
+      "query": "쿼리 매개변수",
+      "headers": "헤더",
+      "body": "본문",
+      "response": "응답",
+      "responsePath": "JSON 경로"
+    },
+    "placeholders": {
+      "pattern": "찾을 텍스트"
+    },
+    "help": {
+      "replacementRegex": "$1, $2…로 캡처 그룹을 삽입합니다.",
+      "characters": "비워 두면 공백을 제거합니다.",
+      "template": "자리표시자: {{list}}",
+      "bodyInput": "문서를 요청 본문으로 보냅니다(파일은 원시 바이트).",
+      "bodyJson": "자리표시자는 JSON 문자열에 맞게 이스케이프됩니다. 예: {{example}}",
+      "responsePath": "응답 내 점 경로(예: choices.0.message.content). 비워 두면 전체 응답을 사용합니다."
+    },
+    "steps": {
+      "replace": {
+        "title": "바꾸기",
+        "description": "텍스트를 찾아 바꿉니다(정규식 사용 가능)."
+      },
+      "trim": {
+        "title": "트리밍",
+        "description": "시작과 끝의 공백이나 문자를 제거합니다."
+      },
+      "collapse_whitespace": {
+        "title": "공백 정리",
+        "description": "반복되는 공백과 빈 줄을 합칩니다."
+      },
+      "strip_html": {
+        "title": "HTML 제거",
+        "description": "HTML 태그를 제거하고 일반 엔터티를 디코딩합니다."
+      },
+      "remove_lines": {
+        "title": "줄 삭제",
+        "description": "패턴과 일치하는 줄을 삭제합니다."
+      },
+      "prepend": {
+        "title": "앞에 추가",
+        "description": "문서 앞에 텍스트를 추가합니다."
+      },
+      "append": {
+        "title": "뒤에 추가",
+        "description": "문서 뒤에 텍스트를 추가합니다."
+      },
+      "truncate": {
+        "title": "자르기",
+        "description": "문서를 최대 문자 수로 제한합니다."
+      },
+      "case": {
+        "title": "대소문자 변환",
+        "description": "텍스트를 소문자나 대문자로 변환합니다."
+      },
+      "skip": {
+        "title": "문서 건너뛰기",
+        "description": "패턴과 일치하는 문서는 저장하지 않습니다."
+      },
+      "http": {
+        "title": "HTTP 요청",
+        "description": "문서를 HTTP 엔드포인트로 보내고 응답을 사용합니다."
+      }
+    },
+    "test": {
+      "open": "파이프라인 테스트",
+      "title": "테스트",
+      "description": "저장하지 않은 현재 파이프라인을 샘플 텍스트로 실행합니다. HTTP 단계와 fetch()는 실제 요청을 보냅니다.",
+      "input": "샘플 입력",
+      "itemName": "항목 이름",
+      "run": "실행",
+      "binaryOutput": "바이너리 출력({{bytes}}바이트)",
+      "skipped": "이 문서는 건너뜁니다.",
+      "context": "컨텍스트",
+      "logs": "콘솔",
+      "outputType": {
+        "text": "텍스트",
+        "binary": "바이너리",
+        "skip": "건너뜀",
+        "error": "오류"
+      }
+    }
   }
 }

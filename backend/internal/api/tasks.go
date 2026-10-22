@@ -20,6 +20,7 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/hindsight"
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
 	"github.com/Nyrest/hindsight-ingestion/internal/observations"
+	"github.com/Nyrest/hindsight-ingestion/internal/postprocess"
 	"github.com/Nyrest/hindsight-ingestion/internal/runner"
 	"github.com/Nyrest/hindsight-ingestion/internal/scheduler"
 	"github.com/Nyrest/hindsight-ingestion/internal/sync"
@@ -51,6 +52,7 @@ type taskDTO struct {
 	FilePolicy              connectors.FilePolicy `json:"filePolicy"`
 	InlineMultimodalMode    string                `json:"inlineMultimodalMode" enum:"global,override"`
 	InlineMultimodalEnabled bool                  `json:"inlineMultimodalEnabled"`
+	PostProcessing          postprocess.Pipeline    `json:"postProcessing"`
 	CronExpression          string                `json:"cronExpression"`
 	ConfigRevision          int64                 `json:"configRevision"`
 	PolicyRevision          int64                 `json:"policyRevision"`
@@ -85,7 +87,7 @@ func taskConfigView(t *models.Task) taskDTO {
 		ReconcileRequired: t.ReconcileRequired, DestinationLocked: t.DestinationLocked,
 		CreatedAt: timeStr(t.CreatedAt), UpdatedAt: timeStr(t.UpdatedAt),
 		SourceConfig: map[string]any{}, CustomTags: []string{}, CustomMetadata: map[string]string{},
-		SourceFilter: connectors.Filter{Mode: "simple"},
+		SourceFilter: connectors.Filter{Mode: "simple"}, PostProcessing: postprocess.Parse(t.PostProcessJSON),
 	}
 	d.ObservationScopeMode = t.ObservationScopeMode
 	if d.ObservationScopeMode == "" {
@@ -151,6 +153,7 @@ type taskBody struct {
 	FilePolicy              *connectors.FilePolicy `json:"filePolicy"`
 	InlineMultimodalMode    *string                `json:"inlineMultimodalMode" enum:"global,override"`
 	InlineMultimodalEnabled *bool                  `json:"inlineMultimodalEnabled"`
+	PostProcessing          *postprocess.Pipeline    `json:"postProcessing"`
 	CronExpression          *string                `json:"cronExpression"`
 }
 
@@ -369,12 +372,27 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 	if b.InlineMultimodalEnabled != nil {
 		t.InlineMultimodalEnabled = *b.InlineMultimodalEnabled
 	}
+	if b.PostProcessing != nil {
+		cfg, err := b.PostProcessing.Normalize()
+		var fe *postprocess.FieldError
+		switch {
+		case errors.As(err, &fe):
+			errs.add("postProcessing."+fe.Field, fe.Message)
+		case err != nil:
+			errs.add("postProcessing", err.Error())
+		default:
+			t.PostProcessJSON = mustJSON(cfg)
+		}
+	} else if t.PostProcessJSON == "" {
+		t.PostProcessJSON = mustJSON(postprocess.Default())
+	}
 	if creating {
 		return true, errs
 	}
 	policyChanged := old.RetainStrategy != t.RetainStrategy || old.CustomTagsJSON != t.CustomTagsJSON ||
 		old.CustomMetadataJSON != t.CustomMetadataJSON || old.InlineMultimodalMode != t.InlineMultimodalMode ||
 		old.InlineMultimodalEnabled != t.InlineMultimodalEnabled ||
+		postprocess.Parse(old.PostProcessJSON).Script() != postprocess.Parse(t.PostProcessJSON).Script() ||
 		((t.SourceType == "notion" || t.SourceType == "siyuan") && (old.ObservationScopeMode != t.ObservationScopeMode || (t.ObservationScopeMode == "override" && old.ObservationScopeJSON != t.ObservationScopeJSON)))
 	if policyChanged {
 		t.PolicyRevision++
@@ -404,7 +422,7 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 	}
 	if old.SourceConfigJSON != t.SourceConfigJSON || old.SourceFilterJSON != t.SourceFilterJSON ||
 		old.SourceCredentialID != t.SourceCredentialID || old.FilePolicyJSON != t.FilePolicyJSON ||
-		old.FilePolicyMode != t.FilePolicyMode || policyChanged {
+		old.FilePolicyMode != t.FilePolicyMode || old.PostProcessJSON != t.PostProcessJSON || policyChanged {
 		t.ConfigRevision++
 	}
 	return resetCursor, errs
