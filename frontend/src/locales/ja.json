@@ -839,7 +839,7 @@
     "title": "タイトル",
     "updated": "更新日時",
     "tags": "タグ",
-    "notionDescription": "共有されたデータソースを読み取るための Notion 内部インテグレーショントークンです。",
+    "notionDescription": "共有済みデータソースとページの読み取り権限を持つ Notion 内部インテグレーショントークン",
     "siYuanDescription": "SiYuan カーネルの API エンドポイントとトークンです（設定 → このアプリについて → API トークン）。",
     "filesystemDescription": "アプリケーションからアクセスできるローカルファイルです。",
     "googleDriveDescription": "OAuth で Google アカウントに接続し、Drive を読み取り専用で利用します。",
@@ -920,7 +920,13 @@
     "emailCc": "Cc",
     "emailDate": "メールの日付",
     "emailAttachments": "添付ファイルあり",
-    "emailFoldersHelp": "完全スキャンが成功すると、見つからなくなった論理メールを削除します。既定のフォルダーは INBOX とサーバーが指定する送信済みフォルダーです。"
+    "emailFoldersHelp": "完全スキャンが成功すると、見つからなくなった論理メールを削除します。既定のフォルダーは INBOX とサーバーが指定する送信済みフォルダーです。",
+    "notionPages": "ページ",
+    "notionPagesHelp": "「参照」で共有済みのページを選択するか、1 行に 1 つのページ ID を入力してください。",
+    "notionIncludeSubpages": "子ページを含める",
+    "notionIncludeSubpagesHelp": "子ページとその内容を同期します。",
+    "notionMaxDepth": "最大探索深度",
+    "notionDepthHelp": "ルートページの深さは 0、直下の子ページは 1 です。既定値：3。"
   },
   "proxy": {
     "title": "プロキシ",
@@ -1127,5 +1133,16 @@
         "error": "エラー"
       }
     }
+  },
+  "notion": {
+    "sourceMode": "ソースモード",
+    "database": "データベース",
+    "pages": "ページ",
+    "unlimited": "無制限",
+    "depthError": "0 から 2147483647 までの整数を入力してください。",
+    "searchPages": "ページを検索…",
+    "searchPagesHelp": "共有済みのページをタイトルで検索します。",
+    "chooseDepth": "深さを選択",
+    "depthInputHelp": "数値または Unlimited（無制限）を入力してください。ルートページの深さは 0、直下の子ページは 1 です。"
   }
 }

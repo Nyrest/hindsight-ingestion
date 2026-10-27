@@ -253,13 +253,23 @@ Credential {
 }
 ```
 
-  `kind` values: `folder`, `file`, `data_source`, `notebook`, `bucket`, `bank`, `drive`, `site`.
+  `kind` values: `folder`, `file`, `page`, `data_source`, `notebook`, `bucket`, `bank`, `drive`, `site`.
   For a Hindsight credential, browsing the root lists banks.
 
 - `GET /api/credentials/:id/strategies?bankId=…` → `{ "defaultStrategy": "", "strategies": ["documents", "chat"] }`
   (Hindsight credentials only).
 
 ## Tasks
+
+Notion tasks support two source modes. Existing `{ "dataSourceId": "…" }` configurations remain in Database mode with subpages disabled. Database mode uses `mode: "database"` and one `dataSourceId` (a data source ID, not a database ID). Pages mode uses `mode: "pages"` and a nonempty `pageIds` array; browse with `kind: "page"` to select multiple shared pages.
+
+```json
+{ "mode": "pages", "pageIds": ["page-a", "page-b"], "includeSubpages": true, "maxDepth": 3 }
+```
+
+`includeSubpages` defaults to `false` in both modes. When enabled, the connector discovers child pages even inside nested content blocks, but skips child databases and page links. `maxDepth` defaults to `3`: selected pages or database entries are depth `0`, and direct child pages are depth `1`. Set `maxDepth` to `0` for roots only, or `null` for unlimited traversal. Overlapping roots are deduplicated and use their shortest depth from a selected root. Scope changes reset the cursor and force reconciliation; source item IDs remain the Notion page IDs, preserving the sync engine's existing task-scoped document IDs.
+
+Pages mode and database tasks with subpages enabled enumerate the complete hierarchy each scan, while unchanged revisions skip Markdown retrieval and retaining. Only a successful complete inventory confirms disappearance; inaccessible pages or failed block pagination fail the scan. Pages mode emits `notion_root_page_id:<root-id>` source group tags; Database mode retains `notion_data_source_id:<data-source-id>` tags.
 
 ```json
 Task {

@@ -839,7 +839,7 @@
     "title": "Titre",
     "updated": "Mis à jour le",
     "tags": "Étiquettes",
-    "notionDescription": "Jeton d’intégration interne Notion avec accès en lecture aux sources de données partagées.",
+    "notionDescription": "Jeton d’intégration interne Notion avec accès en lecture aux sources de données et pages partagées",
     "siYuanDescription": "URL du point de terminaison de l’API du noyau SiYuan et jeton (Paramètres → À propos → Jeton API).",
     "filesystemDescription": "Fichiers locaux accessibles par l’application.",
     "googleDriveDescription": "Compte Google via OAuth, avec accès en lecture seule à Drive.",
@@ -920,7 +920,13 @@
     "emailCc": "Cc",
     "emailDate": "Date du message",
     "emailAttachments": "Avec pièces jointes",
-    "emailFoldersHelp": "Les e-mails logiques absents sont supprimés après une analyse complète réussie. Dossiers par défaut : INBOX et le dossier des messages envoyés indiqué par le serveur."
+    "emailFoldersHelp": "Les e-mails logiques absents sont supprimés après une analyse complète réussie. Dossiers par défaut : INBOX et le dossier des messages envoyés indiqué par le serveur.",
+    "notionPages": "Pages",
+    "notionPagesHelp": "Sélectionnez des pages partagées avec Parcourir ou saisissez un identifiant de page par ligne.",
+    "notionIncludeSubpages": "Inclure les sous-pages",
+    "notionIncludeSubpagesHelp": "Synchronise les sous-pages et leur contenu.",
+    "notionMaxDepth": "Profondeur maximale de parcours",
+    "notionDepthHelp": "Les pages racines ont une profondeur de 0, leurs enfants directs de 1. Par défaut : 3."
   },
   "proxy": {
     "title": "Proxy",
@@ -1127,5 +1133,16 @@
         "error": "Erreur"
       }
     }
+  },
+  "notion": {
+    "sourceMode": "Mode de source",
+    "database": "Base de données",
+    "pages": "Pages",
+    "unlimited": "Illimitée",
+    "depthError": "Saisissez un nombre entier entre 0 et 2147483647.",
+    "searchPages": "Rechercher des pages…",
+    "searchPagesHelp": "Rechercher des pages partagées par titre.",
+    "chooseDepth": "Choisir une profondeur",
+    "depthInputHelp": "Saisissez un nombre ou Unlimited (illimitée). Les pages racines ont une profondeur de 0, leurs enfants directs de 1."
   }
 }

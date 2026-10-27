@@ -80,6 +80,7 @@ type FieldSpec struct {
 	Placeholder string   `json:"placeholder,omitempty"`
 	Help        string   `json:"help,omitempty"`
 	Default     any      `json:"default,omitempty"`
+	Nullable    bool     `json:"nullable,omitempty"`
 	Options     []Option `json:"options,omitempty"`
 	RenderOnly  bool     `json:"renderOnly,omitempty"`
 	Browse      bool     `json:"browse,omitempty"`

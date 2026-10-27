@@ -57,6 +57,7 @@ import { BankPicker, RetainStrategyField } from "./destination-fields";
 import { EditorSection, Hint } from "./editor-section";
 import { FilterBuilder } from "./filter-builder";
 import { validateFilterGroup } from "./filter-model";
+import { validateNotionConfig } from "./notion-source-model";
 import { ScheduleFields } from "./schedule-fields";
 import { SourceConfigFields, SourceTypePicker } from "./source-section";
 import {
@@ -210,7 +211,8 @@ export function TaskEditor({ task }: { task?: Task }) {
     setServerError(null);
     setPostErrors({});
     const spec = findSource(connectors.data, values.sourceType);
-    const cfgErrs = spec ? validateConfig(spec.fields, values.sourceConfig, tr) : {};
+    const cfgErrs = spec?.type === "notion" ? validateNotionConfig(spec.fields, values.sourceConfig, tr)
+      : spec ? validateConfig(spec.fields, values.sourceConfig, tr) : {};
     const rErrs = spec ? validateFilterGroup(values.filterGroup, spec.filterFields, spec.filterCapabilities.maxDepth) : {};
     setConfigErrors(cfgErrs);
     setRuleErrors(rErrs);

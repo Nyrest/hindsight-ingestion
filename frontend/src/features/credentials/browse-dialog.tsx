@@ -39,6 +39,7 @@ import { useBrowse } from "./api";
 const KIND_ICONS: Record<string, LucideIcon> = {
   folder: Folder,
   file: File,
+  page: FileText,
   data_source: Database,
   notebook: NotebookPen,
   bucket: Database,
@@ -53,6 +54,7 @@ const ROOT_BREADCRUMB_KEYS: Record<string, string> = {
   Drives: "browse.drives",
   Buckets: "browse.buckets",
   "Data sources": "browse.dataSources",
+  Pages: "notion.pages",
   Notebooks: "browse.notebooks",
 };
 
@@ -107,6 +109,8 @@ export function BrowseDialog({
 
   const listing = useBrowse(credentialId, { parentId, kind, config }, open);
   const supportsSearch = listing.data?.supportsSearch ?? false;
+  const searchLabel = kind === "page" && supportsSearch ? "notion.searchPages" : supportsSearch ? "browse.searchSources" : "browse.searchList";
+  const searchHelp = kind === "page" && supportsSearch ? "notion.searchPagesHelp" : supportsSearch ? "browse.searchSourcesHelp" : "browse.searchListHelp";
   const searchResults = useBrowse(
     credentialId,
     { parentId, kind, config, query: debouncedQuery },
@@ -204,8 +208,8 @@ export function BrowseDialog({
               type="text"
               value={search}
               onChange={(event) => changeSearch(event.target.value)}
-              placeholder={t(supportsSearch ? "browse.searchSources" : "browse.searchList")}
-              aria-label={t(supportsSearch ? "browse.searchSources" : "browse.searchList")}
+              placeholder={t(searchLabel)}
+              aria-label={t(searchLabel)}
               spellCheck={false}
               className="px-9"
             />
@@ -222,7 +226,7 @@ export function BrowseDialog({
               </Button>
             )}
           </div>
-          <p className="text-xs text-muted-foreground">{t(supportsSearch ? "browse.searchSourcesHelp" : "browse.searchListHelp")}</p>
+          <p className="text-xs text-muted-foreground">{t(searchHelp)}</p>
         </div>
 
         <div className="h-80 min-h-0 overflow-y-auto rounded-md border" aria-busy={loading || q.isFetching}>

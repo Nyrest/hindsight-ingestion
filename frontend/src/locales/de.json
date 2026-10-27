@@ -839,7 +839,7 @@
     "title": "Titel",
     "updated": "Aktualisiert",
     "tags": "Tags",
-    "notionDescription": "Internes Notion-Integrationstoken mit Lesezugriff auf freigegebene Datenquellen.",
+    "notionDescription": "Interner Notion-Integrationstoken mit Lesezugriff auf freigegebene Datenquellen und Seiten",
     "siYuanDescription": "SiYuan-Kernel-API-Endpunkt und Token (Einstellungen → Über → API-Token).",
     "filesystemDescription": "Lokale Dateien, auf die die Anwendung zugreifen kann.",
     "googleDriveDescription": "Google-Konto per OAuth mit schreibgeschütztem Zugriff auf Drive.",
@@ -920,7 +920,13 @@
     "emailCc": "Cc",
     "emailDate": "E-Mail-Datum",
     "emailAttachments": "Mit Anhängen",
-    "emailFoldersHelp": "Fehlende logische E-Mails werden nach einem erfolgreichen vollständigen Scan gelöscht. Standardordner: INBOX und der vom Server ausgewiesene Gesendet-Ordner."
+    "emailFoldersHelp": "Fehlende logische E-Mails werden nach einem erfolgreichen vollständigen Scan gelöscht. Standardordner: INBOX und der vom Server ausgewiesene Gesendet-Ordner.",
+    "notionPages": "Seiten",
+    "notionPagesHelp": "Freigegebene Seiten über Durchsuchen auswählen oder eine Seiten-ID pro Zeile eingeben.",
+    "notionIncludeSubpages": "Unterseiten einbeziehen",
+    "notionIncludeSubpagesHelp": "Unterseiten und ihre Inhalte synchronisieren.",
+    "notionMaxDepth": "Maximale Suchtiefe",
+    "notionDepthHelp": "Ausgangsseiten haben Tiefe 0, direkte Unterseiten Tiefe 1. Standard: 3."
   },
   "proxy": {
     "title": "Proxy",
@@ -1127,5 +1133,16 @@
         "error": "Fehler"
       }
     }
+  },
+  "notion": {
+    "sourceMode": "Quellmodus",
+    "database": "Datenbank",
+    "pages": "Seiten",
+    "unlimited": "Unbegrenzt",
+    "depthError": "Eine ganze Zahl zwischen 0 und 2147483647 eingeben.",
+    "searchPages": "Seiten suchen…",
+    "searchPagesHelp": "Freigegebene Seiten nach Titel suchen.",
+    "chooseDepth": "Tiefe auswählen",
+    "depthInputHelp": "Eine Zahl oder Unlimited (unbegrenzt) eingeben. Ausgangsseiten haben Tiefe 0, direkte Unterseiten Tiefe 1."
   }
 }

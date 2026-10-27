@@ -39,7 +39,7 @@ func init() {
 	connectors.RegisterCredentialType(connectors.CredentialType{
 		Type:        "notion",
 		Name:        "Notion",
-		Description: "Notion internal integration token with read access to shared data sources",
+		Description: "Notion internal integration token with read access to shared data sources and pages",
 		Fields: []connectors.FieldSpec{
 			{Key: "baseUrl", Label: "Base URL", Type: connectors.FieldURL, Default: defaultAPIBase, Placeholder: defaultAPIBase},
 			{Key: "token", Label: "Integration token", Type: connectors.FieldPassword, Secret: true, Required: true, Placeholder: "ntn_…"},
@@ -62,12 +62,8 @@ func (c *Connector) Info() connectors.SourceInfo {
 			IncrementalMode:          connectors.IncrementalHighWater,
 			DeletionMode:             connectors.DeletionFullReconcile,
 		},
-		BrowseKinds: []string{connectors.KindDataSource},
-		Fields: []connectors.FieldSpec{
-			{Key: "dataSourceId", Label: "Data source", Type: connectors.FieldString, Required: true, Browse: true,
-				BrowseKind: connectors.KindDataSource, Help: "Notion data source ID (not the database ID). Use Browse to pick one shared with the integration.",
-				Effect: connectors.EffectRebaseline},
-		},
+		BrowseKinds: []string{connectors.KindDataSource, connectors.KindPage},
+		Fields:      notionFields(),
 		FilterFields: []connectors.FilterFieldSpec{
 			{Key: "name", Label: "Page title", Type: connectors.FilterString, Operators: connectors.StringOps},
 			{Key: "modifiedAt", Label: "Last edited", Type: connectors.FilterDatetime, Operators: connectors.DatetimeOps},
@@ -104,20 +100,25 @@ func (c *Connector) ValidateCredential(ctx context.Context, cred connectors.Cred
 
 // ValidateConfig checks task configuration.
 func (c *Connector) ValidateConfig(cfg map[string]any, f connectors.Filter) error {
-	if err := connectors.Require(cfg, "dataSourceId"); err != nil {
+	if _, err := parseConfig(cfg); err != nil {
 		return err
 	}
 	return connectors.ValidateFilter(f, c.Info().FilterFields, false)
 }
 
-// Browse lists data sources shared with the integration.
+// Browse lists data sources or pages shared with the integration.
 func (c *Connector) Browse(ctx context.Context, cred connectors.Credential, req connectors.BrowseRequest) (connectors.BrowseResult, error) {
 	cl := client(cred)
-	res := connectors.BrowseResult{SupportsSearch: true, Breadcrumbs: []connectors.Breadcrumb{{ID: "", Name: "Data sources"}}}
+	kind, objectType, breadcrumb := connectors.KindDataSource, "data_source", "Data sources"
+	if req.Kind == connectors.KindPage {
+		kind, objectType, breadcrumb = connectors.KindPage, "page", "Pages"
+	}
+	res := connectors.BrowseResult{Items: []connectors.BrowseItem{}, SupportsSearch: true, Breadcrumbs: []connectors.Breadcrumb{{ID: "", Name: breadcrumb}}}
 	cursor := ""
-	for range 20 {
+	seenCursors := map[string]bool{}
+	for {
 		body := map[string]any{
-			"filter":    map[string]any{"property": "object", "value": "data_source"},
+			"filter":    map[string]any{"property": "object", "value": objectType},
 			"page_size": pageSize,
 		}
 		if query := strings.TrimSpace(req.Query); query != "" {
@@ -128,7 +129,7 @@ func (c *Connector) Browse(ctx context.Context, cred connectors.Credential, req 
 		}
 		var out struct {
 			Results []struct {
-				ID    string     `json:"id"`
+				page
 				Title []richText `json:"title"`
 			} `json:"results"`
 			HasMore    bool   `json:"has_more"`
@@ -138,15 +139,25 @@ func (c *Connector) Browse(ctx context.Context, cred connectors.Credential, req 
 			return res, err
 		}
 		for _, r := range out.Results {
+			if r.InTrash || r.Archived {
+				continue
+			}
 			name := plainText(r.Title)
+			if kind == connectors.KindPage {
+				name = pageTitle(r.page)
+			}
 			if name == "" {
 				name = r.ID
 			}
-			res.Items = append(res.Items, connectors.BrowseItem{ID: r.ID, Name: name, Kind: connectors.KindDataSource, Path: name, Selectable: true})
+			res.Items = append(res.Items, connectors.BrowseItem{ID: r.ID, Name: name, Kind: kind, Path: name, Selectable: true})
 		}
-		if !out.HasMore || out.NextCursor == "" {
+		if !out.HasMore {
 			break
 		}
+		if out.NextCursor == "" || seenCursors[out.NextCursor] {
+			return res, errors.New("notion search returned an invalid pagination cursor")
+		}
+		seenCursors[out.NextCursor] = true
 		cursor = out.NextCursor
 	}
 	sort.Slice(res.Items, func(i, j int) bool { return strings.ToLower(res.Items[i].Name) < strings.ToLower(res.Items[j].Name) })
@@ -177,11 +188,23 @@ type opaque struct {
 	URL        string          `json:"url"`
 	Properties json.RawMessage `json:"properties"`
 	Source     string          `json:"source"`
+	RootPageID string          `json:"rootPageId,omitempty"`
 }
 
-// Scan queries the data source. Incremental scans use a last_edited_time
-// high-water mark; full scans list every page (complete inventory).
+// Scan preserves legacy database cursors; hierarchies need a complete inventory
+// because descendant edits do not reliably change the root page revision.
 func (c *Connector) Scan(ctx context.Context, req connectors.ScanRequest) (connectors.ScanResult, error) {
+	cfg, err := parseConfig(req.Config)
+	if err != nil {
+		return connectors.ScanResult{}, err
+	}
+	if cfg.mode == "pages" || cfg.includeSubpages {
+		return c.scanHierarchy(ctx, req, cfg)
+	}
+	return c.scanDatabase(ctx, req)
+}
+
+func (c *Connector) scanDatabase(ctx context.Context, req connectors.ScanRequest) (connectors.ScanResult, error) {
 	cl := client(req.Credential)
 	dsID := connectors.AsString(req.Config["dataSourceId"])
 
@@ -208,6 +231,7 @@ func (c *Connector) Scan(ctx context.Context, req connectors.ScanRequest) (conne
 	}
 
 	cursor := ""
+	seenCursors := map[string]bool{}
 	for {
 		body := map[string]any{
 			"page_size":   pageSize,
@@ -242,16 +266,13 @@ func (c *Connector) Scan(ctx context.Context, req connectors.ScanRequest) (conne
 			if p.Object != "page" {
 				continue
 			}
-			if p.LastEditedTime.IsZero() {
-				return connectors.ScanResult{}, fmt.Errorf("notion returned page %s without last_edited_time", p.ID)
+			if p.ID == "" || p.LastEditedTime.IsZero() {
+				return connectors.ScanResult{}, fmt.Errorf("notion returned page %s without id or last_edited_time", p.ID)
 			}
 			if p.LastEditedTime.After(highWater) {
 				highWater = p.LastEditedTime
 			}
 			item := toItem(p, dsID, dsName)
-			if p.InTrash || p.Archived {
-				item.Deleted = true
-			}
 			if err := req.Emit(item); err != nil {
 				return connectors.ScanResult{}, err
 			}
@@ -259,9 +280,10 @@ func (c *Connector) Scan(ctx context.Context, req connectors.ScanRequest) (conne
 		if !out.HasMore {
 			break
 		}
-		if out.NextCursor == "" {
-			return connectors.ScanResult{}, errors.New("notion returned has_more without next_cursor")
+		if out.NextCursor == "" || seenCursors[out.NextCursor] {
+			return connectors.ScanResult{}, errors.New("notion query returned an invalid pagination cursor")
 		}
+		seenCursors[out.NextCursor] = true
 		cursor = out.NextCursor
 	}
 	if highWater.After(scanStart) {
@@ -275,7 +297,7 @@ func toItem(p page, dsID, dsName string) connectors.SourceItem {
 	title := pageTitle(p)
 	props, _ := json.Marshal(p.Properties)
 	op, _ := json.Marshal(opaque{Title: title, URL: p.URL, Properties: props, Source: dsName})
-	return connectors.SourceItem{
+	item := connectors.SourceItem{
 		ID:         p.ID,
 		Name:       title,
 		Path:       dsName + " / " + title,
@@ -292,6 +314,12 @@ func toItem(p page, dsID, dsName string) connectors.SourceItem {
 		Attributes: map[string]any{"createdAt": p.CreatedTime},
 		Opaque:     op,
 	}
+	item.Deleted = p.InTrash || p.Archived
+	if dsID == "" {
+		delete(item.Metadata, "notion_data_source_id")
+		item.Tags = nil
+	}
+	return item
 }
 
 // OpenContent retrieves the page Markdown plus its properties.
@@ -327,6 +355,9 @@ func (c *Connector) OpenContent(ctx context.Context, req connectors.ContentReque
 			content.Blocks = append(content.Blocks, connectors.TextBlock(properties))
 		}
 		content.Context = fmt.Sprintf("Notion Page %q in Data Source %q", op.Title, op.Source)
+		if op.RootPageID != "" {
+			content.Context = fmt.Sprintf("Notion Page %q under Root Page %q", op.Title, op.Source)
+		}
 		content.TimestampUnset = true
 		return content, nil
 	}

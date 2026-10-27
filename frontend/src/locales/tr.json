@@ -839,7 +839,7 @@
     "title": "Başlık",
     "updated": "Güncellenme",
     "tags": "Etiketler",
-    "notionDescription": "Paylaşılan veri kaynaklarına okuma erişimi sağlayan Notion dahili tümleştirme belirteci.",
+    "notionDescription": "Paylaşılan veri kaynaklarına ve sayfalara okuma erişimi olan Notion dahili entegrasyon belirteci",
     "siYuanDescription": "SiYuan kernel API uç noktası ve belirteci (Ayarlar → Hakkında → API belirteci).",
     "filesystemDescription": "Uygulamanın erişebildiği yerel dosyalar.",
     "googleDriveDescription": "OAuth üzerinden Google hesabı; Drive erişimi salt okunurdur.",
@@ -920,7 +920,13 @@
     "emailCc": "Bilgi",
     "emailDate": "Posta tarihi",
     "emailAttachments": "Ek içeriyor",
-    "emailFoldersHelp": "Başarılı bir tam taramadan sonra kaybolan mantıksal e-postalar silinir. Varsayılan klasörler: INBOX ve sunucunun belirlediği Gönderilmiş klasörü."
+    "emailFoldersHelp": "Başarılı bir tam taramadan sonra kaybolan mantıksal e-postalar silinir. Varsayılan klasörler: INBOX ve sunucunun belirlediği Gönderilmiş klasörü.",
+    "notionPages": "Sayfalar",
+    "notionPagesHelp": "Gözat ile paylaşılan sayfaları seçin veya her satıra bir sayfa kimliği girin.",
+    "notionIncludeSubpages": "Alt sayfaları dahil et",
+    "notionIncludeSubpagesHelp": "Alt sayfaları ve içeriklerini senkronize eder.",
+    "notionMaxDepth": "En fazla tarama derinliği",
+    "notionDepthHelp": "Kök sayfaların derinliği 0, doğrudan alt sayfalarınki 1’dir. Varsayılan: 3."
   },
   "proxy": {
     "title": "Proxy",
@@ -1127,5 +1133,16 @@
         "error": "Hata"
       }
     }
+  },
+  "notion": {
+    "sourceMode": "Kaynak modu",
+    "database": "Veritabanı",
+    "pages": "Sayfalar",
+    "unlimited": "Sınırsız",
+    "depthError": "0 ile 2147483647 arasında bir tam sayı girin.",
+    "searchPages": "Sayfalarda ara…",
+    "searchPagesHelp": "Paylaşılan sayfaları başlığa göre arayın.",
+    "chooseDepth": "Derinlik seçin",
+    "depthInputHelp": "Bir sayı veya Unlimited (sınırsız) girin. Kök sayfaların derinliği 0, doğrudan alt sayfalarınki 1’dir."
   }
 }

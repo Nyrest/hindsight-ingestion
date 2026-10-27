@@ -839,7 +839,7 @@
     "title": "Judul",
     "updated": "Diubah",
     "tags": "Tag",
-    "notionDescription": "Token integrasi internal Notion dengan akses baca ke sumber data yang dibagikan.",
+    "notionDescription": "Token integrasi internal Notion dengan akses baca ke sumber data dan halaman yang dibagikan",
     "siYuanDescription": "Endpoint API kernel SiYuan dan token (Pengaturan → Tentang → Token API).",
     "filesystemDescription": "Berkas lokal yang dapat diakses aplikasi.",
     "googleDriveDescription": "Akun Google melalui OAuth dengan akses Drive hanya-baca.",
@@ -920,7 +920,13 @@
     "emailCc": "Cc",
     "emailDate": "Tanggal email",
     "emailAttachments": "Memiliki lampiran",
-    "emailFoldersHelp": "Email logis yang hilang dihapus setelah pemindaian lengkap berhasil. Folder bawaan: INBOX dan folder Terkirim yang ditentukan server."
+    "emailFoldersHelp": "Email logis yang hilang dihapus setelah pemindaian lengkap berhasil. Folder bawaan: INBOX dan folder Terkirim yang ditentukan server.",
+    "notionPages": "Halaman",
+    "notionPagesHelp": "Pilih halaman yang dibagikan melalui Telusuri, atau masukkan satu ID halaman per baris.",
+    "notionIncludeSubpages": "Sertakan subhalaman",
+    "notionIncludeSubpagesHelp": "Sinkronkan subhalaman beserta isinya.",
+    "notionMaxDepth": "Kedalaman penelusuran maksimum",
+    "notionDepthHelp": "Halaman akar memiliki kedalaman 0; anak langsungnya 1. Default: 3."
   },
   "proxy": {
     "title": "Proksi",
@@ -1127,5 +1133,16 @@
         "error": "Kesalahan"
       }
     }
+  },
+  "notion": {
+    "sourceMode": "Mode sumber",
+    "database": "Database",
+    "pages": "Halaman",
+    "unlimited": "Tak terbatas",
+    "depthError": "Masukkan bilangan bulat antara 0 dan 2147483647.",
+    "searchPages": "Cari halaman…",
+    "searchPagesHelp": "Cari halaman yang dibagikan berdasarkan judul.",
+    "chooseDepth": "Pilih kedalaman",
+    "depthInputHelp": "Masukkan angka atau Unlimited (tak terbatas). Halaman akar memiliki kedalaman 0; anak langsungnya 1."
   }
 }

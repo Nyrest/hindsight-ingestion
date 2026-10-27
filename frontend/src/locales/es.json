@@ -839,7 +839,7 @@
     "title": "Título",
     "updated": "Actualizado",
     "tags": "Etiquetas",
-    "notionDescription": "Token de integración interna de Notion con acceso de lectura a las fuentes de datos compartidas.",
+    "notionDescription": "Token de integración interna de Notion con acceso de lectura a fuentes de datos y páginas compartidas",
     "siYuanDescription": "URL de la API del núcleo de SiYuan y token (Configuración → Acerca de → Token de API).",
     "filesystemDescription": "Archivos locales accesibles para la aplicación.",
     "googleDriveDescription": "Cuenta de Google mediante OAuth, con acceso de solo lectura a Drive.",
@@ -920,7 +920,13 @@
     "emailCc": "Cc",
     "emailDate": "Fecha del correo",
     "emailAttachments": "Tiene adjuntos",
-    "emailFoldersHelp": "Los correos lógicos ausentes se eliminan tras un escaneo completo correcto. Carpetas predeterminadas: INBOX y la carpeta de enviados indicada por el servidor."
+    "emailFoldersHelp": "Los correos lógicos ausentes se eliminan tras un escaneo completo correcto. Carpetas predeterminadas: INBOX y la carpeta de enviados indicada por el servidor.",
+    "notionPages": "Páginas",
+    "notionPagesHelp": "Selecciona páginas compartidas con Explorar o introduce un ID de página por línea.",
+    "notionIncludeSubpages": "Incluir subpáginas",
+    "notionIncludeSubpagesHelp": "Sincroniza las subpáginas y su contenido.",
+    "notionMaxDepth": "Profundidad máxima de recorrido",
+    "notionDepthHelp": "Las páginas raíz tienen profundidad 0; sus hijas directas, 1. Predeterminado: 3."
   },
   "proxy": {
     "title": "Proxy",
@@ -1127,5 +1133,16 @@
         "error": "Error"
       }
     }
+  },
+  "notion": {
+    "sourceMode": "Modo de origen",
+    "database": "Base de datos",
+    "pages": "Páginas",
+    "unlimited": "Sin límite",
+    "depthError": "Introduce un número entero entre 0 y 2147483647.",
+    "searchPages": "Buscar páginas…",
+    "searchPagesHelp": "Busca páginas compartidas por título.",
+    "chooseDepth": "Elegir profundidad",
+    "depthInputHelp": "Introduce un número o Unlimited (sin límite). Las páginas raíz tienen profundidad 0; sus hijas directas, 1."
   }
 }

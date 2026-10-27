@@ -90,6 +90,7 @@ export function normalizeConfig(fields: FieldSpec[], config: Record<string, unkn
     if (f.type === "string_list") out[f.key] = typeof v === "string" ? v.split(/\r?\n/).map((entry) => f.browse ? entry : entry.trim()).filter((entry) => entry.trim()) : v ?? [];
     if (f.type === "multi_select") out[f.key] = v ?? [];
     if (f.type === "number") {
+      if (v === null && f.nullable) continue;
       if (isEmptyValue(v)) delete out[f.key];
       else out[f.key] = typeof v === "number" ? v : Number(v);
     }

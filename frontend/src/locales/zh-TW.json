@@ -151,7 +151,7 @@
     "title": "標題",
     "updated": "更新時間",
     "tags": "標籤",
-    "notionDescription": "具備已授權資料來源讀取權限的 Notion 內部整合權杖。",
+    "notionDescription": "Notion 內部整合權杖，需有已共用資料來源和頁面的讀取權限",
     "siYuanDescription": "思源筆記核心 API 位址與 API 權杖（可在思源軟體內「設定 → 關於 → API 權杖」查看）。",
     "filesystemDescription": "目前應用程式伺服器可直接存取的本機或掛載目錄。",
     "googleDriveDescription": "透過 OAuth 授權連線 Google 帳戶，唯讀存取雲端硬碟。",
@@ -176,7 +176,13 @@
     "siYuanPathHelp": "僅同步人類可讀路徑以此前綴開頭的文件。",
     "siYuanNotebookHelp": "留空則同步思源筆記中所有已開啟的筆記本。",
     "hindsightApiKeyHelp": "將作為 Bearer 權杖隨請求發送。若 Hindsight 執行個體未啟用認證可直接留空。",
-    "syncCollectionHelp": "在伺服器支援時優先採用 RFC 6578 sync-collection 高效同步。"
+    "syncCollectionHelp": "在伺服器支援時優先採用 RFC 6578 sync-collection 高效同步。",
+    "notionPages": "頁面",
+    "notionPagesHelp": "透過「瀏覽」選取已共用的頁面，或每行輸入一個頁面 ID。",
+    "notionIncludeSubpages": "包含子頁面",
+    "notionIncludeSubpagesHelp": "將子頁面及其內容一併同步。",
+    "notionMaxDepth": "最大遍歷深度",
+    "notionDepthHelp": "根頁面深度為 0，直接子頁面為 1，預設最大深度為 3。"
   },
   "nav": {
     "dashboard": "儀表板",
@@ -1134,5 +1140,16 @@
         "error": "錯誤"
       }
     }
+  },
+  "notion": {
+    "sourceMode": "來源模式",
+    "database": "資料庫",
+    "pages": "頁面",
+    "unlimited": "不限",
+    "depthError": "請輸入 0 到 2147483647 之間的整數。",
+    "searchPages": "搜尋頁面…",
+    "searchPagesHelp": "依標題搜尋已共用的頁面。",
+    "chooseDepth": "選擇遍歷深度",
+    "depthInputHelp": "輸入數字或 Unlimited（不限）。根頁面深度為 0，直接子頁面為 1。"
   }
 }

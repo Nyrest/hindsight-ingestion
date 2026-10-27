@@ -216,7 +216,7 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 	if b.SourceConfig != nil {
 		cfg = map[string]any{}
 		for _, f := range info.Fields {
-			if v, ok := b.SourceConfig[f.Key]; ok && v != nil {
+			if v, ok := b.SourceConfig[f.Key]; ok && (v != nil || f.Nullable) {
 				cfg[f.Key] = v
 			} else if f.Default != nil {
 				cfg[f.Key] = f.Default

@@ -11,6 +11,7 @@ import { providerCopy } from "@/lib/provider-copy";
 import { cn } from "@/lib/utils";
 import { SQLSourceFields } from "./sql-source-fields";
 import { CredentialPicker } from "./credential-picker";
+import { NotionSourceFields } from "./notion-source-fields";
 
 export function SourceTypePicker({
   sources,
@@ -126,6 +127,12 @@ export function SourceConfigFields({
 
       {source.type === "sql" ? (
         <SQLSourceFields key={credentialId} credentialId={credentialId} config={config} onChange={onConfigChange} errors={configErrors} />
+      ) : source.type === "notion" ? (
+        <NotionSourceFields fields={source.fields} config={config} errors={configErrors} credentialId={credentialId} labels={labels}
+          onBrowse={setBrowseField} onChange={(key, value) => {
+            onConfigChange(key, value);
+            setLabels((current) => { const next = { ...current }; delete next[key]; return next; });
+          }} />
       ) : source.fields.length > 0 && (
         <div className="grid gap-4">
           {source.fields.filter((f) => !f.renderOnly || config.render === true).map((f) => (

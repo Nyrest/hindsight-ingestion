@@ -35,7 +35,7 @@ Sync **Notion, SiYuan, DeepWiki, S3, WebDAV, WebCAL, CalDAV, Email (IMAP), Steam
 
 | Source | Text | Multimodal | Incremental Sync | Use Cases |
 | :--- | :---: | :---: | :---: | :--- |
-| **Notion** | ✅ | ✅ | ✅ | Personal & team knowledge bases, PRDs, engineering wikis, meeting notes |
+| **Notion** | ✅ | ✅ | ✅ | Databases or pages with optional subpages, PRDs, engineering wikis, meeting notes |
 | **SiYuan** | ✅ | ✅ | ✅ | Personal notes, academic research, linked Zettelkasten, offline docs |
 | **S3 / S3-compatible storage** | ✅ | ✅ | ✅ | Enterprise document archives, data lakes, multimodal buckets, pipeline artifacts |
 | **WebDAV** | ✅ | ✅ | ✅ | NAS storage (Synology/QNAP/Nextcloud), Obsidian & Zotero vaults |

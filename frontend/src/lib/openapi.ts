@@ -532,6 +532,7 @@ export interface components {
             help?: string;
             key: string;
             label: string;
+            nullable?: boolean;
             options?: components["schemas"]["Option"][];
             placeholder?: string;
             renderOnly?: boolean;

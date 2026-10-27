@@ -857,7 +857,7 @@
     "title": "Tytuł",
     "updated": "Zaktualizowano",
     "tags": "Tagi",
-    "notionDescription": "Wewnętrzny token integracji Notion z dostępem do odczytu udostępnionych źródeł danych.",
+    "notionDescription": "Token wewnętrznej integracji Notion z dostępem do odczytu udostępnionych źródeł danych i stron",
     "siYuanDescription": "Adres API jądra SiYuan i token (Ustawienia → Informacje → Token API).",
     "filesystemDescription": "Pliki lokalne dostępne dla aplikacji.",
     "googleDriveDescription": "Konto Google przez OAuth z dostępem do Dysku tylko do odczytu.",
@@ -938,7 +938,13 @@
     "emailCc": "DW",
     "emailDate": "Data wiadomości",
     "emailAttachments": "Zawiera załączniki",
-    "emailFoldersHelp": "Brakujące logiczne wiadomości są usuwane po pomyślnym pełnym skanowaniu. Domyślne foldery: INBOX i folder wysłanych wskazany przez serwer."
+    "emailFoldersHelp": "Brakujące logiczne wiadomości są usuwane po pomyślnym pełnym skanowaniu. Domyślne foldery: INBOX i folder wysłanych wskazany przez serwer.",
+    "notionPages": "Strony",
+    "notionPagesHelp": "Wybierz udostępnione strony przez Przeglądaj lub wpisz jeden identyfikator strony w każdym wierszu.",
+    "notionIncludeSubpages": "Uwzględnij podstrony",
+    "notionIncludeSubpagesHelp": "Synchronizuje podstrony wraz z ich zawartością.",
+    "notionMaxDepth": "Maksymalna głębokość przeszukiwania",
+    "notionDepthHelp": "Strony główne mają głębokość 0, ich bezpośrednie podstrony 1. Domyślnie: 3."
   },
   "proxy": {
     "title": "Proxy",
@@ -1145,5 +1151,16 @@
         "error": "Błąd"
       }
     }
+  },
+  "notion": {
+    "sourceMode": "Tryb źródła",
+    "database": "Baza danych",
+    "pages": "Strony",
+    "unlimited": "Bez limitu",
+    "depthError": "Wpisz liczbę całkowitą od 0 do 2147483647.",
+    "searchPages": "Szukaj stron…",
+    "searchPagesHelp": "Szukaj udostępnionych stron według tytułu.",
+    "chooseDepth": "Wybierz głębokość",
+    "depthInputHelp": "Wpisz liczbę lub Unlimited (bez limitu). Strony główne mają głębokość 0, ich bezpośrednie podstrony 1."
   }
 }

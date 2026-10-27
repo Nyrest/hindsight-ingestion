@@ -1,4 +1,11 @@
 const COPY_KEYS: Record<string, string> = {
+  "Notion internal integration token with read access to shared data sources and pages": "notionDescription",
+  "Pages": "notionPages",
+  "Select shared pages with Browse, or enter one page ID per line.": "notionPagesHelp",
+  "Include subpages": "notionIncludeSubpages",
+  "Sync child pages and their content.": "notionIncludeSubpagesHelp",
+  "Maximum traversal depth": "notionMaxDepth",
+  "Root pages have depth 0; direct children have depth 1. Default: 3.": "notionDepthHelp",
   "CalDAV calendars for events and to-dos": "caldavDescription",
   "Use a CalDAV service, calendar home or calendar URL on the final server host.": "caldavServerHelp",
   "Calendar URL": "caldavURL",

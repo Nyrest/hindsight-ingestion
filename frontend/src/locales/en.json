@@ -151,7 +151,7 @@
     "title": "Title",
     "updated": "Updated",
     "tags": "Tags",
-    "notionDescription": "Notion internal integration token with read access to shared data sources",
+    "notionDescription": "Notion internal integration token with read access to shared data sources and pages",
     "siYuanDescription": "SiYuan kernel API endpoint and token (Settings → About → API token)",
     "filesystemDescription": "Local files accessible to the application.",
     "googleDriveDescription": "Google account via OAuth (read-only Drive access)",
@@ -176,7 +176,13 @@
     "siYuanPathHelp": "Only documents whose human-readable path starts with this prefix.",
     "siYuanNotebookHelp": "Leave empty to sync every open notebook.",
     "hindsightApiKeyHelp": "Sent as a Bearer token. Leave empty if the instance has no authentication.",
-    "syncCollectionHelp": "Use sync-collection (RFC 6578) when available"
+    "syncCollectionHelp": "Use sync-collection (RFC 6578) when available",
+    "notionPages": "Pages",
+    "notionPagesHelp": "Select shared pages with Browse, or enter one page ID per line.",
+    "notionIncludeSubpages": "Include subpages",
+    "notionIncludeSubpagesHelp": "Sync child pages and their content.",
+    "notionMaxDepth": "Maximum traversal depth",
+    "notionDepthHelp": "Root pages have depth 0; direct children have depth 1. Default: 3."
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -1127,5 +1133,16 @@
         "error": "Error"
       }
     }
+  },
+  "notion": {
+    "sourceMode": "Source mode",
+    "database": "Database",
+    "pages": "Pages",
+    "unlimited": "Unlimited",
+    "depthError": "Enter a non-negative whole number up to 2147483647.",
+    "searchPages": "Search pages…",
+    "searchPagesHelp": "Search shared pages by title.",
+    "chooseDepth": "Choose a depth",
+    "depthInputHelp": "Enter a number or Unlimited. Root pages have depth 0; direct children have depth 1."
   }
 }

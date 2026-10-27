@@ -839,7 +839,7 @@
     "title": "제목",
     "updated": "수정됨",
     "tags": "태그",
-    "notionDescription": "공유된 데이터 소스에 읽기 권한을 제공하는 Notion 내부 통합 토큰입니다.",
+    "notionDescription": "공유된 데이터 소스와 페이지의 읽기 권한이 있는 Notion 내부 통합 토큰",
     "siYuanDescription": "SiYuan 커널 API 엔드포인트와 토큰입니다(설정 → 정보 → API 토큰).",
     "filesystemDescription": "애플리케이션이 접근할 수 있는 로컬 파일입니다.",
     "googleDriveDescription": "OAuth로 Google 계정에 연결하며 Drive에는 읽기 전용으로 접근합니다.",
@@ -920,7 +920,13 @@
     "emailCc": "참조",
     "emailDate": "메일 날짜",
     "emailAttachments": "첨부 파일 있음",
-    "emailFoldersHelp": "전체 스캔이 성공하면 사라진 논리 메일을 삭제합니다. 기본 폴더는 INBOX와 서버가 지정한 보낸 편지함입니다."
+    "emailFoldersHelp": "전체 스캔이 성공하면 사라진 논리 메일을 삭제합니다. 기본 폴더는 INBOX와 서버가 지정한 보낸 편지함입니다.",
+    "notionPages": "페이지",
+    "notionPagesHelp": "찾아보기에서 공유된 페이지를 선택하거나 한 줄에 하나의 페이지 ID를 입력하세요.",
+    "notionIncludeSubpages": "하위 페이지 포함",
+    "notionIncludeSubpagesHelp": "하위 페이지와 해당 내용을 동기화합니다.",
+    "notionMaxDepth": "최대 탐색 깊이",
+    "notionDepthHelp": "루트 페이지의 깊이는 0, 바로 아래 하위 페이지는 1입니다. 기본값: 3."
   },
   "proxy": {
     "title": "프록시",
@@ -1127,5 +1133,16 @@
         "error": "오류"
       }
     }
+  },
+  "notion": {
+    "sourceMode": "소스 모드",
+    "database": "데이터베이스",
+    "pages": "페이지",
+    "unlimited": "무제한",
+    "depthError": "0부터 2147483647 사이의 정수를 입력하세요.",
+    "searchPages": "페이지 검색…",
+    "searchPagesHelp": "제목으로 공유된 페이지를 검색합니다.",
+    "chooseDepth": "깊이 선택",
+    "depthInputHelp": "숫자 또는 Unlimited(무제한)를 입력하세요. 루트 페이지의 깊이는 0, 바로 아래 하위 페이지는 1입니다."
   }
 }

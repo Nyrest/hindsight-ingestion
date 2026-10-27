@@ -151,7 +151,7 @@
     "title": "标题",
     "updated": "更新时间",
     "tags": "标签",
-    "notionDescription": "具备已授权数据源读取权限的 Notion 内部集成令牌。",
+    "notionDescription": "Notion 内部集成令牌，需有已共享数据源和页面的读取权限",
     "siYuanDescription": "思源笔记内核 API 地址与 API 令牌（可在思源软件内「设置 → 关于 → API 令牌」查看）。",
     "filesystemDescription": "当前应用服务器可直接访问的本地或挂载目录。",
     "googleDriveDescription": "通过 OAuth 授权连接 Google 账号，只读访问云端硬盘。",
@@ -176,7 +176,13 @@
     "siYuanPathHelp": "仅同步人类可读路径以此前缀开头的文档。",
     "siYuanNotebookHelp": "留空则同步思源笔记中所有已打开的笔记本。",
     "hindsightApiKeyHelp": "将作为 Bearer 令牌随请求发送。若 Hindsight 实例未开启认证可直接留空。",
-    "syncCollectionHelp": "在服务器支持时优先采用 RFC 6578 sync-collection 高效同步。"
+    "syncCollectionHelp": "在服务器支持时优先采用 RFC 6578 sync-collection 高效同步。",
+    "notionPages": "页面",
+    "notionPagesHelp": "通过“浏览”选择已共享的页面，或每行输入一个页面 ID。",
+    "notionIncludeSubpages": "包含子页面",
+    "notionIncludeSubpagesHelp": "将子页面及其内容一并同步。",
+    "notionMaxDepth": "最大遍历深度",
+    "notionDepthHelp": "根页面深度为 0，直接子页面为 1，默认最大深度为 3。"
   },
   "nav": {
     "dashboard": "仪表盘",
@@ -1134,5 +1140,16 @@
         "error": "错误"
       }
     }
+  },
+  "notion": {
+    "sourceMode": "来源模式",
+    "database": "数据库",
+    "pages": "页面",
+    "unlimited": "不限",
+    "depthError": "请输入 0 到 2147483647 之间的整数。",
+    "searchPages": "搜索页面…",
+    "searchPagesHelp": "按标题搜索已共享的页面。",
+    "chooseDepth": "选择遍历深度",
+    "depthInputHelp": "输入数字或 Unlimited（不限）。根页面深度为 0，直接子页面为 1。"
   }
 }

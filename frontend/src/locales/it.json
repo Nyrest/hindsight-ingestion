@@ -839,7 +839,7 @@
     "title": "Titolo",
     "updated": "Aggiornato",
     "tags": "Tag",
-    "notionDescription": "Token di integrazione interna Notion con accesso in lettura alle fonti dati condivise.",
+    "notionDescription": "Token di integrazione interna Notion con accesso in lettura alle origini dati e alle pagine condivise",
     "siYuanDescription": "Endpoint API del kernel SiYuan e token (Impostazioni → Informazioni → Token API).",
     "filesystemDescription": "File locali accessibili dall’applicazione.",
     "googleDriveDescription": "Account Google tramite OAuth con accesso in sola lettura a Drive.",
@@ -920,7 +920,13 @@
     "emailCc": "Cc",
     "emailDate": "Data email",
     "emailAttachments": "Contiene allegati",
-    "emailFoldersHelp": "Le email logiche mancanti vengono eliminate dopo una scansione completa riuscita. Cartelle predefinite: INBOX e la cartella Inviati indicata dal server."
+    "emailFoldersHelp": "Le email logiche mancanti vengono eliminate dopo una scansione completa riuscita. Cartelle predefinite: INBOX e la cartella Inviati indicata dal server.",
+    "notionPages": "Pagine",
+    "notionPagesHelp": "Seleziona le pagine condivise con Sfoglia o inserisci un ID pagina per riga.",
+    "notionIncludeSubpages": "Includi sottopagine",
+    "notionIncludeSubpagesHelp": "Sincronizza le sottopagine e il loro contenuto.",
+    "notionMaxDepth": "Profondità massima di esplorazione",
+    "notionDepthHelp": "Le pagine radice hanno profondità 0; le figlie dirette 1. Predefinita: 3."
   },
   "proxy": {
     "title": "Proxy",
@@ -1127,5 +1133,16 @@
         "error": "Errore"
       }
     }
+  },
+  "notion": {
+    "sourceMode": "Modalità origine",
+    "database": "Database",
+    "pages": "Pagine",
+    "unlimited": "Illimitata",
+    "depthError": "Inserisci un numero intero tra 0 e 2147483647.",
+    "searchPages": "Cerca pagine…",
+    "searchPagesHelp": "Cerca le pagine condivise per titolo.",
+    "chooseDepth": "Scegli la profondità",
+    "depthInputHelp": "Inserisci un numero o Unlimited (illimitata). Le pagine radice hanno profondità 0; le figlie dirette 1."
   }
 }

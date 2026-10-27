@@ -67,6 +67,11 @@ export function sourceGroupTags(
   sourceType: string,
   config: Record<string, unknown>,
 ): string[] {
+  if (sourceType === "notion" && config.mode === "pages") {
+    const roots = typeof config.pageIds === "string" ? config.pageIds.split(/\r?\n/) : config.pageIds;
+    return Array.isArray(roots) ? [...new Set(roots.filter((id): id is string => typeof id === "string" && !!id.trim())
+      .map((id) => `notion_root_page_id:${id.trim()}`))] : [];
+  }
   const keys: Record<string, [string, string]> = {
     notion: ["dataSourceId", "notion_data_source_id"],
     siyuan: ["notebookId", "siyuan_notebook_id"],

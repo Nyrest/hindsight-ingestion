@@ -839,7 +839,7 @@
     "title": "Título",
     "updated": "Atualizado em",
     "tags": "Etiquetas",
-    "notionDescription": "Token de integração interna do Notion com acesso de leitura às fontes de dados compartilhadas.",
+    "notionDescription": "Token de integração interna do Notion com acesso de leitura a fontes de dados e páginas compartilhadas",
     "siYuanDescription": "Endpoint da API do kernel SiYuan e token (Configurações → Sobre → Token da API).",
     "filesystemDescription": "Arquivos locais acessíveis ao aplicativo.",
     "googleDriveDescription": "Conta Google via OAuth, com acesso somente para leitura ao Drive.",
@@ -920,7 +920,13 @@
     "emailCc": "Cc",
     "emailDate": "Data do e-mail",
     "emailAttachments": "Tem anexos",
-    "emailFoldersHelp": "Os e-mails lógicos ausentes são excluídos após uma verificação completa bem-sucedida. Pastas padrão: INBOX e a pasta de enviados indicada pelo servidor."
+    "emailFoldersHelp": "Os e-mails lógicos ausentes são excluídos após uma verificação completa bem-sucedida. Pastas padrão: INBOX e a pasta de enviados indicada pelo servidor.",
+    "notionPages": "Páginas",
+    "notionPagesHelp": "Selecione páginas compartilhadas em Explorar ou insira um ID de página por linha.",
+    "notionIncludeSubpages": "Incluir subpáginas",
+    "notionIncludeSubpagesHelp": "Sincroniza as subpáginas e seu conteúdo.",
+    "notionMaxDepth": "Profundidade máxima de busca",
+    "notionDepthHelp": "Páginas raiz têm profundidade 0; suas filhas diretas, 1. Padrão: 3."
   },
   "proxy": {
     "title": "Proxy",
@@ -1127,5 +1133,16 @@
         "error": "Erro"
       }
     }
+  },
+  "notion": {
+    "sourceMode": "Modo da origem",
+    "database": "Banco de dados",
+    "pages": "Páginas",
+    "unlimited": "Ilimitada",
+    "depthError": "Insira um número inteiro entre 0 e 2147483647.",
+    "searchPages": "Buscar páginas…",
+    "searchPagesHelp": "Busque páginas compartilhadas pelo título.",
+    "chooseDepth": "Escolher profundidade",
+    "depthInputHelp": "Insira um número ou Unlimited (ilimitada). Páginas raiz têm profundidade 0; suas filhas diretas, 1."
   }
 }

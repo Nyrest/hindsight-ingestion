@@ -306,6 +306,9 @@
           "label": {
             "type": "string"
           },
+          "nullable": {
+            "type": "boolean"
+          },
           "options": {
             "items": {
               "$ref": "#/components/schemas/Option"
