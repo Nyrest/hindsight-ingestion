@@ -182,8 +182,8 @@ type TaskRun struct {
 // HindsightOperation tracks an asynchronous Hindsight operation of a run.
 type HindsightOperation struct {
 	ID                string `gorm:"primaryKey;size:36"`
-	RunID             string `gorm:"size:36;not null;index"`
-	RemoteOperationID string `gorm:"size:128;index"`
+	RunID             string `gorm:"size:36;not null;index;index:idx_run_remote_operation,priority:1"`
+	RemoteOperationID string `gorm:"size:128;index;index:idx_run_remote_operation,priority:2"`
 
 	Type       string `gorm:"size:32;not null"`
 	Status     string `gorm:"size:32;not null"`

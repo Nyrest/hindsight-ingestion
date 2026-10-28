@@ -39,6 +39,13 @@ var (
 	maxCallStack           = 2048
 )
 
+// MaxDocumentBytes is independent of the streaming file limit: scripts and
+// attachment serialization require multiple in-memory copies.
+const MaxDocumentBytes = 16 << 20
+const MaxVMDocuments = 128
+const MaxVMBytes = 32 << 20
+const MaxVMLifetime = 10 * time.Minute
+
 // Document is the content handed to process(). Data is set for binary input.
 type Document struct {
 	Text     string
@@ -73,14 +80,17 @@ type Env struct {
 // VM is a goja runtime with the prelude and one user script prepared. A VM is
 // used by one goroutine at a time.
 type VM struct {
-	key     string
-	rt      *goja.Runtime
-	run     goja.Callable
-	program *goja.Program
-	ctx     context.Context
-	env     Env
-	broken  bool
-	idle    time.Time
+	key            string
+	rt             *goja.Runtime
+	run            goja.Callable
+	program        *goja.Program
+	ctx            context.Context
+	env            Env
+	broken         bool
+	idle           time.Time
+	created        time.Time
+	documents      int
+	processedBytes int64
 }
 
 func newVM(key, script string) (*VM, error) {
@@ -92,7 +102,7 @@ func newVM(key, script string) (*VM, error) {
 	if err != nil {
 		return nil, fmt.Errorf("compile post-processing code: %w", err)
 	}
-	v := &VM{key: key, rt: goja.New(), program: prog, ctx: context.Background()}
+	v := &VM{key: key, rt: goja.New(), program: prog, ctx: context.Background(), created: time.Now()}
 	v.rt.SetMaxCallStackSize(maxCallStack)
 	for name, fn := range map[string]func(goja.FunctionCall) goja.Value{
 		"__fetch": v.fetch, "__log": v.log, "__utf8Encode": v.utf8Encode, "__utf8Decode": v.utf8Decode,
@@ -115,6 +125,15 @@ func newVM(key, script string) (*VM, error) {
 
 // Process runs process(context, input) on one document.
 func (v *VM) Process(ctx context.Context, env Env, doc Document) (res Result, err error) {
+	if v.Expired() {
+		v.broken = true
+		return res, errors.New("post-processing runtime reached its reuse limit")
+	}
+	if len(doc.Text)+len(doc.Data) > MaxDocumentBytes {
+		return res, fmt.Errorf("post-processing input exceeds %d MiB", MaxDocumentBytes>>20)
+	}
+	v.documents++
+	defer func() { v.processedBytes += int64(len(doc.Text) + len(doc.Data) + len(res.Text) + len(res.Data)) }()
 	ctx, cancel := context.WithTimeoutCause(ctx, DocumentTimeout, fmt.Errorf("post-processing exceeded %s", DocumentTimeout))
 	defer cancel()
 	v.ctx, v.env = ctx, env
@@ -204,9 +223,19 @@ func (v *VM) result(obj *goja.Object) (Result, error) {
 		if err := v.rt.ExportTo(obj.Get("data"), &data); err != nil {
 			return res, fmt.Errorf("read binary output: %w", err)
 		}
+		if len(data) > MaxDocumentBytes {
+			v.broken = true
+			return res, fmt.Errorf("post-processing output exceeds %d MiB", MaxDocumentBytes>>20)
+		}
 		res.Binary, res.Data = true, bytes.Clone(data)
 	default:
 		res.Text = str("text")
+		if len(res.Text) > MaxDocumentBytes {
+			v.broken = true
+			return Result{}, fmt.Errorf("post-processing output exceeds %d MiB", MaxDocumentBytes>>20)
+		}
+		// Small substrings must not pin a much larger source document.
+		res.Text = strings.Clone(res.Text)
 	}
 	return res, nil
 }
@@ -350,6 +379,7 @@ func (v *VM) fetch(call goja.FunctionCall) goja.Value {
 	if err != nil {
 		v.throw("fetch: read response: %v", err)
 	}
+	v.processedBytes += int64(len(data))
 	if int64(len(data)) > MaxResponseBytes {
 		v.throw("fetch: response exceeds %d MB", MaxResponseBytes>>20)
 	}
@@ -387,4 +417,9 @@ func describeValue(val goja.Value) string {
 		}
 	}
 	return val.String()
+}
+
+// Expired bounds state retained by user-script globals even under continuous use.
+func (v *VM) Expired() bool {
+	return v.documents >= MaxVMDocuments || v.processedBytes >= MaxVMBytes || time.Since(v.created) >= MaxVMLifetime
 }

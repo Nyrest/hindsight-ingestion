@@ -249,7 +249,7 @@ func (c *Client) JSON(ctx context.Context, method, url string, in, out any) erro
 		_, _ = io.Copy(io.Discard, resp.Body)
 		return nil
 	}
-	if err := json.NewDecoder(resp.Body).Decode(out); err != nil {
+	if err := json.NewDecoder(LimitResponse(resp.Body, MaxJSONResponseBytes)).Decode(out); err != nil {
 		return fmt.Errorf("%s %s: decode response: %w", method, redactURL(url), err)
 	}
 	return nil

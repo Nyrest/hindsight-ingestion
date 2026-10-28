@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"net/http"
+	"time"
 
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
 )
@@ -60,12 +61,18 @@ func (s *Server) taskViews(ctx context.Context, tasks []models.Task) ([]taskDTO,
 }
 
 func (s *Server) taskStates(ctx context.Context, ids []string) (map[string]taskStateDTO, error) {
-	var rows []models.TaskState
-	err := s.DB.WithContext(ctx).Where("task_id IN ?", ids).Find(&rows).Error
+	var rows []struct {
+		TaskID                                            string
+		LastStartedAt, LastSuccessAt, LastFullReconcileAt *time.Time
+		HasCursor                                         bool
+	}
+	err := s.DB.WithContext(ctx).Model(&models.TaskState{}).
+		Select("task_id, last_started_at, last_success_at, last_full_reconcile_at, CASE WHEN committed_cursor_json IS NOT NULL AND committed_cursor_json <> '' THEN 1 ELSE 0 END AS has_cursor").
+		Where("task_id IN ?", ids).Scan(&rows).Error
 	states := make(map[string]taskStateDTO, len(rows))
 	for _, row := range rows {
 		states[row.TaskID] = taskStateDTO{LastStartedAt: timePtr(row.LastStartedAt), LastSuccessAt: timePtr(row.LastSuccessAt),
-			LastFullReconcileAt: timePtr(row.LastFullReconcileAt), HasCursor: row.CommittedCursorJSON != ""}
+			LastFullReconcileAt: timePtr(row.LastFullReconcileAt), HasCursor: row.HasCursor}
 	}
 	return states, err
 }
