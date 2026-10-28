@@ -144,3 +144,56 @@ func TestFileAttachmentContentJSON(t *testing.T) {
 		t.Fatalf("file attachment wire contract: %s", raw)
 	}
 }
+
+func TestBatchPreservesTextAttachmentsAndMetadata(t *testing.T) {
+	type wireItem struct {
+		DocumentID string            `json:"document_id"`
+		Content    json.RawMessage   `json:"content"`
+		Tags       []string          `json:"tags"`
+		Metadata   map[string]string `json:"metadata"`
+	}
+	type request struct {
+		Items       []wireItem `json:"items"`
+		OperationID string     `json:"operation_id"`
+		Async       bool       `json:"async"`
+	}
+	received := make(chan request, 1)
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var body request
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Error(err)
+		}
+		received <- body
+		io.WriteString(w, `{"success":true,"operation_id":"accepted"}`)
+	}))
+	defer server.Close()
+	client, err := NewClient(connectors.Credential{Config: map[string]any{"baseUrl": server.URL}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = client.RetainBatch(t.Context(), "bank", []MemoryItem{
+		{DocumentID: "text", Content: "hello"},
+		{DocumentID: "file", Content: "must be replaced by attachment", Blocks: []connectors.ContentBlock{{Type: "file", FileName: "x.pdf", Source: &connectors.AttachmentSource{Type: "base64", Data: "eA==", MediaType: "application/pdf"}}}, Tags: []string{"tag"}, Metadata: map[string]string{"key": "value"}},
+	}, "idempotent-id")
+	if err != nil {
+		t.Fatal(err)
+	}
+	body := <-received
+	if body.OperationID != "idempotent-id" || !body.Async || len(body.Items) != 2 {
+		t.Fatalf("invalid batch envelope: %+v", body)
+	}
+	if string(body.Items[0].Content) != `"hello"` {
+		t.Fatal("text content changed")
+	}
+	file := body.Items[1]
+	if file.DocumentID != "file" || len(file.Tags) != 1 || file.Tags[0] != "tag" || file.Metadata["key"] != "value" {
+		t.Fatal("attachment metadata lost")
+	}
+	var blocks []connectors.ContentBlock
+	if err := json.Unmarshal(file.Content, &blocks); err != nil || len(blocks) != 1 {
+		t.Fatal("invalid attachment content", err)
+	}
+	if blocks[0].FileName != "x.pdf" || blocks[0].Source == nil || blocks[0].Source.Data != "eA==" || blocks[0].Source.MediaType != "application/pdf" {
+		t.Fatalf("attachment changed: %+v", blocks[0])
+	}
+}

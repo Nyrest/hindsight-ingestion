@@ -125,6 +125,8 @@ func (c *Connector) ValidateConfig(cfg map[string]any, f connectors.Filter) erro
 // Browse lists buckets at the root, then "folders" (common prefixes).
 // ParentID is "bucket" or "bucket/prefix/".
 func (c *Connector) Browse(ctx context.Context, cred connectors.Credential, req connectors.BrowseRequest) (connectors.BrowseResult, error) {
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
 	cl, err := newClient(cred)
 	if err != nil {
 		return connectors.BrowseResult{}, err
@@ -156,7 +158,7 @@ func (c *Connector) Browse(ctx context.Context, cred connectors.Credential, req 
 		res.Breadcrumbs = append(res.Breadcrumbs, connectors.Breadcrumb{ID: bucket + "/" + acc, Name: part})
 	}
 	count := 0
-	for obj := range cl.ListObjects(ctx, bucket, minio.ListObjectsOptions{Prefix: prefix, Recursive: false}) {
+	for obj := range cl.ListObjectsIter(ctx, bucket, minio.ListObjectsOptions{Prefix: prefix, Recursive: false}) {
 		if obj.Err != nil {
 			return res, obj.Err
 		}
@@ -182,6 +184,8 @@ type opaque struct {
 // Scan performs a full metadata LIST (cheap) every run; only changed objects
 // are downloaded, as decided by the engine's fingerprints.
 func (c *Connector) Scan(ctx context.Context, req connectors.ScanRequest) (connectors.ScanResult, error) {
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
 	cl, err := newClient(req.Credential)
 	if err != nil {
 		return connectors.ScanResult{}, err
@@ -192,7 +196,7 @@ func (c *Connector) Scan(ctx context.Context, req connectors.ScanRequest) (conne
 	prefix = strings.TrimPrefix(prefix, bucket+"/")
 	recursive := connectors.BoolDefault(req.Config, "recursive", true)
 
-	for obj := range cl.ListObjects(ctx, bucket, minio.ListObjectsOptions{Prefix: prefix, Recursive: recursive}) {
+	for obj := range cl.ListObjectsIter(ctx, bucket, minio.ListObjectsOptions{Prefix: prefix, Recursive: recursive}) {
 		if obj.Err != nil {
 			return connectors.ScanResult{}, fmt.Errorf("list objects: %w", obj.Err)
 		}

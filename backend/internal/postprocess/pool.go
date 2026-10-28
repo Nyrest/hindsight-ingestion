@@ -2,6 +2,7 @@ package postprocess
 
 import (
 	"context"
+	"slices"
 	"sync"
 	"time"
 )
@@ -29,7 +30,10 @@ func (p *Pool) Acquire(key, script string) (*VM, error) {
 	p.mu.Lock()
 	for i := len(p.idle) - 1; i >= 0; i-- {
 		if v := p.idle[i]; v.key == key {
-			p.idle = append(p.idle[:i], p.idle[i+1:]...)
+			p.idle = slices.Delete(p.idle, i, i+1)
+			if v.Expired() {
+				continue
+			}
 			p.mu.Unlock()
 			return v, nil
 		}
@@ -40,7 +44,7 @@ func (p *Pool) Acquire(key, script string) (*VM, error) {
 
 // Release returns a VM for reuse. Broken VMs are discarded.
 func (p *Pool) Release(v *VM) {
-	if v == nil || v.broken || p.MaxIdle <= 0 {
+	if v == nil || v.broken || v.Expired() || p.MaxIdle <= 0 {
 		return
 	}
 	p.mu.Lock()

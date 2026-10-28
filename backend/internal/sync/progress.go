@@ -42,6 +42,9 @@ func (r *runner) finish(err error) {
 		msg = err.Error()
 		if len(r.failed) > 0 {
 			msg += ": " + summarizeFailures(r.failed)
+			if r.run.FailedCount > len(r.failed) {
+				msg += fmt.Sprintf("; and %d more", r.run.FailedCount-len(r.failed))
+			}
 		}
 		r.logf("error", "Run failed: %s", msg)
 	}

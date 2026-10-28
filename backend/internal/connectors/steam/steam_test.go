@@ -50,16 +50,15 @@ func setup(t *testing.T) (*Connector, *fixture) {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { sqlDB, _ := db.DB(); sqlDB.Close() })
+	originalPacing := pacing
+	pacing = &httpx.PacerRegistry{Interval: time.Nanosecond}
+	t.Cleanup(func() { pacing = originalPacing })
 	f := &fixture{username: "Player", owned: `{"response":{"game_count":2,"games":[{"appid":620,"name":"Portal 2","playtime_forever":60},{"appid":400,"name":"Portal","playtime_forever":0}]}}`, recent: `{"response":{"total_count":0}}`, friends: `{"friendslist":{"friends":[{"steamid":"76561197960435530","relationship":"friend","friend_since":1}]}}`, schema: `{"game":{"gameName":"Portal","availableGameStats":{"achievements":[{"name":"B","displayName":"Locked achievement","hidden":1},{"name":"A","displayName":"已完成","description":"Description"}]}}}`, achievements: `{"playerstats":{"success":true,"achievements":[{"apiname":"A","achieved":1,"unlocktime":100},{"apiname":"B","achieved":0}]}}`, calls: map[string]int{}}
 	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Header.Get("x-webapi-key") != testCredential.String("apiKey") || r.URL.Query().Get("key") != "" {
 			t.Error("API key was not confined to the authentication header")
 		}
 		f.calls[r.URL.Path]++
-		// Network semantics are exercised without waiting one second per fixture request.
-		pacing.Lock()
-		delete(pacing.next, CredentialKey(testCredential))
-		pacing.Unlock()
 		w.Header().Set("Content-Type", "application/json")
 		switch r.URL.Path {
 		case "/ISteamUser/GetPlayerSummaries/v2/":

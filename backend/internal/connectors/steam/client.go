@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
@@ -26,10 +25,7 @@ const apiBase = "https://api.steampowered.com/"
 
 type apiClient struct{ http *httpx.Client }
 
-var pacing = struct {
-	sync.Mutex
-	next map[string]time.Time
-}{next: map[string]time.Time{}}
+var pacing = &httpx.PacerRegistry{Interval: time.Second}
 
 func CredentialKey(cred connectors.Credential) string {
 	sum := sha256.Sum256([]byte(strings.ToLower(strings.TrimSpace(cred.String("apiKey")))))
@@ -37,25 +33,7 @@ func CredentialKey(cred connectors.Credential) string {
 }
 
 func pace(ctx context.Context, key string) error {
-	if err := ctx.Err(); err != nil {
-		return err
-	}
-	pacing.Lock()
-	now := time.Now()
-	next := pacing.next[key]
-	if next.Before(now) {
-		next = now
-	}
-	pacing.next[key] = next.Add(time.Second)
-	pacing.Unlock()
-	timer := time.NewTimer(time.Until(next))
-	defer timer.Stop()
-	select {
-	case <-ctx.Done():
-		return ctx.Err()
-	case <-timer.C:
-		return nil
-	}
+	return pacing.Wait(ctx, key)
 }
 
 func reserve(ctx context.Context, db *gorm.DB, key string, now time.Time) error {

@@ -103,9 +103,9 @@ type runner struct {
 	baseTags []string
 	customMD map[string]string
 
-	ledger   map[string]models.TaskItem
-	handled  map[string]bool
-	lastSnap time.Time
+	work          *workingSet
+	priorFailures bool
+	lastSnap      time.Time
 
 	mu      stdsync.Mutex
 	logs    []logLine
@@ -114,7 +114,6 @@ type runner struct {
 	textSz  int
 	pending []pendingItem
 	failed  map[string]string
-	deletes []models.TaskItem
 }
 
 type retainJob struct {
@@ -132,7 +131,7 @@ type logLine struct {
 // Execute runs a task to completion, persisting progress on the run row.
 // The run row must already exist with status running.
 func (e *Engine) Execute(ctx context.Context, runID string, opts RunOptions) error {
-	r := &runner{e: e, ctx: ctx, failed: map[string]string{}, handled: map[string]bool{}}
+	r := &runner{e: e, ctx: ctx, failed: map[string]string{}}
 	var run models.TaskRun
 	if err := e.DB.First(&run, "id = ?", runID).Error; err != nil {
 		return fmt.Errorf("load run: %w", err)
@@ -143,6 +142,7 @@ func (e *Engine) Execute(ctx context.Context, runID string, opts RunOptions) err
 			r.releaseShared()
 		}
 		r.post.release()
+		r.work.close()
 	}()
 	err := r.execute(opts)
 	r.finish(err)
@@ -311,8 +311,8 @@ func (r *runner) execute(opts RunOptions) error {
 		return errors.New("Steam inventory was incomplete; deletion and state commit skipped")
 	}
 
-	if (r.sharedDocs != nil || r.task.SourceType == "sql" || r.task.SourceType == "webcal" || r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam") && len(r.failed) > 0 {
-		return fmt.Errorf("%d item(s) failed; deletion and cursor commit skipped", len(r.failed))
+	if (r.sharedDocs != nil || r.task.SourceType == "sql" || r.task.SourceType == "webcal" || r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam") && r.run.FailedCount > 0 {
+		return fmt.Errorf("%d item(s) failed; deletion and cursor commit skipped", r.run.FailedCount)
 	}
 
 	// 3. Reconcile deletions. Scope exits are always safe; disappearance is
@@ -329,8 +329,8 @@ func (r *runner) execute(opts RunOptions) error {
 		return err
 	}
 
-	if len(r.failed) > 0 {
-		return fmt.Errorf("%d item(s) failed; cursor not advanced", len(r.failed))
+	if r.run.FailedCount > 0 {
+		return fmt.Errorf("%d item(s) failed; cursor not advanced", r.run.FailedCount)
 	}
 
 	// 4. Commit cursor last.
@@ -391,7 +391,15 @@ func (r *runner) observe(item connectors.SourceItem) error {
 	if item.ID == "" {
 		return errors.New("connector emitted an item without ID")
 	}
-	if r.handled[item.ID] {
+	row, ok, err := r.ledgerItem(item.ID)
+	if err != nil {
+		return err
+	}
+	first, err := r.work.mark(item.ID)
+	if err != nil {
+		return err
+	}
+	if !first {
 		// Connectors should emit each item once (last state wins). As a
 		// safety net, a later deletion is never ignored: the item is
 		// queued for deletion even if an earlier emission retained it.
@@ -399,7 +407,10 @@ func (r *runner) observe(item connectors.SourceItem) error {
 			if err := r.flushText(); err != nil {
 				return err
 			}
-			row := r.ledger[item.ID]
+			row, _, err = r.ledgerItem(item.ID)
+			if err != nil {
+				return err
+			}
 			pending := false
 			for _, p := range r.pending {
 				if p.row.SourceItemID == item.ID {
@@ -412,18 +423,15 @@ func (r *runner) observe(item connectors.SourceItem) error {
 			}
 			row.TaskID, row.SourceItemID = r.task.ID, item.ID
 			row.DestinationPresent, row.DesiredMatch, row.LastSeenGeneration = true, false, r.gen
-			r.deletes = append(r.deletes, row)
-			return nil
+			return r.queueDelete(row)
 		}
 		r.logf("debug", "Ignoring duplicate emission of %s", displayName(item))
 		return nil
 	}
-	r.handled[item.ID] = true
 	r.run.DiscoveredCount++
 
 	r.snapshot(false)
 
-	row, ok := r.ledger[item.ID]
 	if !ok {
 		row = models.TaskItem{TaskID: r.task.ID, SourceItemID: item.ID}
 	}
@@ -445,7 +453,7 @@ func (r *runner) observe(item connectors.SourceItem) error {
 		row.DesiredMatch = false
 		row.LastSeenGeneration = r.gen
 		if row.DestinationPresent {
-			r.deletes = append(r.deletes, row)
+			return r.queueDelete(row)
 		} else if err := r.saveRow(row); err != nil {
 			return err
 		}
@@ -462,8 +470,7 @@ func (r *runner) observe(item connectors.SourceItem) error {
 		r.logf("debug", "Out of scope: %s (%s)", displayName(item), reason)
 		r.run.SkippedCount++
 		if row.DestinationPresent {
-			r.deletes = append(r.deletes, row)
-			return nil
+			return r.queueDelete(row)
 		}
 		return r.queueSeen(row)
 	}
@@ -498,8 +505,7 @@ func (r *runner) observe(item connectors.SourceItem) error {
 			r.run.SkippedCount++
 			row.DesiredMatch = false
 			if row.DestinationPresent {
-				r.deletes = append(r.deletes, row)
-				return nil
+				return r.queueDelete(row)
 			}
 			return r.queueSeen(row)
 		}
@@ -514,15 +520,17 @@ func (r *runner) observe(item connectors.SourceItem) error {
 	}
 	row.NeedsImageRetry = r.includesImages() && len(content.Warnings) > 0
 	if content.Body != nil {
-		return r.retainFile(retainJob{item: item, row: row, content: content}, tags, md)
+		if err := r.retainFile(retainJob{item: item, row: row, content: content}, tags, md); err != nil {
+			return err
+		}
+		return r.maybeAwaitPending()
 	}
 	if strings.TrimSpace(content.Text) == "" && len(content.Blocks) == 0 {
 		r.logf("info", "Skipped %s: empty content", displayName(item))
 		r.run.SkippedCount++
 		row.DesiredMatch = false
 		if row.DestinationPresent {
-			r.deletes = append(r.deletes, row)
-			return nil
+			return r.queueDelete(row)
 		}
 		return r.queueSeen(row)
 	}
@@ -543,7 +551,7 @@ func (r *runner) observe(item connectors.SourceItem) error {
 
 func (r *runner) fail(row models.TaskItem, item connectors.SourceItem, err error) error {
 	r.run.FailedCount++
-	r.failed[item.ID] = err.Error()
+	r.recordFailure(item.ID, err.Error())
 	r.logf("error", "Failed %s: %v", displayName(item), err)
 	row.LastError = truncate(err.Error(), 2000)
 	return r.saveRow(row)

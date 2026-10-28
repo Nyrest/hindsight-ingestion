@@ -1,7 +1,11 @@
 package sync
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
+	"golang.org/x/sync/errgroup"
+	"gorm.io/gorm/clause"
 	"io"
 	"time"
 
@@ -91,7 +95,7 @@ func (r *runner) flushText() error {
 		r.pending = append(r.pending, pendingItem{row: j.row, ops: ops})
 	}
 	r.logf("debug", "Submitted %d document(s) to Hindsight", len(batch))
-	return nil
+	return r.maybeAwaitPending()
 }
 
 func (r *runner) retainFile(job retainJob, tags []string, md map[string]string) error {
@@ -156,15 +160,80 @@ func (r *runner) operationRows(ops []string, typ string) []models.HindsightOpera
 	return rows
 }
 
-// awaitPending polls Hindsight until every submitted operation completed,
-// then marks the corresponding items as synced.
+const pendingWindowSize = 500
+const operationPollConcurrency = 4
+
+type stagedPending struct {
+	Row models.TaskItem
+	Ops []string
+}
+
+func (r *runner) maybeAwaitPending() error {
+	if len(r.pending) < pendingWindowSize {
+		return nil
+	}
+	if r.task.SourceType == "email" {
+		// IMAP FETCH literals must be consumed within their command deadline. Spill
+		// metadata while reading mail; settle bounded windows after Scan returns.
+		for _, p := range r.pending {
+			if err := r.work.put("pending", p.row.SourceItemID, stagedPending{p.row, p.ops}); err != nil {
+				return err
+			}
+		}
+		r.pending = nil
+		return nil
+	}
+	return r.awaitWindow()
+}
+
+// awaitPending settles the final window plus any metadata spooled during IMAP
+// FETCH. Cursor advancement still occurs only after every window succeeds.
 func (r *runner) awaitPending() error {
+	if err := r.awaitWindow(); err != nil {
+		return err
+	}
+	if err := r.work.each("pending", func(_ string, data []byte) error {
+		var p stagedPending
+		if err := json.Unmarshal(data, &p); err != nil {
+			return err
+		}
+		r.pending = append(r.pending, pendingItem{row: p.Row, ops: p.Ops})
+		if len(r.pending) >= pendingWindowSize {
+			return r.awaitWindow()
+		}
+		return nil
+	}); err != nil {
+		return err
+	}
+	if err := r.awaitWindow(); err != nil {
+		return err
+	}
+	_, err := r.work.db.ExecContext(r.ctx, "DELETE FROM work WHERE bucket='pending'")
+	return err
+}
+
+// awaitWindow polls just this bounded group, then publishes its ledger rows.
+func (r *runner) awaitWindow() error {
 	if len(r.pending) == 0 {
 		return nil
 	}
+	pollCtx, cancel := context.WithTimeout(r.ctx, OperationWaitTimeout)
+	defer cancel()
+	ids := map[string]bool{}
+	for _, p := range r.pending {
+		for _, id := range p.ops {
+			ids[id] = true
+		}
+	}
+	opIDs := make([]string, 0, len(ids))
+	for id := range ids {
+		opIDs = append(opIDs, id)
+	}
 	var opRows []models.HindsightOperation
-	if err := r.e.DB.WithContext(r.ctx).Where("run_id = ? AND status <> ?", r.run.ID, "completed").Find(&opRows).Error; err != nil {
-		return err
+	if len(opIDs) > 0 {
+		if err := r.e.DB.WithContext(r.ctx).Where("run_id = ? AND remote_operation_id IN ? AND status <> ?", r.run.ID, opIDs, "completed").Find(&opRows).Error; err != nil {
+			return err
+		}
 	}
 	if len(opRows) > 0 {
 		r.setStatus(models.RunWaitingOperations)
@@ -175,8 +244,20 @@ func (r *runner) awaitPending() error {
 	delay := OperationPollInitial
 	for len(opRows) > 0 {
 		var still []models.HindsightOperation
-		for _, op := range opRows {
-			st, err := r.dest.GetOperation(r.ctx, r.task.DestinationBankID, op.RemoteOperationID)
+		statuses := make([]hindsight.OperationStatus, len(opRows))
+		pollErrors := make([]error, len(opRows))
+		var polls errgroup.Group
+		polls.SetLimit(operationPollConcurrency)
+		for i, op := range opRows {
+			polls.Go(func() error {
+				statuses[i], pollErrors[i] = r.dest.GetOperation(pollCtx, r.task.DestinationBankID, op.RemoteOperationID)
+				return nil
+			})
+		}
+		_ = polls.Wait()
+		updates := make([]models.HindsightOperation, 0, len(opRows))
+		for i, op := range opRows {
+			st, err := statuses[i], pollErrors[i]
 			if err != nil {
 				if r.ctx.Err() != nil {
 					return r.ctx.Err()
@@ -194,7 +275,7 @@ func (r *runner) awaitPending() error {
 				still = append(still, op)
 			case "failed":
 				if op.RetryCount < OperationRetryLimit && st.RetryCount < OperationRetryLimit {
-					if err := r.dest.RetryOperation(r.ctx, r.task.DestinationBankID, op.RemoteOperationID); err == nil {
+					if err := r.dest.RetryOperation(pollCtx, r.task.DestinationBankID, op.RemoteOperationID); err == nil {
 						op.RetryCount++
 						op.Status = "retrying"
 						still = append(still, op)
@@ -208,8 +289,11 @@ func (r *runner) awaitPending() error {
 				op.Status = st.Status
 				failedOps[op.RemoteOperationID] = "operation " + st.Status
 			}
-			if err := r.e.DB.WithContext(r.ctx).Model(&models.HindsightOperation{}).Where("id = ?", op.ID).
-				Updates(map[string]any{"status": op.Status, "retry_count": op.RetryCount, "updated_at": time.Now().UTC()}).Error; err != nil {
+			op.UpdatedAt = time.Now().UTC()
+			updates = append(updates, op)
+		}
+		if len(updates) > 0 {
+			if err := r.e.DB.WithContext(r.ctx).Clauses(clause.OnConflict{Columns: []clause.Column{{Name: "id"}}, DoUpdates: clause.AssignmentColumns([]string{"status", "retry_count", "updated_at"})}).CreateInBatches(updates, 100).Error; err != nil {
 				return err
 			}
 		}
@@ -220,7 +304,7 @@ func (r *runner) awaitPending() error {
 		if time.Now().After(deadline) {
 			return fmt.Errorf("timed out waiting for %d Hindsight operation(s)", len(opRows))
 		}
-		if err := sleepCtx(r.ctx, delay); err != nil {
+		if err := sleepCtx(pollCtx, delay); err != nil {
 			return err
 		}
 		delay = min(delay*2, OperationPollMax)
@@ -239,7 +323,7 @@ func (r *runner) awaitPending() error {
 		row := p.row
 		if failure != "" {
 			r.run.FailedCount++
-			r.failed[row.SourceItemID] = failure
+			r.recordFailure(row.SourceItemID, failure)
 			row.LastError = truncate("Hindsight: "+failure, 2000)
 			// The write may have partially landed; treat the document as
 			// present so a later scope exit or disappearance deletes it

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -74,5 +75,31 @@ func TestDryRunGuardsTask(t *testing.T) {
 	}
 	if _, active := h.runs.Active(h.task.ID); active {
 		t.Fatal("guard not released")
+	}
+}
+
+func TestLargePreviewHasExactCountsAndBoundedExamples(t *testing.T) {
+	h := newHarness(t)
+	docs := map[string]fakeDoc{}
+	for i := 0; i < 1205; i++ {
+		docs[fmt.Sprintf("doc-%04d", i)] = fakeDoc{rev: "1", content: "content"}
+	}
+	h.setDocs(docs)
+	preview, err := h.engine.DryRun(t.Context(), h.task.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !preview.Complete || preview.DiscoveredCount != 1205 || preview.CreatedCount != 1205 || len(preview.Items) != 100 || !preview.Truncated {
+		t.Fatalf("incorrect preview: %+v", preview)
+	}
+	for i, item := range preview.Items {
+		if item.SourceItemID != fmt.Sprintf("doc-%04d", i) {
+			t.Fatal("unstable preview ordering")
+		}
+	}
+	var n int64
+	h.db.Model(&models.TaskItem{}).Count(&n)
+	if n != 0 {
+		t.Fatal("preview persisted ledger")
 	}
 }

@@ -20,18 +20,34 @@ import (
 // postProcessor runs a task's post-processing script. Its VM is acquired on
 // the first document that needs processing and reused for the whole run.
 type postProcessor struct {
-	key, script string
-	http        *http.Client
-	vm          *postprocess.VM
+	key, script       string
+	http              *http.Client
+	vm                *postprocess.VM
+	binaryPassThrough bool
 }
 
 func newPostProcessor(taskID, raw string, proxyConfig proxy.Config) *postProcessor {
-	script := postprocess.Parse(raw).Script()
+	cfg := postprocess.Parse(raw)
+	script := cfg.Script()
+	binaryPassThrough := cfg.Mode == postprocess.ModeUI
+	active := false
+	for _, step := range cfg.Steps {
+		if !step.Enabled {
+			continue
+		}
+		active = true
+		if step.Type == postprocess.StepHTTP || step.Type == postprocess.StepSkip {
+			binaryPassThrough = false
+		}
+	}
+	if cfg.Mode == postprocess.ModeUI && !active {
+		return nil
+	}
 	if script == "" {
 		return nil
 	}
 	return &postProcessor{
-		key: postprocess.Key(taskID, script), script: script,
+		key: postprocess.Key(taskID, script), script: script, binaryPassThrough: binaryPassThrough,
 		http: &http.Client{Transport: httpx.Transport(proxyConfig)},
 	}
 }
@@ -95,7 +111,7 @@ func restoreBlocks(text string, media []connectors.ContentBlock) (string, []conn
 // postProcess transforms opened content with the task's script. A script
 // returning no content skips the item.
 func (r *runner) postProcess(item connectors.SourceItem, content connectors.SourceContent) (connectors.SourceContent, error) {
-	if r.post == nil {
+	if r.post == nil || (content.Body != nil && r.post.binaryPassThrough) {
 		return content, nil
 	}
 	doc := postprocess.Document{Text: content.Text, FileName: orEmpty(content.FileName, item.Name),
@@ -103,19 +119,41 @@ func (r *runner) postProcess(item connectors.SourceItem, content connectors.Sour
 	var media []connectors.ContentBlock
 	switch {
 	case content.Body != nil:
-		body := io.Reader(content.Body)
+		limit := int64(postprocess.MaxDocumentBytes)
 		if r.maxSz > 0 {
-			body = &limitedReader{r: content.Body, n: r.maxSz}
+			limit = min(limit, r.maxSz)
 		}
-		data, err := io.ReadAll(body)
+		if content.Size > limit {
+			_ = content.Body.Close()
+			content.Body = nil
+			return content, fmt.Errorf("post-processing input exceeds %d MiB", limit>>20)
+		}
+		data, err := io.ReadAll(io.LimitReader(content.Body, limit+1))
 		_ = content.Body.Close()
 		content.Body = nil
 		if err != nil {
 			return content, err
 		}
+		if int64(len(data)) > limit {
+			return content, fmt.Errorf("post-processing input exceeds %d MiB", limit>>20)
+		}
 		doc.Binary, doc.Data = true, data
+
 	case len(content.Blocks) > 0:
+		size := 0
+		for _, block := range content.Blocks {
+			size += len(block.Text)
+			if block.Source != nil {
+				size += len(block.Source.Data)
+			}
+			if size > postprocess.MaxDocumentBytes {
+				return content, fmt.Errorf("post-processing input exceeds %d MiB", postprocess.MaxDocumentBytes>>20)
+			}
+		}
 		doc.Text, media = flattenBlocks(content.Blocks)
+	}
+	if r.post.vm != nil && r.post.vm.Expired() {
+		r.post.vm = nil
 	}
 	if r.post.vm == nil {
 		vm, err := postprocess.Shared.Acquire(r.post.key, r.post.script)
@@ -161,8 +199,13 @@ func (r *runner) postProcess(item connectors.SourceItem, content connectors.Sour
 			mimeType = "application/octet-stream"
 		}
 		// Attachment blocks use the recoverable, idempotent retain path.
+		var encoded strings.Builder
+		encoded.Grow(base64.StdEncoding.EncodedLen(len(res.Data)))
+		encoder := base64.NewEncoder(base64.StdEncoding, &encoded)
+		_, _ = encoder.Write(res.Data)
+		_ = encoder.Close()
 		block := connectors.ContentBlock{Type: "file", FileName: out.FileName,
-			Source: &connectors.AttachmentSource{Type: "base64", MediaType: mimeType, Data: base64.StdEncoding.EncodeToString(res.Data)}}
+			Source: &connectors.AttachmentSource{Type: "base64", MediaType: mimeType, Data: encoded.String()}}
 		if strings.HasPrefix(mimeType, "image/") {
 			block.Type, block.FileName = "image", ""
 		}

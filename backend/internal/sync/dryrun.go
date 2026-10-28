@@ -2,10 +2,11 @@ package sync
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/google/uuid"
 	"io"
-	"sort"
 	"strings"
 	"time"
 
@@ -70,20 +71,21 @@ func (e *Engine) DryRunWithOptions(ctx context.Context, taskID string, opts RunO
 			r.releaseShared()
 		}
 		r.post.release()
+		r.work.close()
 	}()
 	if err := r.loadLedger(); err != nil {
 		return result, err
 	}
-	observed := map[string]DryRunItem{}
 	res, err := r.scanPreview(connectors.ScanRequest{
 		TaskID: taskID, RunID: uuid.NewString(), Preview: true,
 		Timezone:   cfg.Timezone,
 		Credential: r.cred, Config: r.srcCfg, Filter: r.filter, Full: true,
 		Log: func(string, string) {},
 		Emit: func(item connectors.SourceItem) error {
-			preview := r.previewItem(item)
-			observed[item.ID] = preview
-			return ctx.Err()
+			if err := ctx.Err(); err != nil {
+				return err
+			}
+			return r.work.put("preview", item.ID, r.previewItem(item))
 		},
 	}, opts)
 	if ctx.Err() != nil {
@@ -93,45 +95,72 @@ func (e *Engine) DryRunWithOptions(ctx context.Context, taskID string, opts RunO
 	if r.task.SourceType == "steam" && !res.Complete && err == nil {
 		err = errors.New("Steam inventory was incomplete; deletion preview skipped")
 	}
-	if r.task.SourceType == "webcal" || r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam" {
+	special := r.task.SourceType == "webcal" || r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam"
+	if special {
 		err = errors.Join(err, r.checkTaskRevision(e.DB.WithContext(ctx)))
-		for _, preview := range observed {
-			if preview.Action == "fail" {
-				err = errors.Join(err, errors.New(preview.Reason))
+		failures := 0
+		if visitErr := r.work.each("preview", func(_ string, data []byte) error {
+			var preview DryRunItem
+			if e := json.Unmarshal(data, &preview); e != nil {
+				return e
 			}
+			if preview.Action == "fail" {
+				failures++
+				if failures <= 3 {
+					err = errors.Join(err, errors.New(truncate(preview.Reason, 2000)))
+				}
+			}
+			return nil
+		}); visitErr != nil {
+			return result, visitErr
+		}
+		if failures > 3 {
+			err = errors.Join(err, fmt.Errorf("and %d more failed items", failures-3))
 		}
 	}
 	result.Complete = err == nil && res.Complete
 	if err != nil {
 		result.Error = err.Error()
 	}
-	result.DiscoveredCount = len(observed)
-	if !result.Complete && (r.sharedDocs != nil || r.task.SourceType == "webcal" || r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam") {
-		for id, preview := range observed {
-			if preview.Action == "delete" {
-				preview.Action, preview.Reason = "skip", "incomplete source inventory; document unchanged"
-				observed[id] = preview
-			}
-		}
+	result.DiscoveredCount, err = r.work.count("preview")
+	if err != nil {
+		return result, err
 	}
 	if result.Complete {
-		for id, row := range r.ledger {
-			if _, seen := observed[id]; !seen && row.DestinationPresent {
-				observed[id] = DryRunItem{SourceItemID: id, Name: row.SourceName, Path: row.SourcePath, Action: "delete", Reason: "removed from source"}
+		if err := r.work.each("ledger", func(id string, data []byte) error {
+			var row models.TaskItem
+			if err := json.Unmarshal(data, &row); err != nil {
+				return err
 			}
+			if !row.DestinationPresent {
+				return nil
+			}
+			seen, err := r.work.get("preview", id, nil)
+			if err != nil || seen {
+				return err
+			}
+			return r.work.put("preview", id, DryRunItem{SourceItemID: id, Name: row.SourceName, Path: row.SourcePath, Action: "delete", Reason: "removed from source"})
+		}); err != nil {
+			return result, err
 		}
 	}
-	ids := make([]string, 0, len(observed))
-	for id := range observed {
-		ids = append(ids, id)
-	}
-	sort.Strings(ids)
-	for _, id := range ids {
-		preview := observed[id]
+	total := 0
+	err = r.work.each("preview", func(id string, data []byte) error {
+		var preview DryRunItem
+		if err := json.Unmarshal(data, &preview); err != nil {
+			return err
+		}
+		if !result.Complete && (special || r.sharedDocs != nil) && preview.Action == "delete" {
+			preview.Action, preview.Reason = "skip", "incomplete source inventory; document unchanged"
+		}
 		if preview.Action == "delete" && r.sharedDocs != nil {
-			other, err := r.sharedDocs.OtherReferences(ctx, r.ledger[id])
+			row, _, err := r.ledgerItem(id)
 			if err != nil {
-				return result, err
+				return err
+			}
+			other, err := r.sharedDocs.OtherReferences(ctx, row)
+			if err != nil {
+				return err
 			}
 			if other {
 				preview.Action, preview.Reason = "release", "another task still references this document"
@@ -153,17 +182,27 @@ func (e *Engine) DryRunWithOptions(ctx context.Context, taskID string, opts RunO
 		case "fail":
 			result.FailedCount++
 		}
+		total++
 		if len(result.Items) < 100 {
 			result.Items = append(result.Items, preview)
 		}
+		return nil
+	})
+	if err != nil {
+		return result, err
 	}
-	result.Truncated = len(observed) > len(result.Items)
+	result.Truncated = total > len(result.Items)
+
 	return result, nil
 }
 
 func (r *runner) previewItem(item connectors.SourceItem) DryRunItem {
 	preview := DryRunItem{SourceItemID: item.ID, Name: item.Name, Path: item.Path}
-	row := r.ledger[item.ID]
+	row, _, err := r.ledgerItem(item.ID)
+	if err != nil {
+		preview.Action, preview.Reason = "fail", err.Error()
+		return preview
+	}
 	if item.ContentError != "" {
 		preview.Action, preview.Reason = "fail", item.ContentError
 		return preview

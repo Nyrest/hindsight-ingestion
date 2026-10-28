@@ -117,6 +117,8 @@ Task actions are available from the **Tasks** menu:
 
 Use `.env` for the bundled Compose deployment. Configure source credentials, tasks and global sync settings in the WebUI.
 
+See [memory and throughput](docs/performance.md) for temporary disk requirements, post-processing limits, and large-inventory behavior.
+
 | Variable | Required | Default / purpose |
 | --- | :---: | --- |
 | `BASIC_AUTH_USERNAME` | ✅ | WebUI and API username. Compose default: `admin`. |

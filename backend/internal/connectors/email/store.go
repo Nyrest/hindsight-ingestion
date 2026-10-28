@@ -28,11 +28,12 @@ func (c *Connector) CommitScan(ctx context.Context, runID string, tx *gorm.DB) e
 			return err
 		}
 	}
-	// Staging is immutable while these offset pages are published. Composite keys
-	// cannot use GORM's single-key FindInBatches pagination.
-	for offset := 0; ; offset += 100 {
+	// Advance through immutable staging by the complete ordered keys; OFFSET
+	// repeatedly rescans the prefix and becomes quadratic on large mailboxes.
+	lastIdentity := ""
+	for {
 		var identities []models.EmailScanIdentity
-		if err := tx.Where("run_id = ?", runID).Order("item_id").Offset(offset).Limit(100).Find(&identities).Error; err != nil {
+		if err := tx.Where("run_id = ? AND item_id > ?", runID, lastIdentity).Order("item_id").Limit(100).Find(&identities).Error; err != nil {
 			return err
 		}
 		if len(identities) == 0 {
@@ -45,10 +46,17 @@ func (c *Connector) CommitScan(ctx context.Context, runID string, tx *gorm.DB) e
 		if err := tx.Clauses(clause.OnConflict{DoNothing: true}).Create(&rows).Error; err != nil {
 			return err
 		}
+		lastIdentity = identities[len(identities)-1].ItemID
 	}
-	for offset := 0; ; offset += 100 {
+	var lastOccurrence *models.EmailScanOccurrence
+	for {
 		var occurrences []models.EmailScanOccurrence
-		if err := tx.Where("run_id = ?", runID).Order("account_key, folder_key, uid_validity, uid").Offset(offset).Limit(100).Find(&occurrences).Error; err != nil {
+		q := tx.Where("run_id = ?", runID)
+		if lastOccurrence != nil {
+			p := lastOccurrence
+			q = q.Where("account_key > ? OR (account_key = ? AND folder_key > ?) OR (account_key = ? AND folder_key = ? AND uid_validity > ?) OR (account_key = ? AND folder_key = ? AND uid_validity = ? AND uid > ?)", p.AccountKey, p.AccountKey, p.FolderKey, p.AccountKey, p.FolderKey, p.UIDValidity, p.AccountKey, p.FolderKey, p.UIDValidity, p.UID)
+		}
+		if err := q.Order("account_key, folder_key, uid_validity, uid").Limit(100).Find(&occurrences).Error; err != nil {
 			return err
 		}
 		if len(occurrences) == 0 {
@@ -61,6 +69,7 @@ func (c *Connector) CommitScan(ctx context.Context, runID string, tx *gorm.DB) e
 		if err := tx.Clauses(clause.OnConflict{UpdateAll: true}).Create(&rows).Error; err != nil {
 			return err
 		}
+		lastOccurrence = &occurrences[len(occurrences)-1]
 	}
 	if full {
 		live := tx.Model(&models.EmailOccurrence{}).Select("item_id").Where("task_id = ?", run.TaskID)

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -164,13 +165,13 @@ func TestResultPaginationAndCompleteness(t *testing.T) {
 }
 
 func TestCreationNeverRetriesAndTokenCheckIsReadOnly(t *testing.T) {
-	posts, gets := 0, 0
+	var posts, gets atomic.Int64
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Header.Get("Authorization") != "Bearer secret" {
 			t.Error("missing authentication")
 		}
 		if r.Method == http.MethodPost {
-			posts++
+			posts.Add(1)
 			if r.URL.Path != "/accounts/"+strings.Repeat("a", 32)+"/browser-rendering/crawl" {
 				t.Error("creation used an unexpected API path", r.URL.Path)
 			}
@@ -184,7 +185,7 @@ func TestCreationNeverRetriesAndTokenCheckIsReadOnly(t *testing.T) {
 			w.WriteHeader(503)
 			return
 		}
-		gets++
+		gets.Add(1)
 		if r.URL.Path != "/user/tokens/verify" {
 			t.Errorf("verification touched %s", r.URL.Path)
 		}
@@ -198,19 +199,21 @@ func TestCreationNeverRetriesAndTokenCheckIsReadOnly(t *testing.T) {
 	if _, err := c.StartJob(t.Context(), testRequest()); err == nil {
 		t.Fatal("accepted failed creation")
 	}
-	if gets != 1 || posts != 1 {
-		t.Fatalf("gets=%d posts=%d", gets, posts)
+	if gets.Load() != 1 || posts.Load() != 1 {
+		t.Fatalf("gets=%d posts=%d", gets.Load(), posts.Load())
 	}
 	// A connection lost after submission is also ambiguous and must not replay POST.
-	server.Config.Handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		posts++
+	ambiguous := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		posts.Add(1)
 		connection, _, err := w.(http.Hijacker).Hijack()
 		if err == nil {
 			connection.Close()
 		}
-	})
-	if _, err := c.StartJob(t.Context(), testRequest()); err == nil || posts != 2 {
-		t.Fatalf("ambiguous POST replayed: %d %v", posts, err)
+	}))
+	defer ambiguous.Close()
+	c.APIBase = ambiguous.URL
+	if _, err := c.StartJob(t.Context(), testRequest()); err == nil || posts.Load() != 2 {
+		t.Fatalf("ambiguous POST replayed: %d %v", posts.Load(), err)
 	}
 }
 

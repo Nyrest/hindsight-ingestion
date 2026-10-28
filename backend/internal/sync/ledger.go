@@ -1,6 +1,7 @@
 package sync
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -26,35 +27,39 @@ func (r *runner) reconcileDeletions(complete bool) error {
 		return err
 	}
 	if complete {
-		if r.task.SourceType == "email" {
-			return r.reconcileEmailDeletions()
+		last := ""
+		for {
+			var gone []models.TaskItem
+			q := r.e.DB.WithContext(r.ctx).Where("task_id = ? AND last_seen_generation < ? AND destination_present = ?", r.task.ID, r.gen, true)
+			if last != "" {
+				q = q.Where("source_item_id > ?", last)
+			}
+			if err := q.Order("source_item_id").Limit(500).Find(&gone).Error; err != nil {
+				return err
+			}
+			for _, row := range gone {
+				row.DesiredMatch = false
+				if err := r.queueDelete(row); err != nil {
+					return err
+				}
+			}
+			if len(gone) < 500 {
+				break
+			}
+			last = gone[len(gone)-1].SourceItemID
 		}
-		var gone []models.TaskItem
-		if err := r.e.DB.WithContext(r.ctx).
-			Where("task_id = ? AND last_seen_generation < ? AND destination_present = ?", r.task.ID, r.gen, true).
-			Find(&gone).Error; err != nil {
-			return err
-		}
-		for i := range gone {
-			gone[i].DesiredMatch = false
-		}
-		r.deletes = append(r.deletes, gone...)
-		// Drop ledger rows of vanished items that never reached the destination.
-		if err := r.e.DB.WithContext(r.ctx).
-			Where("task_id = ? AND last_seen_generation < ? AND destination_present = ?", r.task.ID, r.gen, false).
-			Delete(&models.TaskItem{}).Error; err != nil {
+		if err := r.e.DB.WithContext(r.ctx).Where("task_id = ? AND last_seen_generation < ? AND destination_present = ?", r.task.ID, r.gen, false).Delete(&models.TaskItem{}).Error; err != nil {
 			return err
 		}
 	}
-	seen := map[string]bool{}
-	for _, row := range r.deletes {
+	return r.work.each("delete", func(_ string, data []byte) error {
+		var row models.TaskItem
+		if err := json.Unmarshal(data, &row); err != nil {
+			return err
+		}
 		if err := r.checkTaskRevision(r.e.DB.WithContext(r.ctx)); err != nil {
 			return err
 		}
-		if seen[row.SourceItemID] {
-			continue
-		}
-		seen[row.SourceItemID] = true
 		sharedReference := false
 		if r.sharedDocs != nil {
 			var err error
@@ -90,14 +95,13 @@ func (r *runner) reconcileDeletions(complete bool) error {
 				Delete(&models.TaskItem{}).Error; err != nil {
 				return err
 			}
-			continue
+			return nil
 		}
 		if err := r.saveRow(row); err != nil {
 			return err
 		}
-	}
-	r.deletes = nil
-	return nil
+		return nil
+	})
 }
 
 func (r *runner) queueSeen(row models.TaskItem) error {
@@ -123,10 +127,14 @@ func (r *runner) upsertRows(rows []models.TaskItem) error {
 	if len(rows) == 0 {
 		return nil
 	}
-	return r.e.DB.WithContext(r.ctx).Clauses(clause.OnConflict{
+	err := r.e.DB.WithContext(r.ctx).Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "task_id"}, {Name: "source_item_id"}},
 		UpdateAll: true,
 	}).CreateInBatches(rows, 100).Error
+	if err != nil {
+		return err
+	}
+	return r.work.ledgerRows(rows)
 }
 
 func (r *runner) recordRetainIntent(batch []retainJob) error {
@@ -146,18 +154,15 @@ func (r *runner) recordRetainIntent(batch []retainJob) error {
 	return r.upsertRows(rows)
 }
 
-func (r *runner) hasFailedItems() bool {
-	for _, row := range r.ledger {
-		if row.LastError != "" {
-			return true
-		}
-	}
-	return false
-}
+func (r *runner) hasFailedItems() bool { return r.priorFailures }
 
-// loadLedger reads the task's ledger in pages to avoid per-item queries.
+// loadLedger copies bounded pages to disk, avoiding per-item application DB queries.
 func (r *runner) loadLedger() error {
-	r.ledger = map[string]models.TaskItem{}
+	var err error
+	r.work, err = newWorkingSet(r.ctx)
+	if err != nil {
+		return err
+	}
 	lastID := ""
 	for {
 		var batch []models.TaskItem
@@ -169,7 +174,12 @@ func (r *runner) loadLedger() error {
 			return err
 		}
 		for _, row := range batch {
-			r.ledger[row.SourceItemID] = row
+			if row.LastError != "" {
+				r.priorFailures = true
+			}
+		}
+		if err := r.work.ledgerRows(batch); err != nil {
+			return err
 		}
 		if len(batch) < 1000 {
 			return nil

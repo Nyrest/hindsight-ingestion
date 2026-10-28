@@ -227,9 +227,12 @@
     append: textStep((input, o, context) => input + (o.separator || "") + template(o.text, context, input)),
 
     truncate: textStep((input, o) => {
-      const chars = Array.from(input);
-      if (chars.length <= o.maxLength) return input;
-      return chars.slice(0, o.maxLength).join("") + (o.suffix || "");
+      let count = 0, end = 0;
+      for (const ch of input) {
+        if (count++ === o.maxLength) return input.slice(0, end) + (o.suffix || "");
+        end += ch.length;
+      }
+      return input;
     }),
 
     case: textStep((input, o) => (o.case === "upper" ? input.toUpperCase() : input.toLowerCase())),
