@@ -1,5 +1,5 @@
 // Package oauth implements OAuth authorization and token refresh for Google
-// Drive and OneDrive credentials.
+// and Microsoft credentials.
 package oauth
 
 import (
@@ -20,6 +20,7 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/config"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 	"github.com/Nyrest/hindsight-ingestion/internal/credentials"
+	"github.com/Nyrest/hindsight-ingestion/internal/googleauth"
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
 )
 
@@ -115,7 +116,7 @@ func (m *Manager) Start(ctx context.Context, credentialID, redirectURI string) (
 		return "", err
 	}
 	opts := []oauth2.AuthCodeOption{oauth2.AccessTypeOffline, oauth2.S256ChallengeOption(verifier)}
-	if cred.Type == "google_drive" {
+	if cred.Type == "google_drive" || cred.Type == "google_people" {
 		opts = append(opts, oauth2.SetAuthURLParam("prompt", "consent"))
 	} else {
 		opts = append(opts, oauth2.SetAuthURLParam("prompt", "select_account"))
@@ -147,11 +148,27 @@ func (m *Manager) Callback(ctx context.Context, state, code string) (string, err
 	if err != nil {
 		return row.ID, fmt.Errorf("token exchange failed: %s", cred.Proxy.Redact(sanitize(err)))
 	}
+	subject := ""
+	if cred.Type == "google_people" {
+		authorized := cred
+		authorized.OAuth = fromToken(tok)
+		if subject, err = googleauth.Subject(ctx, authorized); err != nil {
+			return row.ID, fmt.Errorf("verify Google account: %w", err)
+		}
+		if cred.OAuthSubject != "" && cred.OAuthSubject != subject {
+			return row.ID, errors.New("Google account changed; create a new credential and task")
+		}
+	}
 	if tok.RefreshToken == "" && cred.OAuth != nil {
 		tok.RefreshToken = cred.OAuth.RefreshToken
 	}
 	stored := fromToken(tok)
-	if err := m.creds.SaveOAuthToken(ctx, row.ID, stored); err != nil {
+	if subject != "" {
+		err = m.creds.SaveOAuthConnection(ctx, row.ID, stored, subject)
+	} else {
+		err = m.creds.SaveOAuthToken(ctx, row.ID, stored)
+	}
+	if err != nil {
 		return row.ID, err
 	}
 	m.log.Info("oauth connected", "credential", row.ID, "type", row.Type)
@@ -283,16 +300,21 @@ type provider struct {
 	scopes   []string
 }
 
+func googleEndpoint(string) oauth2.Endpoint {
+	return oauth2.Endpoint{
+		AuthURL: "https://accounts.google.com/o/oauth2/v2/auth", TokenURL: "https://oauth2.googleapis.com/token",
+		AuthStyle: oauth2.AuthStyleInParams,
+	}
+}
+
 var providers = map[string]provider{
+	"google_people": {
+		endpoint: googleEndpoint,
+		scopes:   []string{"openid", "https://www.googleapis.com/auth/contacts.readonly"},
+	},
 	"google_drive": {
-		endpoint: func(string) oauth2.Endpoint {
-			return oauth2.Endpoint{
-				AuthURL:   "https://accounts.google.com/o/oauth2/v2/auth",
-				TokenURL:  "https://oauth2.googleapis.com/token",
-				AuthStyle: oauth2.AuthStyleInParams,
-			}
-		},
-		scopes: []string{"https://www.googleapis.com/auth/drive.readonly"},
+		endpoint: googleEndpoint,
+		scopes:   []string{"https://www.googleapis.com/auth/drive.readonly"},
 	},
 	"onedrive": {
 		endpoint: func(tenant string) oauth2.Endpoint {

@@ -779,6 +779,12 @@
     "incomplete_many": "Сканирование не завершено ({{count}} элементов). Отсутствующие элементы не помечены для удаления."
   },
   "providerCopy": {
+    "googlePeopleDescription": "Аккаунт Google через OAuth",
+    "googlePeopleSetupHelp": "Включите People API в проекте Google Cloud. При повторном подключении используйте тот же аккаунт Google.",
+    "googlePeopleContactName": "Имя контакта",
+    "googlePeopleEmail": "Адрес электронной почты",
+    "googlePeoplePhone": "Номер телефона",
+    "googlePeopleOrganization": "Организация",
     "caldavDescription": "Календари CalDAV с событиями и задачами",
     "caldavServerHelp": "Укажите URL сервиса CalDAV, каталога календарей или календаря на конечном сервере.",
     "caldavURL": "URL календаря",

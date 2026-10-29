@@ -35,6 +35,7 @@ type Credential struct {
 	Status                 string `gorm:"size:32;not null;default:active"`
 	StatusMessage          string `gorm:"type:text"`
 	OAuthExpiresAt         *time.Time
+	OAuthSubject           string `gorm:"size:255" json:"-"`
 	OAuthState             string `gorm:"size:128;index"`
 	OAuthRedirectURI       string `gorm:"type:text"`
 	OAuthStateExpiresAt    *time.Time
@@ -226,5 +227,6 @@ func All() []any {
 		&TaskRun{}, &HindsightOperation{}, &Setting{}, &SourceJob{}, &SharedDocument{},
 		&EmailIdentity{}, &EmailOccurrence{}, &EmailScanIdentity{}, &EmailScanOccurrence{},
 		&SteamSchema{}, &SteamPlayerSnapshot{}, &SteamAPIUsage{},
+		&GooglePeopleIdentity{}, &GooglePeopleScanAlias{}, &GooglePeopleScanContact{},
 	}
 }

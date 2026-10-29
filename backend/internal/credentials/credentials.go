@@ -89,7 +89,7 @@ func (s *Service) Load(ctx context.Context, id string) (connectors.Credential, e
 
 // Decrypt converts a stored credential into its usable form.
 func (s *Service) Decrypt(m *models.Credential) (connectors.Credential, error) {
-	cred := connectors.Credential{ID: m.ID, Name: m.Name, Type: m.Type, Config: map[string]any{}}
+	cred := connectors.Credential{ID: m.ID, Name: m.Name, Type: m.Type, OAuthSubject: m.OAuthSubject, Config: map[string]any{}}
 	if m.ConfigJSON != "" {
 		if err := json.Unmarshal([]byte(m.ConfigJSON), &cred.Config); err != nil {
 			return cred, fmt.Errorf("credential %s: invalid config: %w", m.ID, err)
@@ -314,11 +314,32 @@ func (s *Service) Apply(m *models.Credential, in Input, creating bool) error {
 
 // SaveOAuthToken persists a token immediately (refresh token rotation safe).
 func (s *Service) SaveOAuthToken(ctx context.Context, id string, tok *connectors.OAuthToken) error {
+	return s.saveOAuthToken(ctx, id, oauthConnection{Token: tok})
+}
+
+type oauthConnection struct {
+	Token   *connectors.OAuthToken
+	Subject string
+}
+
+// SaveOAuthConnection binds a credential to its first authorized Google account.
+func (s *Service) SaveOAuthConnection(ctx context.Context, id string, tok *connectors.OAuthToken, subject string) error {
+	if subject == "" {
+		return errors.New("Google account subject is required")
+	}
+	return s.saveOAuthToken(ctx, id, oauthConnection{Token: tok, Subject: subject})
+}
+
+func (s *Service) saveOAuthToken(ctx context.Context, id string, connection oauthConnection) error {
 	return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		var m models.Credential
 		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&m, "id = ?", id).Error; err != nil {
 			return err
 		}
+		if connection.Subject != "" && m.OAuthSubject != "" && m.OAuthSubject != connection.Subject {
+			return errors.New("Google account changed; create a new credential and task")
+		}
+		tok := connection.Token
 		cred, err := s.Decrypt(&m)
 		if err != nil {
 			return err
@@ -333,6 +354,9 @@ func (s *Service) SaveOAuthToken(ctx context.Context, id string, tok *connectors
 			"encrypted_secret": enc,
 			"status":           models.CredentialActive,
 			"status_message":   "",
+		}
+		if connection.Subject != "" {
+			updates["o_auth_subject"] = connection.Subject
 		}
 		if exp.IsZero() {
 			updates["o_auth_expires_at"] = nil

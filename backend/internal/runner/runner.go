@@ -94,6 +94,12 @@ func (m *Manager) RecoverInterrupted(ctx context.Context) (int64, error) {
 	if res.Error != nil {
 		return 0, res.Error
 	}
+	for _, model := range []any{&models.GooglePeopleScanAlias{}, &models.GooglePeopleScanContact{}} {
+		liveRuns := m.db.Model(&models.TaskRun{}).Select("id").Where("status IN ?", ActiveStatuses)
+		if err := m.db.WithContext(ctx).Where("run_id NOT IN (?)", liveRuns).Delete(model).Error; err != nil {
+			return 0, err
+		}
+	}
 	if err := m.db.WithContext(ctx).Model(&models.HindsightOperation{}).
 		Where("status IN ?", []string{"pending", "processing", "retrying"}).
 		Where("run_id NOT IN (?)", m.db.Model(&models.SourceJob{}).Select("run_id")).

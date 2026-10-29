@@ -761,6 +761,12 @@
     }
   },
   "providerCopy": {
+    "googlePeopleDescription": "OAuth で Google アカウントに接続",
+    "googlePeopleSetupHelp": "Google Cloud プロジェクトで People API を有効にしてください。再接続には同じ Google アカウントを使用する必要があります。",
+    "googlePeopleContactName": "連絡先の名前",
+    "googlePeopleEmail": "メールアドレス",
+    "googlePeoplePhone": "電話番号",
+    "googlePeopleOrganization": "組織",
     "caldavDescription": "予定と ToDo を同期する CalDAV カレンダー",
     "caldavServerHelp": "最終接続先サーバーの CalDAV サービス、カレンダーホーム、またはカレンダーの URL を入力します。",
     "caldavURL": "カレンダー URL",

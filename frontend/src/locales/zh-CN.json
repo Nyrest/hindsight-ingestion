@@ -17,6 +17,12 @@
     "label": "语言"
   },
   "providerCopy": {
+    "googlePeopleDescription": "通过 OAuth 连接 Google 账号",
+    "googlePeopleSetupHelp": "请在 Google Cloud 项目中启用 People API。重新连接时必须使用同一个 Google 账号。",
+    "googlePeopleContactName": "联系人姓名",
+    "googlePeopleEmail": "电子邮箱",
+    "googlePeoplePhone": "电话号码",
+    "googlePeopleOrganization": "组织",
     "caldavDescription": "通过 CalDAV 同步日程与待办事项",
     "caldavServerHelp": "填写最终服务器上的 CalDAV 服务、日历主目录或日历地址。",
     "caldavURL": "日历地址",

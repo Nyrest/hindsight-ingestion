@@ -761,6 +761,12 @@
     }
   },
   "providerCopy": {
+    "googlePeopleDescription": "OAuth로 Google 계정 연결",
+    "googlePeopleSetupHelp": "Google Cloud 프로젝트에서 People API를 사용 설정하세요. 다시 연결할 때는 동일한 Google 계정을 사용해야 합니다.",
+    "googlePeopleContactName": "연락처 이름",
+    "googlePeopleEmail": "이메일 주소",
+    "googlePeoplePhone": "전화번호",
+    "googlePeopleOrganization": "조직",
     "caldavDescription": "일정과 할 일을 동기화하는 CalDAV 캘린더",
     "caldavServerHelp": "최종 서버의 CalDAV 서비스, 캘린더 홈 또는 캘린더 URL을 입력하세요.",
     "caldavURL": "캘린더 URL",

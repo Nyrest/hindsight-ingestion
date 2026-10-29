@@ -189,7 +189,7 @@ func (r *runner) execute(opts RunOptions) error {
 	if r.dest, err = r.e.NewDestination(destCred); err != nil {
 		return err
 	}
-	if r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam" {
+	if r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam" || r.task.SourceType == "google_people" {
 		if err := r.fencePriorRetainOperations(); err != nil {
 			return err
 		}
@@ -211,9 +211,9 @@ func (r *runner) execute(opts RunOptions) error {
 	switch {
 	case r.reing:
 		r.full = true
-	case r.task.SourceType == "email" && r.state.PendingScanRunID != "":
+	case (r.task.SourceType == "email" || r.task.SourceType == "google_people") && r.state.PendingScanRunID != "":
 		r.full = true
-		r.logf("info", "Recovering an uncommitted email scan with full reconciliation")
+		r.logf("info", "Recovering an uncommitted %s scan with full reconciliation", r.task.SourceType)
 	case opts.Mode == models.SyncFull:
 		r.full = true
 		r.logf("info", "Full reconciliation requested")
@@ -286,7 +286,7 @@ func (r *runner) execute(opts RunOptions) error {
 		Log:        func(level, msg string) { r.logf(level, "%s", msg) },
 	}, opts)
 	if err != nil {
-		if r.task.SourceType == "webcal" || r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam" {
+		if r.task.SourceType == "webcal" || r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam" || r.task.SourceType == "google_people" {
 			return errors.Join(fmt.Errorf("scan source: %w", err), r.flushSeen(), r.awaitPending())
 		}
 		return fmt.Errorf("scan source: %w", err)
@@ -307,18 +307,21 @@ func (r *runner) execute(opts RunOptions) error {
 	if r.task.SourceType == "email" && r.full && !res.Complete {
 		return errors.New("Email full inventory was incomplete; deletion and state commit skipped")
 	}
+	if r.task.SourceType == "google_people" && r.full && !res.Complete {
+		return errors.New("Google People full inventory was incomplete; deletion and state commit skipped")
+	}
 	if r.task.SourceType == "steam" && !res.Complete {
 		return errors.New("Steam inventory was incomplete; deletion and state commit skipped")
 	}
 
-	if (r.sharedDocs != nil || r.task.SourceType == "sql" || r.task.SourceType == "webcal" || r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam") && len(r.failed) > 0 {
+	if (r.sharedDocs != nil || r.task.SourceType == "sql" || r.task.SourceType == "webcal" || r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam" || r.task.SourceType == "google_people") && len(r.failed) > 0 {
 		return fmt.Errorf("%d item(s) failed; deletion and cursor commit skipped", len(r.failed))
 	}
 
 	// 3. Reconcile deletions. Scope exits are always safe; disappearance is
 	// only inferred from a complete inventory.
 	complete := res.Complete
-	if r.task.SourceType == "email" && complete && !r.full {
+	if (r.task.SourceType == "email" || r.task.SourceType == "google_people") && complete && !r.full {
 		r.full = true
 		r.run.SyncMode = models.SyncFull
 		if err := db.Model(r.run).Update("sync_mode", models.SyncFull).Error; err != nil {
@@ -483,7 +486,7 @@ func (r *runner) observe(item connectors.SourceItem) error {
 		row.SyncedFingerprint = actual
 	}
 
-	if !r.reing && row.DestinationPresent && row.SyncedFingerprint == target && !((r.task.SourceType == "webcal" || r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam") && row.LastError != "") && !(r.full && r.includesImages() && row.NeedsImageRetry) {
+	if !r.reing && row.DestinationPresent && row.SyncedFingerprint == target && !((r.task.SourceType == "webcal" || r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam" || r.task.SourceType == "google_people") && row.LastError != "") && !(r.full && r.includesImages() && row.NeedsImageRetry) {
 		r.run.UnchangedCount++
 		return r.queueSeen(row)
 	}

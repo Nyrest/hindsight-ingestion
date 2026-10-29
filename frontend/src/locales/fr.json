@@ -761,6 +761,12 @@
     }
   },
   "providerCopy": {
+    "googlePeopleDescription": "Compte Google via OAuth",
+    "googlePeopleSetupHelp": "Activez People API dans votre projet Google Cloud. Utilisez le même compte Google lors de la reconnexion.",
+    "googlePeopleContactName": "Nom du contact",
+    "googlePeopleEmail": "Adresse e-mail",
+    "googlePeoplePhone": "Numéro de téléphone",
+    "googlePeopleOrganization": "Organisation",
     "caldavDescription": "Calendriers CalDAV pour les événements et les tâches",
     "caldavServerHelp": "Utilisez l’URL du service CalDAV, du répertoire des calendriers ou d’un calendrier sur le serveur final.",
     "caldavURL": "URL du calendrier",

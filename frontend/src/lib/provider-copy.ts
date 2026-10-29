@@ -1,4 +1,10 @@
 const COPY_KEYS: Record<string, string> = {
+  "Google account via OAuth": "googlePeopleDescription",
+  "Enable People API in your Google Cloud project. Reconnecting must use the same Google account.": "googlePeopleSetupHelp",
+  "Contact name": "googlePeopleContactName",
+  "Email address": "googlePeopleEmail",
+  "Phone number": "googlePeoplePhone",
+  "Organization": "googlePeopleOrganization",
   "Notion internal integration token with read access to shared data sources and pages": "notionDescription",
   "Pages": "notionPages",
   "Select shared pages with Browse, or enter one page ID per line.": "notionPagesHelp",

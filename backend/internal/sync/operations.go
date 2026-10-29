@@ -55,7 +55,7 @@ func (r *runner) flushText() error {
 		}
 	}
 	var retainIntent string
-	if r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam" {
+	if r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam" || r.task.SourceType == "google_people" {
 		retainIntent = uuid.NewString()
 		if err := r.e.DB.WithContext(r.ctx).Create(&models.HindsightOperation{ID: retainIntent, RunID: r.run.ID, RemoteOperationID: operationID, Type: "retain_intent", Status: "submitted"}).Error; err != nil {
 			return err

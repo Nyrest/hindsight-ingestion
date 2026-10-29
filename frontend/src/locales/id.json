@@ -761,6 +761,12 @@
     }
   },
   "providerCopy": {
+    "googlePeopleDescription": "Akun Google melalui OAuth",
+    "googlePeopleSetupHelp": "Aktifkan People API di proyek Google Cloud Anda. Gunakan akun Google yang sama saat menghubungkan kembali.",
+    "googlePeopleContactName": "Nama kontak",
+    "googlePeopleEmail": "Alamat email",
+    "googlePeoplePhone": "Nomor telepon",
+    "googlePeopleOrganization": "Organisasi",
     "caldavDescription": "Kalender CalDAV untuk acara dan tugas",
     "caldavServerHelp": "Gunakan URL layanan CalDAV, direktori kalender, atau kalender pada server tujuan akhir.",
     "caldavURL": "URL kalender",

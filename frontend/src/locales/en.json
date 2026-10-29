@@ -17,6 +17,12 @@
     "label": "Language"
   },
   "providerCopy": {
+    "googlePeopleDescription": "Google account via OAuth",
+    "googlePeopleSetupHelp": "Enable People API in your Google Cloud project. Reconnecting must use the same Google account.",
+    "googlePeopleContactName": "Contact name",
+    "googlePeopleEmail": "Email address",
+    "googlePeoplePhone": "Phone number",
+    "googlePeopleOrganization": "Organization",
     "caldavDescription": "CalDAV calendars for events and to-dos",
     "caldavServerHelp": "Use a CalDAV service, calendar home or calendar URL on the final server host.",
     "caldavURL": "Calendar URL",

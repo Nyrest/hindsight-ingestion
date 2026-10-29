@@ -212,6 +212,8 @@ type Credential struct {
 	Secrets   map[string]string // decrypted secret values
 	Headers   map[string]string // custom headers
 	OAuth     *OAuthToken
+
+	OAuthSubject string
 	// AccessToken, when set, returns a currently valid OAuth access token
 	// (refreshing as needed). Connectors should prefer it over OAuth for
 	// requests made during long runs.

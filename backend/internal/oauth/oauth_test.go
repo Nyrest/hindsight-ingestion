@@ -42,7 +42,7 @@ func TestProviderConfigUsesCredentialSettings(t *testing.T) {
 		t.Fatal(err)
 	}
 	mgr := &Manager{cfg: cfg}
-	for _, typ := range []string{"google_drive", "onedrive"} {
+	for _, typ := range []string{"google_drive", "google_people", "onedrive"} {
 		t.Run(typ, func(t *testing.T) {
 			if _, err := mgr.ProviderConfig(connectors.Credential{Type: typ}); err == nil {
 				t.Fatal("credential without client ID inherited environment settings")

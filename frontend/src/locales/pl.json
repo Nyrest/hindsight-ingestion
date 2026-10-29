@@ -779,6 +779,12 @@
     "incomplete_many": "Niepełne skanowanie ({{count}} elementów). Brakujące elementy nie zostaną oznaczone do usunięcia."
   },
   "providerCopy": {
+    "googlePeopleDescription": "Konto Google przez OAuth",
+    "googlePeopleSetupHelp": "Włącz People API w swoim projekcie Google Cloud. Przy ponownym łączeniu użyj tego samego konta Google.",
+    "googlePeopleContactName": "Nazwa kontaktu",
+    "googlePeopleEmail": "Adres e-mail",
+    "googlePeoplePhone": "Numer telefonu",
+    "googlePeopleOrganization": "Organizacja",
     "caldavDescription": "Kalendarze CalDAV z wydarzeniami i zadaniami",
     "caldavServerHelp": "Użyj adresu URL usługi CalDAV, katalogu kalendarzy lub kalendarza na docelowym serwerze.",
     "caldavURL": "Adres URL kalendarza",

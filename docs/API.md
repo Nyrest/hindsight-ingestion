@@ -205,10 +205,19 @@ Legacy flat `sourceFilter.rules` continue to mean AND. Supply either legacy rule
 
 ## Credentials
 
-Google Drive and OneDrive credentials require `config.clientId` and
+Google People, Google Drive and OneDrive credentials require `config.clientId` and
 `config.clientSecret`. OneDrive also accepts `config.tenant` (default `common`).
 These OAuth application settings belong to the credential; there are no environment
 defaults. The client secret is encrypted and returned as a masked value.
+
+`google_people` reads saved Google Contacts using `contacts.readonly` and `openid`.
+It uses the existing OAuth endpoints and binds each credential to its first Google
+account. Reconnecting to another account, or changing a synced task to another
+account's credential, is rejected. Its internal account subject is not exposed.
+Tasks default to hourly sync, support structured `name`, `email`, `phone`,
+`organization` and `modifiedAt` filters, and use `google_people:` document IDs.
+Successful complete inventories, including empty ones, reconcile deletions.
+Dry-run does not change committed identities, ledger rows, cursors or destination documents.
 
 ```json
 Credential {

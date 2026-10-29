@@ -130,7 +130,7 @@ func (r *runner) upsertRows(rows []models.TaskItem) error {
 }
 
 func (r *runner) recordRetainIntent(batch []retainJob) error {
-	if r.task.SourceType != "webcal" && r.task.SourceType != "caldav" && r.task.SourceType != "email" && r.task.SourceType != "steam" {
+	if r.task.SourceType != "webcal" && r.task.SourceType != "caldav" && r.task.SourceType != "email" && r.task.SourceType != "steam" && r.task.SourceType != "google_people" {
 		return nil
 	}
 	rows := make([]models.TaskItem, 0, len(batch))
@@ -138,7 +138,7 @@ func (r *runner) recordRetainIntent(batch []retainJob) error {
 		// Unconfirmed writes must remain retryable after an interrupted run.
 		batch[index].row.LastError = "Hindsight retain has not been confirmed"
 		row := batch[index].row
-		if r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam" {
+		if r.task.SourceType == "caldav" || r.task.SourceType == "email" || r.task.SourceType == "steam" || r.task.SourceType == "google_people" {
 			row.DestinationPresent = true
 		}
 		rows = append(rows, row)
