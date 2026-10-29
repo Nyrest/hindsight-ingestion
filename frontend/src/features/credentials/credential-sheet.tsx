@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { z } from "zod";
 import { ProxyEditor } from "@/components/proxy-editor";
+import { CopyButton } from "@/components/copy-button";
+import { useSettings } from "@/features/settings/api";
 import { defaultProxy, proxySchema } from "@/features/settings/config-model";
 import type { ProxyConfig } from "@/lib/types";
 import { FieldRow } from "@/components/field-row";
@@ -69,6 +71,8 @@ export function CredentialSheet({
 }) {
   const { t } = useTranslation();
   const connectors = useConnectors();
+  const settings = useSettings();
+  const redirectURI = settings.data?.oauthRedirectUri || `${window.location.origin}/api/oauth/callback`;
   const editing = !!credential;
   const create = useCreateCredential();
   const update = useUpdateCredential();
@@ -271,9 +275,17 @@ export function CredentialSheet({
               )}
 
               {typeSpec.oauth && (
-                <Alert>
-                  <AlertDescription>{t("credentials.oauthHint")}</AlertDescription>
-                </Alert>
+                <>
+                  <FieldRow label={t("settings.oauth.redirectUri")} htmlFor="cred-redirect-uri">
+                    <div className="flex items-center gap-2">
+                      <Input id="cred-redirect-uri" readOnly value={redirectURI} className="font-mono text-xs sm:text-xs" onFocus={(event) => event.currentTarget.select()} />
+                      <CopyButton value={redirectURI} />
+                    </div>
+                  </FieldRow>
+                  <Alert>
+                    <AlertDescription>{t("credentials.oauthHint")}</AlertDescription>
+                  </Alert>
+                </>
               )}
 
               {!isSQL && <>

@@ -397,7 +397,7 @@
       "startFailed": "Could not start OAuth",
       "connected": "Connected",
       "notConnected": "Not connected",
-      "expires": "Token expires {{when}}"
+      "tokenRefresh": "Token refresh {{when}}"
     },
     "toast": {
       "created": "Credential created",
@@ -574,6 +574,7 @@
       "reconcilePending": "Reconcile pending"
     },
     "actions": {
+      "runAll": "Run all",
       "runNow": "Run now",
       "fullReconcile": "Full reconcile",
       "fullReingest": "Full re-ingest",
@@ -587,6 +588,9 @@
     "empty": {
       "title": "No tasks yet",
       "description": "Create a task to start syncing a source into Hindsight."
+    },
+    "runAll": {
+      "result": "{{started}} started · {{failed}} failed · {{skipped}} already running"
     },
     "trigger": {
       "run": {
@@ -828,8 +832,8 @@
       "empty": "No upcoming runs"
     },
     "failures": {
-      "title": "Recent failures",
-      "empty": "No recent failures"
+      "title": "Failures in the last 7 days",
+      "empty": "No failures in the last 7 days"
     }
   },
   "settings": {

@@ -44,6 +44,7 @@ import {
   useTasks,
   useToggleTask,
   useTriggerTask,
+  useRunAllTasks,
   type TriggerKind,
 } from "@/features/tasks/api";
 import { errorMessage, isApiError } from "@/lib/api";
@@ -67,6 +68,7 @@ export default function TasksPage() {
   const connectors = useConnectors();
   const toggle = useToggleTask();
   const trigger = useTriggerTask();
+  const runAll = useRunAllTasks();
   const cancel = useCancelTask();
   const del = useDeleteTask();
   const clear = useDeleteDocuments();
@@ -168,7 +170,7 @@ export default function TasksPage() {
             <Square /> <span className="hidden xl:inline">{t("tasks.actions.cancel")}</span>
           </Button>
         ) : (
-          <Button size="sm" variant="ghost" onClick={() => fire(task, "run")} disabled={!!busy}>
+          <Button size="sm" variant="ghost" onClick={() => fire(task, "run")} disabled={!!busy || runAll.isPending}>
             {pendingTrigger === `run-${task.id}` ? <Loader2 className="animate-spin" /> : <Play />}
             <span className="hidden xl:inline">{t("tasks.actions.runNow")}</span>
           </Button>
@@ -180,16 +182,16 @@ export default function TasksPage() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-52">
-            <DropdownMenuItem onSelect={() => fire(task, "run")} disabled={task.running}>
+            <DropdownMenuItem onSelect={() => fire(task, "run")} disabled={task.running || runAll.isPending}>
               <Play /> {t("tasks.actions.runNow")}
             </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setDryRunTask(task)} disabled={task.running}>
+            <DropdownMenuItem onSelect={() => setDryRunTask(task)} disabled={task.running || runAll.isPending}>
               <FlaskConical /> {t("tasks.actions.dryRun")}
             </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => fire(task, "fullReconcile")} disabled={task.running}>
+            <DropdownMenuItem onSelect={() => fire(task, "fullReconcile")} disabled={task.running || runAll.isPending}>
               <RefreshCcw /> {t("tasks.actions.fullReconcile")}
             </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setToReingest(task)} disabled={task.running}>
+            <DropdownMenuItem onSelect={() => setToReingest(task)} disabled={task.running || runAll.isPending}>
               <RotateCcw /> {t("tasks.actions.fullReingest")}
             </DropdownMenuItem>
             {task.running && (
@@ -228,11 +230,17 @@ export default function TasksPage() {
         title={t("tasks.title")}
         description={t("tasks.description")}
         actions={
-          <Button asChild>
-            <Link to="/tasks/new">
-              <Plus /> {t("tasks.new")}
-            </Link>
-          </Button>
+          <>
+            <Button variant="outline" onClick={() => runAll.mutate(list)} disabled={runAll.isPending || !!pendingTrigger || !list.some((task) => task.enabled && !task.running)}>
+              {runAll.isPending ? <Loader2 className="animate-spin" /> : <Play />}
+              {t("tasks.actions.runAll")}
+            </Button>
+            <Button asChild>
+              <Link to="/tasks/new">
+                <Plus /> {t("tasks.new")}
+              </Link>
+            </Button>
+          </>
         }
       />
 

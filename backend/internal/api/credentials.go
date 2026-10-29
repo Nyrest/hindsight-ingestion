@@ -37,6 +37,7 @@ type credentialDTO struct {
 	StatusMessage  string            `json:"statusMessage"`
 	OAuthConnected bool              `json:"oauthConnected"`
 	OAuthExpiresAt *string           `json:"oauthExpiresAt"`
+	OAuthRefreshAt *string           `json:"oauthRefreshAt"`
 	UsedByTasks    int64             `json:"usedByTasks"`
 	CreatedAt      string            `json:"createdAt"`
 	UpdatedAt      string            `json:"updatedAt"`
@@ -49,10 +50,15 @@ func (s *Server) credentialView(m *models.Credential, used int64) credentialDTO 
 		status, msg = models.CredentialError, "Stored secrets cannot be decrypted (was CREDENTIAL_ENCRYPTION_KEY changed?). Re-enter them."
 	}
 
+	var refreshAt *string
+	if view.OAuthConnect && status == models.CredentialActive && m.OAuthExpiresAt != nil {
+		at := m.OAuthExpiresAt.Add(-oauth.SafetyMargin)
+		refreshAt = timePtr(&at)
+	}
 	return credentialDTO{
 		ID: m.ID, Name: m.Name, Type: m.Type, ProxyMode: view.ProxyMode, Proxy: view.Proxy, Config: view.Config, CustomHeaders: view.CustomHeaders,
 		Status: status, StatusMessage: msg, OAuthConnected: view.OAuthConnect,
-		OAuthExpiresAt: timePtr(m.OAuthExpiresAt), UsedByTasks: used,
+		OAuthExpiresAt: timePtr(m.OAuthExpiresAt), OAuthRefreshAt: refreshAt, UsedByTasks: used,
 		CreatedAt: timeStr(m.CreatedAt), UpdatedAt: timeStr(m.UpdatedAt),
 	}
 }

@@ -223,7 +223,7 @@
       "startFailed": "Tidak dapat memulai OAuth",
       "connected": "Terhubung",
       "notConnected": "Tidak terhubung",
-      "expires": "Token kedaluwarsa {{when}}"
+      "tokenRefresh": "Pembaruan token {{when}}"
     },
     "toast": {
       "created": "Kredensial dibuat",
@@ -400,6 +400,7 @@
       "reconcilePending": "Menunggu sinkronisasi penuh"
     },
     "actions": {
+      "runAll": "Jalankan semua",
       "runNow": "Jalankan sekarang",
       "fullReconcile": "Rekonsiliasi penuh (Reconcile)",
       "fullReingest": "Ingest ulang penuh (Re-ingest)",
@@ -413,6 +414,9 @@
     "empty": {
       "title": "Belum ada tugas",
       "description": "Buat tugas untuk mulai menyinkronkan sumber ke Hindsight."
+    },
+    "runAll": {
+      "result": "{{started}} dimulai · {{failed}} gagal · {{skipped}} sudah berjalan"
     },
     "trigger": {
       "run": {
@@ -654,8 +658,8 @@
       "empty": "Tidak ada eksekusi mendatang"
     },
     "failures": {
-      "title": "Kegagalan baru-baru ini",
-      "empty": "Tidak ada kegagalan baru-baru ini"
+      "title": "Kegagalan dalam 7 hari terakhir",
+      "empty": "Tidak ada kegagalan dalam 7 hari terakhir"
     }
   },
   "observationScope": {

@@ -398,7 +398,7 @@
       "startFailed": "無法啟動 OAuth 授權流程",
       "connected": "已連線",
       "notConnected": "未連線",
-      "expires": "權杖將於 {{when}} 到期"
+      "tokenRefresh": "權杖更新：{{when}}"
     },
     "toast": {
       "created": "憑證建立成功",
@@ -577,6 +577,7 @@
       "reconcilePending": "等待對齊"
     },
     "actions": {
+      "runAll": "全部執行",
       "runNow": "立即執行",
       "fullReconcile": "全量對齊",
       "fullReingest": "全量重新錄入",
@@ -590,6 +591,9 @@
     "empty": {
       "title": "尚無同步任務",
       "description": "建立一個任務，開始將資料來源內容同步至 Hindsight 記憶庫。"
+    },
+    "runAll": {
+      "result": "已啟動 {{started}} 個 · 啟動失敗 {{failed}} 個 · 已在執行 {{skipped}} 個"
     },
     "trigger": {
       "run": {
@@ -834,8 +838,8 @@
       "empty": "尚無後續計畫中的執行"
     },
     "failures": {
-      "title": "最近失敗紀錄",
-      "empty": "近期無失敗紀錄"
+      "title": "最近 7 天的失敗記錄",
+      "empty": "最近 7 天沒有失敗記錄"
     }
   },
   "settings": {

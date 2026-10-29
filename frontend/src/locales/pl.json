@@ -223,7 +223,7 @@
       "startFailed": "Nie można uruchomić OAuth",
       "connected": "Połączono",
       "notConnected": "Nie połączono",
-      "expires": "Token wygasa {{when}}"
+      "tokenRefresh": "Odświeżenie tokena {{when}}"
     },
     "toast": {
       "created": "Utworzono dane uwierzytelniające",
@@ -404,6 +404,7 @@
       "reconcilePending": "Oczekuje na pełną synchronizację"
     },
     "actions": {
+      "runAll": "Uruchom wszystkie",
       "runNow": "Uruchom teraz",
       "fullReconcile": "Pełna synchronizacja (Reconcile)",
       "fullReingest": "Pełne ponowne pobranie (Re-ingest)",
@@ -417,6 +418,9 @@
     "empty": {
       "title": "Nie ma jeszcze żadnych zadań",
       "description": "Utwórz zadanie, aby rozpocząć synchronizację źródła z Hindsight."
+    },
+    "runAll": {
+      "result": "Uruchomione: {{started}} · Nieudane: {{failed}} · Już uruchomione: {{skipped}}"
     },
     "trigger": {
       "run": {
@@ -668,8 +672,8 @@
       "empty": "Brak nadchodzących uruchomień"
     },
     "failures": {
-      "title": "Ostatnie błędy",
-      "empty": "Brak ostatnich błędów"
+      "title": "Błędy z ostatnich 7 dni",
+      "empty": "Brak błędów w ostatnich 7 dniach"
     }
   },
   "observationScope": {

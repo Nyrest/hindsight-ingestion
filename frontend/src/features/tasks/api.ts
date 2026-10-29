@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { api, errorMessage, isApiError } from "@/lib/api";
 import { POLL_ACTIVE_MS, POLL_IDLE_MS, qk } from "@/lib/query";
 import type { RunTriggered, Task, TaskInput, TaskPatch } from "@/lib/types";
+import { runEnabledTasks } from "./run-all";
 
 export function useTasks() {
   return useQuery({
@@ -116,6 +117,21 @@ export function useCancelTask() {
     onError: (e) => {
       if (isApiError(e) && e.status === 409) toast.info(t("tasks.cancel.notRunning"));
       else toast.error(t("tasks.cancel.failed"), { description: errorMessage(e) });
+    },
+    onSettled: invalidate,
+  });
+}
+
+export function useRunAllTasks() {
+  const { t } = useTranslation();
+  const invalidate = useInvalidateTasks();
+  return useMutation({
+    mutationFn: (tasks: Task[]) => runEnabledTasks(tasks, api.runTask),
+    onSuccess: (result) => {
+      const message = t("tasks.runAll.result", result);
+      if (result.failed) toast.error(message);
+      else if (result.skipped) toast.warning(message);
+      else toast.success(message);
     },
     onSettled: invalidate,
   });

@@ -398,7 +398,7 @@
       "startFailed": "无法启动 OAuth 授权流程",
       "connected": "已连接",
       "notConnected": "未连接",
-      "expires": "令牌将于 {{when}} 过期"
+      "tokenRefresh": "令牌刷新：{{when}}"
     },
     "toast": {
       "created": "凭据创建成功",
@@ -577,6 +577,7 @@
       "reconcilePending": "等待对齐"
     },
     "actions": {
+      "runAll": "全部运行",
       "runNow": "立即运行",
       "fullReconcile": "全量对齐",
       "fullReingest": "全量重新录入",
@@ -590,6 +591,9 @@
     "empty": {
       "title": "暂无同步任务",
       "description": "新建一个任务，开始将数据源内容同步至 Hindsight 记忆库。"
+    },
+    "runAll": {
+      "result": "已启动 {{started}} 个 · 启动失败 {{failed}} 个 · 已在运行 {{skipped}} 个"
     },
     "trigger": {
       "run": {
@@ -834,8 +838,8 @@
       "empty": "暂无后续计划中的运行"
     },
     "failures": {
-      "title": "最近失败记录",
-      "empty": "近期无失败记录"
+      "title": "最近 7 天的失败记录",
+      "empty": "最近 7 天没有失败记录"
     }
   },
   "settings": {

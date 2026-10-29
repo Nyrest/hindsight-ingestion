@@ -223,7 +223,7 @@
       "startFailed": "Impossible de démarrer OAuth",
       "connected": "Connecté",
       "notConnected": "Non connecté",
-      "expires": "Le jeton expire {{when}}"
+      "tokenRefresh": "Renouvellement du jeton {{when}}"
     },
     "toast": {
       "created": "Identifiant créé",
@@ -400,6 +400,7 @@
       "reconcilePending": "Synchronisation complète en attente"
     },
     "actions": {
+      "runAll": "Tout exécuter",
       "runNow": "Exécuter maintenant",
       "fullReconcile": "Réconciliation complète (Reconcile)",
       "fullReingest": "Réingestion complète (Re-ingest)",
@@ -413,6 +414,9 @@
     "empty": {
       "title": "Aucune tâche pour l'instant",
       "description": "Créez une tâche pour démarrer la synchronisation d'une source dans Hindsight."
+    },
+    "runAll": {
+      "result": "{{started}} démarrées · {{failed}} en échec · {{skipped}} déjà en cours"
     },
     "trigger": {
       "run": {
@@ -654,8 +658,8 @@
       "empty": "Aucune exécution à venir"
     },
     "failures": {
-      "title": "Échecs récents",
-      "empty": "Aucun échec récent"
+      "title": "Échecs des 7 derniers jours",
+      "empty": "Aucun échec au cours des 7 derniers jours"
     }
   },
   "observationScope": {

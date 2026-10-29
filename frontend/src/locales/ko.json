@@ -223,7 +223,7 @@
       "startFailed": "OAuth를 시작할 수 없습니다.",
       "connected": "연결됨",
       "notConnected": "연결되지 않음",
-      "expires": "토큰 만료: {{when}}"
+      "tokenRefresh": "토큰 갱신: {{when}}"
     },
     "toast": {
       "created": "자격 증명이 생성되었습니다.",
@@ -400,6 +400,7 @@
       "reconcilePending": "전체 동기화 대기 중"
     },
     "actions": {
+      "runAll": "모두 실행",
       "runNow": "지금 실행",
       "fullReconcile": "전체 정합성 맞춤 (Full reconcile)",
       "fullReingest": "전체 재수집 (Full re-ingest)",
@@ -413,6 +414,9 @@
     "empty": {
       "title": "아직 작업이 없습니다.",
       "description": "작업을 만들어 원본 콘텐츠를 Hindsight에 동기화하세요."
+    },
+    "runAll": {
+      "result": "{{started}}개 시작 · {{failed}}개 실패 · {{skipped}}개 이미 실행 중"
     },
     "trigger": {
       "run": {
@@ -654,8 +658,8 @@
       "empty": "예정된 실행이 없습니다"
     },
     "failures": {
-      "title": "최근 실패",
-      "empty": "최근 실패 없음"
+      "title": "최근 7일간 실패",
+      "empty": "최근 7일간 실패가 없습니다"
     }
   },
   "observationScope": {

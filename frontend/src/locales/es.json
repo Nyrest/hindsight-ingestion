@@ -223,7 +223,7 @@
       "startFailed": "No se pudo iniciar OAuth",
       "connected": "Conectado",
       "notConnected": "No conectado",
-      "expires": "El token caduca {{when}}"
+      "tokenRefresh": "Renovación del token {{when}}"
     },
     "toast": {
       "created": "Credencial creada",
@@ -400,6 +400,7 @@
       "reconcilePending": "Sincronización completa pendiente"
     },
     "actions": {
+      "runAll": "Ejecutar todas",
       "runNow": "Ejecutar ahora",
       "fullReconcile": "Reconciliación completa (Reconcile)",
       "fullReingest": "Reingesta completa (Re-ingest)",
@@ -413,6 +414,9 @@
     "empty": {
       "title": "Aún no hay tareas",
       "description": "Cree una tarea para comenzar a sincronizar una fuente en Hindsight."
+    },
+    "runAll": {
+      "result": "{{started}} iniciadas · {{failed}} fallidas · {{skipped}} ya en ejecución"
     },
     "trigger": {
       "run": {
@@ -654,8 +658,8 @@
       "empty": "No hay ejecuciones próximas"
     },
     "failures": {
-      "title": "Fallos recientes",
-      "empty": "Sin fallos recientes"
+      "title": "Fallos de los últimos 7 días",
+      "empty": "No hay fallos en los últimos 7 días"
     }
   },
   "observationScope": {

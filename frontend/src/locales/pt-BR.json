@@ -223,7 +223,7 @@
       "startFailed": "Não foi possível iniciar OAuth",
       "connected": "Conectado",
       "notConnected": "Não conectado",
-      "expires": "O token expira {{when}}"
+      "tokenRefresh": "Renovação do token {{when}}"
     },
     "toast": {
       "created": "Credencial criada",
@@ -400,6 +400,7 @@
       "reconcilePending": "Sincronização completa pendente"
     },
     "actions": {
+      "runAll": "Executar todas",
       "runNow": "Executar agora",
       "fullReconcile": "Reconciliação completa (Reconcile)",
       "fullReingest": "Reingestão completa (Re-ingest)",
@@ -413,6 +414,9 @@
     "empty": {
       "title": "Nenhuma tarefa ainda",
       "description": "Crie uma tarefa para iniciar a sincronização de uma origem em Hindsight."
+    },
+    "runAll": {
+      "result": "{{started}} iniciadas · {{failed}} falharam · {{skipped}} já em execução"
     },
     "trigger": {
       "run": {
@@ -654,8 +658,8 @@
       "empty": "Não há execuções próximas"
     },
     "failures": {
-      "title": "Falhas recentes",
-      "empty": "Nenhuma falha recente"
+      "title": "Falhas nos últimos 7 dias",
+      "empty": "Nenhuma falha nos últimos 7 dias"
     }
   },
   "observationScope": {

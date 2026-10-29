@@ -692,6 +692,7 @@ export interface components {
             name: string;
             oauthConnected: boolean;
             oauthExpiresAt: string | null;
+            oauthRefreshAt: string | null;
             proxy: components["schemas"]["Config"];
             /** @enum {string} */
             proxyMode: "global" | "override";

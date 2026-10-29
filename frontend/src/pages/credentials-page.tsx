@@ -175,10 +175,10 @@ export default function CredentialsPage() {
   function oauthInfo(c: Credential) {
     if (!isOAuth(c)) return <span className="text-muted-foreground">—</span>;
     if (!c.oauthConnected) return <span className="text-muted-foreground">{t("credentials.oauth.notConnected")}</span>;
-    if (!c.oauthExpiresAt) return <span>{t("credentials.oauth.connected")}</span>;
+    if (!c.oauthRefreshAt) return <span>{t("credentials.oauth.connected")}</span>;
     return (
-      <span title={formatDateTime(c.oauthExpiresAt, timezone)}>
-        {t("credentials.oauth.expires", { when: formatRelative(c.oauthExpiresAt, now) })}
+      <span title={formatDateTime(c.oauthRefreshAt, timezone)}>
+        {t("credentials.oauth.tokenRefresh", { when: formatRelative(c.oauthRefreshAt, now) })}
       </span>
     );
   }

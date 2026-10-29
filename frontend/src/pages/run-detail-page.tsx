@@ -10,25 +10,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useTimezone } from "@/features/settings/api";
 import { useRun } from "@/features/runs/api";
+import { RunLog, RunLogCopyButton, RunOperationsTable } from "@/features/runs/run-output";
 import { RunCountersGrid } from "@/features/runs/run-counters";
 import { ModeLabel, TriggerLabel } from "@/features/runs/runs-table";
 import { useCancelTask } from "@/features/tasks/api";
 import { errorMessage, isApiError } from "@/lib/api";
-import { formatDateTime, formatDuration, formatRelative, formatTime, runDuration } from "@/lib/format";
+import { formatDateTime, formatDuration, formatRelative, runDuration } from "@/lib/format";
 import { useNow } from "@/lib/hooks";
 import { isActiveRun } from "@/lib/types";
 import { cn } from "@/lib/utils";
-
-const LEVEL_CLASSES: Record<string, string> = {
-  debug: "text-muted-foreground",
-  info: "text-sky-600 dark:text-sky-400",
-  warn: "text-amber-600 dark:text-amber-400",
-  warning: "text-amber-600 dark:text-amber-400",
-  error: "text-red-600 dark:text-red-400",
-};
 
 export default function RunDetailPage() {
   const timezone = useTimezone();
@@ -155,47 +147,7 @@ export default function RunDetailPage() {
           {ops.length === 0 ? (
             <p className="px-5 py-6 text-center text-sm text-muted-foreground">{t("runDetail.noOperations")}</p>
           ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="pl-5">{t("runDetail.opColumns.remoteId")}</TableHead>
-                    <TableHead>{t("runDetail.opColumns.type")}</TableHead>
-                    <TableHead>{t("runDetail.opColumns.status")}</TableHead>
-                    <TableHead>{t("runDetail.opColumns.retries")}</TableHead>
-                    <TableHead>{t("runDetail.opColumns.created")}</TableHead>
-                    <TableHead className="pr-5">{t("runDetail.opColumns.updated")}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {ops.map((op) => (
-                    <TableRow key={op.id}>
-                      <TableCell className="max-w-[16rem] truncate pl-5 font-mono text-xs" title={op.remoteOperationId}>
-                        {op.remoteOperationId || "—"}
-                      </TableCell>
-                      <TableCell className="text-sm">{op.type}</TableCell>
-                      <TableCell>
-                        <span
-                          className={cn(
-                            "text-xs font-medium",
-                            /fail|error/i.test(op.status)
-                              ? "text-red-600 dark:text-red-400"
-                              : /complete|success|succeeded|done/i.test(op.status)
-                                ? "text-emerald-600 dark:text-emerald-400"
-                                : "text-sky-600 dark:text-sky-400",
-                          )}
-                        >
-                          {op.status}
-                        </span>
-                      </TableCell>
-                      <TableCell className="tabular-nums">{op.retryCount}</TableCell>
-                      <TableCell className="text-xs whitespace-nowrap">{formatDateTime(op.createdAt, timezone)}</TableCell>
-                      <TableCell className="pr-5 text-xs whitespace-nowrap">{formatDateTime(op.updatedAt, timezone)}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+            <RunOperationsTable key={r.id} operations={ops} timezone={timezone} />
           )}
         </CardContent>
       </Card>
@@ -207,26 +159,14 @@ export default function RunDetailPage() {
             {active && <Loader2 className="size-3.5 animate-spin text-muted-foreground" />}
           </CardTitle>
           {log.length > 0 && (
-            <CopyButton value={log.map((l) => `${l.time} ${l.level.toUpperCase()} ${l.message}`).join("\n")} className="size-8" />
+            <RunLogCopyButton log={log} />
           )}
         </CardHeader>
         <CardContent className="p-0">
           {log.length === 0 ? (
             <p className="px-5 py-6 text-center text-sm text-muted-foreground">{t("runDetail.noLog")}</p>
           ) : (
-            <div className="max-h-[32rem] overflow-auto bg-muted/30 py-2 font-mono text-xs leading-relaxed">
-              {log.map((l, i) => (
-                <div key={i} className="flex gap-3 px-5 py-px hover:bg-accent/50">
-                  <span className="shrink-0 text-muted-foreground tabular-nums" title={formatDateTime(l.time, timezone)}>
-                    {formatTime(l.time, timezone)}
-                  </span>
-                  <span className={cn("w-12 shrink-0 font-semibold uppercase", LEVEL_CLASSES[l.level.toLowerCase()] ?? "text-muted-foreground")}>
-                    {l.level}
-                  </span>
-                  <span className="min-w-0 break-all whitespace-pre-wrap">{l.message}</span>
-                </div>
-              ))}
-            </div>
+            <RunLog key={r.id} log={log} timezone={timezone} />
           )}
         </CardContent>
       </Card>

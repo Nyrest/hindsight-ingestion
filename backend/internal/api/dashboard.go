@@ -76,7 +76,9 @@ func (s *Server) runningTasks(ctx context.Context, names map[string]string) ([]r
 func (s *Server) recentFailures(ctx context.Context, names map[string]string) ([]runDTO, error) {
 	var rows []models.TaskRun
 	err := s.DB.WithContext(ctx).Omit("log_json", "cursor_before", "cursor_after").
-		Where("status IN ?", []string{models.RunFailed, models.RunInterrupted}).Order("started_at DESC").Limit(10).Find(&rows).Error
+		Where("status IN ?", []string{models.RunFailed, models.RunInterrupted}).
+		Where("COALESCE(finished_at, started_at) >= ?", time.Now().UTC().Add(-7*24*time.Hour)).
+		Order("COALESCE(finished_at, started_at) DESC").Order("id DESC").Limit(10).Find(&rows).Error
 	failures := make([]runDTO, 0, len(rows))
 	for i := range rows {
 		failures = append(failures, runView(&rows[i], names[rows[i].TaskID]))

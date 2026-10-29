@@ -223,7 +223,7 @@
       "startFailed": "OAuth başlatılamadı",
       "connected": "Bağlı",
       "notConnected": "Bağlı değil",
-      "expires": "Belirtecin süresi {{when}} dolacak"
+      "tokenRefresh": "Belirteç yenileme {{when}}"
     },
     "toast": {
       "created": "Kimlik bilgisi oluşturuldu",
@@ -400,6 +400,7 @@
       "reconcilePending": "Tam eşitleme bekleniyor"
     },
     "actions": {
+      "runAll": "Tümünü çalıştır",
       "runNow": "Şimdi çalıştır",
       "fullReconcile": "Tam eşitleme (Reconcile)",
       "fullReingest": "Yeniden içe aktarma (Re-ingest)",
@@ -413,6 +414,9 @@
     "empty": {
       "title": "Henüz görev yok",
       "description": "Bir kaynağı Hindsight ile senkronize etmeye başlamak için bir görev oluşturun."
+    },
+    "runAll": {
+      "result": "{{started}} başlatıldı · {{failed}} başarısız · {{skipped}} zaten çalışıyor"
     },
     "trigger": {
       "run": {
@@ -654,8 +658,8 @@
       "empty": "Yaklaşan çalıştırma yok"
     },
     "failures": {
-      "title": "Son başarısızlıklar",
-      "empty": "Yakın zamanda başarısızlık yok"
+      "title": "Son 7 gündeki hatalar",
+      "empty": "Son 7 günde hata yok"
     }
   },
   "observationScope": {

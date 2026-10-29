@@ -223,7 +223,7 @@
       "startFailed": "OAuth を開始できませんでした",
       "connected": "接続済み",
       "notConnected": "接続されていません",
-      "expires": "トークンの有効期限: {{when}}"
+      "tokenRefresh": "トークン更新：{{when}}"
     },
     "toast": {
       "created": "認証情報が作成されました",
@@ -400,6 +400,7 @@
       "reconcilePending": "全件同期待ち"
     },
     "actions": {
+      "runAll": "すべて実行",
       "runNow": "今すぐ実行",
       "fullReconcile": "フル整合 (Reconcile)",
       "fullReingest": "全件再取り込み (Re-ingest)",
@@ -413,6 +414,9 @@
     "empty": {
       "title": "まだタスクはありません",
       "description": "Hindsight へのソースの同期を開始するタスクを作成します。"
+    },
+    "runAll": {
+      "result": "{{started}} 件開始 · {{failed}} 件失敗 · {{skipped}} 件実行中"
     },
     "trigger": {
       "run": {
@@ -654,8 +658,8 @@
       "empty": "今後の実行予定はありません"
     },
     "failures": {
-      "title": "最近の失敗",
-      "empty": "最近失敗はありません"
+      "title": "過去7日間の失敗",
+      "empty": "過去7日間の失敗はありません"
     }
   },
   "observationScope": {

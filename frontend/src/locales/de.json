@@ -223,7 +223,7 @@
       "startFailed": "OAuth konnte nicht gestartet werden",
       "connected": "Verbunden",
       "notConnected": "Nicht verbunden",
-      "expires": "Token läuft ab {{when}}"
+      "tokenRefresh": "Token-Aktualisierung {{when}}"
     },
     "toast": {
       "created": "Zugangsdaten erstellt",
@@ -400,6 +400,7 @@
       "reconcilePending": "Vollständiger Abgleich ausstehend"
     },
     "actions": {
+      "runAll": "Alle ausführen",
       "runNow": "Jetzt ausführen",
       "fullReconcile": "Vollständiger Abgleich (Reconcile)",
       "fullReingest": "Vollständig neu erfassen (Re-ingest)",
@@ -413,6 +414,9 @@
     "empty": {
       "title": "Noch keine Aufgaben",
       "description": "Erstellen Sie eine Aufgabe, um mit der Synchronisierung einer Quelle mit Hindsight zu beginnen."
+    },
+    "runAll": {
+      "result": "{{started}} gestartet · {{failed}} fehlgeschlagen · {{skipped}} bereits aktiv"
     },
     "trigger": {
       "run": {
@@ -654,8 +658,8 @@
       "empty": "Keine anstehenden Ausführungen"
     },
     "failures": {
-      "title": "Letzte fehlgeschlagene Ausführungen",
-      "empty": "Keine kürzlich fehlgeschlagenen Ausführungen"
+      "title": "Fehler der letzten 7 Tage",
+      "empty": "Keine Fehler in den letzten 7 Tagen"
     }
   },
   "observationScope": {
