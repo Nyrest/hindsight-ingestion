@@ -184,47 +184,98 @@ func (c *client) propfind(ctx context.Context, p string, depth string) ([]entry,
 	return c.parse(resp.Body)
 }
 
+const maxMetadataBytes = 64 << 20
+const maxMetadataEntries = 100000
+
+// Decode one DAV response at a time so the XML tree is not retained alongside
+// the entry list. Any limit or parse error invalidates the whole inventory.
 func (c *client) parse(r io.Reader) ([]entry, string, error) {
-	var ms multistatus
-	if err := xml.NewDecoder(r).Decode(&ms); err != nil {
-		return nil, "", fmt.Errorf("parse WebDAV response: %w", err)
-	}
+	dec := xml.NewDecoder(httpx.LimitResponse(r, maxMetadataBytes))
 	var out []entry
-	token := ms.SyncToken
-	for _, resp := range ms.Responses {
-		e := entry{Path: c.relPath(resp.Href)}
-		if strings.Contains(resp.Status, " 404") {
-			e.Gone = true
-			out = append(out, e)
-			continue
+	token := ""
+	root := false
+	for {
+		t, err := dec.Token()
+		if err != nil {
+			return nil, "", fmt.Errorf("parse WebDAV response: %w", err)
 		}
-		for _, ps := range resp.Propstat {
-			if ps.Status != "" && !strings.Contains(ps.Status, " 200") {
+		switch t := t.(type) {
+		case xml.StartElement:
+			if !root {
+				if t.Name.Local != "multistatus" {
+					return nil, "", errors.New("expected WebDAV multistatus")
+				}
+				root = true
 				continue
 			}
-			pr := ps.Prop
-			if pr.ResourceType.Collection != nil {
-				e.IsDir = true
+			switch t.Name.Local {
+			case "response":
+				if len(out) >= maxMetadataEntries {
+					return nil, "", errors.New("WebDAV response exceeds entry limit")
+				}
+				var resp response
+				if err := dec.DecodeElement(&resp, &t); err != nil {
+					return nil, "", fmt.Errorf("parse WebDAV response: %w", err)
+				}
+				e := c.responseEntry(resp)
+				if token == "" {
+					for _, ps := range resp.Propstat {
+						if (ps.Status == "" || strings.Contains(ps.Status, " 200")) && ps.Prop.SyncToken != "" {
+							token = ps.Prop.SyncToken
+						}
+					}
+				}
+				out = append(out, e)
+			case "sync-token":
+				var rootToken string
+				if err := dec.DecodeElement(&rootToken, &t); err != nil {
+					return nil, "", err
+				}
+				if rootToken != "" {
+					token = rootToken
+				}
+			default:
+				if err := dec.Skip(); err != nil {
+					return nil, "", err
+				}
 			}
-			if pr.ETag != "" {
-				e.ETag = strings.Trim(pr.ETag, `"`)
-			}
-			if pr.ContentLength != "" {
-				e.Size, _ = strconv.ParseInt(pr.ContentLength, 10, 64)
-			}
-			if pr.ContentType != "" {
-				e.MIME = pr.ContentType
-			}
-			if pr.LastModified != "" {
-				e.Modified, _ = http.ParseTime(pr.LastModified)
-			}
-			if pr.SyncToken != "" && token == "" {
-				token = pr.SyncToken
+		case xml.EndElement:
+			if root && t.Name.Local == "multistatus" {
+				return out, token, nil
 			}
 		}
-		out = append(out, e)
 	}
-	return out, token, nil
+}
+
+func (c *client) responseEntry(resp response) entry {
+	e := entry{Path: c.relPath(resp.Href)}
+	if strings.Contains(resp.Status, " 404") {
+		e.Gone = true
+		return e
+	}
+	for _, ps := range resp.Propstat {
+		if ps.Status != "" && !strings.Contains(ps.Status, " 200") {
+			continue
+		}
+		pr := ps.Prop
+		if pr.ResourceType.Collection != nil {
+			e.IsDir = true
+		}
+		if pr.ETag != "" {
+			e.ETag = strings.Trim(pr.ETag, `"`)
+		}
+		if pr.ContentLength != "" {
+			e.Size, _ = strconv.ParseInt(pr.ContentLength, 10, 64)
+		}
+		if pr.ContentType != "" {
+			e.MIME = pr.ContentType
+		}
+		if pr.LastModified != "" {
+			e.Modified, _ = http.ParseTime(pr.LastModified)
+		}
+
+	}
+	return e
 }
 
 // ValidateCredential issues a depth-0 PROPFIND on the base URL.

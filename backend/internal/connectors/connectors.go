@@ -359,11 +359,11 @@ type Breadcrumb struct {
 
 // BrowseResult is a browse listing.
 type BrowseResult struct {
-	DefaultSelection []string `json:"defaultSelection,omitempty"`
-	Items          []BrowseItem `json:"items"`
-	ParentID       string       `json:"parentId"`
-	Breadcrumbs    []Breadcrumb `json:"breadcrumbs"`
-	SupportsSearch bool         `json:"supportsSearch"`
+	DefaultSelection []string     `json:"defaultSelection,omitempty"`
+	Items            []BrowseItem `json:"items"`
+	ParentID         string       `json:"parentId"`
+	Breadcrumbs      []Breadcrumb `json:"breadcrumbs"`
+	SupportsSearch   bool         `json:"supportsSearch"`
 }
 
 // SourceConnector is implemented by every source.

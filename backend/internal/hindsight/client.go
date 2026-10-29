@@ -133,22 +133,33 @@ type MemoryItem struct {
 	UpdateMode        string                    `json:"update_mode,omitempty"`
 }
 
-func (item MemoryItem) MarshalJSON() ([]byte, error) {
-	type plain MemoryItem
+type plainMemoryItem MemoryItem
+
+type memoryItemJSON struct {
+	plainMemoryItem
+	Content any `json:"content"`
+}
+
+func (item MemoryItem) wire() memoryItemJSON {
 	var content any = item.Content
 	if len(item.Blocks) > 0 {
 		content = item.Blocks
 	}
-	return json.Marshal(struct {
-		plain
-		Content any `json:"content"`
-	}{plain(item), content})
+	return memoryItemJSON{plainMemoryItem(item), content}
 }
+
+func (item MemoryItem) MarshalJSON() ([]byte, error) { return json.Marshal(item.wire()) }
 
 // RetainBatch submits items asynchronously and returns operation IDs.
 // operationID makes resubmission idempotent.
 func (c *Client) RetainBatch(ctx context.Context, bankID string, items []MemoryItem, operationID string) ([]string, error) {
-	body := map[string]any{"items": items, "async": true}
+	// Avoid invoking a per-item Marshaler inside the request Marshaler, which
+	// creates another full JSON copy of large attachment blocks.
+	encodedItems := make([]memoryItemJSON, len(items))
+	for i, item := range items {
+		encodedItems[i] = item.wire()
+	}
+	body := map[string]any{"items": encodedItems, "async": true}
 	if operationID != "" {
 		body["operation_id"] = operationID
 	}

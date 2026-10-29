@@ -13,6 +13,7 @@ import (
 	"sort"
 	"strings"
 	stdsync "sync"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -695,7 +696,7 @@ func TestStaleActiveRunDoesNotBlockStart(t *testing.T) {
 }
 
 func TestDuplicateDeletionAfterUpsert(t *testing.T) {
-	for _, count := range []int{1, sync.RetainBatchSize} {
+	for _, count := range []int{1, sync.RetainBatchSize, 525} {
 		t.Run(fmt.Sprintf("batch-%d", count), func(t *testing.T) {
 			h := newHarness(t)
 			docs := map[string]fakeDoc{}
@@ -753,4 +754,75 @@ func contains(list []string, s string) bool {
 		}
 	}
 	return false
+}
+
+func TestFailuresAcrossPendingWindowsKeepCursorStale(t *testing.T) {
+	h := newHarness(t)
+	docs := map[string]fakeDoc{}
+	for i := 0; i < 1125; i++ {
+		docs[fmt.Sprintf("doc-%03d", i)] = fakeDoc{rev: "1", content: "content"}
+	}
+	h.setDocs(docs)
+	h.dest.failOps = true
+	run := h.run("")
+	expectStatus(t, run, models.RunFailed)
+	if run.FailedCount != 1125 || h.state().CommittedCursorJSON != "" {
+		t.Fatalf("failed=%d cursor=%q", run.FailedCount, h.state().CommittedCursorJSON)
+	}
+	var failed int64
+	h.db.Model(&models.TaskItem{}).Where("task_id = ? AND last_error <> ''", h.task.ID).Count(&failed)
+	if failed != 1125 {
+		t.Fatalf("failed ledger rows=%d", failed)
+	}
+}
+
+type pollingDestination struct {
+	*fakeDest
+	active, maximum atomic.Int64
+	block           bool
+}
+
+func (d *pollingDestination) GetOperation(ctx context.Context, bank, op string) (hindsight.OperationStatus, error) {
+	n := d.active.Add(1)
+	defer d.active.Add(-1)
+	for {
+		m := d.maximum.Load()
+		if n <= m || d.maximum.CompareAndSwap(m, n) {
+			break
+		}
+	}
+	if d.block {
+		<-ctx.Done()
+		return hindsight.OperationStatus{}, ctx.Err()
+	}
+	time.Sleep(5 * time.Millisecond)
+	return d.fakeDest.GetOperation(ctx, bank, op)
+}
+func TestOperationPollingIsBoundedAndParallel(t *testing.T) {
+	h := newHarness(t)
+	dest := &pollingDestination{fakeDest: h.dest}
+	h.engine.NewDestination = func(connectors.Credential) (sync.Destination, error) { return dest, nil }
+	docs := map[string]fakeDoc{}
+	for i := 0; i < 175; i++ {
+		docs[fmt.Sprint(i)] = fakeDoc{rev: "1", content: "text"}
+	}
+	h.setDocs(docs)
+	expectStatus(t, h.run(""), models.RunSucceeded)
+	if n := dest.maximum.Load(); n < 2 || n > 4 {
+		t.Fatalf("poll concurrency=%d", n)
+	}
+}
+func TestOperationWaitDeadlineCancelsStatusRequests(t *testing.T) {
+	h := newHarness(t)
+	dest := &pollingDestination{fakeDest: h.dest, block: true}
+	h.engine.NewDestination = func(connectors.Credential) (sync.Destination, error) { return dest, nil }
+	h.setDocs(map[string]fakeDoc{"a": {rev: "1", content: "text"}})
+	old := sync.OperationWaitTimeout
+	sync.OperationWaitTimeout = 20 * time.Millisecond
+	defer func() { sync.OperationWaitTimeout = old }()
+	started := time.Now()
+	expectStatus(t, h.run(""), models.RunFailed)
+	if time.Since(started) > time.Second || dest.active.Load() != 0 {
+		t.Fatal("status requests survived deadline")
+	}
 }

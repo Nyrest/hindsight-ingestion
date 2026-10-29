@@ -3,6 +3,8 @@ package notion
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -72,12 +74,15 @@ func (c *Connector) Info() connectors.SourceInfo {
 	}
 }
 
+var pacing = &httpx.PacerRegistry{Interval: requestInterval}
+
 func client(cred connectors.Credential) *httpx.Client {
 	c := httpx.New(cred.Headers, map[string]string{
 		"Authorization":  "Bearer " + cred.String("token"),
 		"Notion-Version": apiVersion,
 	}, cred.Proxy)
-	c.Pace = httpx.Pacer(requestInterval)
+	key := sha256.Sum256([]byte(apiBase(cred) + "\x00" + cred.String("token")))
+	c.Pace = func(ctx context.Context) error { return pacing.Wait(ctx, hex.EncodeToString(key[:])) }
 	return c
 }
 
