@@ -30,6 +30,7 @@ Sync **Notion, SiYuan, DeepWiki, S3, WebDAV, WebCAL, CalDAV, Email (IMAP), Steam
 - 🧪 **Preview and trace every change** — Dry-run shows planned changes before ingestion. Follow real runs through sync counters, Hindsight operations and detailed logs.
 - 🔐 **Self-hosted, secrets encrypted** — Deploy with Docker, encrypt credentials with AES-256-GCM, and choose SQLite, PostgreSQL or MySQL for persistent storage.
 - 🌍 **Localized interface** — Built-in multi-language WebUI supporting 14 locales with automatic browser detection and seamless switching.
+- 🪶 **Lightweight** — ~18 MB minimal musl-based Docker image, ~20 MB idle RAM usage.
 
 ## 🔌 Supported Sources
 
