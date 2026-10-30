@@ -96,3 +96,14 @@ test("every locale translates post-processing copy", () => {
     expect(translation.taskEditor.sections.postprocess.title.trim()).not.toBe("");
   }
 });
+
+test("extraction steps generate typed code and validate cloud credentials", () => {
+  const steps = (["unstructured", "kreuzberg", "docling", "mineru"] as const).map((type) => ({
+    ...newStep(type), url: "https://parser.example.com", apiKey: "example",
+  }));
+  expect(ts.getPreEmitDiagnostics(codeProgram(generateCode(steps)).program)).toEqual([]);
+  expect(stepErrors({ ...newStep("mineru"), apiMode: "cloud", url: "https://mineru.net" })).toEqual({ apiKey: "validation.required" });
+  expect(stepErrors(newStep("docling"))).toEqual({ url: "validation.required" });
+  const disabled = generateCode([{ ...steps[3], enabled: false }]);
+  expect(disabled).toContain('// input = await steps.mineru(context, input, {"apiKey":"example","apiMode":"self_hosted","url":"https://parser.example.com"});');
+});

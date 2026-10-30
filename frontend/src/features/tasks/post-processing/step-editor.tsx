@@ -28,6 +28,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { PipelineStep, StepType } from "./model";
+import { ExtractionFields } from "./extraction-fields";
 
 export const STEP_ICONS: Record<StepType, LucideIcon> = {
   replace: Replace,
@@ -41,6 +42,10 @@ export const STEP_ICONS: Record<StepType, LucideIcon> = {
   case: CaseSensitive,
   skip: Ban,
   http: Globe,
+  unstructured: Globe,
+  kreuzberg: Globe,
+  docling: Globe,
+  mineru: Globe,
 };
 
 const SEPARATORS = [
@@ -77,6 +82,11 @@ export function stepSummary(step: PipelineStep, t: (key: string, opts?: Record<s
       return t(`postProcessing.case.${step.case ?? "lower"}`);
     case "http":
       return step.url ? `${step.method ?? "POST"} ${step.url}` : "";
+    case "unstructured":
+    case "kreuzberg":
+    case "docling":
+    case "mineru":
+      return step.url ?? "";
     default:
       return "";
   }
@@ -274,6 +284,11 @@ function StepFields({ step, errors, onChange }: { step: PipelineStep; errors: Re
       );
     case "http":
       return <HttpFields step={step} errors={errors} set={set} id={id} />;
+    case "unstructured":
+    case "kreuzberg":
+    case "docling":
+    case "mineru":
+      return <ExtractionFields step={step} errors={errors} onChange={onChange} />;
     default:
       return null;
   }

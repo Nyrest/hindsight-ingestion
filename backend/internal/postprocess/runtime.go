@@ -29,8 +29,6 @@ var prelude = sync.OnceValues(func() (*goja.Program, error) {
 
 // Tunables.
 var (
-	// DocumentTimeout bounds initialization and one process() call, including HTTP requests.
-	DocumentTimeout = 2 * time.Minute
 	// FetchTimeout is the default timeout of one fetch() request.
 	FetchTimeout = 60 * time.Second
 	// MaxResponseBytes bounds a fetch() response body.
@@ -107,6 +105,7 @@ func newVM(key, script string) (*VM, error) {
 	for name, fn := range map[string]func(goja.FunctionCall) goja.Value{
 		"__fetch": v.fetch, "__log": v.log, "__utf8Encode": v.utf8Encode, "__utf8Decode": v.utf8Decode,
 		"__atob": v.atob, "__btoa": v.btoa,
+		"__extract": v.extract,
 	} {
 		if err := v.rt.Set(name, fn); err != nil {
 			return nil, err
@@ -134,8 +133,6 @@ func (v *VM) Process(ctx context.Context, env Env, doc Document) (res Result, er
 	}
 	v.documents++
 	defer func() { v.processedBytes += int64(len(doc.Text) + len(doc.Data) + len(res.Text) + len(res.Data)) }()
-	ctx, cancel := context.WithTimeoutCause(ctx, DocumentTimeout, fmt.Errorf("post-processing exceeded %s", DocumentTimeout))
-	defer cancel()
 	v.ctx, v.env = ctx, env
 	defer func() { v.ctx, v.env = context.Background(), Env{} }()
 
@@ -357,6 +354,22 @@ func (v *VM) fetch(call goja.FunctionCall) goja.Value {
 	if httpReq.Header.Get("User-Agent") == "" {
 		httpReq.Header.Set("User-Agent", httpx.UserAgent)
 	}
+	resp, data, err := v.request(httpReq)
+	if err != nil {
+		v.throw("fetch: %v", err)
+	}
+	respHeaders := make([]any, 0, len(resp.Header))
+	for k, vals := range resp.Header {
+		respHeaders = append(respHeaders, []any{strings.ToLower(k), strings.Join(vals, ", ")})
+	}
+	statusText := strings.TrimSpace(strings.TrimPrefix(resp.Status, fmt.Sprint(resp.StatusCode)))
+	return v.rt.ToValue(map[string]any{
+		"status": resp.StatusCode, "statusText": statusText, "url": resp.Request.URL.String(),
+		"headers": respHeaders, "body": v.rt.NewArrayBuffer(data),
+	})
+}
+
+func (v *VM) request(httpReq *http.Request) (*http.Response, []byte, error) {
 	client := v.env.HTTP
 	if client == nil {
 		client = &http.Client{Transport: httpx.Shared}
@@ -372,26 +385,18 @@ func (v *VM) fetch(call goja.FunctionCall) goja.Value {
 	requestClient.CheckRedirect = guard.CheckRedirect
 	resp, err := requestClient.Do(httpReq)
 	if err != nil {
-		v.throw("fetch: %v", err)
+		return nil, nil, err
 	}
 	defer resp.Body.Close()
 	data, err := io.ReadAll(io.LimitReader(resp.Body, MaxResponseBytes+1))
 	if err != nil {
-		v.throw("fetch: read response: %v", err)
+		return nil, nil, fmt.Errorf("read response: %w", err)
 	}
 	v.processedBytes += int64(len(data))
 	if int64(len(data)) > MaxResponseBytes {
-		v.throw("fetch: response exceeds %d MB", MaxResponseBytes>>20)
+		return nil, nil, fmt.Errorf("response exceeds %d MB", MaxResponseBytes>>20)
 	}
-	respHeaders := make([]any, 0, len(resp.Header))
-	for k, vals := range resp.Header {
-		respHeaders = append(respHeaders, []any{strings.ToLower(k), strings.Join(vals, ", ")})
-	}
-	statusText := strings.TrimSpace(strings.TrimPrefix(resp.Status, fmt.Sprint(resp.StatusCode)))
-	return v.rt.ToValue(map[string]any{
-		"status": resp.StatusCode, "statusText": statusText, "url": resp.Request.URL.String(),
-		"headers": respHeaders, "body": v.rt.NewArrayBuffer(data),
-	})
+	return resp, data, nil
 }
 
 func describe(err error) string {

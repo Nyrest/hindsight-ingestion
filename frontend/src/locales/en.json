@@ -1123,6 +1123,22 @@
       "http": {
         "title": "HTTP request",
         "description": "Send the document to an HTTP endpoint and use the response."
+      },
+      "unstructured": {
+        "title": "Unstructured",
+        "description": "Send the document to Unstructured over HTTP and use the extracted text."
+      },
+      "kreuzberg": {
+        "title": "Kreuzberg",
+        "description": "Send the document to Kreuzberg over HTTP and use the extracted text."
+      },
+      "docling": {
+        "title": "Docling",
+        "description": "Send the document to Docling over HTTP and use the extracted text."
+      },
+      "mineru": {
+        "title": "MinerU",
+        "description": "Send the document to MinerU, wait for parsing, and use the returned Markdown."
       }
     },
     "test": {
@@ -1142,6 +1158,15 @@
         "skip": "Skipped",
         "error": "Error"
       }
+    },
+    "extraction": {
+      "apiMode": "API mode",
+      "self_hosted": "Self-hosted (V1)",
+      "cloud": "MinerU Cloud",
+      "baseURL": "Service base URL, without /v1 or /api/v4.",
+      "endpoint": "Full file-upload endpoint URL.",
+      "apiKey": "API key",
+      "formHelp": "Optional API form fields. The file is uploaded automatically; Docling output is fixed to Markdown."
     }
   },
   "notion": {

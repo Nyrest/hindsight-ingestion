@@ -1123,6 +1123,22 @@
       "http": {
         "title": "HTTP isteği",
         "description": "Belgeyi bir HTTP uç noktasına gönderir ve yanıtı kullanır."
+      },
+      "unstructured": {
+        "title": "Unstructured",
+        "description": "Belgeyi HTTP üzerinden Unstructured hizmetine gönderip çıkarılan metni kullanın."
+      },
+      "kreuzberg": {
+        "title": "Kreuzberg",
+        "description": "Belgeyi HTTP üzerinden Kreuzberg hizmetine gönderip çıkarılan metni kullanın."
+      },
+      "docling": {
+        "title": "Docling",
+        "description": "Belgeyi HTTP üzerinden Docling hizmetine gönderip çıkarılan metni kullanın."
+      },
+      "mineru": {
+        "title": "MinerU",
+        "description": "Belgeyi MinerU’ya gönderin, işlemin tamamlanmasını bekleyin ve döndürülen Markdown’ı kullanın."
       }
     },
     "test": {
@@ -1142,6 +1158,15 @@
         "skip": "Atlandı",
         "error": "Hata"
       }
+    },
+    "extraction": {
+      "apiMode": "API modu",
+      "self_hosted": "Kendi sunucunuz (V1)",
+      "cloud": "MinerU Cloud",
+      "baseURL": "/v1 veya /api/v4 içermeyen hizmet temel URL’si.",
+      "endpoint": "Dosya yükleme uç noktasının tam URL’si.",
+      "apiKey": "API anahtarı",
+      "formHelp": "İsteğe bağlı API form alanları. Dosya otomatik yüklenir; Docling Markdown döndürür."
     }
   },
   "notion": {

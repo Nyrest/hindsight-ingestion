@@ -26,6 +26,7 @@ Sync **Notion, SiYuan, DeepWiki, S3, WebDAV, WebCAL, CalDAV, Email (IMAP), Steam
 - 🔄 **Stay in sync, deletions included** — Clean up documents when source items disappear or leave your sync scope. Incomplete scans never treat missing items as deletions.
 - 🚀 **Streaming file ingestion** — Stream files directly into Hindsight without loading entire uploads into memory. Export Google Docs, Sheets and Slides as Markdown, CSV and PDF.
 - 🎛️ **Your sync, your rules** — Combine filters, file types, retain strategies, tags and metadata. Set a schedule for every task, or run on demand.
+- 📄 **Post-processing** — Call Unstructured, Kreuzberg, Docling, MinerU or custom http API or JavaScript code to process and enrich your ingested content.
 - 🛡️ **Built to recover** — Persisted checkpoints and operation retries recover from failures and restarts. Overlap protection keeps each task from running twice at once.
 - 🧪 **Preview and trace every change** — Dry-run shows planned changes before ingestion. Follow real runs through sync counters, Hindsight operations and detailed logs.
 - 🔐 **Self-hosted, secrets encrypted** — Deploy with Docker, encrypt credentials with AES-256-GCM, and choose SQLite, PostgreSQL or MySQL for persistent storage.

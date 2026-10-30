@@ -1123,6 +1123,22 @@
       "http": {
         "title": "Permintaan HTTP",
         "description": "Kirim dokumen ke endpoint HTTP dan gunakan responsnya."
+      },
+      "unstructured": {
+        "title": "Unstructured",
+        "description": "Kirim dokumen ke Unstructured melalui HTTP dan gunakan teks hasil ekstraksi."
+      },
+      "kreuzberg": {
+        "title": "Kreuzberg",
+        "description": "Kirim dokumen ke Kreuzberg melalui HTTP dan gunakan teks hasil ekstraksi."
+      },
+      "docling": {
+        "title": "Docling",
+        "description": "Kirim dokumen ke Docling melalui HTTP dan gunakan teks hasil ekstraksi."
+      },
+      "mineru": {
+        "title": "MinerU",
+        "description": "Kirim dokumen ke MinerU, tunggu pemrosesan selesai, lalu gunakan Markdown yang dikembalikan."
       }
     },
     "test": {
@@ -1142,6 +1158,15 @@
         "skip": "Dilewati",
         "error": "Kesalahan"
       }
+    },
+    "extraction": {
+      "apiMode": "Mode API",
+      "self_hosted": "Hosting mandiri (V1)",
+      "cloud": "MinerU Cloud",
+      "baseURL": "URL dasar layanan, tanpa /v1 atau /api/v4.",
+      "endpoint": "URL lengkap endpoint unggah berkas.",
+      "apiKey": "Kunci API",
+      "formHelp": "Kolom formulir API opsional. Berkas diunggah otomatis; Docling menghasilkan Markdown."
     }
   },
   "notion": {

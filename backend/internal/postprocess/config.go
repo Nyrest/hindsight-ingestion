@@ -38,10 +38,15 @@ const (
 	StepRemoveLines        = "remove_lines"
 	StepSkip               = "skip"
 	StepHTTP               = "http"
+	StepUnstructured       = "unstructured"
+	StepKreuzberg          = "kreuzberg"
+	StepDocling            = "docling"
+	StepMinerU             = "mineru"
 )
 
 var stepTypes = []string{StepReplace, StepTrim, StepPrepend, StepAppend, StepTruncate, StepCase,
-	StepCollapseWhitespace, StepStripHTML, StepRemoveLines, StepSkip, StepHTTP}
+	StepCollapseWhitespace, StepStripHTML, StepRemoveLines, StepSkip, StepHTTP,
+	StepUnstructured, StepKreuzberg, StepDocling, StepMinerU}
 
 // Limits.
 const (
@@ -75,7 +80,7 @@ type KeyValue struct {
 // PipelineStep is one UI pipeline step. Only the fields of its type are meaningful.
 type PipelineStep struct {
 	ID      string `json:"id"`
-	Type    string `json:"type" enum:"replace,trim,prepend,append,truncate,case,collapse_whitespace,strip_html,remove_lines,skip,http"`
+	Type    string `json:"type" enum:"replace,trim,prepend,append,truncate,case,collapse_whitespace,strip_html,remove_lines,skip,http,unstructured,kreuzberg,docling,mineru"`
 	Enabled bool   `json:"enabled"`
 
 	// replace, remove_lines, skip
@@ -106,6 +111,9 @@ type PipelineStep struct {
 	Form         []KeyValue `json:"form,omitempty"`
 	ResponseMode string     `json:"responseMode,omitempty" enum:"text,json,binary,ignore"`
 	ResponsePath string     `json:"responsePath,omitempty"`
+	// Document extraction services. MinerU cloud uses the official V4 API.
+	APIKey  string `json:"apiKey,omitempty"`
+	APIMode string `json:"apiMode,omitempty" enum:"self_hosted,cloud"`
 }
 
 // Pipeline is a task's post-processing configuration.
@@ -185,6 +193,22 @@ func (s PipelineStep) normalize() (PipelineStep, *FieldError) {
 		return s, &FieldError{"type", "Unknown step type"}
 	}
 	switch s.Type {
+	case StepUnstructured, StepKreuzberg, StepDocling, StepMinerU:
+		s.URL = strings.TrimSpace(s.URL)
+		if s.URL == "" {
+			return s, &FieldError{"url", "URL is required"}
+		}
+		if s.Type == StepMinerU {
+			if s.APIMode == "" {
+				s.APIMode = "self_hosted"
+			}
+			if s.APIMode != "self_hosted" && s.APIMode != "cloud" {
+				return s, &FieldError{"apiMode", "Must be self_hosted or cloud"}
+			}
+			if s.APIMode == "cloud" && strings.TrimSpace(s.APIKey) == "" {
+				return s, &FieldError{"apiKey", "API key is required"}
+			}
+		}
 	case StepReplace, StepRemoveLines, StepSkip:
 		if s.Pattern == "" {
 			return s, &FieldError{"pattern", "Pattern is required"}

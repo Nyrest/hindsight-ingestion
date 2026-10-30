@@ -1141,6 +1141,22 @@
       "http": {
         "title": "Żądanie HTTP",
         "description": "Wysyła dokument do punktu końcowego HTTP i używa odpowiedzi."
+      },
+      "unstructured": {
+        "title": "Unstructured",
+        "description": "Wyślij dokument do Unstructured przez HTTP i użyj wyodrębnionego tekstu."
+      },
+      "kreuzberg": {
+        "title": "Kreuzberg",
+        "description": "Wyślij dokument do Kreuzberg przez HTTP i użyj wyodrębnionego tekstu."
+      },
+      "docling": {
+        "title": "Docling",
+        "description": "Wyślij dokument do Docling przez HTTP i użyj wyodrębnionego tekstu."
+      },
+      "mineru": {
+        "title": "MinerU",
+        "description": "Wyślij dokument do MinerU, poczekaj na przetworzenie i użyj zwróconego Markdown."
       }
     },
     "test": {
@@ -1160,6 +1176,15 @@
         "skip": "Pominięty",
         "error": "Błąd"
       }
+    },
+    "extraction": {
+      "apiMode": "Tryb API",
+      "self_hosted": "Własny serwer (V1)",
+      "cloud": "MinerU Cloud",
+      "baseURL": "Bazowy adres URL usługi, bez /v1 ani /api/v4.",
+      "endpoint": "Pełny adres URL punktu przesyłania plików.",
+      "apiKey": "Klucz API",
+      "formHelp": "Opcjonalne pola formularza API. Plik jest przesyłany automatycznie; Docling zwraca Markdown."
     }
   },
   "notion": {

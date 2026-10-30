@@ -10,8 +10,9 @@
     decode: global.__utf8Decode,
     atob: global.__atob,
     btoa: global.__btoa,
+    extract: global.__extract,
   };
-  for (const name of ["__fetch", "__log", "__utf8Encode", "__utf8Decode", "__atob", "__btoa"]) delete global[name];
+  for (const name of ["__fetch", "__log", "__utf8Encode", "__utf8Decode", "__atob", "__btoa", "__extract"]) delete global[name];
 
   function isBinary(value) {
     return value instanceof ArrayBuffer || ArrayBuffer.isView(value);
@@ -205,7 +206,25 @@
   const textStep = (fn) => (context, input, options) =>
     typeof input === "string" ? fn(input, options || {}, context) : input;
 
+  const extractionStep = (type) => async (context, input, options) => {
+    if (input === null || input === undefined) return null;
+    const o = Object.assign({}, options, { type });
+    o.url = template(o.url, context, input);
+    for (const field of ["headers", "form", "query"]) {
+      o[field] = (o[field] || []).map(({ key, value }) => ({ key, value: template(value, context, input) }));
+    }
+    const binary = isBinary(input);
+    return host.extract(o, toBytes(input), {
+      fileName: binary ? context.document.fileName : "document.txt",
+      mimeType: binary ? context.document.mimeType : "text/plain;charset=UTF-8",
+    });
+  };
+
   const steps = {
+    unstructured: extractionStep("unstructured"),
+    kreuzberg: extractionStep("kreuzberg"),
+    docling: extractionStep("docling"),
+    mineru: extractionStep("mineru"),
     template: (context, input, text, json = false) => template(text, context, input, json),
 
     replace: textStep((input, o) => {

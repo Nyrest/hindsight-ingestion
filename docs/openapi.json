@@ -601,6 +601,16 @@
       },
       "PipelineStep": {
         "properties": {
+          "apiKey": {
+            "type": "string"
+          },
+          "apiMode": {
+            "enum": [
+              "self_hosted",
+              "cloud"
+            ],
+            "type": "string"
+          },
           "body": {
             "type": "string"
           },
@@ -717,7 +727,11 @@
               "strip_html",
               "remove_lines",
               "skip",
-              "http"
+              "http",
+              "unstructured",
+              "kreuzberg",
+              "docling",
+              "mineru"
             ],
             "type": "string"
           },

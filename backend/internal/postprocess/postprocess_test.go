@@ -113,16 +113,31 @@ func TestErrors(t *testing.T) {
 	}
 }
 
-func TestTimeoutInterruptsAndBreaksVM(t *testing.T) {
-	old := DocumentTimeout
-	DocumentTimeout = 50 * time.Millisecond
-	defer func() { DocumentTimeout = old }()
+func TestProcessUsesCallerContextWithoutAddingDeadline(t *testing.T) {
+	ctx := context.WithValue(t.Context(), struct{}{}, "caller")
+	var requestCtx context.Context
+	v, err := newVM("caller-context", `function process(c, input) { console.log("inspect"); return input; }`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = v.Process(ctx, Env{Log: func(string, string) { requestCtx = v.ctx }}, Document{Text: "text"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if requestCtx != ctx {
+		t.Fatal("post-processing replaced the caller context")
+	}
+}
+
+func TestCallerDeadlineInterruptsAndBreaksVM(t *testing.T) {
+	deadlineCtx, deadlineCancel := context.WithTimeout(t.Context(), 50*time.Millisecond)
+	defer deadlineCancel()
 	pool := &Pool{MaxIdle: 2, IdleTTL: time.Minute}
 	v, err := pool.Acquire("k", `function process() { for (;;) {} }`)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := v.Process(context.Background(), Env{}, Document{Text: "x"}); err == nil || !strings.Contains(err.Error(), "exceeded") {
+	if _, err := v.Process(deadlineCtx, Env{}, Document{Text: "x"}); !errors.Is(err, context.DeadlineExceeded) {
 		t.Fatalf("got %v", err)
 	}
 	pool.Release(v)
@@ -237,11 +252,10 @@ func TestGenerate(t *testing.T) {
 }
 
 func TestInitializationRespectsDeadlineAndCancellation(t *testing.T) {
-	old := DocumentTimeout
-	DocumentTimeout = 30 * time.Millisecond
-	defer func() { DocumentTimeout = old }()
-	_, err := Run(t.Context(), `while (true) {} function process(c, input) { return input; }`, Env{}, Document{})
-	if err == nil || !strings.Contains(err.Error(), "exceeded") {
+	deadlineCtx, deadlineCancel := context.WithTimeout(t.Context(), 30*time.Millisecond)
+	defer deadlineCancel()
+	_, err := Run(deadlineCtx, `while (true) {} function process(c, input) { return input; }`, Env{}, Document{})
+	if !errors.Is(err, context.DeadlineExceeded) {
 		t.Fatalf("top-level loop escaped deadline: %v", err)
 	}
 	ctx, cancel := context.WithCancel(t.Context())
@@ -257,12 +271,11 @@ func TestInitializationRespectsDeadlineAndCancellation(t *testing.T) {
 	}
 }
 
-func TestDocumentDeadlineCancelsFetch(t *testing.T) {
-	old := DocumentTimeout
-	DocumentTimeout = 100 * time.Millisecond
-	defer func() { DocumentTimeout = old }()
+func TestCallerDeadlineCancelsFetch(t *testing.T) {
 	for _, location := range []string{"initialization", "process", "response body"} {
 		t.Run(location, func(t *testing.T) {
+			ctx, cancel := context.WithTimeout(t.Context(), 100*time.Millisecond)
+			defer cancel()
 			cancelled := make(chan struct{})
 			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				if location == "response body" {
@@ -281,14 +294,14 @@ func TestDocumentDeadlineCancelsFetch(t *testing.T) {
 			if location == "initialization" {
 				script = request + `; function process(c, input) { return input; }`
 			}
-			_, err := Run(t.Context(), script, Env{}, Document{})
-			if err == nil || !strings.Contains(err.Error(), "exceeded") {
-				t.Fatalf("document deadline not reported: %v", err)
+			_, err := Run(ctx, script, Env{}, Document{})
+			if !errors.Is(err, context.DeadlineExceeded) {
+				t.Fatalf("caller deadline not reported: %v", err)
 			}
 			select {
 			case <-cancelled:
 			case <-time.After(time.Second):
-				t.Fatal("document deadline did not cancel the HTTP request")
+				t.Fatal("caller deadline did not cancel the HTTP request")
 			}
 		})
 	}

@@ -1123,6 +1123,22 @@
       "http": {
         "title": "HTTP リクエスト",
         "description": "ドキュメントを HTTP エンドポイントに送信し、レスポンスを使用します。"
+      },
+      "unstructured": {
+        "title": "Unstructured",
+        "description": "HTTP 経由でドキュメントを Unstructured に送り、抽出されたテキストを使用します。"
+      },
+      "kreuzberg": {
+        "title": "Kreuzberg",
+        "description": "HTTP 経由でドキュメントを Kreuzberg に送り、抽出されたテキストを使用します。"
+      },
+      "docling": {
+        "title": "Docling",
+        "description": "HTTP 経由でドキュメントを Docling に送り、抽出されたテキストを使用します。"
+      },
+      "mineru": {
+        "title": "MinerU",
+        "description": "ドキュメントを MinerU に送り、解析完了後に返された Markdown を使用します。"
       }
     },
     "test": {
@@ -1142,6 +1158,15 @@
         "skip": "スキップ",
         "error": "エラー"
       }
+    },
+    "extraction": {
+      "apiMode": "API モード",
+      "self_hosted": "セルフホスト（V1）",
+      "cloud": "MinerU クラウド",
+      "baseURL": "サービスのベース URL。/v1 や /api/v4 は含めません。",
+      "endpoint": "ファイルアップロード先の完全な URL。",
+      "apiKey": "API キー",
+      "formHelp": "任意の API フォーム項目。ファイルは自動でアップロードされ、Docling は Markdown を返します。"
     }
   },
   "notion": {

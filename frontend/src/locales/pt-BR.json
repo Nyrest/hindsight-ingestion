@@ -1123,6 +1123,22 @@
       "http": {
         "title": "Requisição HTTP",
         "description": "Envia o documento para um endpoint HTTP e usa a resposta."
+      },
+      "unstructured": {
+        "title": "Unstructured",
+        "description": "Enviar o documento ao Unstructured por HTTP e usar o texto extraído."
+      },
+      "kreuzberg": {
+        "title": "Kreuzberg",
+        "description": "Enviar o documento ao Kreuzberg por HTTP e usar o texto extraído."
+      },
+      "docling": {
+        "title": "Docling",
+        "description": "Enviar o documento ao Docling por HTTP e usar o texto extraído."
+      },
+      "mineru": {
+        "title": "MinerU",
+        "description": "Enviar o documento ao MinerU, aguardar o processamento e usar o Markdown retornado."
       }
     },
     "test": {
@@ -1142,6 +1158,15 @@
         "skip": "Ignorado",
         "error": "Erro"
       }
+    },
+    "extraction": {
+      "apiMode": "Modo da API",
+      "self_hosted": "Hospedagem própria (V1)",
+      "cloud": "MinerU Cloud",
+      "baseURL": "URL base do serviço, sem /v1 ou /api/v4.",
+      "endpoint": "URL completa do endpoint de envio de arquivos.",
+      "apiKey": "Chave de API",
+      "formHelp": "Campos opcionais do formulário da API. O arquivo é enviado automaticamente; o Docling retorna Markdown."
     }
   },
   "notion": {

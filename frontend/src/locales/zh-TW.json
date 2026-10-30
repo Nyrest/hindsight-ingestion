@@ -1130,6 +1130,22 @@
       "http": {
         "title": "HTTP 請求",
         "description": "將文件傳送到 HTTP 端點並使用其回應。"
+      },
+      "unstructured": {
+        "title": "Unstructured",
+        "description": "透過 HTTP 將文件傳送至 Unstructured，使用擷取後的文字。"
+      },
+      "kreuzberg": {
+        "title": "Kreuzberg",
+        "description": "透過 HTTP 將文件傳送至 Kreuzberg，使用擷取後的文字。"
+      },
+      "docling": {
+        "title": "Docling",
+        "description": "透過 HTTP 將文件傳送至 Docling，使用擷取後的文字。"
+      },
+      "mineru": {
+        "title": "MinerU",
+        "description": "將文件傳送至 MinerU，等待解析完成後使用傳回的 Markdown。"
       }
     },
     "test": {
@@ -1149,6 +1165,15 @@
         "skip": "已略過",
         "error": "錯誤"
       }
+    },
+    "extraction": {
+      "apiMode": "API 模式",
+      "self_hosted": "自行部署（V1）",
+      "cloud": "MinerU 雲端服務",
+      "baseURL": "服務基礎網址，不含 /v1 或 /api/v4。",
+      "endpoint": "檔案上傳端點的完整網址。",
+      "apiKey": "API 金鑰",
+      "formHelp": "選填的 API 表單參數。檔案會自動上傳；Docling 固定輸出 Markdown。"
     }
   },
   "notion": {

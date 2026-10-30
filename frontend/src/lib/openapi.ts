@@ -593,6 +593,9 @@ export interface components {
             steps: components["schemas"]["PipelineStep"][];
         };
         PipelineStep: {
+            apiKey?: string;
+            /** @enum {string} */
+            apiMode?: "self_hosted" | "cloud";
             body?: string;
             /** @enum {string} */
             bodyType?: "none" | "input" | "text" | "json" | "form";
@@ -621,7 +624,7 @@ export interface components {
             suffix?: string;
             text?: string;
             /** @enum {string} */
-            type: "replace" | "trim" | "prepend" | "append" | "truncate" | "case" | "collapse_whitespace" | "strip_html" | "remove_lines" | "skip" | "http";
+            type: "replace" | "trim" | "prepend" | "append" | "truncate" | "case" | "collapse_whitespace" | "strip_html" | "remove_lines" | "skip" | "http" | "unstructured" | "kreuzberg" | "docling" | "mineru";
             url?: string;
         };
         PreviewResult: {

@@ -1123,6 +1123,22 @@
       "http": {
         "title": "HTTP 요청",
         "description": "문서를 HTTP 엔드포인트로 보내고 응답을 사용합니다."
+      },
+      "unstructured": {
+        "title": "Unstructured",
+        "description": "HTTP로 문서를 Unstructured에 보내고 추출된 텍스트를 사용합니다."
+      },
+      "kreuzberg": {
+        "title": "Kreuzberg",
+        "description": "HTTP로 문서를 Kreuzberg에 보내고 추출된 텍스트를 사용합니다."
+      },
+      "docling": {
+        "title": "Docling",
+        "description": "HTTP로 문서를 Docling에 보내고 추출된 텍스트를 사용합니다."
+      },
+      "mineru": {
+        "title": "MinerU",
+        "description": "문서를 MinerU에 보내고 분석이 끝나면 반환된 Markdown을 사용합니다."
       }
     },
     "test": {
@@ -1142,6 +1158,15 @@
         "skip": "건너뜀",
         "error": "오류"
       }
+    },
+    "extraction": {
+      "apiMode": "API 모드",
+      "self_hosted": "자체 호스팅 (V1)",
+      "cloud": "MinerU 클라우드",
+      "baseURL": "/v1 또는 /api/v4를 제외한 서비스 기본 URL입니다.",
+      "endpoint": "파일 업로드 엔드포인트의 전체 URL입니다.",
+      "apiKey": "API 키",
+      "formHelp": "선택적 API 폼 필드입니다. 파일은 자동으로 업로드되며 Docling은 Markdown을 반환합니다."
     }
   },
   "notion": {

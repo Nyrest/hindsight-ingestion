@@ -68,7 +68,25 @@ interface ProcessContext {
 
 interface KeyValue { key: string; value: string }
 
+interface ExtractionOptions {
+  /** Complete upload endpoint; for MinerU, the service base URL without /v1 or /api/v4. */
+  url: string;
+  apiKey?: string;
+  headers?: KeyValue[];
+  /** Extra multipart fields for Unstructured, Kreuzberg and Docling. */
+  form?: KeyValue[];
+  query?: KeyValue[];
+}
+
 interface StepLibrary {
+  /** Uploads the current input and joins the returned element text. */
+  unstructured(context: ProcessContext, input: ProcessInput | null, options: ExtractionOptions): Promise<string | null>;
+  /** Uploads the current input and returns extracted content. */
+  kreuzberg(context: ProcessContext, input: ProcessInput | null, options: ExtractionOptions): Promise<string | null>;
+  /** Converts the current input to Markdown using docling-serve. */
+  docling(context: ProcessContext, input: ProcessInput | null, options: ExtractionOptions): Promise<string | null>;
+  /** Uploads, polls and downloads Markdown until completion or task cancellation. */
+  mineru(context: ProcessContext, input: ProcessInput | null, options: Pick<ExtractionOptions, "url" | "apiKey" | "headers"> & { apiMode?: "self_hosted" | "cloud" }): Promise<string | null>;
   /** Replaces {{path}} placeholders (input, task.*, run.*, item.*, document.*). Set json to escape values for JSON strings. */
   template(context: ProcessContext, input: ProcessInput | null, text: string, json?: boolean): string;
   /** Replaces every match. With regex, the replacement supports $1 references. */

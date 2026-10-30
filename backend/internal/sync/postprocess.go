@@ -36,7 +36,9 @@ func newPostProcessor(taskID, raw string, proxyConfig proxy.Config) *postProcess
 			continue
 		}
 		active = true
-		if step.Type == postprocess.StepHTTP || step.Type == postprocess.StepSkip {
+		switch step.Type {
+		case postprocess.StepHTTP, postprocess.StepSkip, postprocess.StepUnstructured,
+			postprocess.StepKreuzberg, postprocess.StepDocling, postprocess.StepMinerU:
 			binaryPassThrough = false
 		}
 	}

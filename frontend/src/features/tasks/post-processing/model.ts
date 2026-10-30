@@ -18,7 +18,17 @@ export const STEP_TYPES: StepType[] = [
   "case",
   "skip",
   "http",
+  "unstructured",
+  "kreuzberg",
+  "docling",
+  "mineru",
 ];
+
+const EXTRACTION_TYPES = ["unstructured", "kreuzberg", "docling", "mineru"] as const;
+
+export function isExtractionStep(type: StepType): boolean {
+  return EXTRACTION_TYPES.some((value) => value === type);
+}
 
 /** Mirrors postprocess.ProcessDocumentation in the backend. */
 export const PROCESS_DOCUMENTATION = `/**
@@ -70,6 +80,12 @@ export function newStep(type: StepType): PipelineStep {
       return { ...base, case: "lower" };
     case "http":
       return { ...base, method: "POST", url: "", bodyType: "json", body: '{\n  "text": "{{input}}"\n}', responseMode: "json", responsePath: "" };
+    case "mineru":
+      return { ...base, url: "", apiMode: "self_hosted" };
+    case "unstructured":
+    case "kreuzberg":
+    case "docling":
+      return { ...base, url: "" };
     default:
       return base;
   }
@@ -110,7 +126,8 @@ export function stepErrors(step: PipelineStep): Record<string, string> {
   const errs: Record<string, string> = {};
   if ((step.type === "replace" || step.type === "remove_lines" || step.type === "skip") && !step.pattern) errs.pattern = "validation.required";
   if (step.type === "truncate" && !(Number(step.maxLength) > 0)) errs.maxLength = "postProcessing.errors.positive";
-  if (step.type === "http" && !step.url?.trim()) errs.url = "validation.required";
+  if ((step.type === "http" || isExtractionStep(step.type)) && !step.url?.trim()) errs.url = "validation.required";
+  if (step.type === "mineru" && step.apiMode === "cloud" && !step.apiKey?.trim()) errs.apiKey = "validation.required";
   if (step.regex && step.pattern && (step.type === "replace" || step.type === "remove_lines" || step.type === "skip")) {
     try {
       new RegExp(step.pattern);
