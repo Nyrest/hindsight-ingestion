@@ -473,6 +473,7 @@ export interface components {
             breadcrumbs: components["schemas"]["Breadcrumb"][];
             defaultSelection?: string[];
             items: components["schemas"]["BrowseItem"][];
+            nextCursor?: string;
             parentId: string;
             supportsSearch: boolean;
         };
@@ -1209,7 +1210,9 @@ export interface operations {
                     config?: {
                         [key: string]: unknown;
                     };
+                    cursor?: string;
                     kind?: string;
+                    limit?: number;
                     parentId?: string;
                     query?: string;
                 };

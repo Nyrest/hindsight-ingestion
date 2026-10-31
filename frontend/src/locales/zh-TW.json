@@ -304,6 +304,7 @@
     "searchSourcesHelp": "依標題搜尋已對該連線授權的資料來源。",
     "searchListHelp": "依名稱、路徑或 ID 篩選目前清單。",
     "clearSearch": "清除搜尋",
+    "loadMore": "載入更多",
     "noResults": "未找到符合項目",
     "button": "瀏覽選擇…",
     "title": "瀏覽選擇",

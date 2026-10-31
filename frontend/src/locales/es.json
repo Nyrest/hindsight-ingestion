@@ -130,6 +130,7 @@
     "searchSourcesHelp": "Busca por título las fuentes de datos compartidas con esta conexión.",
     "searchListHelp": "Filtra la lista actual por nombre, ruta o ID.",
     "clearSearch": "Borrar búsqueda",
+    "loadMore": "Cargar más",
     "noResults": "No hay elementos coincidentes",
     "button": "Explorar…",
     "title": "Navegar",

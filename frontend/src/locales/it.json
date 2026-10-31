@@ -130,6 +130,7 @@
     "searchSourcesHelp": "Cerca per titolo le fonti di dati condivise con questa connessione.",
     "searchListHelp": "Filtra l’elenco attuale per nome, percorso o ID.",
     "clearSearch": "Cancella ricerca",
+    "loadMore": "Carica altro",
     "noResults": "Nessun elemento corrispondente",
     "button": "Sfoglia...",
     "title": "Sfoglia",

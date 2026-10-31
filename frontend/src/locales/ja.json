@@ -130,6 +130,7 @@
     "searchSourcesHelp": "この接続に共有されたデータソースをタイトルで検索します。",
     "searchListHelp": "現在の一覧を名前、パス、IDで絞り込みます。",
     "clearSearch": "検索をクリア",
+    "loadMore": "さらに読み込む",
     "noResults": "一致する項目がありません",
     "button": "参照…",
     "title": "参照",

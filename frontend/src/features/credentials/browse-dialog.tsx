@@ -34,7 +34,7 @@ import { errorMessage } from "@/lib/api";
 import { useDebounced } from "@/lib/hooks";
 import type { Breadcrumb, BrowseItem } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { useBrowse } from "./api";
+import { useInfiniteBrowse } from "./api";
 
 const KIND_ICONS: Record<string, LucideIcon> = {
   folder: Folder,
@@ -94,6 +94,8 @@ export function BrowseDialog({
   const [selected, setSelected] = useState<BrowseItem | null>(null);
   const [selections, setSelections] = useState<BrowseSelection[]>([]);
   const [search, setSearch] = useState("");
+  const [scrollContainer, setScrollContainer] = useState<HTMLDivElement | null>(null);
+  const [loadMoreTrigger, setLoadMoreTrigger] = useState<HTMLDivElement | null>(null);
   const query = search.trim();
   const debouncedQuery = useDebounced(query);
 
@@ -107,11 +109,11 @@ export function BrowseDialog({
     }
   }, [open, credentialId]);
 
-  const listing = useBrowse(credentialId, { parentId, kind, config }, open);
+  const listing = useInfiniteBrowse(credentialId, { parentId, kind, config }, open);
   const supportsSearch = listing.data?.supportsSearch ?? false;
   const searchLabel = kind === "page" && supportsSearch ? "notion.searchPages" : supportsSearch ? "browse.searchSources" : "browse.searchList";
   const searchHelp = kind === "page" && supportsSearch ? "notion.searchPagesHelp" : supportsSearch ? "browse.searchSourcesHelp" : "browse.searchListHelp";
-  const searchResults = useBrowse(
+  const searchResults = useInfiniteBrowse(
     credentialId,
     { parentId, kind, config, query: debouncedQuery },
     open && supportsSearch && !!query && !!debouncedQuery,
@@ -125,6 +127,20 @@ export function BrowseDialog({
   const searchTerm = query.toLowerCase();
   const matchingItems = q.data?.items.filter((entry) => supportsSearch || !searchTerm ||
     [entry.name, entry.path, entry.id].some((label) => label.toLowerCase().includes(searchTerm))) ?? [];
+  const { fetchNextPage, hasNextPage, isFetching, isError } = q;
+
+  useEffect(() => {
+    if (!open || !scrollContainer || !loadMoreTrigger || !hasNextPage || isFetching || isError || searchPending) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) void fetchNextPage({ cancelRefetch: false });
+    }, { root: scrollContainer, rootMargin: "0px 0px 96px 0px" });
+    observer.observe(loadMoreTrigger);
+    return () => observer.disconnect();
+  }, [open, scrollContainer, loadMoreTrigger, hasNextPage, isFetching, isError, searchPending, fetchNextPage]);
+
+  useEffect(() => {
+    scrollContainer?.scrollTo(0, 0);
+  }, [scrollContainer, credentialId, parentId, kind, debouncedQuery]);
 
   function changeSearch(text: string) {
     setSearch(text);
@@ -192,7 +208,7 @@ export function BrowseDialog({
             size="icon-sm"
             onClick={() => {
               setSelected(null);
-              void q.refetch();
+              void q.refresh();
             }}
             aria-label={t("common.refresh")}
             disabled={q.isFetching || searchPending}
@@ -229,20 +245,20 @@ export function BrowseDialog({
           <p className="text-xs text-muted-foreground">{t(searchHelp)}</p>
         </div>
 
-        <div className="h-80 min-h-0 overflow-y-auto rounded-md border" aria-busy={loading || q.isFetching}>
+        <div ref={setScrollContainer} className="h-80 min-h-0 overflow-y-auto rounded-md border" aria-busy={loading || q.isFetching}>
           {loading ? (
             <div className="space-y-1 p-2">
               {Array.from({ length: 6 }).map((_, i) => (
                 <Skeleton key={i} className="h-9 w-full" />
               ))}
             </div>
-          ) : q.isError ? (
+          ) : q.isError && !q.data ? (
             <div className="p-3">
               <Alert variant="destructive">
                 <AlertDescription>{errorMessage(q.error)}</AlertDescription>
               </Alert>
             </div>
-          ) : !matchingItems.length ? (
+          ) : !matchingItems.length && !q.hasNextPage ? (
             <EmptyState icon={query ? Search : Folder} title={t(query ? "browse.noResults" : "browse.empty")} className="m-3 border-none" compact />
           ) : (
             <ul className="divide-y">
@@ -314,6 +330,19 @@ export function BrowseDialog({
               })}
             </ul>
           )}
+          {!loading && q.hasNextPage && (
+            <div ref={setLoadMoreTrigger} className="flex flex-col items-center gap-2 p-3">
+              {q.isFetchNextPageError && (
+                <Alert variant="destructive">
+                  <AlertDescription>{errorMessage(q.error)}</AlertDescription>
+                </Alert>
+              )}
+              <Button type="button" variant="ghost" size="sm" disabled={q.isFetching || searchPending}
+                onClick={() => void q.fetchNextPage({ cancelRefetch: false })}>
+                {q.isFetchingNextPage ? <><Loader2 className="animate-spin" />{t("common.loading")}</> : t(q.isFetchNextPageError ? "common.retry" : "browse.loadMore")}
+              </Button>
+            </div>
+          )}
         </div>
 
         {multiple && (
@@ -340,7 +369,7 @@ export function BrowseDialog({
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               {t("common.cancel")}
             </Button>
-            <Button type="button" onClick={confirm} disabled={(!multiple && !selected) || loading || q.isError}>
+            <Button type="button" onClick={confirm} disabled={(!multiple && !selected) || loading || (q.isError && !q.data)}>
               {q.isFetching && !q.isLoading ? <Loader2 className="animate-spin" /> : null}
               {t("browse.select")}
             </Button>

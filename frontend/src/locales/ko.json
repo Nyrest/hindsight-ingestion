@@ -130,6 +130,7 @@
     "searchSourcesHelp": "이 연결에 공유된 데이터 소스를 제목으로 검색합니다.",
     "searchListHelp": "현재 목록을 이름, 경로 또는 ID로 필터링합니다.",
     "clearSearch": "검색 지우기",
+    "loadMore": "더 불러오기",
     "noResults": "일치하는 항목이 없습니다",
     "button": "찾아보기…",
     "title": "찾아보기",

@@ -130,6 +130,7 @@
     "searchSourcesHelp": "Titel der Datenquellen suchen, die mit dieser Verbindung geteilt wurden.",
     "searchListHelp": "Aktuelle Liste nach Name, Pfad oder ID filtern.",
     "clearSearch": "Suche löschen",
+    "loadMore": "Mehr laden",
     "noResults": "Keine passenden Einträge",
     "button": "Durchsuchen…",
     "title": "Durchsuchen",

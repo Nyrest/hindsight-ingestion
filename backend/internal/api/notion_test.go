@@ -1,11 +1,59 @@
 package api_test
 
 import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 	"time"
 
 	"github.com/Nyrest/hindsight-ingestion/internal/models"
 )
+
+func TestNotionBrowsePagination(t *testing.T) {
+	e := newEnv(t)
+	requests := 0
+	upstream := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		var body map[string]any
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Error(err)
+		}
+		if body["page_size"] != float64(20) || body["query"] != "Notes" {
+			t.Errorf("browse parameters did not reach Notion: %v", body)
+		}
+		if body["start_cursor"] == nil {
+			fmt.Fprint(w, `{"results":[{"id":"first"}],"has_more":true,"next_cursor":"next"}`)
+		} else {
+			if body["start_cursor"] != "next" {
+				t.Errorf("unexpected cursor: %v", body["start_cursor"])
+			}
+			fmt.Fprint(w, `{"results":[{"id":"second"}],"has_more":false}`)
+		}
+	}))
+	defer upstream.Close()
+	id := webcalAPICredential(t, e, "notion", map[string]any{"baseUrl": upstream.URL, "token": "test-token"})
+	req := map[string]any{"kind": "page", "query": "Notes", "limit": 20}
+	for i, want := range []string{"first", "second"} {
+		var out map[string]any
+		if code := e.do("POST", "/api/credentials/"+id+"/browse", req, &out); code != 200 {
+			t.Fatal(code, out)
+		}
+		items := out["items"].([]any)
+		if requests != i+1 || len(items) != 1 || items[0].(map[string]any)["id"] != want {
+			t.Fatal("browse endpoint fetched more than one batch", requests, out)
+		}
+		if i == 0 {
+			if out["nextCursor"] != "next" {
+				t.Fatal("missing continuation cursor", out)
+			}
+			req["cursor"] = out["nextCursor"]
+		} else if out["nextCursor"] != nil {
+			t.Fatal("last batch must not have a continuation cursor", out)
+		}
+	}
+}
 
 func TestNotionModesAndUnlimitedDepth(t *testing.T) {
 	e := newEnv(t)

@@ -304,6 +304,7 @@
     "searchSourcesHelp": "按标题搜索已对该连接授权的数据源。",
     "searchListHelp": "按名称、路径或 ID 筛选当前列表。",
     "clearSearch": "清空搜索",
+    "loadMore": "加载更多",
     "noResults": "未找到匹配项",
     "button": "浏览选择…",
     "title": "浏览选择",

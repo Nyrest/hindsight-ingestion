@@ -1,7 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { infiniteQueryOptions, useInfiniteQuery, useMutation, useQuery, useQueryClient, type InfiniteData } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { qk } from "@/lib/query";
-import type { BrowseRequest, CredentialCreate, CredentialPatch } from "@/lib/types";
+import type { BrowseRequest, BrowseResult, CredentialCreate, CredentialPatch } from "@/lib/types";
 
 export function useCredentials() {
   return useQuery({ queryKey: qk.credentials, queryFn: api.listCredentials });
@@ -87,4 +87,40 @@ export function useBrowse(
     staleTime: 30_000,
     retry: false,
   });
+}
+
+function mergeBrowsePages(data: InfiniteData<BrowseResult>): BrowseResult {
+  return {
+    ...data.pages[0],
+    nextCursor: data.pages.at(-1)?.nextCursor,
+    items: [...new Map(data.pages.flatMap((page) => page.items).map((item) => [item.id, item])).values()],
+  };
+}
+
+export function infiniteBrowseOptions(credentialId: string, request: BrowseRequest) {
+  return infiniteQueryOptions({
+    queryKey: [...qk.browse(credentialId, request), "infinite"],
+    queryFn: ({ pageParam, signal }) => api.browse(credentialId, { ...request, cursor: pageParam }, signal),
+    initialPageParam: "",
+    getNextPageParam: (lastPage, _pages, _lastParam, params) => {
+      const cursor = lastPage.nextCursor;
+      return cursor && !params.includes(cursor) ? cursor : undefined;
+    },
+    select: mergeBrowsePages,
+    // Keep browsing explicit: reopening must not refetch every cached batch.
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+    retry: false,
+  });
+}
+
+export function useInfiniteBrowse(credentialId: string, request: BrowseRequest, enabled = true) {
+  const qc = useQueryClient();
+  const options = infiniteBrowseOptions(credentialId, request);
+  const query = useInfiniteQuery({ ...options, enabled: enabled && !!credentialId });
+  return {
+    ...query,
+    // Refresh starts at the first batch instead of fetching every previously loaded batch.
+    refresh: () => qc.resetQueries({ queryKey: options.queryKey, exact: true }),
+  };
 }

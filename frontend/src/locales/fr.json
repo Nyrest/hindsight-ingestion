@@ -130,6 +130,7 @@
     "searchSourcesHelp": "Recherchez par titre les sources de données partagées avec cette connexion.",
     "searchListHelp": "Filtrez la liste actuelle par nom, chemin ou identifiant.",
     "clearSearch": "Effacer la recherche",
+    "loadMore": "Charger plus",
     "noResults": "Aucun élément correspondant",
     "button": "Parcourir…",
     "title": "Parcourir",

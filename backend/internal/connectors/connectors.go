@@ -337,6 +337,8 @@ type BrowseRequest struct {
 	ParentID string         `json:"parentId"`
 	Kind     string         `json:"kind"`
 	Query    string         `json:"query,omitempty"`
+	Cursor   string         `json:"cursor,omitempty"`
+	Limit    int            `json:"limit,omitempty"`
 	Config   map[string]any `json:"config,omitempty"`
 }
 
@@ -364,6 +366,7 @@ type BrowseResult struct {
 	ParentID         string       `json:"parentId"`
 	Breadcrumbs      []Breadcrumb `json:"breadcrumbs"`
 	SupportsSearch   bool         `json:"supportsSearch"`
+	NextCursor       string       `json:"nextCursor,omitempty"`
 }
 
 // SourceConnector is implemented by every source.

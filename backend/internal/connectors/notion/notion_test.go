@@ -138,12 +138,18 @@ func TestBrowseSearch(t *testing.T) {
 				}
 			}))
 			defer srv.Close()
-			listing, err := (&Connector{}).Browse(t.Context(), connectors.Credential{Config: map[string]any{"baseUrl": srv.URL}}, connectors.BrowseRequest{Query: query})
-			if err != nil || !listing.SupportsSearch || requests != 2 || len(listing.Items) != 2 {
+			conn := &Connector{}
+			cred := connectors.Credential{Config: map[string]any{"baseUrl": srv.URL}}
+			listing, err := conn.Browse(t.Context(), cred, connectors.BrowseRequest{Query: query})
+			if err != nil || !listing.SupportsSearch || requests != 1 || len(listing.Items) != 1 || listing.NextCursor != "next" {
 				t.Fatalf("browse: %+v, requests=%d, err=%v", listing, requests, err)
 			}
-			if listing.Items[0].Name != "Alpha" || !listing.Items[0].Selectable || listing.Items[0].Kind != connectors.KindDataSource {
-				t.Fatalf("selection and sort: %+v", listing.Items)
+			if listing.Items[0].Name != "Zulu" || !listing.Items[0].Selectable || listing.Items[0].Kind != connectors.KindDataSource {
+				t.Fatalf("selection: %+v", listing.Items)
+			}
+			listing, err = conn.Browse(t.Context(), cred, connectors.BrowseRequest{Query: query, Cursor: listing.NextCursor})
+			if err != nil || requests != 2 || len(listing.Items) != 1 || listing.Items[0].Name != "Alpha" || listing.NextCursor != "" {
+				t.Fatalf("next batch: %+v, requests=%d, err=%v", listing, requests, err)
 			}
 		})
 	}

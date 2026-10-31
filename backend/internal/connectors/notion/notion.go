@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"sort"
 	"strings"
 	"time"
 
@@ -119,53 +118,54 @@ func (c *Connector) Browse(ctx context.Context, cred connectors.Credential, req 
 		kind, objectType, breadcrumb = connectors.KindPage, "page", "Pages"
 	}
 	res := connectors.BrowseResult{Items: []connectors.BrowseItem{}, SupportsSearch: true, Breadcrumbs: []connectors.Breadcrumb{{ID: "", Name: breadcrumb}}}
-	cursor := ""
-	seenCursors := map[string]bool{}
-	for {
-		body := map[string]any{
-			"filter":    map[string]any{"property": "object", "value": objectType},
-			"page_size": pageSize,
+	limit := req.Limit
+	if limit <= 0 {
+		limit = 50
+	}
+	if limit > pageSize {
+		limit = pageSize
+	}
+	body := map[string]any{
+		"filter":    map[string]any{"property": "object", "value": objectType},
+		"page_size": limit,
+		"sort":      map[string]string{"timestamp": "last_edited_time", "direction": "descending"},
+	}
+	if query := strings.TrimSpace(req.Query); query != "" {
+		body["query"] = query
+	}
+	if req.Cursor != "" {
+		body["start_cursor"] = req.Cursor
+	}
+	var out struct {
+		Results []struct {
+			page
+			Title []richText `json:"title"`
+		} `json:"results"`
+		HasMore    bool   `json:"has_more"`
+		NextCursor string `json:"next_cursor"`
+	}
+	if err := cl.JSON(ctx, http.MethodPost, apiBase(cred)+"/search", body, &out); err != nil {
+		return res, err
+	}
+	for _, r := range out.Results {
+		if r.InTrash || r.Archived {
+			continue
 		}
-		if query := strings.TrimSpace(req.Query); query != "" {
-			body["query"] = query
+		name := plainText(r.Title)
+		if kind == connectors.KindPage {
+			name = pageTitle(r.page)
 		}
-		if cursor != "" {
-			body["start_cursor"] = cursor
+		if name == "" {
+			name = r.ID
 		}
-		var out struct {
-			Results []struct {
-				page
-				Title []richText `json:"title"`
-			} `json:"results"`
-			HasMore    bool   `json:"has_more"`
-			NextCursor string `json:"next_cursor"`
-		}
-		if err := cl.JSON(ctx, http.MethodPost, apiBase(cred)+"/search", body, &out); err != nil {
-			return res, err
-		}
-		for _, r := range out.Results {
-			if r.InTrash || r.Archived {
-				continue
-			}
-			name := plainText(r.Title)
-			if kind == connectors.KindPage {
-				name = pageTitle(r.page)
-			}
-			if name == "" {
-				name = r.ID
-			}
-			res.Items = append(res.Items, connectors.BrowseItem{ID: r.ID, Name: name, Kind: kind, Path: name, Selectable: true})
-		}
-		if !out.HasMore {
-			break
-		}
-		if out.NextCursor == "" || seenCursors[out.NextCursor] {
+		res.Items = append(res.Items, connectors.BrowseItem{ID: r.ID, Name: name, Kind: kind, Path: name, Selectable: true})
+	}
+	if out.HasMore {
+		if out.NextCursor == "" || out.NextCursor == req.Cursor {
 			return res, errors.New("notion search returned an invalid pagination cursor")
 		}
-		seenCursors[out.NextCursor] = true
-		cursor = out.NextCursor
+		res.NextCursor = out.NextCursor
 	}
-	sort.Slice(res.Items, func(i, j int) bool { return strings.ToLower(res.Items[i].Name) < strings.ToLower(res.Items[j].Name) })
 	return res, nil
 }
 

@@ -73,6 +73,9 @@
             },
             "type": "array"
           },
+          "nextCursor": {
+            "type": "string"
+          },
           "parentId": {
             "type": "string"
           },
@@ -2440,8 +2443,14 @@
                     "additionalProperties": {},
                     "type": "object"
                   },
+                  "cursor": {
+                    "type": "string"
+                  },
                   "kind": {
                     "type": "string"
+                  },
+                  "limit": {
+                    "type": "integer"
                   },
                   "parentId": {
                     "type": "string"
