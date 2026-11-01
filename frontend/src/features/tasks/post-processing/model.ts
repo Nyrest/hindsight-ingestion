@@ -30,6 +30,15 @@ export function isExtractionStep(type: StepType): boolean {
   return EXTRACTION_TYPES.some((value) => value === type);
 }
 
+export function extractionFormats(type: StepType): NonNullable<PipelineStep["outputFormat"]>[] {
+  switch (type) {
+    case "unstructured": return ["text", "json"];
+    case "kreuzberg": return ["markdown", "text", "html", "djot"];
+    case "docling": return ["markdown", "text", "html", "json", "doctags"];
+    default: return ["markdown", "html", "latex"];
+  }
+}
+
 /** Mirrors postprocess.ProcessDocumentation in the backend. */
 export const PROCESS_DOCUMENTATION = `/**
  * Transforms one document before it is retained to Hindsight.

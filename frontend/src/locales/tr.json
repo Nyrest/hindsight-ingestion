@@ -1164,10 +1164,8 @@
       "apiMode": "API modu",
       "self_hosted": "Kendi sunucunuz (V1)",
       "cloud": "MinerU Cloud",
-      "baseURL": "/v1 veya /api/v4 içermeyen hizmet temel URL’si.",
-      "endpoint": "Dosya yükleme uç noktasının tam URL’si.",
       "apiKey": "API anahtarı",
-      "formHelp": "İsteğe bağlı API form alanları. Dosya otomatik yüklenir; Docling Markdown döndürür."
+      "outputFormat": "Çıktı biçimi"
     }
   },
   "notion": {

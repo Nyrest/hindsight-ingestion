@@ -3,7 +3,8 @@ import { FieldRow } from "@/components/field-row";
 import { KeyValueEditor } from "@/components/key-value-editor";
 import { Segmented } from "@/components/segmented";
 import { Input } from "@/components/ui/input";
-import type { PipelineStep } from "./model";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { extractionFormats, type PipelineStep } from "./model";
 
 const ENDPOINTS: Record<string, string> = {
   unstructured: "https://api.example.com/general/v0/general",
@@ -33,10 +34,19 @@ export function ExtractionFields({ step, errors, onChange }: {
           />
         </FieldRow>
       )}
-      <FieldRow label={t("postProcessing.fields.url")} htmlFor={id("url")} required error={errors.url ? t(errors.url) : undefined}
-        help={t(step.type === "mineru" ? "postProcessing.extraction.baseURL" : "postProcessing.extraction.endpoint")}>
+      <FieldRow label={t("postProcessing.fields.url")} htmlFor={id("url")} required error={errors.url ? t(errors.url) : undefined}>
         <Input id={id("url")} value={step.url ?? ""} onChange={(e) => set({ url: e.target.value })}
           placeholder={cloud ? "https://mineru.net" : ENDPOINTS[step.type]} spellCheck={false} aria-invalid={!!errors.url} />
+      </FieldRow>
+      <FieldRow label={t("postProcessing.extraction.outputFormat")} htmlFor={id("outputFormat")}>
+        <Select value={step.outputFormat ?? extractionFormats(step.type)[0]} onValueChange={(outputFormat) => set({ outputFormat: outputFormat as PipelineStep["outputFormat"] })}>
+          <SelectTrigger id={id("outputFormat")}><SelectValue /></SelectTrigger>
+          <SelectContent>
+            {extractionFormats(step.type).map((format) => (
+              <SelectItem key={format} value={format}>{format === "text" ? t("postProcessing.responseMode.text") : ({ markdown: "Markdown", html: "HTML", json: "JSON", doctags: "DocTags", djot: "Djot", latex: "LaTeX" }[format])}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </FieldRow>
       <FieldRow label={t("postProcessing.extraction.apiKey")} htmlFor={id("apiKey")} required={cloud} error={errors.apiKey ? t(errors.apiKey) : undefined}>
         <Input id={id("apiKey")} type="password" autoComplete="off" value={step.apiKey ?? ""}
@@ -46,7 +56,7 @@ export function ExtractionFields({ step, errors, onChange }: {
         <KeyValueEditor rows={step.headers ?? []} onChange={(headers) => set({ headers })} monospace addLabel={t("postProcessing.addHeader")} />
       </FieldRow>
       {step.type !== "mineru" && (
-        <FieldRow label={t("postProcessing.bodyType.form")} help={t("postProcessing.extraction.formHelp")}>
+        <FieldRow label={t("postProcessing.bodyType.form")}>
           <KeyValueEditor rows={step.form ?? []} onChange={(form) => set({ form })} monospace addLabel={t("postProcessing.addField")} />
         </FieldRow>
       )}

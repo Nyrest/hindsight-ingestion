@@ -1164,10 +1164,8 @@
       "apiMode": "Mode API",
       "self_hosted": "Hosting mandiri (V1)",
       "cloud": "MinerU Cloud",
-      "baseURL": "URL dasar layanan, tanpa /v1 atau /api/v4.",
-      "endpoint": "URL lengkap endpoint unggah berkas.",
       "apiKey": "Kunci API",
-      "formHelp": "Kolom formulir API opsional. Berkas diunggah otomatis; Docling menghasilkan Markdown."
+      "outputFormat": "Format keluaran"
     }
   },
   "notion": {

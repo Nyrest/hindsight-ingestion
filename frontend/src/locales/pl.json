@@ -1182,10 +1182,8 @@
       "apiMode": "Tryb API",
       "self_hosted": "Własny serwer (V1)",
       "cloud": "MinerU Cloud",
-      "baseURL": "Bazowy adres URL usługi, bez /v1 ani /api/v4.",
-      "endpoint": "Pełny adres URL punktu przesyłania plików.",
       "apiKey": "Klucz API",
-      "formHelp": "Opcjonalne pola formularza API. Plik jest przesyłany automatycznie; Docling zwraca Markdown."
+      "outputFormat": "Format wyjściowy"
     }
   },
   "notion": {

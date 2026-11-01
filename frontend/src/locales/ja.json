@@ -1164,10 +1164,8 @@
       "apiMode": "API モード",
       "self_hosted": "セルフホスト（V1）",
       "cloud": "MinerU クラウド",
-      "baseURL": "サービスのベース URL。/v1 や /api/v4 は含めません。",
-      "endpoint": "ファイルアップロード先の完全な URL。",
       "apiKey": "API キー",
-      "formHelp": "任意の API フォーム項目。ファイルは自動でアップロードされ、Docling は Markdown を返します。"
+      "outputFormat": "出力形式"
     }
   },
   "notion": {

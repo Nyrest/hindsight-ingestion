@@ -27,6 +27,26 @@ type extractionClient struct {
 	headers http.Header
 }
 
+func extractionFormats(provider string) []string {
+	switch provider {
+	case StepUnstructured:
+		return []string{"text", "json"}
+	case StepKreuzberg:
+		return []string{"markdown", "text", "html", "djot"}
+	case StepDocling:
+		return []string{"markdown", "text", "html", "json", "doctags"}
+	default:
+		return []string{"markdown", "html", "latex"}
+	}
+}
+
+func (s PipelineStep) extractionFormat() string {
+	if s.OutputFormat != "" {
+		return s.OutputFormat
+	}
+	return extractionFormats(s.Type)[0]
+}
+
 func (v *VM) extract(call goja.FunctionCall) goja.Value {
 	var step PipelineStep
 	var doc struct {
@@ -164,7 +184,7 @@ func (c extractionClient) multipartExtract(data []byte, name, contentType string
 	if err != nil {
 		return "", err
 	}
-	return extractionText(c.step.Type, response)
+	return extractionText(c.step.Type, c.step.extractionFormat(), response)
 }
 
 func extractionMultipart(step PipelineStep, data []byte, name, contentType string) ([]byte, string, error) {
@@ -172,13 +192,23 @@ func extractionMultipart(step PipelineStep, data []byte, name, contentType strin
 	w := multipart.NewWriter(&body)
 	fields := append([]KeyValue{}, step.Form...)
 	for _, field := range fields {
-		if field.Key == "files" || (step.Type == StepDocling && (field.Key == "to_formats" || field.Key == "target_type" || field.Key == "image_export_mode")) {
+		if field.Key == "files" || (step.Type == StepKreuzberg && field.Key == "output_format") || (step.Type == StepDocling && (field.Key == "to_formats" || field.Key == "target_type" || field.Key == "image_export_mode")) {
 			return nil, "", fmt.Errorf("form field %q is managed by the extraction step", field.Key)
 		}
 	}
-	// Docling must return JSON with Markdown, not a ZIP or image attachments.
 	if step.Type == StepDocling {
-		fields = append(fields, KeyValue{"to_formats", "md"}, KeyValue{"target_type", "inbody"}, KeyValue{"image_export_mode", "placeholder"})
+		format := step.extractionFormat()
+		if format == "markdown" {
+			format = "md"
+		}
+		fields = append(fields, KeyValue{"to_formats", format}, KeyValue{"target_type", "inbody"}, KeyValue{"image_export_mode", "placeholder"})
+	}
+	if step.Type == StepKreuzberg {
+		format := step.extractionFormat()
+		if format == "text" {
+			format = "plain"
+		}
+		fields = append(fields, KeyValue{"output_format", format})
 	}
 	for _, field := range fields {
 		if field.Key == "" {
@@ -207,21 +237,31 @@ func extractionMultipart(step PipelineStep, data []byte, name, contentType strin
 	return body.Bytes(), w.FormDataContentType(), nil
 }
 
-func extractionText(provider string, data []byte) (string, error) {
+func extractionText(provider, format string, data []byte) (string, error) {
 	if provider == StepDocling {
 		var result struct {
-			Status   string `json:"status"`
-			Document struct {
-				Markdown *string `json:"md_content"`
-			} `json:"document"`
+			Status   string                     `json:"status"`
+			Document map[string]json.RawMessage `json:"document"`
 		}
 		if err := json.Unmarshal(data, &result); err != nil {
 			return "", err
 		}
-		if result.Status != "success" || result.Document.Markdown == nil {
-			return "", fmt.Errorf("conversion did not return a successful Markdown document (status %q)", result.Status)
+		field := format
+		if field == "markdown" {
+			field = "md"
 		}
-		return *result.Document.Markdown, nil
+		content := result.Document[field+"_content"]
+		if result.Status != "success" || len(content) == 0 || string(content) == "null" {
+			return "", fmt.Errorf("conversion did not return a successful %s document (status %q)", format, result.Status)
+		}
+		if format == "json" {
+			return string(content), nil
+		}
+		var text string
+		if err := json.Unmarshal(content, &text); err != nil {
+			return "", err
+		}
+		return text, nil
 	}
 	var elements []map[string]json.RawMessage
 	if err := json.Unmarshal(data, &elements); err != nil {
@@ -232,6 +272,9 @@ func extractionText(provider string, data []byte) (string, error) {
 	}
 	if provider == StepKreuzberg && len(elements) != 1 {
 		return "", fmt.Errorf("expected one extraction result for the uploaded file")
+	}
+	if provider == StepUnstructured && format == "json" {
+		return string(data), nil
 	}
 	texts := make([]string, 0, len(elements))
 	for _, element := range elements {
@@ -248,28 +291,29 @@ func extractionText(provider string, data []byte) (string, error) {
 	return strings.Join(texts, "\n\n"), nil
 }
 
-func markdownFromZIP(data []byte) (string, error) {
+func textFromZIP(data []byte, format string) (string, error) {
+	extension := map[string]string{"markdown": ".md", "html": ".html", "latex": ".tex"}[format]
 	archive, err := zip.NewReader(bytes.NewReader(data), int64(len(data)))
 	if err != nil {
 		return "", fmt.Errorf("invalid result ZIP: %w", err)
 	}
-	// A single input must have one Markdown artifact; never silently choose among documents.
-	var markdown *zip.File
+	// A single input must have one selected artifact; never silently choose among documents.
+	var artifact *zip.File
 	for _, file := range archive.File {
-		if !file.FileInfo().IsDir() && strings.EqualFold(path.Ext(file.Name), ".md") {
-			if markdown != nil {
-				return "", fmt.Errorf("result ZIP contains multiple Markdown documents")
+		if !file.FileInfo().IsDir() && strings.EqualFold(path.Ext(file.Name), extension) {
+			if artifact != nil {
+				return "", fmt.Errorf("result ZIP contains multiple %s documents", format)
 			}
-			markdown = file
+			artifact = file
 		}
 	}
-	if markdown == nil {
-		return "", fmt.Errorf("result ZIP has no Markdown document")
+	if artifact == nil {
+		return "", fmt.Errorf("result ZIP has no %s document", format)
 	}
-	if markdown.UncompressedSize64 > MaxDocumentBytes {
-		return "", fmt.Errorf("Markdown exceeds %d MiB", MaxDocumentBytes>>20)
+	if artifact.UncompressedSize64 > MaxDocumentBytes {
+		return "", fmt.Errorf("extracted content exceeds %d MiB", MaxDocumentBytes>>20)
 	}
-	reader, err := markdown.Open()
+	reader, err := artifact.Open()
 	if err != nil {
 		return "", err
 	}
@@ -279,7 +323,7 @@ func markdownFromZIP(data []byte) (string, error) {
 		return "", err
 	}
 	if len(text) > MaxDocumentBytes {
-		return "", fmt.Errorf("Markdown exceeds %d MiB", MaxDocumentBytes>>20)
+		return "", fmt.Errorf("extracted content exceeds %d MiB", MaxDocumentBytes>>20)
 	}
 	return string(text), nil
 }

@@ -112,8 +112,9 @@ type PipelineStep struct {
 	ResponseMode string     `json:"responseMode,omitempty" enum:"text,json,binary,ignore"`
 	ResponsePath string     `json:"responsePath,omitempty"`
 	// Document extraction services. MinerU cloud uses the official V4 API.
-	APIKey  string `json:"apiKey,omitempty"`
-	APIMode string `json:"apiMode,omitempty" enum:"self_hosted,cloud"`
+	APIKey       string `json:"apiKey,omitempty"`
+	APIMode      string `json:"apiMode,omitempty" enum:"self_hosted,cloud"`
+	OutputFormat string `json:"outputFormat,omitempty" enum:"markdown,text,html,json,doctags,djot,latex"`
 }
 
 // Pipeline is a task's post-processing configuration.
@@ -194,6 +195,9 @@ func (s PipelineStep) normalize() (PipelineStep, *FieldError) {
 	}
 	switch s.Type {
 	case StepUnstructured, StepKreuzberg, StepDocling, StepMinerU:
+		if s.OutputFormat != "" && !slices.Contains(extractionFormats(s.Type), s.OutputFormat) {
+			return s, &FieldError{"outputFormat", "Unsupported output format"}
+		}
 		s.URL = strings.TrimSpace(s.URL)
 		if s.URL == "" {
 			return s, &FieldError{"url", "URL is required"}

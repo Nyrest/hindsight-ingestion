@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import ts from "typescript";
-import { DEFAULT_CODE, PROCESS_DOCUMENTATION, STEP_TYPES, firstInvalidStep, generateCode, newStep, stepErrors } from "../src/features/tasks/post-processing/model";
+import { DEFAULT_CODE, PROCESS_DOCUMENTATION, STEP_TYPES, extractionFormats, firstInvalidStep, generateCode, newStep, stepErrors } from "../src/features/tasks/post-processing/model";
 import { RUNTIME_TYPINGS } from "../src/features/tasks/post-processing/typings";
 
 function codeProgram(code: string) {
@@ -106,4 +106,12 @@ test("extraction steps generate typed code and validate cloud credentials", () =
   expect(stepErrors(newStep("docling"))).toEqual({ url: "validation.required" });
   const disabled = generateCode([{ ...steps[3], enabled: false }]);
   expect(disabled).toContain('// input = await steps.mineru(context, input, {"apiKey":"example","apiMode":"self_hosted","url":"https://parser.example.com"});');
+});
+
+test("selected extraction formats survive generated code with Markdown as the default", () => {
+  for (const type of ["docling", "kreuzberg", "mineru"] as const) expect(extractionFormats(type)[0]).toBe("markdown");
+  expect(extractionFormats("unstructured")).toEqual(["text", "json"]);
+  const code = generateCode([{ ...newStep("docling"), url: "https://parser.example.com", outputFormat: "json" }]);
+  expect(code).toContain('"outputFormat":"json"');
+  expect(ts.getPreEmitDiagnostics(codeProgram(code).program)).toEqual([]);
 });

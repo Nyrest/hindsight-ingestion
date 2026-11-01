@@ -1171,10 +1171,8 @@
       "apiMode": "API 模式",
       "self_hosted": "自行部署（V1）",
       "cloud": "MinerU 雲端服務",
-      "baseURL": "服務基礎網址，不含 /v1 或 /api/v4。",
-      "endpoint": "檔案上傳端點的完整網址。",
       "apiKey": "API 金鑰",
-      "formHelp": "選填的 API 表單參數。檔案會自動上傳；Docling 固定輸出 Markdown。"
+      "outputFormat": "輸出格式"
     }
   },
   "notion": {

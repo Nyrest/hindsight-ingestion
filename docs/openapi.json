@@ -674,6 +674,18 @@
             ],
             "type": "string"
           },
+          "outputFormat": {
+            "enum": [
+              "markdown",
+              "text",
+              "html",
+              "json",
+              "doctags",
+              "djot",
+              "latex"
+            ],
+            "type": "string"
+          },
           "pattern": {
             "type": "string"
           },

@@ -1182,10 +1182,8 @@
       "apiMode": "Режим API",
       "self_hosted": "Свой сервер (V1)",
       "cloud": "MinerU Cloud",
-      "baseURL": "Базовый URL сервиса без /v1 или /api/v4.",
-      "endpoint": "Полный URL загрузки файлов.",
       "apiKey": "Ключ API",
-      "formHelp": "Необязательные поля формы API. Файл загружается автоматически; Docling возвращает Markdown."
+      "outputFormat": "Формат вывода"
     }
   },
   "notion": {

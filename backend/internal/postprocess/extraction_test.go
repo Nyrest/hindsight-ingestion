@@ -68,6 +68,48 @@ func TestExtractionMultipart(t *testing.T) {
 	}
 }
 
+func TestSelectedExtractionFormats(t *testing.T) {
+	for _, tc := range []struct{ provider, format, field, apiFormat, response, want string }{
+		{StepDocling, "text", "to_formats", "text", `{"status":"success","document":{"text_content":"plain","md_content":"wrong"}}`, "plain"},
+		{StepDocling, "html", "to_formats", "html", `{"status":"success","document":{"html_content":"<p>html</p>"}}`, "<p>html</p>"},
+		{StepDocling, "json", "to_formats", "json", `{"status":"success","document":{"json_content":{"body":"structured"}}}`, `{"body":"structured"}`},
+		{StepDocling, "doctags", "to_formats", "doctags", `{"status":"success","document":{"doctags_content":"<doctag>"}}`, "<doctag>"},
+		{StepKreuzberg, "markdown", "output_format", "markdown", `[{"content":"# title"}]`, "# title"},
+		{StepKreuzberg, "text", "output_format", "plain", `[{"content":"plain"}]`, "plain"},
+		{StepKreuzberg, "html", "output_format", "html", `[{"content":"<p>html</p>"}]`, "<p>html</p>"},
+		{StepKreuzberg, "djot", "output_format", "djot", `[{"content":"djot"}]`, "djot"},
+		{StepUnstructured, "json", "", "", `[{"text":"text","type":"Title"}]`, `[{"text":"text","type":"Title"}]`},
+	} {
+		t.Run(tc.provider+"/"+tc.format, func(t *testing.T) {
+			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if err := r.ParseMultipartForm(1024); err != nil {
+					t.Error(err)
+					return
+				}
+				defer r.MultipartForm.RemoveAll()
+				if tc.field != "" && r.FormValue(tc.field) != tc.apiFormat {
+					t.Errorf("incorrect selected format: %v", r.Form)
+				}
+				fmt.Fprint(w, tc.response)
+			}))
+			defer server.Close()
+			res := run(t, Pipeline{Steps: []PipelineStep{{Type: tc.provider, Enabled: true, URL: server.URL, OutputFormat: tc.format}}}, Document{Text: "source"})
+			if res.Text != tc.want {
+				t.Fatalf("got %q, want %q", res.Text, tc.want)
+			}
+		})
+	}
+	archive := resultZIP(t, "full.md", "full.html", "full.tex")
+	for _, format := range []string{"markdown", "html", "latex"} {
+		if text, err := textFromZIP(archive, format); err != nil || text != "# Parsed" {
+			t.Fatalf("format %s: %q, %v", format, text, err)
+		}
+	}
+	if _, err := (PipelineStep{Type: StepDocling, URL: "https://example.com", OutputFormat: "djot"}).normalize(); err == nil {
+		t.Fatal("accepted unsupported format")
+	}
+}
+
 func resultZIP(t *testing.T, names ...string) []byte {
 	t.Helper()
 	var buffer bytes.Buffer
@@ -89,76 +131,88 @@ func resultZIP(t *testing.T, names ...string) []byte {
 
 func TestMinerUUploadPollDownload(t *testing.T) {
 	for _, mode := range []string{"cloud", "self_hosted"} {
-		t.Run(mode, func(t *testing.T) {
-			zipData := resultZIP(t, "output/full.md", "output/data.json")
-			uploads, downloads, polls := 0, 0, 0
-			storage := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				if r.Header.Get("Authorization") != "" || r.Header.Get("X-Custom") != "" {
-					t.Error("API credentials leaked to storage")
-				}
-				if r.Method == "PUT" {
-					uploads++
-					data, _ := io.ReadAll(r.Body)
-					if string(data) != "PDF bytes" {
-						t.Error("upload content changed")
+		for _, format := range []string{"", "html", "latex"} {
+			t.Run(mode+"/"+format, func(t *testing.T) {
+				zipData := resultZIP(t, "output/full.md", "output/full.html", "output/full.tex", "output/data.json")
+				uploads, downloads, polls := 0, 0, 0
+				storage := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+					if r.Header.Get("Authorization") != "" || r.Header.Get("X-Custom") != "" {
+						t.Error("API credentials leaked to storage")
 					}
-					if mode == "self_hosted" && r.Header.Get("X-Upload") != "signed" {
-						t.Error("missing upload headers")
-					}
-				} else {
-					downloads++
-					w.Write(zipData)
-				}
-			}))
-			defer storage.Close()
-			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				if r.Header.Get("Authorization") != "Bearer secret" {
-					t.Error("missing API credentials")
-				}
-				if r.Method == "POST" {
-					var payload map[string]any
-					if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
-						t.Error(err)
-					}
-					files, ok := payload["files"].([]any)
-					if !ok || len(files) != 1 {
-						t.Error("missing file manifest")
-					}
-					if mode == "cloud" {
-						if r.URL.Path != "/api/v4/file-urls/batch" {
-							t.Error(r.URL.Path)
+					if r.Method == "PUT" {
+						uploads++
+						data, _ := io.ReadAll(r.Body)
+						if string(data) != "PDF bytes" {
+							t.Error("upload content changed")
 						}
-						fmt.Fprintf(w, `{"code":0,"data":{"batch_id":"batch","file_urls":[%q]}}`, storage.URL)
+						if mode == "self_hosted" && r.Header.Get("X-Upload") != "signed" {
+							t.Error("missing upload headers")
+						}
 					} else {
-						if r.URL.Path != "/v1/tasks" {
-							t.Error(r.URL.Path)
-						}
-						manifest := files[0].(map[string]any)
-						if manifest["file_name"] != "report.pdf" || manifest["page_range"] != "" || manifest["bytes"] != float64(9) {
-							t.Error("incorrect V1 manifest")
-						}
-						w.WriteHeader(http.StatusAccepted)
-						fmt.Fprintf(w, `{"task_id":"task","status":"waiting-file","files":[{"file_id":"f","file_name":"report.pdf","status":"waiting-file","upload":{"url":%q,"headers":{"X-Upload":"signed"}}}]}`, storage.URL)
+						downloads++
+						w.Write(zipData)
 					}
-					return
-				}
-				polls++
-				if mode == "cloud" {
-					state := "running"
-					if polls > 1 {
-						state = "done"
+				}))
+				defer storage.Close()
+				server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+					if r.Header.Get("Authorization") != "Bearer secret" {
+						t.Error("missing API credentials")
 					}
-					fmt.Fprintf(w, `{"code":0,"data":{"batch_id":"batch","extract_result":[{"file_name":"report.pdf","state":%q,"full_zip_url":%q}]}}`, state, storage.URL)
-				} else {
-					fmt.Fprintf(w, `{"task_id":"task","status":"completed","files":[{"file_id":"f","file_name":"report.pdf","status":"completed","result_url":%q}]}`, storage.URL)
+					if r.Method == "POST" {
+						var payload map[string]any
+						if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+							t.Error(err)
+						}
+						if format != "" {
+							key := "extra_formats"
+							if mode == "self_hosted" {
+								key = "output_formats"
+							}
+							encoded, _ := json.Marshal(payload[key])
+							if !strings.Contains(string(encoded), `"`+format+`"`) {
+								t.Errorf("missing selected format in %v", payload)
+							}
+						}
+						files, ok := payload["files"].([]any)
+						if !ok || len(files) != 1 {
+							t.Error("missing file manifest")
+						}
+						if mode == "cloud" {
+							if r.URL.Path != "/api/v4/file-urls/batch" {
+								t.Error(r.URL.Path)
+							}
+							fmt.Fprintf(w, `{"code":0,"data":{"batch_id":"batch","file_urls":[%q]}}`, storage.URL)
+						} else {
+							if r.URL.Path != "/v1/tasks" {
+								t.Error(r.URL.Path)
+							}
+							manifest := files[0].(map[string]any)
+							if manifest["file_name"] != "report.pdf" || manifest["page_range"] != "" || manifest["bytes"] != float64(9) {
+								t.Error("incorrect V1 manifest")
+							}
+							w.WriteHeader(http.StatusAccepted)
+							fmt.Fprintf(w, `{"task_id":"task","status":"waiting-file","files":[{"file_id":"f","file_name":"report.pdf","status":"waiting-file","upload":{"url":%q,"headers":{"X-Upload":"signed"}}}]}`, storage.URL)
+						}
+						return
+					}
+					polls++
+					if mode == "cloud" {
+						state := "running"
+						if polls > 1 {
+							state = "done"
+						}
+						fmt.Fprintf(w, `{"code":0,"data":{"batch_id":"batch","extract_result":[{"file_name":"report.pdf","state":%q,"full_zip_url":%q}]}}`, state, storage.URL)
+					} else {
+						fmt.Fprintf(w, `{"task_id":"task","status":"completed","files":[{"file_id":"f","file_name":"report.pdf","status":"completed","result_url":%q}]}`, storage.URL)
+					}
+				}))
+				defer server.Close()
+				res := run(t, Pipeline{Steps: []PipelineStep{{Type: StepMinerU, Enabled: true, APIMode: mode, OutputFormat: format, URL: server.URL, APIKey: "secret", Headers: []KeyValue{{"X-Custom", "private"}}}}}, Document{Binary: true, Data: []byte("PDF bytes"), FileName: "report.pdf"})
+				if res.Text != "# Parsed" || uploads != 1 || downloads != 1 {
+					t.Fatalf("result=%+v uploads=%d downloads=%d", res, uploads, downloads)
 				}
-			}))
-			defer server.Close()
-			res := run(t, Pipeline{Steps: []PipelineStep{{Type: StepMinerU, Enabled: true, APIMode: mode, URL: server.URL, APIKey: "secret", Headers: []KeyValue{{"X-Custom", "private"}}}}}, Document{Binary: true, Data: []byte("PDF bytes"), FileName: "report.pdf"})
-			if res.Text != "# Parsed" || uploads != 1 || downloads != 1 {
-				t.Fatalf("result=%+v uploads=%d downloads=%d", res, uploads, downloads)
-			}
-		})
+			})
+		}
 	}
 }
 
@@ -168,12 +222,12 @@ func TestExtractionRejectsInvalidResults(t *testing.T) {
 		{StepDocling, `{"status":"partial_success","document":{"md_content":"partial"}}`},
 		{StepDocling, `{"status":"success","document":{}}`},
 	} {
-		if _, err := extractionText(tc.provider, []byte(tc.response)); err == nil {
+		if _, err := extractionText(tc.provider, PipelineStep{Type: tc.provider}.extractionFormat(), []byte(tc.response)); err == nil {
 			t.Errorf("accepted %s", tc.response)
 		}
 	}
 	for _, data := range [][]byte{[]byte("not a ZIP"), resultZIP(t, "x.json"), resultZIP(t, "a.md", "b.md")} {
-		if _, err := markdownFromZIP(data); err == nil {
+		if _, err := textFromZIP(data, "markdown"); err == nil {
 			t.Error("accepted invalid ZIP result")
 		}
 	}
@@ -227,10 +281,10 @@ func TestExtractionConfigurationAndReservedFields(t *testing.T) {
 			t.Errorf("accepted reserved field %s", key)
 		}
 	}
-	if _, err := extractionText(StepKreuzberg, []byte(`[]`)); err == nil {
+	if _, err := extractionText(StepKreuzberg, "markdown", []byte(`[]`)); err == nil {
 		t.Error("accepted missing file result")
 	}
-	if text, err := extractionText(StepUnstructured, []byte(`[]`)); err != nil || text != "" {
+	if text, err := extractionText(StepUnstructured, "text", []byte(`[]`)); err != nil || text != "" {
 		t.Error("empty element array is a valid Unstructured result")
 	}
 }

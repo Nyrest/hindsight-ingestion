@@ -1164,10 +1164,8 @@
       "apiMode": "API-Modus",
       "self_hosted": "Selbst gehostet (V1)",
       "cloud": "MinerU Cloud",
-      "baseURL": "Basis-URL des Dienstes, ohne /v1 oder /api/v4.",
-      "endpoint": "Vollständige URL des Datei-Upload-Endpunkts.",
       "apiKey": "API-Schlüssel",
-      "formHelp": "Optionale API-Formularfelder. Die Datei wird automatisch hochgeladen; Docling gibt Markdown zurück."
+      "outputFormat": "Ausgabeformat"
     }
   },
   "notion": {

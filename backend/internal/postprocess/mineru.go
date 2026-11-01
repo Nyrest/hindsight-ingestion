@@ -39,6 +39,9 @@ func (c extractionClient) minerUSelfHosted(data []byte, name string) (string, er
 		"files":          []any{map[string]any{"file_name": name, "bytes": len(data), "sha256sum": fmt.Sprintf("%x", sha256.Sum256(data)), "page_range": ""}},
 		"output_formats": []string{"default"},
 	}
+	if format := c.step.extractionFormat(); format != "markdown" {
+		payload["output_formats"] = []string{"default", format}
+	}
 	var task minerUTask
 	if err := c.jsonRequest("POST", endpoint, payload, &task); err != nil {
 		return "", err
@@ -62,7 +65,7 @@ func (c extractionClient) minerUSelfHosted(data []byte, name string) (string, er
 			if file.Status != "completed" {
 				return "", fmt.Errorf("task file did not complete")
 			}
-			return c.downloadMarkdown(file.ResultURL)
+			return c.downloadExtraction(file.ResultURL)
 		case "failed", "canceled", "partial":
 			return "", fmt.Errorf("task %s ended with status %s", taskID, task.Status)
 		case "waiting-file", "pending", "running":
@@ -114,6 +117,9 @@ func (c extractionClient) cloudRequest(method, endpoint string, payload any) (mi
 func (c extractionClient) minerUCloud(data []byte, name string) (string, error) {
 	base := strings.TrimRight(c.step.URL, "/")
 	payload := map[string]any{"files": []any{map[string]string{"name": name}}}
+	if format := c.step.extractionFormat(); format != "markdown" {
+		payload["extra_formats"] = []string{format}
+	}
 	created, err := c.cloudRequest("POST", base+"/api/v4/file-urls/batch", payload)
 	if err != nil {
 		return "", err
@@ -135,7 +141,7 @@ func (c extractionClient) minerUCloud(data []byte, name string) (string, error) 
 		file := result.Data.Results[0]
 		switch file.State {
 		case "done":
-			return c.downloadMarkdown(file.ZIPURL)
+			return c.downloadExtraction(file.ZIPURL)
 		case "failed":
 			return "", fmt.Errorf("cloud task failed")
 		case "waiting-file", "pending", "running", "converting":
@@ -148,10 +154,10 @@ func (c extractionClient) minerUCloud(data []byte, name string) (string, error) 
 	}
 }
 
-func (c extractionClient) downloadMarkdown(reference string) (string, error) {
+func (c extractionClient) downloadExtraction(reference string) (string, error) {
 	data, err := c.storageRequest("GET", reference, nil, nil)
 	if err != nil {
 		return "", err
 	}
-	return markdownFromZIP(data)
+	return textFromZIP(data, c.step.extractionFormat())
 }

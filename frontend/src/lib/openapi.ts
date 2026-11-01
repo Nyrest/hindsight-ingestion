@@ -612,6 +612,8 @@ export interface components {
             maxLength?: number;
             /** @enum {string} */
             method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+            /** @enum {string} */
+            outputFormat?: "markdown" | "text" | "html" | "json" | "doctags" | "djot" | "latex";
             pattern?: string;
             query?: components["schemas"]["KeyValue"][];
             regex?: boolean;
