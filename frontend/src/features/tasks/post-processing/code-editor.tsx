@@ -1,16 +1,8 @@
 // Loaded lazily: importing this module pulls in Monaco and its workers.
-import * as monaco from "monaco-editor";
-import EditorWorker from "monaco-editor/editor/editor.worker.js?worker";
-import TsWorker from "monaco-editor/language/typescript/ts.worker.js?worker";
+import { monaco } from "@/lib/monaco";
 import { useEffect, useRef } from "react";
 import { useTheme } from "@/lib/theme";
 import { RUNTIME_TYPINGS } from "./typings";
-
-self.MonacoEnvironment = {
-  getWorker(_id: string, label: string) {
-    return label === "typescript" || label === "javascript" ? new TsWorker() : new EditorWorker();
-  },
-};
 
 const js = monaco.typescript.javascriptDefaults;
 js.setCompilerOptions({

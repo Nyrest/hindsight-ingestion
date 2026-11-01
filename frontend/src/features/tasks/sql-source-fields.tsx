@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { Tabs } from "radix-ui";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FieldRow } from "@/components/field-row";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { api, errorMessage } from "@/lib/api";
 import type { SQLPreviewRequest } from "@/lib/types";
+
+const SQLQueryEditor = lazy(() => import("./sql-query-editor"));
 
 export function SQLSourceFields({ credentialId, config, onChange, errors }: {
   credentialId: string;
@@ -56,7 +58,9 @@ export function SQLSourceFields({ credentialId, config, onChange, errors }: {
       </Tabs.Root>
       {errors.documentMode && <p className="text-sm text-destructive">{errors.documentMode}</p>}
       <FieldRow label={t("sql.queryLabel")} htmlFor="sql-query" required error={errors.query}>
-        <Textarea id="sql-query" rows={8} className="font-mono text-xs" spellCheck={false} value={query} onChange={(event) => change("query", event.target.value)} aria-invalid={!!errors.query} placeholder="SELECT …" />
+        <Suspense fallback={<Textarea id="sql-query" className="h-64 font-mono text-xs" readOnly value={query} aria-label={t("sql.queryLabel")} aria-busy="true" />}>
+          <SQLQueryEditor value={query} onChange={(value) => change("query", value)} ariaLabel={t("sql.queryLabel")} invalid={!!errors.query} />
+        </Suspense>
       </FieldRow>
       <p className="text-xs text-muted-foreground">{t("sql.limits")}</p>
       <div className="space-y-2">
