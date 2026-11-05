@@ -51,8 +51,7 @@ Sync **Notion, SiYuan, DeepWiki, S3, WebDAV, WebCAL, CalDAV, Email (IMAP), Steam
 | **File System** | ✅ | ✅ | ✅ | Local source code repos, developer specs, local Obsidian/Logseq vaults |
 | **SQL** | ✅ | — | — | Data analysis, reporting from query results |
 | **DeepWiki** | ✅ | — | — | Public repository documentation |
-| **FTP / FTPS** | ✅ | ✅ | ✅ | Remote files, shared folders |
-| **SFTP** | ✅ | ✅ | ✅ | Remote files over SSH |
+| **FTP / FTPS / SFTP** | ✅ | ✅ | ✅ | Remote files, shared folders |
 | **Cloudflare Browser Run (Web scraping)** | ✅ | — | ✅ | Online documentation, API references, blogs, public help centers & FAQs |
 
 ✅ Supported · — Unavailable
