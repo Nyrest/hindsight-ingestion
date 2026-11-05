@@ -20,7 +20,7 @@ Sync **Notion, SiYuan, DeepWiki, S3, WebDAV, WebCAL, CalDAV, Email (IMAP), Steam
 
 ## ✨ Features
 
-- ⚡ **Smart incremental sync** — Native change feeds, sync tokens and revision tracking detect what changed. Upload new or updated content and skip the rest.
+- ⚡ **Incremental sync** — Fetch source changes where supported and skip unchanged items during ingestion.
 - 🌐 **Multiple sources, one memory hub** — Bring Notion, SiYuan, S3, WebDAV, Google Drive, OneDrive and local files into Hindsight. Route each task to the bank you choose.
 - 🖼️ **Multimodal ingestion** — Sync text, documents and multimodal files from S3, WebDAV, Google Drive, OneDrive and local storage into Hindsight.
 - 🔄 **Stay in sync, deletions included** — Clean up documents when source items disappear or leave your sync scope. Incomplete scans never treat missing items as deletions.
@@ -42,18 +42,20 @@ Sync **Notion, SiYuan, DeepWiki, S3, WebDAV, WebCAL, CalDAV, Email (IMAP), Steam
 | **S3 / S3-compatible storage** | ✅ | ✅ | ✅ | Enterprise document archives, data lakes, multimodal buckets, pipeline artifacts |
 | **WebDAV** | ✅ | ✅ | ✅ | NAS storage (Synology/QNAP/Nextcloud), Obsidian & Zotero vaults |
 | **WebCAL** | ✅ | — | ✅ | iCalendar events, todo tasks |
-| **CalDAV** | ✅ | — | ✅ | Calendar collections, events and to-dos |
+| **CalDAV** | ✅ | — | — | Calendar collections, events and to-dos |
 | **Steam** | ✅ | — | ✅ | Player profile, game library, playtime and achievements |
 | **Email (IMAP)** | ✅ | — | ✅ | Email conversations, inbox indexing |
 | **Google Drive** | ✅ | ✅ | ✅ | Google Workspace collaboration (Docs, Sheets, Slides), shared team drives |
 | **Google People** | ✅ | — | ✅ | Saved contacts, people and organizations, relationships and contact notes |
 | **OneDrive** | ✅ | ✅ | ✅ | Microsoft 365 workspaces, Office files (Word, Excel, PPT), SharePoint folders |
 | **File System** | ✅ | ✅ | ✅ | Local source code repos, developer specs, local Obsidian/Logseq vaults |
-| **SQL** | ✅ | — | ✅ | Data analysis, reporting from query results |
+| **SQL** | ✅ | — | — | Data analysis, reporting from query results |
 | **DeepWiki** | ✅ | — | — | Public repository documentation |
 | **FTP / FTPS** | ✅ | ✅ | ✅ | Remote files, shared folders |
 | **SFTP** | ✅ | ✅ | ✅ | Remote files over SSH |
 | **Cloudflare Browser Run (Web scraping)** | ✅ | — | ✅ | Online documentation, API references, blogs, public help centers & FAQs |
+
+✅ Supported · — Unavailable
 
 ### Local files in Docker
 
