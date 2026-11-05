@@ -258,8 +258,8 @@ func (s *Service) Apply(m *models.Credential, in Input, creating bool) error {
 			return err
 		}
 	}
-	if m.Type == "imap" && len(in.CustomHeaders) > 0 {
-		return invalid("customHeaders", "IMAP does not use HTTP headers")
+	if (m.Type == "imap" || m.Type == "ftp" || m.Type == "sftp") && len(in.CustomHeaders) > 0 {
+		return invalid("customHeaders", strings.ToUpper(m.Type)+" does not use HTTP headers")
 	}
 	if in.HeadersSet {
 		headers, names, err := mergeHeaders(blob.Headers, in.CustomHeaders)

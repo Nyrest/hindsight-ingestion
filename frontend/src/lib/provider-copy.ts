@@ -1,4 +1,17 @@
 const COPY_KEYS: Record<string, string> = {
+  "Remote files over FTP or TLS-encrypted FTPS": "remoteFTPDescription",
+  "Remote files over SSH with password or private-key authentication": "remoteSFTPDescription",
+  "Default: 21 (FTP / explicit FTPS), 990 (implicit FTPS).": "remoteFTPPortHelp",
+  "Explicit TLS": "remoteExplicitTLS",
+  "Implicit TLS": "remoteImplicitTLS",
+  "None (plain FTP)": "remotePlainFTP",
+  "SSH private key": "remotePrivateKey",
+  "Private key passphrase": "remotePassphrase",
+  "SSH host key fingerprint": "remoteHostKey",
+  "SHA256 fingerprint supplied by your server administrator. Connections reject a different host key.": "remoteHostKeyHelp",
+  "TLS CA certificate (PEM)": "remoteCACert",
+  "Optional CA certificate for a private FTPS server. Server certificates and hostnames are always verified.": "remoteCAHelp",
+
   "Google account via OAuth": "googlePeopleDescription",
   "Enable People API in your Google Cloud project. Reconnecting must use the same Google account.": "googlePeopleSetupHelp",
   "Contact name": "googlePeopleContactName",

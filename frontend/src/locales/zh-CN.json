@@ -188,7 +188,19 @@
     "notionIncludeSubpages": "包含子页面",
     "notionIncludeSubpagesHelp": "将子页面及其内容一并同步。",
     "notionMaxDepth": "最大遍历深度",
-    "notionDepthHelp": "根页面深度为 0，直接子页面为 1，默认最大深度为 3。"
+    "notionDepthHelp": "根页面深度为 0，直接子页面为 1，默认最大深度为 3。",
+    "remoteFTPDescription": "通过 FTP 或 TLS 加密的 FTPS 同步远程文件",
+    "remoteSFTPDescription": "通过 SSH 同步远程文件，支持密码或私钥认证",
+    "remoteFTPPortHelp": "默认端口：21（FTP / 显式 FTPS），990（隐式 FTPS）。",
+    "remoteExplicitTLS": "显式 TLS",
+    "remoteImplicitTLS": "隐式 TLS",
+    "remotePlainFTP": "不加密（普通 FTP）",
+    "remotePrivateKey": "SSH 私钥",
+    "remotePassphrase": "私钥口令",
+    "remoteHostKey": "SSH 主机密钥指纹",
+    "remoteHostKeyHelp": "填写服务器管理员提供的 SHA256 指纹。主机密钥不匹配时将拒绝连接。",
+    "remoteCACert": "TLS CA 证书（PEM）",
+    "remoteCAHelp": "私有 FTPS 服务器的可选 CA 证书。始终验证服务器证书和主机名。"
   },
   "nav": {
     "dashboard": "仪表盘",
@@ -276,7 +288,9 @@
   },
   "secret": {
     "keepHint": "已保存加密密钥。保持掩码不变将沿用原值，输入新内容将覆盖现有值。",
-    "clear": "清除已保存的密钥"
+    "clear": "清除已保存的密钥",
+    "show": "显示密钥",
+    "hide": "隐藏密钥"
   },
   "headers": {
     "title": "自定义请求头",

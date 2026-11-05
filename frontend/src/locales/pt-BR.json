@@ -102,7 +102,9 @@
   },
   "secret": {
     "keepHint": "O segredo existente está mascarado. Deixe inalterado para mantê-lo, ou digite um novo valor para atualizar.",
-    "clear": "Limpar valor armazenado"
+    "clear": "Limpar valor armazenado",
+    "show": "Mostrar segredo",
+    "hide": "Ocultar segredo"
   },
   "headers": {
     "title": "Cabeçalhos personalizados",
@@ -937,7 +939,19 @@
     "notionIncludeSubpages": "Incluir subpáginas",
     "notionIncludeSubpagesHelp": "Sincroniza as subpáginas e seu conteúdo.",
     "notionMaxDepth": "Profundidade máxima de busca",
-    "notionDepthHelp": "Páginas raiz têm profundidade 0; suas filhas diretas, 1. Padrão: 3."
+    "notionDepthHelp": "Páginas raiz têm profundidade 0; suas filhas diretas, 1. Padrão: 3.",
+    "remoteFTPDescription": "Arquivos remotos por FTP ou FTPS criptografado com TLS",
+    "remoteSFTPDescription": "Arquivos remotos por SSH com senha ou chave privada",
+    "remoteFTPPortHelp": "Portas padrão: 21 (FTP / FTPS explícito), 990 (FTPS implícito).",
+    "remoteExplicitTLS": "TLS explícito",
+    "remoteImplicitTLS": "TLS implícito",
+    "remotePlainFTP": "Sem criptografia (FTP simples)",
+    "remotePrivateKey": "Chave privada SSH",
+    "remotePassphrase": "Frase secreta da chave privada",
+    "remoteHostKey": "Impressão digital da chave do servidor SSH",
+    "remoteHostKeyHelp": "Impressão digital SHA256 fornecida pelo administrador do servidor. Conexões com uma chave diferente são recusadas.",
+    "remoteCACert": "Certificado de CA TLS (PEM)",
+    "remoteCAHelp": "Certificado de CA opcional para um servidor FTPS privado. O certificado e o nome do servidor são sempre verificados."
   },
   "proxy": {
     "title": "Proxy",

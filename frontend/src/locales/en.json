@@ -188,7 +188,19 @@
     "notionIncludeSubpages": "Include subpages",
     "notionIncludeSubpagesHelp": "Sync child pages and their content.",
     "notionMaxDepth": "Maximum traversal depth",
-    "notionDepthHelp": "Root pages have depth 0; direct children have depth 1. Default: 3."
+    "notionDepthHelp": "Root pages have depth 0; direct children have depth 1. Default: 3.",
+    "remoteFTPDescription": "Remote files over FTP or TLS-encrypted FTPS",
+    "remoteSFTPDescription": "Remote files over SSH with password or private-key authentication",
+    "remoteFTPPortHelp": "Default: 21 (FTP / explicit FTPS), 990 (implicit FTPS).",
+    "remoteExplicitTLS": "Explicit TLS",
+    "remoteImplicitTLS": "Implicit TLS",
+    "remotePlainFTP": "None (plain FTP)",
+    "remotePrivateKey": "SSH private key",
+    "remotePassphrase": "Private key passphrase",
+    "remoteHostKey": "SSH host key fingerprint",
+    "remoteHostKeyHelp": "SHA256 fingerprint supplied by your server administrator. Connections reject a different host key.",
+    "remoteCACert": "TLS CA certificate (PEM)",
+    "remoteCAHelp": "Optional CA certificate for a private FTPS server. Server certificates and hostnames are always verified."
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -276,7 +288,9 @@
   },
   "secret": {
     "keepHint": "Existing secret is masked. Leave unchanged to keep it, or enter a new value to update.",
-    "clear": "Clear stored value"
+    "clear": "Clear stored value",
+    "show": "Show secret",
+    "hide": "Hide secret"
   },
   "headers": {
     "title": "Custom headers",

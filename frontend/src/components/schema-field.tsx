@@ -1,4 +1,5 @@
-import { FolderSearch } from "lucide-react";
+import { Eye, EyeOff, FolderSearch } from "lucide-react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FieldRow } from "@/components/field-row";
 import { Button } from "@/components/ui/button";
@@ -101,6 +102,32 @@ export function normalizeConfig(fields: FieldSpec[], config: Record<string, unkn
 
 const NONE = "__none__";
 
+function SecretTextarea({ id, value, onChange, placeholder, invalid, masked }: {
+  id: string; value: string; onChange: (value: string) => void;
+  placeholder?: string; invalid: boolean; masked: boolean;
+}) {
+  const { t } = useTranslation();
+  const [visible, setVisible] = useState(false);
+  return (
+    <div className="space-y-2">
+      {visible ? (
+        <Textarea id={id} value={value} onChange={(event) => onChange(event.target.value)}
+          onFocus={(event) => { if (masked) event.currentTarget.select(); }}
+          placeholder={placeholder} aria-invalid={invalid} autoComplete="off" spellCheck={false} rows={4}
+          className="font-mono text-xs" />
+      ) : (
+        <Input id={id} type="password" value={value} onChange={(event) => onChange(event.target.value)}
+          onFocus={(event) => { if (masked) event.currentTarget.select(); }}
+          onPaste={(event) => { event.preventDefault(); onChange(event.clipboardData.getData("text")); }}
+          placeholder={placeholder} aria-invalid={invalid} autoComplete="new-password" className="font-mono text-xs" />
+      )}
+      <Button type="button" variant="ghost" size="sm" aria-controls={id} aria-pressed={visible} onClick={() => setVisible((shown) => !shown)}>
+        {visible ? <EyeOff /> : <Eye />}{t(visible ? "secret.hide" : "secret.show")}
+      </Button>
+    </div>
+  );
+}
+
 export interface SchemaFieldProps {
   field: FieldSpec;
   value: unknown;
@@ -200,7 +227,9 @@ export function SchemaField({
       break;
     }
     case "textarea":
-      control = (
+      control = secret ? (
+        <SecretTextarea key={id} id={id} value={str} onChange={onChange} placeholder={f.placeholder} invalid={!!error} masked={masked} />
+      ) : (
         <Textarea
           id={id}
           value={str}

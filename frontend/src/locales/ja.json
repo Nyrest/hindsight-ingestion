@@ -102,7 +102,9 @@
   },
   "secret": {
     "keepHint": "既存のシークレットはマスクされています。保持する場合はそのままにし、変更する場合は新しい値を入力してください。",
-    "clear": "保存された値をクリアする"
+    "clear": "保存された値をクリアする",
+    "show": "秘密情報を表示",
+    "hide": "秘密情報を隠す"
   },
   "headers": {
     "title": "カスタムヘッダー",
@@ -937,7 +939,19 @@
     "notionIncludeSubpages": "子ページを含める",
     "notionIncludeSubpagesHelp": "子ページとその内容を同期します。",
     "notionMaxDepth": "最大探索深度",
-    "notionDepthHelp": "ルートページの深さは 0、直下の子ページは 1 です。既定値：3。"
+    "notionDepthHelp": "ルートページの深さは 0、直下の子ページは 1 です。既定値：3。",
+    "remoteFTPDescription": "FTP または TLS 暗号化 FTPS によるリモートファイル同期",
+    "remoteSFTPDescription": "パスワードまたは秘密鍵認証で SSH 経由のファイルを同期",
+    "remoteFTPPortHelp": "既定のポート：21（FTP / 明示的 FTPS）、990（暗黙的 FTPS）。",
+    "remoteExplicitTLS": "明示的 TLS",
+    "remoteImplicitTLS": "暗黙的 TLS",
+    "remotePlainFTP": "暗号化なし（通常の FTP）",
+    "remotePrivateKey": "SSH 秘密鍵",
+    "remotePassphrase": "秘密鍵のパスフレーズ",
+    "remoteHostKey": "SSH ホスト鍵のフィンガープリント",
+    "remoteHostKeyHelp": "サーバー管理者が提供した SHA256 フィンガープリントを入力してください。ホスト鍵が異なる場合は接続を拒否します。",
+    "remoteCACert": "TLS CA 証明書（PEM）",
+    "remoteCAHelp": "プライベート FTPS サーバー用の任意の CA 証明書。サーバー証明書とホスト名は常に検証されます。"
   },
   "proxy": {
     "title": "プロキシ",

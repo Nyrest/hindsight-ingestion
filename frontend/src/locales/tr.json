@@ -102,7 +102,9 @@
   },
   "secret": {
     "keepHint": "Mevcut gizli anahtar maskelenmiştir. Korumak için değiştirmeyin veya güncellemek için yeni bir değer girin.",
-    "clear": "Saklanan değeri temizle"
+    "clear": "Saklanan değeri temizle",
+    "show": "Gizli değeri göster",
+    "hide": "Gizli değeri gizle"
   },
   "headers": {
     "title": "Özel üstbilgiler (Headers)",
@@ -937,7 +939,19 @@
     "notionIncludeSubpages": "Alt sayfaları dahil et",
     "notionIncludeSubpagesHelp": "Alt sayfaları ve içeriklerini senkronize eder.",
     "notionMaxDepth": "En fazla tarama derinliği",
-    "notionDepthHelp": "Kök sayfaların derinliği 0, doğrudan alt sayfalarınki 1’dir. Varsayılan: 3."
+    "notionDepthHelp": "Kök sayfaların derinliği 0, doğrudan alt sayfalarınki 1’dir. Varsayılan: 3.",
+    "remoteFTPDescription": "FTP veya TLS ile şifrelenmiş FTPS üzerinden uzak dosyalar",
+    "remoteSFTPDescription": "Parola veya özel anahtar doğrulamasıyla SSH üzerinden uzak dosyalar",
+    "remoteFTPPortHelp": "Varsayılan bağlantı noktaları: 21 (FTP / açık FTPS), 990 (örtük FTPS).",
+    "remoteExplicitTLS": "Açık TLS",
+    "remoteImplicitTLS": "Örtük TLS",
+    "remotePlainFTP": "Şifreleme yok (düz FTP)",
+    "remotePrivateKey": "SSH özel anahtarı",
+    "remotePassphrase": "Özel anahtar parolası",
+    "remoteHostKey": "SSH sunucu anahtarı parmak izi",
+    "remoteHostKeyHelp": "Sunucu yöneticisinin sağladığı SHA256 parmak izi. Farklı sunucu anahtarı kullanan bağlantılar reddedilir.",
+    "remoteCACert": "TLS CA sertifikası (PEM)",
+    "remoteCAHelp": "Özel FTPS sunucusu için isteğe bağlı CA sertifikası. Sunucu sertifikaları ve ana makine adları her zaman doğrulanır."
   },
   "proxy": {
     "title": "Proxy",

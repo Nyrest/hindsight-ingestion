@@ -83,7 +83,7 @@ export function CredentialSheet({
   });
   const type = form.watch("type");
   const isSQL = ["sql_mysql", "sql_postgres", "sql_sqlite"].includes(type);
-  const supportsHeaders = !isSQL && type!=="imap";
+  const supportsHeaders = !isSQL && !["imap", "ftp", "sftp"].includes(type);
   const typeSpec = findCredentialType(connectors.data, type);
 
   const [proxyMode, setProxyMode] = useState<"global" | "override">("global");

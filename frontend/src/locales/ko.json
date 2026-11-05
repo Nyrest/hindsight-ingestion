@@ -102,7 +102,9 @@
   },
   "secret": {
     "keepHint": "기존 비밀번호/키는 마스킹 처리되어 있습니다. 유지하려면 그대로 두고, 변경하려면 새 값을 입력하세요.",
-    "clear": "저장된 값 지우기"
+    "clear": "저장된 값 지우기",
+    "show": "비밀 값 표시",
+    "hide": "비밀 값 숨기기"
   },
   "headers": {
     "title": "사용자 지정 헤더",
@@ -937,7 +939,19 @@
     "notionIncludeSubpages": "하위 페이지 포함",
     "notionIncludeSubpagesHelp": "하위 페이지와 해당 내용을 동기화합니다.",
     "notionMaxDepth": "최대 탐색 깊이",
-    "notionDepthHelp": "루트 페이지의 깊이는 0, 바로 아래 하위 페이지는 1입니다. 기본값: 3."
+    "notionDepthHelp": "루트 페이지의 깊이는 0, 바로 아래 하위 페이지는 1입니다. 기본값: 3.",
+    "remoteFTPDescription": "FTP 또는 TLS로 암호화된 FTPS를 통한 원격 파일 동기화",
+    "remoteSFTPDescription": "암호 또는 개인 키 인증으로 SSH를 통한 원격 파일 동기화",
+    "remoteFTPPortHelp": "기본 포트: 21(FTP / 명시적 FTPS), 990(암시적 FTPS).",
+    "remoteExplicitTLS": "명시적 TLS",
+    "remoteImplicitTLS": "암시적 TLS",
+    "remotePlainFTP": "암호화 없음(일반 FTP)",
+    "remotePrivateKey": "SSH 개인 키",
+    "remotePassphrase": "개인 키 암호",
+    "remoteHostKey": "SSH 호스트 키 지문",
+    "remoteHostKeyHelp": "서버 관리자가 제공한 SHA256 지문을 입력하세요. 호스트 키가 다르면 연결을 거부합니다.",
+    "remoteCACert": "TLS CA 인증서(PEM)",
+    "remoteCAHelp": "비공개 FTPS 서버용 선택적 CA 인증서입니다. 서버 인증서와 호스트 이름은 항상 검증합니다."
   },
   "proxy": {
     "title": "프록시",

@@ -102,7 +102,9 @@
   },
   "secret": {
     "keepHint": "Zapisana wartość jest zamaskowana. Pozostaw maskę bez zmian, aby ją zachować, lub wpisz nową wartość.",
-    "clear": "Wyczyść zapisaną wartość"
+    "clear": "Wyczyść zapisaną wartość",
+    "show": "Pokaż sekret",
+    "hide": "Ukryj sekret"
   },
   "headers": {
     "title": "Niestandardowe nagłówki",
@@ -955,7 +957,19 @@
     "notionIncludeSubpages": "Uwzględnij podstrony",
     "notionIncludeSubpagesHelp": "Synchronizuje podstrony wraz z ich zawartością.",
     "notionMaxDepth": "Maksymalna głębokość przeszukiwania",
-    "notionDepthHelp": "Strony główne mają głębokość 0, ich bezpośrednie podstrony 1. Domyślnie: 3."
+    "notionDepthHelp": "Strony główne mają głębokość 0, ich bezpośrednie podstrony 1. Domyślnie: 3.",
+    "remoteFTPDescription": "Pliki zdalne przez FTP lub FTPS szyfrowany TLS",
+    "remoteSFTPDescription": "Pliki zdalne przez SSH z hasłem lub kluczem prywatnym",
+    "remoteFTPPortHelp": "Porty domyślne: 21 (FTP / jawny FTPS), 990 (niejawny FTPS).",
+    "remoteExplicitTLS": "Jawny TLS",
+    "remoteImplicitTLS": "Niejawny TLS",
+    "remotePlainFTP": "Bez szyfrowania (zwykły FTP)",
+    "remotePrivateKey": "Klucz prywatny SSH",
+    "remotePassphrase": "Hasło klucza prywatnego",
+    "remoteHostKey": "Odcisk klucza hosta SSH",
+    "remoteHostKeyHelp": "Odcisk SHA256 podany przez administratora serwera. Połączenia z innym kluczem są odrzucane.",
+    "remoteCACert": "Certyfikat CA TLS (PEM)",
+    "remoteCAHelp": "Opcjonalny certyfikat CA dla prywatnego serwera FTPS. Certyfikaty i nazwy hostów są zawsze weryfikowane."
   },
   "proxy": {
     "title": "Proxy",

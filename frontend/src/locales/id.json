@@ -102,7 +102,9 @@
   },
   "secret": {
     "keepHint": "Kunci rahasia saat ini disamarkan. Biarkan tidak berubah untuk mempertahankan, atau masukkan nilai baru untuk memperbarui.",
-    "clear": "Hapus nilai yang disimpan"
+    "clear": "Hapus nilai yang disimpan",
+    "show": "Tampilkan rahasia",
+    "hide": "Sembunyikan rahasia"
   },
   "headers": {
     "title": "Header kustom",
@@ -937,7 +939,19 @@
     "notionIncludeSubpages": "Sertakan subhalaman",
     "notionIncludeSubpagesHelp": "Sinkronkan subhalaman beserta isinya.",
     "notionMaxDepth": "Kedalaman penelusuran maksimum",
-    "notionDepthHelp": "Halaman akar memiliki kedalaman 0; anak langsungnya 1. Default: 3."
+    "notionDepthHelp": "Halaman akar memiliki kedalaman 0; anak langsungnya 1. Default: 3.",
+    "remoteFTPDescription": "Berkas jarak jauh melalui FTP atau FTPS terenkripsi TLS",
+    "remoteSFTPDescription": "Berkas jarak jauh melalui SSH dengan kata sandi atau kunci privat",
+    "remoteFTPPortHelp": "Port bawaan: 21 (FTP / FTPS eksplisit), 990 (FTPS implisit).",
+    "remoteExplicitTLS": "TLS eksplisit",
+    "remoteImplicitTLS": "TLS implisit",
+    "remotePlainFTP": "Tanpa enkripsi (FTP biasa)",
+    "remotePrivateKey": "Kunci privat SSH",
+    "remotePassphrase": "Frasa sandi kunci privat",
+    "remoteHostKey": "Sidik jari kunci host SSH",
+    "remoteHostKeyHelp": "Sidik jari SHA256 dari administrator server. Koneksi ditolak jika kunci host berbeda.",
+    "remoteCACert": "Sertifikat CA TLS (PEM)",
+    "remoteCAHelp": "Sertifikat CA opsional untuk server FTPS privat. Sertifikat dan nama host server selalu diverifikasi."
   },
   "proxy": {
     "title": "Proksi",

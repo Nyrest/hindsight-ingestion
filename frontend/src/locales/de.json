@@ -102,7 +102,9 @@
   },
   "secret": {
     "keepHint": "Bestehendes Geheimnis ist maskiert. Unverändert lassen, um es beizubehalten, oder neuen Wert eingeben.",
-    "clear": "Gespeicherten Wert löschen"
+    "clear": "Gespeicherten Wert löschen",
+    "show": "Geheimnis anzeigen",
+    "hide": "Geheimnis ausblenden"
   },
   "headers": {
     "title": "Benutzerdefinierte Header",
@@ -937,7 +939,19 @@
     "notionIncludeSubpages": "Unterseiten einbeziehen",
     "notionIncludeSubpagesHelp": "Unterseiten und ihre Inhalte synchronisieren.",
     "notionMaxDepth": "Maximale Suchtiefe",
-    "notionDepthHelp": "Ausgangsseiten haben Tiefe 0, direkte Unterseiten Tiefe 1. Standard: 3."
+    "notionDepthHelp": "Ausgangsseiten haben Tiefe 0, direkte Unterseiten Tiefe 1. Standard: 3.",
+    "remoteFTPDescription": "Remote-Dateien über FTP oder TLS-verschlüsseltes FTPS",
+    "remoteSFTPDescription": "Remote-Dateien über SSH mit Passwort oder privatem Schlüssel",
+    "remoteFTPPortHelp": "Standardports: 21 (FTP / explizites FTPS), 990 (implizites FTPS).",
+    "remoteExplicitTLS": "Explizites TLS",
+    "remoteImplicitTLS": "Implizites TLS",
+    "remotePlainFTP": "Keine Verschlüsselung (einfaches FTP)",
+    "remotePrivateKey": "Privater SSH-Schlüssel",
+    "remotePassphrase": "Passphrase des privaten Schlüssels",
+    "remoteHostKey": "Fingerabdruck des SSH-Hostschlüssels",
+    "remoteHostKeyHelp": "Vom Serveradministrator bereitgestellter SHA256-Fingerabdruck. Verbindungen mit einem anderen Hostschlüssel werden abgelehnt.",
+    "remoteCACert": "TLS-CA-Zertifikat (PEM)",
+    "remoteCAHelp": "Optionales CA-Zertifikat für einen privaten FTPS-Server. Serverzertifikate und Hostnamen werden immer geprüft."
   },
   "proxy": {
     "title": "Proxy",

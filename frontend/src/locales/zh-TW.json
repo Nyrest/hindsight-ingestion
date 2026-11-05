@@ -188,7 +188,19 @@
     "notionIncludeSubpages": "包含子頁面",
     "notionIncludeSubpagesHelp": "將子頁面及其內容一併同步。",
     "notionMaxDepth": "最大遍歷深度",
-    "notionDepthHelp": "根頁面深度為 0，直接子頁面為 1，預設最大深度為 3。"
+    "notionDepthHelp": "根頁面深度為 0，直接子頁面為 1，預設最大深度為 3。",
+    "remoteFTPDescription": "透過 FTP 或 TLS 加密的 FTPS 同步遠端檔案",
+    "remoteSFTPDescription": "透過 SSH 同步遠端檔案，支援密碼或私鑰驗證",
+    "remoteFTPPortHelp": "預設連接埠：21（FTP / 顯式 FTPS），990（隱式 FTPS）。",
+    "remoteExplicitTLS": "顯式 TLS",
+    "remoteImplicitTLS": "隱式 TLS",
+    "remotePlainFTP": "不加密（一般 FTP）",
+    "remotePrivateKey": "SSH 私鑰",
+    "remotePassphrase": "私鑰密語",
+    "remoteHostKey": "SSH 主機金鑰指紋",
+    "remoteHostKeyHelp": "填入伺服器管理員提供的 SHA256 指紋。主機金鑰不符時將拒絕連線。",
+    "remoteCACert": "TLS CA 憑證（PEM）",
+    "remoteCAHelp": "私人 FTPS 伺服器的選用 CA 憑證。一律驗證伺服器憑證和主機名稱。"
   },
   "nav": {
     "dashboard": "儀表板",
@@ -276,7 +288,9 @@
   },
   "secret": {
     "keepHint": "已儲存加密金鑰。維持遮罩不變將沿用原值，輸入新內容將覆寫現有值。",
-    "clear": "清除已儲存的金鑰"
+    "clear": "清除已儲存的金鑰",
+    "show": "顯示金鑰",
+    "hide": "隱藏金鑰"
   },
   "headers": {
     "title": "自訂標頭 (Headers)",

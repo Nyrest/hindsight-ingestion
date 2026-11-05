@@ -102,7 +102,9 @@
   },
   "secret": {
     "keepHint": "Le secret existant est masqué. Laissez-le inchangé pour le conserver, ou saisissez une nouvelle valeur.",
-    "clear": "Effacer la valeur stockée"
+    "clear": "Effacer la valeur stockée",
+    "show": "Afficher le secret",
+    "hide": "Masquer le secret"
   },
   "headers": {
     "title": "En-têtes personnalisés",
@@ -937,7 +939,19 @@
     "notionIncludeSubpages": "Inclure les sous-pages",
     "notionIncludeSubpagesHelp": "Synchronise les sous-pages et leur contenu.",
     "notionMaxDepth": "Profondeur maximale de parcours",
-    "notionDepthHelp": "Les pages racines ont une profondeur de 0, leurs enfants directs de 1. Par défaut : 3."
+    "notionDepthHelp": "Les pages racines ont une profondeur de 0, leurs enfants directs de 1. Par défaut : 3.",
+    "remoteFTPDescription": "Fichiers distants via FTP ou FTPS chiffré avec TLS",
+    "remoteSFTPDescription": "Fichiers distants via SSH avec mot de passe ou clé privée",
+    "remoteFTPPortHelp": "Ports par défaut : 21 (FTP / FTPS explicite), 990 (FTPS implicite).",
+    "remoteExplicitTLS": "TLS explicite",
+    "remoteImplicitTLS": "TLS implicite",
+    "remotePlainFTP": "Sans chiffrement (FTP simple)",
+    "remotePrivateKey": "Clé privée SSH",
+    "remotePassphrase": "Phrase secrète de la clé privée",
+    "remoteHostKey": "Empreinte de la clé du serveur SSH",
+    "remoteHostKeyHelp": "Empreinte SHA256 fournie par l’administrateur du serveur. Les connexions sont refusées si la clé est différente.",
+    "remoteCACert": "Certificat d’AC TLS (PEM)",
+    "remoteCAHelp": "Certificat d’AC facultatif pour un serveur FTPS privé. Les certificats et noms de serveur sont toujours vérifiés."
   },
   "proxy": {
     "title": "Proxy",
