@@ -738,7 +738,7 @@ func (r *runner) prepareSource() (settings.Settings, error) {
 	r.post = newPostProcessor(r.task.ID, r.task.PostProcessJSON, cfg.Proxy)
 
 	r.cred = connectors.Credential{Proxy: cfg.Proxy}
-	if len(src.Info().CredentialTypes) > 0 {
+	if len(src.Info().CredentialTypes) > 0 && !(src.Info().CredentialOptional && r.task.SourceCredentialID == "") {
 		srcCred, err := r.e.Creds.Load(r.ctx, r.task.SourceCredentialID)
 		if err != nil {
 			return cfg, fmt.Errorf("load source credential: %w", err)

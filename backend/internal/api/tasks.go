@@ -204,10 +204,12 @@ func (s *Server) applyTask(ctx context.Context, t *models.Task, b taskBody, crea
 	}
 	if len(info.CredentialTypes) == 0 {
 		t.SourceCredentialID = ""
-	} else if cred, err := s.Creds.Get(ctx, t.SourceCredentialID); err != nil {
-		errs.add("sourceCredentialId", "Select a source credential")
-	} else if !info.AcceptsCredential(cred.Type) {
-		errs.add("sourceCredentialId", "Credential type does not match the source")
+	} else if t.SourceCredentialID != "" || !info.CredentialOptional {
+		if cred, err := s.Creds.Get(ctx, t.SourceCredentialID); err != nil {
+			errs.add("sourceCredentialId", "Select a source credential")
+		} else if !info.AcceptsCredential(cred.Type) {
+			errs.add("sourceCredentialId", "Credential type does not match the source")
+		}
 	}
 	if !creating && t.SourceType == "google_people" && old.SourceCredentialID != t.SourceCredentialID {
 		if err := s.validatePeopleAccountChange(ctx, old, *t); err != nil {
@@ -603,6 +605,14 @@ func (s *Server) deleteTask(w http.ResponseWriter, r *http.Request) {
 	} else if err := s.checkPendingRetains(ctx, &t); err != nil {
 		s.documentCleanupError(w, 0, err)
 		return
+	}
+	if src, ok := connectors.Source(t.SourceType); ok {
+		if cleaner, ok := src.(connectors.TaskCleaner); ok {
+			if err := cleaner.CleanupTask(ctx, id); err != nil {
+				s.fail(w, err)
+				return
+			}
+		}
 	}
 	s.Sched.RemoveTask(id)
 	err = s.DB.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {

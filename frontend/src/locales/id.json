@@ -320,7 +320,8 @@
     "type": "Jenis sumber",
     "credential": "Kredensial sumber",
     "pickTypeFirst": "Pilih jenis sumber terlebih dahulu.",
-    "pickCredentialFirst": "Pilih kredensial terlebih dahulu"
+    "pickCredentialFirst": "Pilih kredensial terlebih dahulu",
+    "anonymous": "Anonim (repositori publik)"
   },
   "destination": {
     "credential": "Kredensial Hindsight",
@@ -951,7 +952,26 @@
     "remoteHostKey": "Sidik jari kunci host SSH",
     "remoteHostKeyHelp": "Sidik jari SHA256 dari administrator server. Koneksi ditolak jika kunci host berbeda.",
     "remoteCACert": "Sertifikat CA TLS (PEM)",
-    "remoteCAHelp": "Sertifikat CA opsional untuk server FTPS privat. Sertifikat dan nama host server selalu diverifikasi."
+    "remoteCAHelp": "Sertifikat CA opsional untuk server FTPS privat. Sertifikat dan nama host server selalu diverifikasi.",
+    "gitDescription": "Autentikasi Git untuk repositori HTTP(S) atau SSH",
+    "gitPassword": "Kata sandi / token akses",
+    "gitHostKeyHelp": "Wajib untuk SSH. Gunakan sidik jari SHA256 dari administrator server.",
+    "gitRepository": "URL repositori",
+    "gitRepositoryHelp": "Mendukung HTTP(S), ssh://, dan git@host:path. Repositori HTTP(S) publik tidak memerlukan kredensial.",
+    "gitRefType": "Jenis referensi",
+    "gitBranch": "Cabang",
+    "gitTag": "Tag",
+    "gitLatestTag": "Tag versi semantik terbaru",
+    "gitCommit": "SHA commit",
+    "gitRef": "Cabang / tag / commit",
+    "gitRefHelp": "Kosongkan untuk cabang bawaan. Tag yang dipindahkan akan diikuti; mode commit memerlukan SHA lengkap. Kedalaman unduhan selalu 1.",
+    "gitTagPattern": "Pola tag",
+    "gitTagHelp": "Hanya untuk tag versi semantik terbaru, misalnya v*. Bawaan: *.",
+    "gitKeepCache": "Simpan cache Git lokal",
+    "gitCacheSize": "Ukuran maksimum cache Git (MiB)",
+    "gitCacheHelp": "Cache lama dibuat ulang saat batas tercapai. Jika snapshot melebihi batas, tugas gagal tanpa menghapus dokumen yang hilang.",
+    "gitFileSize": "Ukuran maksimum berkas Git (MiB)",
+    "gitFileHelp": "Batas penyerapan opsional yang tidak melebihi batas global. Filter tidak mengurangi unduhan Git Pack. Penunjuk LFS dan submodul dilewati."
   },
   "proxy": {
     "title": "Proksi",

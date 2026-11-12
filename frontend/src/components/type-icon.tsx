@@ -7,11 +7,14 @@ import MySQL from "@thesvg/react/mysql";
 import PostgreSQL from "@thesvg/react/postgresql";
 import SQLite from "@thesvg/react/sqlite";
 import Steam from "@thesvg/react/steam";
+import Git from "@thesvg/react/git";
 import { typeIcon } from "@/lib/connectors";
 import { cn } from "@/lib/utils";
 
 function brandIcon(type: string) {
   switch (type) {
+    case "git":
+      return <Git aria-hidden="true" className="size-4 shrink-0" />;
     case "steam":
       return <Steam aria-hidden="true" className="size-4 shrink-0 text-foreground" variant="mono" />;
     case "cloudflare_crawl":

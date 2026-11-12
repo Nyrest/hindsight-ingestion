@@ -17,6 +17,7 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/config"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors/email"
+	gitsource "github.com/Nyrest/hindsight-ingestion/internal/connectors/git"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors/googlepeople"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors/sqlsource"
 	"github.com/Nyrest/hindsight-ingestion/internal/connectors/steam"
@@ -25,6 +26,7 @@ import (
 	"github.com/Nyrest/hindsight-ingestion/internal/database"
 	"github.com/Nyrest/hindsight-ingestion/internal/hindsight"
 	"github.com/Nyrest/hindsight-ingestion/internal/httpx"
+	"github.com/Nyrest/hindsight-ingestion/internal/models"
 	"github.com/Nyrest/hindsight-ingestion/internal/oauth"
 	"github.com/Nyrest/hindsight-ingestion/internal/runner"
 	"github.com/Nyrest/hindsight-ingestion/internal/scheduler"
@@ -85,6 +87,15 @@ func run() error {
 	connectors.RegisterSource(&email.Connector{DB: db})
 	connectors.RegisterSource(&googlepeople.Connector{DB: db})
 	connectors.RegisterSource(&steam.Connector{DB: db})
+	gitSource := &gitsource.Source{}
+	connectors.RegisterSource(gitSource)
+	var gitTaskIDs []string
+	if err := db.Model(&models.Task{}).Where("source_type = ?", "git").Pluck("id", &gitTaskIDs).Error; err != nil {
+		return err
+	}
+	if err := gitSource.RecoverCaches(context.Background(), gitTaskIDs); err != nil {
+		return err
+	}
 
 	creds := credentials.NewService(db, cipher)
 	store := settings.NewStore(db, cipher)

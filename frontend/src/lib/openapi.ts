@@ -643,6 +643,7 @@ export interface components {
         SourceInfo: {
             browseKinds: string[];
             capabilities: components["schemas"]["Capabilities"];
+            credentialOptional: boolean;
             credentialTypes: string[];
             fields: components["schemas"]["FieldSpec"][];
             filterCapabilities: components["schemas"]["FilterCapabilities"];

@@ -183,6 +183,7 @@ type SourceInfo struct {
 	Type               string             `json:"type"`
 	Name               string             `json:"name"`
 	CredentialTypes    []string           `json:"credentialTypes"`
+	CredentialOptional bool               `json:"credentialOptional"`
 	Capabilities       Capabilities       `json:"capabilities"`
 	BrowseKinds        []string           `json:"browseKinds"`
 	Fields             []FieldSpec        `json:"fields"`
@@ -381,6 +382,11 @@ type SourceConnector interface {
 	OpenContent(ctx context.Context, req ContentRequest) (SourceContent, error)
 }
 
+// TaskCleaner releases connector-owned resources when a task is deleted.
+type TaskCleaner interface {
+	CleanupTask(context.Context, string) error
+}
+
 const SourceCloudflareCrawl = "cloudflare_crawl"
 
 // ScanCommitter publishes connector state in the cursor's database transaction.
@@ -468,7 +474,7 @@ func CredentialTypes() []CredentialType {
 }
 
 func order(t string) int {
-	for i, v := range []string{"notion", "siyuan", "cloudflare_crawl", "deepwiki", "webcal", "caldav", "email", "imap", "steam", "s3", "webdav", "ftp", "sftp", "google_drive", "onedrive", "filesystem", "sql", "sql_mysql", "sql_postgres", "sql_sqlite"} {
+	for i, v := range []string{"notion", "siyuan", "cloudflare_crawl", "deepwiki", "git", "webcal", "caldav", "email", "imap", "steam", "s3", "webdav", "ftp", "sftp", "google_drive", "onedrive", "filesystem", "sql", "sql_mysql", "sql_postgres", "sql_sqlite"} {
 		if v == t {
 			return i
 		}

@@ -200,7 +200,26 @@
     "remoteHostKey": "SSH 主机密钥指纹",
     "remoteHostKeyHelp": "填写服务器管理员提供的 SHA256 指纹。主机密钥不匹配时将拒绝连接。",
     "remoteCACert": "TLS CA 证书（PEM）",
-    "remoteCAHelp": "私有 FTPS 服务器的可选 CA 证书。始终验证服务器证书和主机名。"
+    "remoteCAHelp": "私有 FTPS 服务器的可选 CA 证书。始终验证服务器证书和主机名。",
+    "gitDescription": "用于 HTTP(S) 或 SSH 仓库的 Git 认证",
+    "gitPassword": "密码 / 访问令牌",
+    "gitHostKeyHelp": "SSH 必填。使用服务器管理员提供的 SHA256 指纹。",
+    "gitRepository": "仓库 URL",
+    "gitRepositoryHelp": "支持 HTTP(S)、ssh:// 和 git@host:path。公开 HTTP(S) 仓库无需凭据。",
+    "gitRefType": "引用类型",
+    "gitBranch": "分支",
+    "gitTag": "标签",
+    "gitLatestTag": "最新语义化版本标签",
+    "gitCommit": "Commit SHA",
+    "gitRef": "分支 / 标签 / Commit",
+    "gitRefHelp": "留空使用默认分支。标签移动后跟随源端；Commit 模式需填写完整 SHA。下载深度固定为 1。",
+    "gitTagPattern": "标签匹配模式",
+    "gitTagHelp": "仅用于最新语义化版本标签，如 v*；默认为 *。",
+    "gitKeepCache": "保留本地 Git 缓存",
+    "gitCacheSize": "Git 缓存大小上限（MiB）",
+    "gitCacheHelp": "旧缓存达到上限后重建。当前快照仍超限时任务失败，不执行缺失项删除对账。",
+    "gitFileSize": "Git 文件大小上限（MiB）",
+    "gitFileHelp": "可选的摄取上限，不能超过全局限制。筛选不会减少 Git Pack 下载量。跳过 LFS 指针和子模块。"
   },
   "nav": {
     "dashboard": "仪表盘",
@@ -508,7 +527,8 @@
     "type": "数据源类型",
     "credential": "数据源凭据",
     "pickTypeFirst": "请先选择数据源类型。",
-    "pickCredentialFirst": "请先选择数据源凭据。"
+    "pickCredentialFirst": "请先选择数据源凭据。",
+    "anonymous": "匿名访问（公开仓库）"
   },
   "destination": {
     "credential": "Hindsight 凭据",

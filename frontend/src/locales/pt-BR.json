@@ -320,7 +320,8 @@
     "type": "Tipo de fonte",
     "credential": "Credencial de origem",
     "pickTypeFirst": "Selecione primeiro um tipo de fonte.",
-    "pickCredentialFirst": "Selecione primeiro uma credencial."
+    "pickCredentialFirst": "Selecione primeiro uma credencial.",
+    "anonymous": "Anônimo (repositório público)"
   },
   "destination": {
     "credential": "Credencial Hindsight",
@@ -951,7 +952,26 @@
     "remoteHostKey": "Impressão digital da chave do servidor SSH",
     "remoteHostKeyHelp": "Impressão digital SHA256 fornecida pelo administrador do servidor. Conexões com uma chave diferente são recusadas.",
     "remoteCACert": "Certificado de CA TLS (PEM)",
-    "remoteCAHelp": "Certificado de CA opcional para um servidor FTPS privado. O certificado e o nome do servidor são sempre verificados."
+    "remoteCAHelp": "Certificado de CA opcional para um servidor FTPS privado. O certificado e o nome do servidor são sempre verificados.",
+    "gitDescription": "Autenticação Git para repositórios HTTP(S) ou SSH",
+    "gitPassword": "Senha / token de acesso",
+    "gitHostKeyHelp": "Obrigatório para SSH. Use a impressão digital SHA256 fornecida pelo administrador do servidor.",
+    "gitRepository": "URL do repositório",
+    "gitRepositoryHelp": "Aceita HTTP(S), ssh:// e git@host:path. Repositórios HTTP(S) públicos não precisam de credenciais.",
+    "gitRefType": "Tipo de referência",
+    "gitBranch": "Branch",
+    "gitTag": "Tag",
+    "gitLatestTag": "Tag de versão semântica mais recente",
+    "gitCommit": "SHA do commit",
+    "gitRef": "Branch / tag / commit",
+    "gitRefHelp": "Vazio usa a branch padrão. Tags movidas são acompanhadas; o modo commit exige o SHA completo. Profundidade de download: 1.",
+    "gitTagPattern": "Padrão de tags",
+    "gitTagHelp": "Usado apenas para a tag de versão semântica mais recente, como v*. Padrão: *.",
+    "gitKeepCache": "Manter cache local do Git",
+    "gitCacheSize": "Tamanho máximo do cache Git (MiB)",
+    "gitCacheHelp": "O cache antigo é recriado ao atingir o limite. Se o snapshot exceder o limite, a tarefa falha sem excluir documentos ausentes.",
+    "gitFileSize": "Tamanho máximo de arquivo Git (MiB)",
+    "gitFileHelp": "Limite opcional de ingestão, limitado pelo valor global. Filtros não reduzem downloads do Git Pack. Ponteiros LFS e submódulos são ignorados."
   },
   "proxy": {
     "title": "Proxy",

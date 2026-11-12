@@ -52,6 +52,7 @@ Sync **Notion, SiYuan, DeepWiki, S3, WebDAV, WebCAL, CalDAV, Email (IMAP), Steam
 | **SQL** | ✅ | — | — | Data analysis, reporting from query results |
 | **DeepWiki** | ✅ | — | — | Public repository documentation |
 | **FTP / FTPS / SFTP** | ✅ | ✅ | ✅ | Remote files, shared folders |
+| **Git** | ✅ | ✅ | ✅ | Codebase Wiki, repo documentation, file sync |
 | **Cloudflare Browser Run (Web scraping)** | ✅ | — | ✅ | Online documentation, API references, blogs, public help centers & FAQs |
 
 ✅ Supported · — Unavailable

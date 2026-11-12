@@ -320,7 +320,8 @@
     "type": "Quelltyp",
     "credential": "Quellzugangsdaten",
     "pickTypeFirst": "Wählen Sie zunächst einen Quelltyp aus.",
-    "pickCredentialFirst": "Wählen Sie zuerst Zugangsdaten aus."
+    "pickCredentialFirst": "Wählen Sie zuerst Zugangsdaten aus.",
+    "anonymous": "Anonym (öffentliches Repository)"
   },
   "destination": {
     "credential": "Hindsight-Zugangsdaten",
@@ -951,7 +952,26 @@
     "remoteHostKey": "Fingerabdruck des SSH-Hostschlüssels",
     "remoteHostKeyHelp": "Vom Serveradministrator bereitgestellter SHA256-Fingerabdruck. Verbindungen mit einem anderen Hostschlüssel werden abgelehnt.",
     "remoteCACert": "TLS-CA-Zertifikat (PEM)",
-    "remoteCAHelp": "Optionales CA-Zertifikat für einen privaten FTPS-Server. Serverzertifikate und Hostnamen werden immer geprüft."
+    "remoteCAHelp": "Optionales CA-Zertifikat für einen privaten FTPS-Server. Serverzertifikate und Hostnamen werden immer geprüft.",
+    "gitDescription": "Git-Authentifizierung für HTTP(S)- oder SSH-Repositorys",
+    "gitPassword": "Passwort / Zugriffstoken",
+    "gitHostKeyHelp": "Für SSH erforderlich. Verwenden Sie den SHA256-Fingerabdruck des Serveradministrators.",
+    "gitRepository": "Repository-URL",
+    "gitRepositoryHelp": "HTTP(S), ssh:// und git@host:path werden unterstützt. Öffentliche HTTP(S)-Repositorys benötigen keine Zugangsdaten.",
+    "gitRefType": "Referenztyp",
+    "gitBranch": "Branch",
+    "gitTag": "Tag",
+    "gitLatestTag": "Neuestes Tag nach semantischer Version",
+    "gitCommit": "Commit-SHA",
+    "gitRef": "Branch / Tag / Commit",
+    "gitRefHelp": "Leer für den Standardbranch. Verschobenen Tags wird gefolgt; Commits benötigen den vollständigen SHA. Downloadtiefe: immer 1.",
+    "gitTagPattern": "Tag-Muster",
+    "gitTagHelp": "Nur für das neueste Tag nach semantischer Version, z. B. v*. Standard: *.",
+    "gitKeepCache": "Lokalen Git-Cache behalten",
+    "gitCacheSize": "Maximale Git-Cachegröße (MiB)",
+    "gitCacheHelp": "Alte Caches werden beim Grenzwert neu erstellt. Überschreitet der Snapshot das Limit, schlägt der Lauf ohne Löschabgleich fehl.",
+    "gitFileSize": "Maximale Git-Dateigröße (MiB)",
+    "gitFileHelp": "Optionales Importlimit, begrenzt durch das globale Limit. Filter verringern Git-Pack-Downloads nicht. LFS-Zeiger und Submodule werden übersprungen."
   },
   "proxy": {
     "title": "Proxy",

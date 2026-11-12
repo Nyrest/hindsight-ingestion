@@ -320,7 +320,8 @@
     "type": "Kaynak türü",
     "credential": "Kaynak kimlik bilgisi",
     "pickTypeFirst": "Önce bir kaynak türü seçin.",
-    "pickCredentialFirst": "Önce bir kimlik bilgisi seçin"
+    "pickCredentialFirst": "Önce bir kimlik bilgisi seçin",
+    "anonymous": "Anonim (herkese açık depo)"
   },
   "destination": {
     "credential": "Hindsight kimlik bilgisi",
@@ -951,7 +952,26 @@
     "remoteHostKey": "SSH sunucu anahtarı parmak izi",
     "remoteHostKeyHelp": "Sunucu yöneticisinin sağladığı SHA256 parmak izi. Farklı sunucu anahtarı kullanan bağlantılar reddedilir.",
     "remoteCACert": "TLS CA sertifikası (PEM)",
-    "remoteCAHelp": "Özel FTPS sunucusu için isteğe bağlı CA sertifikası. Sunucu sertifikaları ve ana makine adları her zaman doğrulanır."
+    "remoteCAHelp": "Özel FTPS sunucusu için isteğe bağlı CA sertifikası. Sunucu sertifikaları ve ana makine adları her zaman doğrulanır.",
+    "gitDescription": "HTTP(S) veya SSH depoları için Git kimlik doğrulaması",
+    "gitPassword": "Parola / erişim belirteci",
+    "gitHostKeyHelp": "SSH için gereklidir. Sunucu yöneticisinin sağladığı SHA256 parmak izini kullanın.",
+    "gitRepository": "Depo URL’si",
+    "gitRepositoryHelp": "HTTP(S), ssh:// ve git@host:path desteklenir. Herkese açık HTTP(S) depoları kimlik bilgisi gerektirmez.",
+    "gitRefType": "Referans türü",
+    "gitBranch": "Dal",
+    "gitTag": "Etiket",
+    "gitLatestTag": "En yeni anlamsal sürüm etiketi",
+    "gitCommit": "Commit SHA değeri",
+    "gitRef": "Dal / etiket / commit",
+    "gitRefHelp": "Varsayılan dal için boş bırakın. Taşınan etiketler izlenir; commit modu tam SHA gerektirir. İndirme derinliği her zaman 1’dir.",
+    "gitTagPattern": "Etiket deseni",
+    "gitTagHelp": "Yalnızca en yeni anlamsal sürüm etiketi için kullanılır; ör. v*. Varsayılan: *.",
+    "gitKeepCache": "Yerel Git önbelleğini koru",
+    "gitCacheSize": "En büyük Git önbellek boyutu (MiB)",
+    "gitCacheHelp": "Eski önbellek sınıra ulaştığında yeniden oluşturulur. Anlık görüntü sınırı aşarsa görev başarısız olur ve eksik belgeler silinmez.",
+    "gitFileSize": "En büyük Git dosya boyutu (MiB)",
+    "gitFileHelp": "Genel sınırı aşamayan isteğe bağlı alım sınırı. Filtreler Git Pack indirmelerini azaltmaz. LFS işaretçileri ve alt modüller atlanır."
   },
   "proxy": {
     "title": "Proxy",

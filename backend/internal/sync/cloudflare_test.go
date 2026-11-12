@@ -384,7 +384,8 @@ func TestCloudflareRestartReusesJobAndConfirmsOldWrites(t *testing.T) {
 			if stage != "writing" {
 				f.ready.Store(false)
 			}
-			id, err := h.runs.Start(h.task.ID, models.TriggerManual, models.SyncFull, nil, false)
+			// Wait for the runner's terminal-state check before rewriting the run as interrupted.
+			id, err := h.runs.Start(h.task.ID, models.TriggerManual, models.SyncFull, nil, stage == "writing")
 			if err != nil {
 				t.Fatal(err)
 			}

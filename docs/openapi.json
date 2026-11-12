@@ -825,6 +825,9 @@
           "capabilities": {
             "$ref": "#/components/schemas/Capabilities"
           },
+          "credentialOptional": {
+            "type": "boolean"
+          },
           "credentialTypes": {
             "items": {
               "type": "string"
@@ -857,6 +860,7 @@
           "type",
           "name",
           "credentialTypes",
+          "credentialOptional",
           "capabilities",
           "browseKinds",
           "fields",

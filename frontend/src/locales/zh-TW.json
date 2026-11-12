@@ -200,7 +200,26 @@
     "remoteHostKey": "SSH 主機金鑰指紋",
     "remoteHostKeyHelp": "填入伺服器管理員提供的 SHA256 指紋。主機金鑰不符時將拒絕連線。",
     "remoteCACert": "TLS CA 憑證（PEM）",
-    "remoteCAHelp": "私人 FTPS 伺服器的選用 CA 憑證。一律驗證伺服器憑證和主機名稱。"
+    "remoteCAHelp": "私人 FTPS 伺服器的選用 CA 憑證。一律驗證伺服器憑證和主機名稱。",
+    "gitDescription": "用於 HTTP(S) 或 SSH 儲存庫的 Git 驗證",
+    "gitPassword": "密碼 / 存取權杖",
+    "gitHostKeyHelp": "SSH 必填。使用伺服器管理員提供的 SHA256 指紋。",
+    "gitRepository": "儲存庫 URL",
+    "gitRepositoryHelp": "支援 HTTP(S)、ssh:// 和 git@host:path。公開 HTTP(S) 儲存庫不需憑證。",
+    "gitRefType": "參照類型",
+    "gitBranch": "分支",
+    "gitTag": "標籤",
+    "gitLatestTag": "最新語意化版本標籤",
+    "gitCommit": "提交 SHA",
+    "gitRef": "分支 / 標籤 / 提交",
+    "gitRefHelp": "留空使用預設分支。標籤移動後跟隨來源；提交模式需填入完整 SHA。下載深度固定為 1。",
+    "gitTagPattern": "標籤比對模式",
+    "gitTagHelp": "僅用於最新語意化版本標籤，例如 v*；預設為 *。",
+    "gitKeepCache": "保留本機 Git 快取",
+    "gitCacheSize": "Git 快取大小上限（MiB）",
+    "gitCacheHelp": "舊快取達到上限後重建。當前快照仍超限時工作失敗，不執行缺失項目刪除對帳。",
+    "gitFileSize": "Git 檔案大小上限（MiB）",
+    "gitFileHelp": "選用的擷取上限，不可超過全域限制。篩選不會減少 Git Pack 下載量。略過 LFS 指標和子模組。"
   },
   "nav": {
     "dashboard": "儀表板",
@@ -508,7 +527,8 @@
     "type": "資料來源類型",
     "credential": "資料來源憑證",
     "pickTypeFirst": "請先選擇資料來源類型。",
-    "pickCredentialFirst": "請先選擇資料來源憑證。"
+    "pickCredentialFirst": "請先選擇資料來源憑證。",
+    "anonymous": "匿名存取（公開儲存庫）"
   },
   "destination": {
     "credential": "Hindsight 憑證",

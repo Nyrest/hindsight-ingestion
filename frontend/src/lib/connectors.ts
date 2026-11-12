@@ -5,6 +5,7 @@ import {
   Calendar,
   ContactRound,
   Gamepad2,
+  GitBranch,
   Mail,
   Cloud,
   Database,
@@ -21,6 +22,7 @@ import type { Connectors, CredentialTypeSpec, SourceSpec } from "./types";
 
 const TYPE_ICONS: Record<string, LucideIcon> = {
   deepwiki: BookOpen,
+  git: GitBranch,
   cloudflare_crawl: Cloud,
   webcal: Calendar,
   caldav: Calendar,
@@ -50,6 +52,7 @@ export function typeIcon(type: string | undefined | null): LucideIcon {
 
 const FALLBACK_NAMES: Record<string, string> = {
   deepwiki: "DeepWiki",
+  git: "Git",
   cloudflare_crawl: "Cloudflare Browser Run",
   webcal: "WebCAL",
   caldav: "CalDAV",

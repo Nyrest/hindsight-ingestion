@@ -39,7 +39,8 @@ export const taskFormSchema = (sources: SourceSpec[]) => z
     cronExpression: z.string().trim(),
   })
   .superRefine((v, ctx) => {
-    if (sources.find((s) => s.type === v.sourceType)?.credentialTypes.length !== 0 && !v.sourceCredentialId) {
+    const source = sources.find((s) => s.type === v.sourceType);
+    if (source && source.credentialTypes.length > 0 && !source.credentialOptional && !v.sourceCredentialId) {
       ctx.addIssue({ code: "custom", path: ["sourceCredentialId"], message: "validation.required" });
     }
     metadataRowErrors(v.metadataRows).forEach((msg, i) => {

@@ -35,6 +35,7 @@ LABEL org.opencontainers.image.licenses="MIT"
 USER app
 ENV LISTEN_ADDR=:8080 \
     DB_TYPE=sqlite \
+    GIT_CACHE_DIR=/data/git \
     DB_DSN=/data/hindsight-ingestion.db
 EXPOSE 8080
 VOLUME ["/data"]

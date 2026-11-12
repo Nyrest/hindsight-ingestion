@@ -320,7 +320,8 @@
     "type": "소스 유형",
     "credential": "소스 자격 증명",
     "pickTypeFirst": "먼저 소스 유형을 선택하세요.",
-    "pickCredentialFirst": "먼저 자격 증명을 선택하세요."
+    "pickCredentialFirst": "먼저 자격 증명을 선택하세요.",
+    "anonymous": "익명 접근(공개 저장소)"
   },
   "destination": {
     "credential": "Hindsight 자격 증명",
@@ -951,7 +952,26 @@
     "remoteHostKey": "SSH 호스트 키 지문",
     "remoteHostKeyHelp": "서버 관리자가 제공한 SHA256 지문을 입력하세요. 호스트 키가 다르면 연결을 거부합니다.",
     "remoteCACert": "TLS CA 인증서(PEM)",
-    "remoteCAHelp": "비공개 FTPS 서버용 선택적 CA 인증서입니다. 서버 인증서와 호스트 이름은 항상 검증합니다."
+    "remoteCAHelp": "비공개 FTPS 서버용 선택적 CA 인증서입니다. 서버 인증서와 호스트 이름은 항상 검증합니다.",
+    "gitDescription": "HTTP(S) 또는 SSH 저장소용 Git 인증",
+    "gitPassword": "암호 / 액세스 토큰",
+    "gitHostKeyHelp": "SSH에 필수입니다. 서버 관리자가 제공한 SHA256 지문을 사용하세요.",
+    "gitRepository": "저장소 URL",
+    "gitRepositoryHelp": "HTTP(S), ssh:// 및 git@host:path를 지원합니다. 공개 HTTP(S) 저장소는 인증 정보가 필요 없습니다.",
+    "gitRefType": "참조 유형",
+    "gitBranch": "브랜치",
+    "gitTag": "태그",
+    "gitLatestTag": "최신 시맨틱 버전 태그",
+    "gitCommit": "커밋 SHA",
+    "gitRef": "브랜치 / 태그 / 커밋",
+    "gitRefHelp": "비워 두면 기본 브랜치를 사용합니다. 태그가 이동하면 따라갑니다. 커밋 모드는 전체 SHA가 필요하며 다운로드 깊이는 항상 1입니다.",
+    "gitTagPattern": "태그 패턴",
+    "gitTagHelp": "최신 시맨틱 버전 태그에만 적용됩니다. 예: v*. 기본값: *.",
+    "gitKeepCache": "로컬 Git 캐시 유지",
+    "gitCacheSize": "Git 캐시 최대 크기(MiB)",
+    "gitCacheHelp": "한도에 도달한 기존 캐시는 다시 만듭니다. 스냅샷이 한도를 초과하면 작업이 실패하고 누락 항목을 삭제하지 않습니다.",
+    "gitFileSize": "Git 파일 최대 크기(MiB)",
+    "gitFileHelp": "선택적 수집 한도로 전역 한도를 초과할 수 없습니다. 필터는 Git Pack 다운로드량을 줄이지 않습니다. LFS 포인터와 서브모듈은 건너뜁니다."
   },
   "proxy": {
     "title": "프록시",

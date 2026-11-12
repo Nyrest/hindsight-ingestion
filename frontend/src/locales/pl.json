@@ -324,7 +324,8 @@
     "type": "Typ źródła",
     "credential": "Poświadczenie źródła",
     "pickTypeFirst": "Najpierw wybierz typ źródła.",
-    "pickCredentialFirst": "Najpierw wybierz dane uwierzytelniające"
+    "pickCredentialFirst": "Najpierw wybierz dane uwierzytelniające",
+    "anonymous": "Anonimowo (repozytorium publiczne)"
   },
   "destination": {
     "credential": "Poświadczenie Hindsight",
@@ -969,7 +970,26 @@
     "remoteHostKey": "Odcisk klucza hosta SSH",
     "remoteHostKeyHelp": "Odcisk SHA256 podany przez administratora serwera. Połączenia z innym kluczem są odrzucane.",
     "remoteCACert": "Certyfikat CA TLS (PEM)",
-    "remoteCAHelp": "Opcjonalny certyfikat CA dla prywatnego serwera FTPS. Certyfikaty i nazwy hostów są zawsze weryfikowane."
+    "remoteCAHelp": "Opcjonalny certyfikat CA dla prywatnego serwera FTPS. Certyfikaty i nazwy hostów są zawsze weryfikowane.",
+    "gitDescription": "Uwierzytelnianie Git dla repozytoriów HTTP(S) lub SSH",
+    "gitPassword": "Hasło / token dostępu",
+    "gitHostKeyHelp": "Wymagane dla SSH. Użyj odcisku SHA256 podanego przez administratora serwera.",
+    "gitRepository": "URL repozytorium",
+    "gitRepositoryHelp": "Obsługuje HTTP(S), ssh:// i git@host:path. Publiczne repozytoria HTTP(S) nie wymagają danych logowania.",
+    "gitRefType": "Typ odwołania",
+    "gitBranch": "Gałąź",
+    "gitTag": "Tag",
+    "gitLatestTag": "Najnowszy tag według wersji semantycznej",
+    "gitCommit": "SHA commitu",
+    "gitRef": "Gałąź / tag / commit",
+    "gitRefHelp": "Puste oznacza gałąź domyślną. Przeniesione tagi są śledzone; commit wymaga pełnego SHA. Głębokość pobierania zawsze 1.",
+    "gitTagPattern": "Wzorzec tagów",
+    "gitTagHelp": "Tylko dla najnowszego tagu według wersji semantycznej, np. v*. Domyślnie: *.",
+    "gitKeepCache": "Zachowaj lokalną pamięć podręczną Git",
+    "gitCacheSize": "Maksymalny rozmiar pamięci Git (MiB)",
+    "gitCacheHelp": "Stara pamięć jest odbudowywana po osiągnięciu limitu. Zbyt duża migawka kończy zadanie błędem bez usuwania brakujących dokumentów.",
+    "gitFileSize": "Maksymalny rozmiar pliku Git (MiB)",
+    "gitFileHelp": "Opcjonalny limit importu ograniczony limitem globalnym. Filtry nie zmniejszają pobierania Git Pack. Wskaźniki LFS i podmoduły są pomijane."
   },
   "proxy": {
     "title": "Proxy",

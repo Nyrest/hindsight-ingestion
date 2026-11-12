@@ -320,7 +320,8 @@
     "type": "Tipo de fuente",
     "credential": "Credencial de origen",
     "pickTypeFirst": "Seleccione primero un tipo de fuente.",
-    "pickCredentialFirst": "Seleccione una credencial primero"
+    "pickCredentialFirst": "Seleccione una credencial primero",
+    "anonymous": "Anónimo (repositorio público)"
   },
   "destination": {
     "credential": "Credencial Hindsight",
@@ -951,7 +952,26 @@
     "remoteHostKey": "Huella de la clave del servidor SSH",
     "remoteHostKeyHelp": "Huella SHA256 proporcionada por el administrador del servidor. Se rechazan las conexiones si la clave no coincide.",
     "remoteCACert": "Certificado de CA TLS (PEM)",
-    "remoteCAHelp": "Certificado de CA opcional para un servidor FTPS privado. Siempre se verifican el certificado y el nombre del servidor."
+    "remoteCAHelp": "Certificado de CA opcional para un servidor FTPS privado. Siempre se verifican el certificado y el nombre del servidor.",
+    "gitDescription": "Autenticación Git para repositorios HTTP(S) o SSH",
+    "gitPassword": "Contraseña / token de acceso",
+    "gitHostKeyHelp": "Obligatorio para SSH. Usa la huella SHA256 proporcionada por el administrador del servidor.",
+    "gitRepository": "URL del repositorio",
+    "gitRepositoryHelp": "Admite HTTP(S), ssh:// y git@host:path. Los repositorios HTTP(S) públicos no necesitan credenciales.",
+    "gitRefType": "Tipo de referencia",
+    "gitBranch": "Rama",
+    "gitTag": "Etiqueta",
+    "gitLatestTag": "Última etiqueta de versión semántica",
+    "gitCommit": "SHA del commit",
+    "gitRef": "Rama / etiqueta / commit",
+    "gitRefHelp": "Vacío para la rama predeterminada. Se siguen las etiquetas movidas; el modo commit exige el SHA completo. Profundidad de descarga: 1.",
+    "gitTagPattern": "Patrón de etiquetas",
+    "gitTagHelp": "Solo para la última etiqueta de versión semántica; por ejemplo, v*. Predeterminado: *.",
+    "gitKeepCache": "Conservar la caché local de Git",
+    "gitCacheSize": "Tamaño máximo de caché Git (MiB)",
+    "gitCacheHelp": "La caché antigua se reconstruye al alcanzar el límite. Si la instantánea lo supera, la tarea falla sin eliminar documentos ausentes.",
+    "gitFileSize": "Tamaño máximo de archivo Git (MiB)",
+    "gitFileHelp": "Límite de ingesta opcional sujeto al límite global. Los filtros no reducen las descargas de Git Pack. Se omiten punteros LFS y submódulos."
   },
   "proxy": {
     "title": "Proxy",

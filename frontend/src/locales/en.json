@@ -200,7 +200,26 @@
     "remoteHostKey": "SSH host key fingerprint",
     "remoteHostKeyHelp": "SHA256 fingerprint supplied by your server administrator. Connections reject a different host key.",
     "remoteCACert": "TLS CA certificate (PEM)",
-    "remoteCAHelp": "Optional CA certificate for a private FTPS server. Server certificates and hostnames are always verified."
+    "remoteCAHelp": "Optional CA certificate for a private FTPS server. Server certificates and hostnames are always verified.",
+    "gitDescription": "Git authentication for HTTP(S) or SSH repositories",
+    "gitPassword": "Password / access token",
+    "gitHostKeyHelp": "Required for SSH. Use the SHA256 fingerprint supplied by your server administrator.",
+    "gitRepository": "Repository URL",
+    "gitRepositoryHelp": "HTTP(S), ssh:// and git@host:path URLs. Public HTTP(S) repositories need no credential.",
+    "gitRefType": "Reference type",
+    "gitBranch": "Branch",
+    "gitTag": "Tag",
+    "gitLatestTag": "Latest semantic version tag",
+    "gitCommit": "Commit SHA",
+    "gitRef": "Branch / tag / commit",
+    "gitRefHelp": "Leave blank for the default branch. Tags follow the source if moved; commit mode requires a full SHA. All downloads use depth 1.",
+    "gitTagPattern": "Tag pattern",
+    "gitTagHelp": "Used only for latest semantic version tag, for example v*. Defaults to *.",
+    "gitKeepCache": "Keep local Git cache",
+    "gitCacheSize": "Maximum Git cache size (MiB)",
+    "gitCacheHelp": "Old caches are rebuilt at the limit. A snapshot that exceeds the limit fails without deletion reconciliation.",
+    "gitFileSize": "Maximum Git file size (MiB)",
+    "gitFileHelp": "Optional ingestion limit, capped by the global file limit. Filters do not reduce Git pack downloads. LFS pointers and submodules are skipped."
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -506,7 +525,8 @@
     "type": "Source type",
     "credential": "Source credential",
     "pickTypeFirst": "Select a source type first.",
-    "pickCredentialFirst": "Select a credential first."
+    "pickCredentialFirst": "Select a credential first.",
+    "anonymous": "Anonymous (public repository)"
   },
   "destination": {
     "credential": "Hindsight credential",

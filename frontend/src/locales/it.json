@@ -320,7 +320,8 @@
     "type": "Tipo di fonte",
     "credential": "Credenziale di origine",
     "pickTypeFirst": "Seleziona prima un tipo di fonte.",
-    "pickCredentialFirst": "Seleziona prima una credenziale"
+    "pickCredentialFirst": "Seleziona prima una credenziale",
+    "anonymous": "Anonimo (repository pubblico)"
   },
   "destination": {
     "credential": "Credenziale Hindsight",
@@ -951,7 +952,26 @@
     "remoteHostKey": "Impronta della chiave host SSH",
     "remoteHostKeyHelp": "Impronta SHA256 fornita dall’amministratore del server. Le connessioni con una chiave diversa vengono rifiutate.",
     "remoteCACert": "Certificato CA TLS (PEM)",
-    "remoteCAHelp": "Certificato CA facoltativo per un server FTPS privato. Il certificato e il nome del server vengono sempre verificati."
+    "remoteCAHelp": "Certificato CA facoltativo per un server FTPS privato. Il certificato e il nome del server vengono sempre verificati.",
+    "gitDescription": "Autenticazione Git per repository HTTP(S) o SSH",
+    "gitPassword": "Password / token di accesso",
+    "gitHostKeyHelp": "Obbligatorio per SSH. Usa l’impronta SHA256 fornita dall’amministratore del server.",
+    "gitRepository": "URL del repository",
+    "gitRepositoryHelp": "Supporta HTTP(S), ssh:// e git@host:path. I repository HTTP(S) pubblici non richiedono credenziali.",
+    "gitRefType": "Tipo di riferimento",
+    "gitBranch": "Ramo",
+    "gitTag": "Tag",
+    "gitLatestTag": "Ultimo tag per versione semantica",
+    "gitCommit": "SHA del commit",
+    "gitRef": "Ramo / tag / commit",
+    "gitRefHelp": "Vuoto per il ramo predefinito. I tag spostati vengono seguiti; il commit richiede lo SHA completo. Profondità di download sempre 1.",
+    "gitTagPattern": "Schema dei tag",
+    "gitTagHelp": "Solo per l’ultimo tag per versione semantica, ad esempio v*. Predefinito: *.",
+    "gitKeepCache": "Conserva la cache Git locale",
+    "gitCacheSize": "Dimensione massima cache Git (MiB)",
+    "gitCacheHelp": "La vecchia cache viene ricreata al limite. Se lo snapshot supera il limite, l’attività fallisce senza eliminare documenti mancanti.",
+    "gitFileSize": "Dimensione massima file Git (MiB)",
+    "gitFileHelp": "Limite di acquisizione facoltativo entro il limite globale. I filtri non riducono i download Git Pack. Puntatori LFS e sottomoduli vengono ignorati."
   },
   "proxy": {
     "title": "Proxy",

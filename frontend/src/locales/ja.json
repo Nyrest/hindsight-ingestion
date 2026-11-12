@@ -320,7 +320,8 @@
     "type": "ソースの種類",
     "credential": "ソース認証情報",
     "pickTypeFirst": "最初にソースの種類を選択します。",
-    "pickCredentialFirst": "最初に認証情報を選択してください"
+    "pickCredentialFirst": "最初に認証情報を選択してください",
+    "anonymous": "匿名アクセス（公開リポジトリ）"
   },
   "destination": {
     "credential": "Hindsight 認証情報",
@@ -951,7 +952,26 @@
     "remoteHostKey": "SSH ホスト鍵のフィンガープリント",
     "remoteHostKeyHelp": "サーバー管理者が提供した SHA256 フィンガープリントを入力してください。ホスト鍵が異なる場合は接続を拒否します。",
     "remoteCACert": "TLS CA 証明書（PEM）",
-    "remoteCAHelp": "プライベート FTPS サーバー用の任意の CA 証明書。サーバー証明書とホスト名は常に検証されます。"
+    "remoteCAHelp": "プライベート FTPS サーバー用の任意の CA 証明書。サーバー証明書とホスト名は常に検証されます。",
+    "gitDescription": "HTTP(S) または SSH リポジトリ用の Git 認証",
+    "gitPassword": "パスワード / アクセストークン",
+    "gitHostKeyHelp": "SSH では必須です。サーバー管理者が提供した SHA256 フィンガープリントを使用します。",
+    "gitRepository": "リポジトリ URL",
+    "gitRepositoryHelp": "HTTP(S)、ssh://、git@host:path に対応。公開 HTTP(S) リポジトリでは認証情報は不要です。",
+    "gitRefType": "参照の種類",
+    "gitBranch": "ブランチ",
+    "gitTag": "タグ",
+    "gitLatestTag": "最新のセマンティックバージョンタグ",
+    "gitCommit": "コミット SHA",
+    "gitRef": "ブランチ / タグ / コミット",
+    "gitRefHelp": "空欄で既定のブランチを使用します。タグ移動時は追従します。コミット指定には完全な SHA が必要です。取得深度は常に 1 です。",
+    "gitTagPattern": "タグパターン",
+    "gitTagHelp": "最新のセマンティックバージョンタグでのみ使用します。例：v*。既定値は * です。",
+    "gitKeepCache": "ローカル Git キャッシュを保持",
+    "gitCacheSize": "Git キャッシュの上限（MiB）",
+    "gitCacheHelp": "上限に達した古いキャッシュは再構築します。スナップショットが上限を超えると処理を失敗とし、欠落項目を削除しません。",
+    "gitFileSize": "Git ファイルの上限（MiB）",
+    "gitFileHelp": "任意の取り込み上限で、全体の上限を超えられません。フィルターで Git Pack の取得量は減りません。LFS ポインターとサブモジュールはスキップします。"
   },
   "proxy": {
     "title": "プロキシ",

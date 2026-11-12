@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { SQLSourceFields } from "./sql-source-fields";
 import { CredentialPicker } from "./credential-picker";
 import { NotionSourceFields } from "./notion-source-fields";
+import { GitSourceFields } from "./git-source-fields";
 
 export function SourceTypePicker({
   sources,
@@ -105,7 +106,7 @@ export function SourceConfigFields({
   return (
     <>
       {source.credentialTypes.length > 0 && (
-        <FieldRow label={t("source.credential")} htmlFor="task-source-cred" required error={credentialError}>
+        <FieldRow label={t("source.credential")} htmlFor="task-source-cred" required={!source.credentialOptional} error={credentialError}>
           <CredentialPicker
             id="task-source-cred"
             credentials={credentials}
@@ -121,6 +122,7 @@ export function SourceConfigFields({
               onCredentialChange(id);
             }}
             invalid={!!credentialError}
+            optional={source.credentialOptional}
           />
         </FieldRow>
       )}
@@ -133,6 +135,8 @@ export function SourceConfigFields({
             onConfigChange(key, value);
             setLabels((current) => { const next = { ...current }; delete next[key]; return next; });
           }} />
+      ) : source.type === "git" ? (
+        <GitSourceFields fields={source.fields} config={config} onChange={onConfigChange} errors={configErrors} editing={editing} />
       ) : source.fields.length > 0 && (
         <div className="grid gap-4">
           {source.fields.filter((f) => !f.renderOnly || config.render === true).map((f) => (

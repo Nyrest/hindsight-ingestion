@@ -17,6 +17,7 @@ export function CredentialPicker({
   onChange,
   invalid,
   disabled,
+  optional,
 }: {
   id?: string;
   credentials: Credential[];
@@ -26,6 +27,7 @@ export function CredentialPicker({
   onChange: (id: string) => void;
   invalid?: boolean;
   disabled?: boolean;
+  optional?: boolean;
 }) {
   const { t } = useTranslation();
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -35,14 +37,15 @@ export function CredentialPicker({
   return (
     <div className="space-y-1.5">
       <div className="flex gap-2">
-        <Select value={value || undefined} onValueChange={(selectedID) => {
+        <Select value={value || (optional ? "__anonymous__" : undefined)} onValueChange={(selectedID) => {
           // Radix's hidden native select can emit an empty value before newly created options register.
-          if (selectedID) onChange(selectedID);
+          if (selectedID) onChange(selectedID === "__anonymous__" ? "" : selectedID);
         }} disabled={disabled}>
           <SelectTrigger id={id} className="w-full" aria-invalid={invalid}>
             <SelectValue placeholder={options.length ? t("credentials.pick") : t("credentials.noneOfType", { type: typeLabel })} />
           </SelectTrigger>
           <SelectContent>
+            {optional && <SelectItem value="__anonymous__">{t("source.anonymous")}</SelectItem>}
             {options.map((c) => (
               <SelectItem key={c.id} value={c.id}>
                 <span className="flex items-center gap-2">
